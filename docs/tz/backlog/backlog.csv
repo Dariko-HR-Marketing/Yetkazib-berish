@@ -1,0 +1,31 @@
+ID,Epik,User story,Talab kodi,Ustuvorlik,Sprint,Baho (SP),Qabul sharti,Mas'ul rol
+US-001,Infratuzilma,"Dasturchi sifatida men CI/CD, staging va production muhitlarini xohlayman, kod avtomatik sinovdan o'tib deploy bo'lishi uchun",NFR-05;NFR-17,M,1,8,"Push'da testlar ishlaydi, staging'ga avtomatik deploy",DevOps
+US-002,Hamkor va filial,"Administrator sifatida men yangi hamkor va filialni sozlamalar orqali qo'shmoqchiman, kod o'zgartirmasdan",FR-ADM;NFR-15,M,1,5,"Hamkor 3 ish kunida ulanadi; profil shabloni tanlanadi",Backend
+US-003,Autentifikatsiya,"Xaridor sifatida men telefon va OTP bilan kirmoqchiman, parol eslamaslik uchun",FR-AUTH,M,1,5,"OTP 5 daqiqa amal qiladi; 5 xato urinishdan keyin bloklanadi",Backend
+US-004,Autentifikatsiya,"Xodim sifatida men rolimga mos panelni ko'rmoqchiman; admin MFA bilan kiradi",NFR-07;NFR-08,M,1,5,"AC-04 o'tadi; admin MFA'siz kira olmaydi",Backend
+US-005,Katalog,"Filial menejeri sifatida men mahsulot, variant va rasmlarni qo'shmoqchiman",FR-PT02,M,2,8,"CRUD ishlaydi; uz/ru nomlar",Backend;Frontend
+US-006,Katalog,"Filial menejeri sifatida men katalogni CSV orqali yuklamoqchiman",FR-PT02;INT-POS,M,2,5,"1000 qatorli CSV 1 daqiqada import; xatolar hisoboti",Backend
+US-007,Katalog,"Filial menejeri sifatida men narx, qoldiq va stop-listni boshqarmoqchiman",FR-PT03,M,2,5,"O'zgarish auditga yoziladi; vitrinada darhol ko'rinadi",Backend;Frontend
+US-008,Hudud va slot,"Filial menejeri sifatida men xizmat hududini xaritada chizmoqchiman va tarif belgilamoqchiman",FR-PT04;FR-ZONE,M,3,8,"Poligon saqlanadi; manzil to'g'ri filialga tushadi",Backend;Frontend
+US-009,Vitrina,"Xaridor sifatida men manzilni pin va mo'ljal bilan kiritib, mos katalogni ko'rmoqchiman",FR-ADR;FR-CAT,M,3,8,"Hududdan tashqarida aniq xabar; LCP ≤ 2,5 s",Frontend
+US-010,Savat,"Xaridor sifatida men savatda yakuniy summa, yetkazish haqi va minimal savatni ko'rmoqchiman",FR-CART,M,3,5,"Summa serverda hisoblanadi; minimal savat ogohlantirishi",Backend;Frontend
+US-011,Savat,"Xaridor sifatida men slot yoki 'imkon qadar tez'ni tanlamoqchiman",FR-SLOT,M,3,5,"To'lgan slot tanlanmaydi",Backend;Frontend
+US-012,Buyurtma,"Xaridor sifatida men buyurtma bersam, qoldiq va slot atomar band qilinishini xohlayman",FR-CART;ADR-003,M,4,8,"AC-02 va AC-03 o'tadi",Backend
+US-013,Buyurtma,"Tizim sifatida buyurtma holatlari faqat ruxsat etilgan yo'nalishda o'zgarishi kerak",TZ 5.2,M,4,5,"Noto'g'ri o'tish 409 qaytaradi; tarix yoziladi",Backend
+US-014,Buyurtma,"Kichik do'kon sotuvchisi sifatida men buyurtmani qo'lda tasdiqlamoqchiman",FR-P01,M,4,3,"Tasdiqsiz yakuniy xabar ketmaydi; SLA ogohlantirishi",Backend;Frontend
+US-015,Buyurtma,"Tizim sifatida hodisalar outbox orqali ishonchli yuborilishi kerak",ADR-003,M,4,5,"10 urinish, keyin dead-letter va ogohlantirish",Backend
+US-016,To'lov,"Xaridor sifatida men onlayn to'lov qilmoqchiman",FR-PAY;INT-PAY,M,5,8,"Webhook idempotent; takroriy undirish yo'q",Backend
+US-017,Xabarnoma,"Xaridor sifatida men holat o'zgarganda SMS yoki Telegram xabar olmoqchiman",INT-MSG,M,5,5,"6.6-band jadvalidagi barcha hodisalar",Backend
+US-018,Hamkor portali,"Filial menejeri sifatida men buyurtmalar ro'yxatini ovozli signal bilan ko'rmoqchiman",FR-PT05,M,5,5,"Yangi buyurtma 5 soniyada paydo bo'ladi",Frontend
+US-019,Yig'ish,"Yig'uvchi sifatida men mahsulotni belgilab, haqiqiy vazn yoki muqobilni kiritmoqchiman",FR-PK;FR-P02,M,6,8,"AC-10 o'tadi; shtrix-kod kamera orqali",Frontend;Backend
+US-020,Almashtirish,"Xaridor sifatida men muqobil yoki summa o'zgarishini tasdiqlamoqchiman",FR-SUB,M,6,5,"AC-09 o'tadi",Backend;Frontend
+US-021,Oshxona,"Oshpaz sifatida men buyurtmalar navbatini va tayyorlik vaqtini ko'rmoqchiman",FR-P03,M,6,5,"Band vaqtda yangi vaqt taklif qilinadi",Frontend;Backend
+US-022,Yetkazish,"Dispetcher sifatida men jo'natmaga kuryer biriktirmoqchiman",FR-DSP,M,6,5,"AC-07 o'tadi",Frontend;Backend
+US-023,Yetkazish,"Kuryer sifatida men topshiriqni qabul qilib, PIN bilan topshirmoqchiman",FR-CR;FR-POD,M,6,8,"AC-05 o'tadi; muvaffaqiyatsiz sabab majburiy",Frontend;Backend
+US-024,Kuzatuv,"Xaridor sifatida men buyurtmani tokenli havola orqali kuzatmoqchiman",FR-TRK,M,6,3,"Token muddati tugasa 410",Frontend;Backend
+US-025,Yordam,"Xaridor sifatida men aniq mahsulot bo'yicha murojaat yubormoqchiman",FR-SUP;FR-CS,M,6,5,"Murojaat buyurtma qatoriga bog'lanadi",Frontend;Backend
+US-026,Moliya,"Moliyachi sifatida men kun yakuni solishtiruvini olmoqchiman",FR-FIN,M,6,5,"Nomuvofiqliklar ro'yxati va eksport",Backend
+US-027,Hisobot,"Hamkor sifatida men sotuv va buyurtma hissasi hisobotini ko'rmoqchiman",FR-PT06,S,6,5,"11.1-band moddalari ko'rinadi",Backend;Frontend
+US-028,Telegram,"Xaridor sifatida men Telegram bot orqali vitrinaga o'tmoqchiman",INT-TG,M,5,3,"Deep link to'g'ri filialga olib boradi",Backend
+US-029,Telegram,"Xaridor sifatida men Telegram Mini App ichida buyurtma bermoqchiman",INT-TG,S,—,8,"initData serverda tekshiriladi",Frontend
+US-030,Takroriy savat,"Xaridor sifatida men avvalgi buyurtmani qayta ochmoqchiman",FR-HIST,S,—,3,"Narx va qoldiq qayta tekshiriladi",Frontend;Backend

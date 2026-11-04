@@ -1,0 +1,699 @@
+openapi: 3.0.3
+info:
+  title: Universal dostavka platformasi — OMS API
+  version: 1.0.0-draft
+  description: |
+    TZ v1.0 asosidagi boshlang'ich API shartnomasi (MVP). G2 darvozasida yakunlanadi.
+
+    Umumiy qoidalar:
+    - Barcha summalar tiyinda (1 so'm = 100 tiyin), butun son.
+    - Buyurtma, to'lov va qaytarish yaratuvchi so'rovlar `Idempotency-Key` sarlavhasini talab qiladi (ADR-003).
+    - Har bir javobda `X-Request-Id` qaytariladi (loglar bilan bog'lash uchun).
+    - Xodim so'rovlari tenant va filial bo'yicha serverda tekshiriladi; boshqa tenant obyekti uchun 404 qaytariladi.
+    - Til: `Accept-Language: uz` yoki `ru`.
+servers:
+  - url: https://api.example.uz/v1
+    description: Production (domen G1 da belgilanadi)
+  - url: https://staging-api.example.uz/v1
+    description: Staging
+tags:
+  - name: Auth
+  - name: Storefront
+    description: Xaridor vitrinasi
+  - name: Orders
+  - name: Partner
+    description: Hamkor portali
+  - name: Picking
+  - name: Delivery
+  - name: Support
+  - name: Webhooks
+
+paths:
+  /auth/otp/request:
+    post:
+      tags: [Auth]
+      summary: Telefon raqamiga OTP yuborish (FR-AUTH)
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [phone]
+              properties:
+                phone: { type: string, example: "+998901234567" }
+      responses:
+        '204': { description: Kod yuborildi }
+        '429': { $ref: '#/components/responses/TooManyRequests' }
+
+  /auth/otp/verify:
+    post:
+      tags: [Auth]
+      summary: OTP ni tekshirish va token olish
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [phone, code]
+              properties:
+                phone: { type: string }
+                code: { type: string, example: "123456" }
+      responses:
+        '200':
+          description: Token
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/TokenPair' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+
+  /storefront/{tenantSlug}/zones/resolve:
+    get:
+      tags: [Storefront]
+      summary: Manzil bo'yicha filial, tarif va slotlarni aniqlash (FR-ZONE)
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/TenantSlug'
+        - { name: lat, in: query, required: true, schema: { type: number, format: double } }
+        - { name: lon, in: query, required: true, schema: { type: number, format: double } }
+      responses:
+        '200':
+          description: Mos filial topildi
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ZoneResolution' }
+        '404':
+          description: Manzil xizmat hududidan tashqarida
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+  /storefront/{tenantSlug}/branches/{branchId}/catalog:
+    get:
+      tags: [Storefront]
+      summary: Filial katalogi, mavjudlik va narx bilan (FR-CAT)
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/TenantSlug'
+        - $ref: '#/components/parameters/BranchId'
+        - { name: category_id, in: query, schema: { type: string, format: uuid } }
+        - { name: q, in: query, description: Qidiruv matni, schema: { type: string } }
+        - { name: page, in: query, schema: { type: integer, minimum: 1, default: 1 } }
+        - { name: page_size, in: query, schema: { type: integer, maximum: 100, default: 40 } }
+      responses:
+        '200':
+          description: Mahsulotlar sahifasi
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items: { $ref: '#/components/schemas/CatalogItem' }
+                  total: { type: integer }
+
+  /storefront/{tenantSlug}/cart/quote:
+    post:
+      tags: [Storefront]
+      summary: Savatni serverda hisoblash (narx, yetkazish haqi, minimal savat) (FR-CART)
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/TenantSlug'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CartInput' }
+      responses:
+        '200':
+          description: Hisoblangan savat
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CartQuote' }
+        '422': { $ref: '#/components/responses/Unprocessable' }
+
+  /orders:
+    post:
+      tags: [Orders]
+      summary: Buyurtma yaratish va rezerv (atomar)
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/OrderCreate' }
+      responses:
+        '201':
+          description: Buyurtma yaratildi
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Order' }
+        '409':
+          description: Qoldiq yoki slot yetarli emas
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '422': { $ref: '#/components/responses/Unprocessable' }
+
+  /orders/{orderId}:
+    get:
+      tags: [Orders]
+      summary: Buyurtma holati (xaridor yoki xodim)
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+      responses:
+        '200':
+          description: Buyurtma
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Order' }
+        '404': { $ref: '#/components/responses/NotFound' }
+
+  /orders/{orderId}/cancel:
+    post:
+      tags: [Orders]
+      summary: Bekor qilish (xaridor — preparing gacha; keyin operator)
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason: { type: string }
+      responses:
+        '200':
+          description: Bekor qilindi, rezerv bo'shatildi
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Order' }
+        '409': { $ref: '#/components/responses/InvalidTransition' }
+
+  /orders/{orderId}/approve-changes:
+    post:
+      tags: [Orders]
+      summary: Almashtirish yoki summa o'zgarishini xaridor tasdiqlashi (FR-SUB)
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [version, approved]
+              properties:
+                version: { type: integer, description: Tasdiqlanayotgan buyurtma versiyasi }
+                approved: { type: boolean }
+      responses:
+        '200':
+          description: Qaror qabul qilindi
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Order' }
+        '409':
+          description: Versiya eskirgan
+
+  /orders/{orderId}/payments:
+    post:
+      tags: [Orders]
+      summary: Onlayn to'lov sessiyasini yaratish (FR-PAY)
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '201':
+          description: Provayder sahifasi havolasi
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment_id: { type: string, format: uuid }
+                  redirect_url: { type: string, format: uri }
+
+  /tracking/{token}:
+    get:
+      tags: [Orders]
+      summary: Kuzatuv sahifasi ma'lumoti (qisqa muddatli token, FR-TRK)
+      security: []
+      parameters:
+        - { name: token, in: path, required: true, schema: { type: string } }
+      responses:
+        '200':
+          description: Holat, ETA, kuryer ismi va niqoblangan aloqa
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Tracking' }
+        '410':
+          description: Token muddati tugagan
+
+  /partner/branches/{branchId}/orders:
+    get:
+      tags: [Partner]
+      summary: Filial buyurtmalari ro'yxati (FR-PT05)
+      parameters:
+        - $ref: '#/components/parameters/BranchId'
+        - { name: status, in: query, schema: { $ref: '#/components/schemas/OrderStatus' } }
+      responses:
+        '200':
+          description: Ro'yxat
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Order' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+
+  /partner/orders/{orderId}/transition:
+    post:
+      tags: [Partner]
+      summary: Buyurtma holatini o'zgartirish (accept, start_preparing, ready)
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action, version]
+              properties:
+                action:
+                  type: string
+                  enum: [accept, reject, start_preparing, mark_ready]
+                version: { type: integer }
+                reason: { type: string }
+      responses:
+        '200':
+          description: Yangi holat
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Order' }
+        '409': { $ref: '#/components/responses/InvalidTransition' }
+
+  /partner/branches/{branchId}/stock:
+    put:
+      tags: [Partner]
+      summary: Narx, qoldiq va stop-listni yangilash (FR-PT03)
+      parameters:
+        - $ref: '#/components/parameters/BranchId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                required: [variant_id]
+                properties:
+                  variant_id: { type: string, format: uuid }
+                  price: { type: integer }
+                  available_qty: { type: number }
+                  is_stopped: { type: boolean }
+      responses:
+        '204': { description: Yangilandi }
+
+  /partner/catalog/import:
+    post:
+      tags: [Partner]
+      summary: Katalogni CSV orqali import qilish (FR-PT02, INT-POS)
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file: { type: string, format: binary }
+                branch_id: { type: string, format: uuid }
+      responses:
+        '202':
+          description: Import navbatga qo'yildi
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id: { type: string }
+
+  /picking/orders/{orderId}/items/{itemId}:
+    patch:
+      tags: [Picking]
+      summary: Yig'ish natijasi — haqiqiy vazn, muqobil yoki olib tashlash (FR-PK)
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+        - { name: itemId, in: path, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [result]
+              properties:
+                result:
+                  type: string
+                  enum: [picked, substituted, removed]
+                actual_qty: { type: number, example: 1.08 }
+                substitute_variant_id: { type: string, format: uuid }
+                serial_number: { type: string }
+      responses:
+        '200':
+          description: Qator yangilandi; summa chegaradan oshsa xaridorga tasdiq yuboriladi
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Order' }
+
+  /delivery/shipments:
+    get:
+      tags: [Delivery]
+      summary: Dispetcher — jo'natmalar; kuryer — faqat o'zinikilar
+      parameters:
+        - { name: status, in: query, schema: { $ref: '#/components/schemas/ShipmentStatus' } }
+      responses:
+        '200':
+          description: Ro'yxat
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Shipment' }
+
+  /delivery/shipments/{shipmentId}/assign:
+    post:
+      tags: [Delivery]
+      summary: Kuryer biriktirish yoki qayta biriktirish (FR-DSP)
+      parameters:
+        - $ref: '#/components/parameters/ShipmentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [courier_id]
+              properties:
+                courier_id: { type: string, format: uuid }
+                vehicle_type: { type: string, enum: [foot, bike, car, van] }
+      responses:
+        '200':
+          description: Biriktirildi
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Shipment' }
+
+  /delivery/shipments/{shipmentId}/status:
+    post:
+      tags: [Delivery]
+      summary: Kuryer holati — olib ketdi, yo'lda, topshirildi (PoD), muvaffaqiyatsiz
+      parameters:
+        - $ref: '#/components/parameters/ShipmentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status: { $ref: '#/components/schemas/ShipmentStatus' }
+                pin: { type: string, pattern: '^[0-9]{4}$' }
+                pod_photo_url: { type: string, format: uri }
+                failure_reason:
+                  type: string
+                  enum: [no_answer, wrong_address, refused, damaged, other]
+      responses:
+        '200':
+          description: Yangilandi
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Shipment' }
+        '422':
+          description: PIN noto'g'ri
+
+  /support/tickets:
+    post:
+      tags: [Support]
+      summary: Buyurtma yoki mahsulot qatori bo'yicha murojaat (FR-SUP)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [order_id, type]
+              properties:
+                order_id: { type: string, format: uuid }
+                order_item_id: { type: string, format: uuid }
+                type: { type: string, enum: [damaged, missing, late, wrong_item, other] }
+                message: { type: string }
+                attachments:
+                  type: array
+                  items: { type: string, format: uri }
+      responses:
+        '201': { description: Murojaat yaratildi }
+
+  /support/orders/{orderId}/refunds:
+    post:
+      tags: [Support]
+      summary: Qisman yoki to'liq qaytarish so'rovi (moliya tasdiqlaydi)
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [amount, reason]
+              properties:
+                amount: { type: integer }
+                reason: { type: string }
+      responses:
+        '201': { description: Qaytarish yozuvi yaratildi }
+
+  /webhooks/payments/{provider}:
+    post:
+      tags: [Webhooks]
+      summary: To'lov provayderi webhooki (imzo tekshiriladi, idempotent)
+      security: []
+      parameters:
+        - { name: provider, in: path, required: true, schema: { type: string, enum: [payme, click] } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, additionalProperties: true }
+      responses:
+        '200': { description: Qabul qilindi (takroriy bo'lsa ham) }
+        '401': { description: Imzo noto'g'ri }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    TenantSlug: { name: tenantSlug, in: path, required: true, schema: { type: string } }
+    BranchId: { name: branchId, in: path, required: true, schema: { type: string, format: uuid } }
+    OrderId: { name: orderId, in: path, required: true, schema: { type: string, format: uuid } }
+    ShipmentId: { name: shipmentId, in: path, required: true, schema: { type: string, format: uuid } }
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      description: UUID; takroriy so'rov saqlangan javobni qaytaradi (24 soat)
+      schema: { type: string, format: uuid }
+  responses:
+    Unauthorized:
+      description: Autentifikatsiya talab qilinadi
+      content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+    Forbidden:
+      description: Ruxsat yo'q
+      content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+    NotFound:
+      description: Topilmadi (yoki boshqa tenantga tegishli)
+      content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+    InvalidTransition:
+      description: Ruxsat etilmagan holat o'tishi yoki eskirgan versiya
+      content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+    Unprocessable:
+      description: Biznes qoidasi buzildi (minimal savat, hududdan tashqari va h.k.)
+      content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+    TooManyRequests:
+      description: So'rovlar chegarasi oshdi
+      content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } }
+  schemas:
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code: { type: string, example: out_of_stock }
+        message: { type: string }
+        details: { type: object, additionalProperties: true }
+        request_id: { type: string }
+    TokenPair:
+      type: object
+      properties:
+        access_token: { type: string }
+        refresh_token: { type: string }
+        expires_in: { type: integer }
+    OrderStatus:
+      type: string
+      enum: [created, pending_confirmation, accepted, preparing, ready, in_delivery, completed, cancelled]
+    PaymentStatus:
+      type: string
+      enum: [pending, authorized, paid, refunding, partially_refunded, refunded, failed]
+    ShipmentStatus:
+      type: string
+      enum: [created, assigned, picked_up, on_the_way, delivered, failed, returned]
+    Money:
+      type: integer
+      description: Tiyinda
+      example: 2600000
+    Address:
+      type: object
+      required: [lat, lon, text]
+      properties:
+        lat: { type: number }
+        lon: { type: number }
+        text: { type: string }
+        landmark: { type: string, description: Mo'ljal }
+        entrance: { type: string }
+        floor: { type: string }
+        apartment: { type: string }
+    ZoneResolution:
+      type: object
+      properties:
+        branch_id: { type: string, format: uuid }
+        branch_name: { type: string }
+        delivery_fee: { $ref: '#/components/schemas/Money' }
+        free_from: { $ref: '#/components/schemas/Money' }
+        min_order: { $ref: '#/components/schemas/Money' }
+        asap_eta_minutes: { type: integer }
+        slots:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: string, format: uuid }
+              starts_at: { type: string, format: date-time }
+              ends_at: { type: string, format: date-time }
+              available: { type: boolean }
+    CatalogItem:
+      type: object
+      properties:
+        variant_id: { type: string, format: uuid }
+        product_id: { type: string, format: uuid }
+        name: { type: string }
+        unit: { type: string, enum: [pcs, kg, l] }
+        is_weighted: { type: boolean }
+        price: { $ref: '#/components/schemas/Money' }
+        available: { type: boolean }
+        image_url: { type: string, format: uri }
+    CartInput:
+      type: object
+      required: [branch_id, items]
+      properties:
+        branch_id: { type: string, format: uuid }
+        address: { $ref: '#/components/schemas/Address' }
+        items:
+          type: array
+          items:
+            type: object
+            required: [variant_id, qty]
+            properties:
+              variant_id: { type: string, format: uuid }
+              qty: { type: number }
+              modifiers:
+                type: array
+                items: { type: string, format: uuid }
+              substitution_rule: { type: string, enum: [suggest_similar, remove, call_me] }
+    CartQuote:
+      type: object
+      properties:
+        subtotal: { $ref: '#/components/schemas/Money' }
+        delivery_fee: { $ref: '#/components/schemas/Money' }
+        discount: { $ref: '#/components/schemas/Money' }
+        total: { $ref: '#/components/schemas/Money' }
+        warnings:
+          type: array
+          items: { type: string, example: below_min_order }
+    OrderCreate:
+      allOf:
+        - $ref: '#/components/schemas/CartInput'
+        - type: object
+          required: [address, phone, payment_method]
+          properties:
+            phone: { type: string }
+            slot_id: { type: string, format: uuid, description: Bo'sh bo'lsa — imkon qadar tez }
+            payment_method: { type: string, enum: [online, cash_on_delivery, card_on_delivery] }
+            substitution_rule: { type: string, enum: [suggest_similar, remove, call_me] }
+            consent_increase_pct: { type: number, default: 10 }
+            channel: { type: string, enum: [web, telegram, qr, instagram] }
+            utm: { type: object, additionalProperties: { type: string } }
+            comment: { type: string }
+    Order:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        number: { type: string, example: "A-104512" }
+        status: { $ref: '#/components/schemas/OrderStatus' }
+        payment_status: { $ref: '#/components/schemas/PaymentStatus' }
+        version: { type: integer }
+        branch_id: { type: string, format: uuid }
+        total: { $ref: '#/components/schemas/Money' }
+        final_total: { $ref: '#/components/schemas/Money' }
+        requires_customer_approval: { type: boolean }
+        items:
+          type: array
+          items:
+            type: object
+            properties:
+              id: { type: string, format: uuid }
+              name: { type: string }
+              requested_qty: { type: number }
+              actual_qty: { type: number }
+              unit_price: { $ref: '#/components/schemas/Money' }
+              status: { type: string, enum: [pending, picked, substituted, removed] }
+        tracking_url: { type: string, format: uri }
+        created_at: { type: string, format: date-time }
+    Shipment:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        order_id: { type: string, format: uuid }
+        order_number: { type: string }
+        status: { $ref: '#/components/schemas/ShipmentStatus' }
+        courier_id: { type: string, format: uuid }
+        vehicle_type: { type: string }
+        address: { $ref: '#/components/schemas/Address' }
+        customer_phone_masked: { type: string, example: "+99890***4567" }
+        eta: { type: string, format: date-time }
+    Tracking:
+      type: object
+      properties:
+        order_number: { type: string }
+        status: { $ref: '#/components/schemas/OrderStatus' }
+        eta: { type: string, format: date-time }
+        courier_name: { type: string }
+        courier_location:
+          type: object
+          properties:
+            lat: { type: number }
+            lon: { type: number }
+        support_url: { type: string, format: uri }
+
+security:
+  - bearerAuth: []

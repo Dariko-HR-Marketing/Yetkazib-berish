@@ -1,0 +1,9 @@
+Modda,Belgi,Misol (so'm),Kuryer +6000 (so'm),Izoh
+Mahsulot yalpi foydasi,+,26000,26000,Sotuv narxi minus tannarx
+Xaridordan yetkazish haqi,+,10000,10000,Hudud tarifi
+Yig'ish,-,5000,5000,Yig'uvchi vaqti
+Qadoq,-,2000,2000,Paket va idish
+Kuryer,-,18000,24000,Bir yetkazish tannarxi
+To'lov komissiyasi,-,2000,2000,Provayder foizi
+Boshqa o'zgaruvchan xarajatlar,-,4000,4000,"Chegirma, qaytarish zarari, xizmat"
+Hissa,=,5000,-1000,Yalpi foyda + yetkazish haqi − xarajatlar

@@ -1,0 +1,72 @@
+# Universal dostavka platformasi — lokal ishlab chiqish va staging uchun infratuzilma
+# Ishga tushirish: deploy/DEPLOY.md
+# Backend, vitrina va panel obrazlari jamoa kodi tayyor bo'lgach `image:` qatorlarida ko'rsatiladi.
+
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ../db/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ../db/seed_demo.sql:/docker-entrypoint-initdb.d/02_seed_demo.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY}
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - miniodata:/data
+
+  swagger-ui:
+    image: swaggerapi/swagger-ui:latest
+    environment:
+      SWAGGER_JSON: /spec/openapi.yaml
+    ports:
+      - "8081:8080"
+    volumes:
+      - ../api:/spec:ro
+
+  # --- Jamoa kodi tayyor bo'lgach yoqiladi ---
+  # backend:
+  #   image: registry.example.uz/dariko/backend:latest
+  #   env_file: .env
+  #   depends_on: [postgres, redis, minio]
+  #   ports: ["8000:8000"]
+  # worker:            # outbox, xabarnoma, qayta urinish
+  #   image: registry.example.uz/dariko/backend:latest
+  #   command: ["worker"]
+  #   env_file: .env
+  #   depends_on: [postgres, redis]
+  # storefront:        # Next.js vitrina
+  #   image: registry.example.uz/dariko/storefront:latest
+  #   ports: ["3000:3000"]
+  # panels:            # React panellar
+  #   image: registry.example.uz/dariko/panels:latest
+  #   ports: ["3001:80"]
+
+volumes:
+  pgdata:
+  miniodata:
