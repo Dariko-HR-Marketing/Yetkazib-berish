@@ -83,6 +83,7 @@ api = [
     # Webhooklar
     path("webhooks/payments/<str:provider>", pay.PaymentWebhook.as_view()),
     path("webhooks/telegram", plat.TelegramWebhook.as_view()),
+    path("dev/pay/<uuid:payment_id>", plat.DevPay.as_view()),
 ]
 
 def serve(request, path, document_root=None, **kw):

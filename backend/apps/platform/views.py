@@ -66,3 +66,22 @@ class TelegramWebhook(APIView):
                  "text": f"{t.name} vitrinasi: {url}",
                  "reply_markup": {"inline_keyboard": [[{"text": "Buyurtma berish", "web_app": {"url": url}}]]}}
         return Response(reply)     # webhook javobi sifatida to'g'ridan-to'g'ri Telegramga qaytadi
+
+
+class DevPay(APIView):
+    """Faqat development: mock provayder to'lovini 'muvaffaqiyatli' qilib webhook yuboradi (demo uchun)."""
+    authentication_classes = []
+
+    def post(self, request, payment_id):
+        if settings.APP_ENV != "development":
+            raise Http404
+        import hashlib
+        import hmac
+        from apps.payments.models import Payment
+        from apps.payments.services import handle_webhook
+        p = Payment.objects.filter(pk=payment_id, provider="mock").first()
+        if not p:
+            raise Http404
+        raw = json.dumps({"event_id": f"dev-{p.id}", "type": "payment.paid", "payment_id": str(p.id), "amount": p.amount}).encode()
+        sig = hmac.new(settings.PAYMENT_WEBHOOK_SECRET.encode(), raw, hashlib.sha256).hexdigest()
+        return Response(handle_webhook("mock", raw, sig))

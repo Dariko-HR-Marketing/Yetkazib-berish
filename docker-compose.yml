@@ -1,0 +1,40 @@
+# Lokal ishga tushirish:  cp deploy/.env.example .env && docker compose up --build
+# Birinchi marta demo ma'lumot:  docker compose exec web python manage.py seed_demo
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-dariko}
+      POSTGRES_USER: ${POSTGRES_USER:-dariko}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD kerak}
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-dariko} -d ${POSTGRES_DB:-dariko}"]
+      interval: 5s
+      retries: 10
+  web:
+    build: {context: ., dockerfile: backend/Dockerfile}
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-dariko}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-dariko}
+    depends_on: {db: {condition: service_healthy}}
+    ports: ["8000:8000"]
+    volumes: [media:/app/media]
+  worker:       # outbox, taymautlar, rezerv muddati, to'lov holati tekshiruvi (ADR-003)
+    build: {context: ., dockerfile: backend/Dockerfile}
+    restart: unless-stopped
+    command: ["python", "manage.py", "worker"]
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-dariko}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-dariko}
+    depends_on: {db: {condition: service_healthy}}
+  swagger:
+    image: swaggerapi/swagger-ui:latest
+    environment: {SWAGGER_JSON: /spec/openapi.yaml}
+    ports: ["8081:8080"]
+    volumes: ["./docs/tz/api:/spec:ro"]
+volumes:
+  pgdata:
+  media:

@@ -1,6 +1,6 @@
 # ADR-002. Texnologik stek
 
-- **Holat:** Ochiq (G1 da tasdiqlanadi)
+- **Holat:** Taklif asosida amalga oshirildi — Python 3.13 + Django 5.2/DRF (G1 da rasman tasdiqlanadi)
 - **Sana:** 04.11.2026
 
 ## Variantlar

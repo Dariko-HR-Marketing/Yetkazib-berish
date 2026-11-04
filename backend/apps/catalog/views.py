@@ -171,7 +171,7 @@ class StockUpdate(APIView):
         if not b or not sc.can_branch(b, *MGR, Role.PICKER):
             raise Http404
         return Response([{"variant_id": str(s.variant_id), "sku": s.variant.sku, "name": s.variant.product.name, "price": s.price, "cost": s.cost,
-                          "available_qty": str(s.available_qty), "reserved_qty": str(s.reserved_qty), "is_stopped": s.is_stopped,
+                          "barcode": s.variant.barcode, "available_qty": str(s.available_qty), "reserved_qty": str(s.reserved_qty), "is_stopped": s.is_stopped,
                           "online_quota": None if s.online_quota is None else str(s.online_quota), "source": s.source}
                          for s in BranchStock.objects.filter(branch=b).select_related("variant__product").order_by("variant__sku")])
 

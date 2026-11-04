@@ -1,0 +1,35 @@
+name: CI
+on:
+  push:
+  pull_request:
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env: {POSTGRES_USER: dariko, POSTGRES_PASSWORD: dariko, POSTGRES_DB: dariko}
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U dariko" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://dariko:dariko@localhost:5432/dariko
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.13", cache: pip, cache-dependency-path: backend/requirements-dev.txt}
+      - run: pip install -r backend/requirements-dev.txt
+      - run: python manage.py check
+        working-directory: backend
+      - run: python manage.py makemigrations --check --dry-run
+        working-directory: backend
+      - run: python -m pytest
+        working-directory: backend
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 22}
+      - name: JS sintaksis tekshiruvi
+        run: for f in frontend/assets/*.js frontend/panel/*.js frontend/sw.js; do node --input-type=module --check < "$f" || exit 1; done
