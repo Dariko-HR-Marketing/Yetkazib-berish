@@ -6,7 +6,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY backend/ /app/
 COPY frontend/ /frontend/
 ENV FRONTEND_DIR=/frontend APP_ENV=production
-RUN python manage.py collectstatic --noinput
+RUN JWT_SECRET=build-only python manage.py collectstatic --noinput
 RUN useradd -m app && mkdir -p /app/media && chown -R app /app/media
 USER app
 EXPOSE 8000

@@ -19,8 +19,8 @@ def env(name, default=None, cast=str):
 APP_ENV = env("APP_ENV", "development")  # development | staging | production
 DEBUG = APP_ENV == "development" and env("DEBUG", True, bool)
 SECRET_KEY = env("JWT_SECRET", "dev-insecure-change-me-" + "x" * 24)
-if APP_ENV == "production" and SECRET_KEY.startswith("dev-insecure"):
-    raise RuntimeError("Production uchun JWT_SECRET o'rnating")
+if APP_ENV == "production" and (SECRET_KEY.startswith("dev-insecure") or (len(SECRET_KEY) < 32 and SECRET_KEY != "build-only")):
+    raise RuntimeError("Production uchun kamida 32 belgili JWT_SECRET o'rnating")
 ALLOWED_HOSTS = env("ALLOWED_HOSTS", "*").split(",")
 CSRF_TRUSTED_ORIGINS = [o for o in env("CSRF_TRUSTED_ORIGINS", "").split(",") if o]
 
@@ -41,6 +41,7 @@ MIDDLEWARE = [
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 ROOT_URLCONF = "config.urls"
 TEMPLATES = [{
@@ -96,6 +97,7 @@ if APP_ENV != "development":
     SECURE_SSL_REDIRECT = env("SECURE_SSL_REDIRECT", True, bool)
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE = True
 
 # --- Biznes sozlamalari (deploy/.env.example) ---
