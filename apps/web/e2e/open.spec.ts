@@ -4,7 +4,7 @@ test.use({ viewport: { width: 390, height: 800 } });
 
 test("sinov rejimi: faqat telefon bilan kirish, do'kon yaratish — SMS, TOTP va rozilik so'ralmaydi", async ({ page }) => {
   await page.goto("/kirish");
-  await expect(page.getByText(/Sinov rejimi/)).toBeVisible();
+  await expect(page.getByLabel("SMS kod")).toHaveCount(0);
   await expect(page.getByLabel("SMS kod")).toHaveCount(0);
   await page.getByLabel("Telefon raqami").fill("90 444 55 66");
   await page.getByRole("button", { name: "Kirish", exact: true }).click();
@@ -23,7 +23,7 @@ test("sinov rejimi: faqat telefon bilan kirish, do'kon yaratish — SMS, TOTP va
   // chiqib qayta kirish: bir xil hisob
   await page.getByRole("button", { name: "Chiqish" }).click();
   await expect(page).toHaveURL(/kirish/);
-  await expect(page.getByText(/Sinov rejimi/)).toBeVisible();
+  await expect(page.getByLabel("SMS kod")).toHaveCount(0);
   await expect(async () => { // gidratatsiya poygasi: qiymat saqlanmaguncha qayta urinadi
     await page.getByLabel("Telefon raqami").fill("90 444 55 66");
     await expect(page.getByRole("button", { name: "Kirish", exact: true })).toBeEnabled({ timeout: 1000 });

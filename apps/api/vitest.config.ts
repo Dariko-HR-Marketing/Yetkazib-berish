@@ -11,6 +11,7 @@ export default defineConfig({
       APP_DATABASE_URL: process.env.TEST_APP_DATABASE_URL ?? "postgresql://dostavka_app:dostavka_app@127.0.0.1:5432/dostavka_test",
       REDIS_URL: process.env.TEST_REDIS_URL ?? "redis://127.0.0.1:6379/15",
       TELEGRAM_BOT_TOKEN: "123456:TEST-BOT-TOKEN",
+      OPEN_LOGIN: "off", // standart testlar to'liq SMS/TOTP oqimini tekshiradi; soddalashtirilgan kirish open-login.test.ts da
       // Testlar bir IP'dan minglab so'rov yuboradi; chegara alohida testda pasaytiriladi.
       RATE_LIMIT_AUTH_PER_MIN: "1000000",
       RATE_LIMIT_API_PER_MIN: "1000000",

@@ -64,14 +64,9 @@ describe("OPEN_LOGIN: telefon raqami bilan to'g'ridan-to'g'ri kirish", () => {
   });
 });
 
-describe("OPEN_LOGIN: konfiguratsiya himoyasi", () => {
-  const base = { NODE_ENV: "production", JWT_SECRET: "x".repeat(40), DATA_ENCRYPTION_KEY: Buffer.alloc(32, 1).toString("base64"), PHONE_HASH_PEPPER: "prod-pepper-xxxxxxxx", TELEGRAM_BOT_TOKEN: "1:abc", DATABASE_URL: "postgres://x", APP_DATABASE_URL: "postgres://x", REDIS_URL: "redis://x" } as NodeJS.ProcessEnv;
-  it("productionda ikki marta ongli tasdiqsiz yoqilmaydi", () => {
-    expect(() => loadConfig({ ...base, OPEN_LOGIN: "on" })).toThrow(/OPEN_LOGIN_CONFIRM/);
-    expect(() => loadConfig({ ...base, OPEN_LOGIN: "on", OPEN_LOGIN_CONFIRM: "yes" })).toThrow(/OPEN_LOGIN_CONFIRM/);
-    expect(loadConfig({ ...base, OPEN_LOGIN: "on", OPEN_LOGIN_CONFIRM: "I-UNDERSTAND-NO-AUTH" }).OPEN_LOGIN).toBe("on");
-  });
-  it("standart holatda o'chiq", () => {
-    expect(loadConfig({ ...base }).OPEN_LOGIN).toBe("off");
+describe("OPEN_LOGIN: konfiguratsiya", () => {
+  it("standart holatda yoqiq; off qilinsa SMS/TOTP oqimi qaytadi", () => {
+    expect(loadConfig({} as NodeJS.ProcessEnv).OPEN_LOGIN).toBe("on");
+    expect(loadConfig({ OPEN_LOGIN: "off" } as NodeJS.ProcessEnv).OPEN_LOGIN).toBe("off");
   });
 });

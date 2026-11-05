@@ -42,15 +42,10 @@ Test bazasi `dostavka_test` (har ishga tushirishda noldan quriladi), E2E — `do
 
 Pul — tiyinda butun son; vaqt — UTC; har so'rovda `X-Tenant-Id` (begona do'kon → 404); o'zgartiruvchi so'rovlarda `Idempotency-Key`; ilova DB roli (`dostavka_app`) RLS'ni chetlab o'ta olmaydi; audit va rozilik jadvallari o'zgarmas; loglarda telefon maskalanadi.
 
-## Vaqtincha sinov rejimi (OPEN_LOGIN)
+## Soddalashtirilgan kirish (OPEN_LOGIN)
 
-Sinov bosqichida SMS kod, ikkinchi omil (TOTP) va rozilik so'rovlarini o'chirib, faqat telefon raqami bilan kirish mumkin:
+Hozircha kirish juda sodda: faqat telefon raqami. SMS kod, ikkinchi omil (TOTP), oferta/rozilik so'rovlari va blokirovkalar ishlamaydi. Standart: **yoqiq** (`OPEN_LOGIN=on`).
 
-```bash
-OPEN_LOGIN=on pnpm --filter @dostavka/api start
-```
-
-- **Xavfsiz emas**: istalgan raqam bilan istalgan hisobga kiriladi. Standart holatda **o'chiq**.
-- `NODE_ENV=production` da faqat `OPEN_LOGIN_CONFIRM=I-UNDERSTAND-NO-AUTH` bilan yoqiladi (aks holda API ishga tushmaydi).
+- **Xavfsiz emas**: istalgan raqam bilan istalgan hisobga kiriladi; haqiqiy ma'lumot bilan ochiq internetga qo'ymang.
 - Soxta rozilik yozuvlari yaratilmaydi; har kirish auditga (`auth.open_login`) yoziladi.
-- Rasmiy ishga tushirishdan oldin `OPEN_LOGIN=off` qiling — oddiy SMS/Telegram + TOTP oqimi o'zgarishsiz saqlangan.
+- Rasmiy ishga tushirishda `OPEN_LOGIN=off` qiling: SMS/Telegram + TOTP + rozilik oqimi o'zgarishsiz saqlangan va testlar bilan qoplangan.

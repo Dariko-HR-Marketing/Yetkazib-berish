@@ -39,6 +39,7 @@ export default defineConfig({
         TELEGRAM_BOT_TOKEN: BOT_TOKEN,
         CORS_ORIGINS: `http://127.0.0.1:${WEB_PORT}`,
         EVENTS_DISPATCH: "off",
+        OPEN_LOGIN: "off", // asosiy E2E to'liq SMS/TOTP oqimini tekshiradi
         // E2E bitta IP (127.0.0.1) dan yuzlab so'rov yuboradi; IP cheklovi API testlarida tekshiriladi.
         RATE_LIMIT_AUTH_PER_MIN: "100000",
         RATE_LIMIT_API_PER_MIN: "100000",

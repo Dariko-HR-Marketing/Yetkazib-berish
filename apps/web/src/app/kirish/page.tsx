@@ -149,7 +149,6 @@ export default function LoginPage() {
   if (openLogin) {
     return (
       <CenterCard title={t("login.title")} subtitle={t("login.subtitle")}>
-        <p role="note" className="rounded-md border border-line-strong bg-bg p-3 text-body-sm font-semibold">{t("login.test_mode")}</p>
         <Input id="phone" label={t("login.phone")} type="tel" inputMode="tel" autoComplete="tel" value={phone} onChange={(e) => setPhone(e.target.value.length < 5 ? "+998 " : pretty(e.target.value))} error={error} hint="+998 90 123 45 67" autoFocus />
         <MainAction text={t("login.enter")} onClick={openSignIn} disabled={!validPhone} loading={busy}>{t("login.enter")}</MainAction>
       </CenterCard>
