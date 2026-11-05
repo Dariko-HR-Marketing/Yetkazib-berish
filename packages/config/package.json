@@ -1,0 +1,22 @@
+{
+  "name": "@dostavka/config",
+  "version": "0.0.0",
+  "private": true,
+  "files": [
+    "tsconfig.base.json",
+    "tsconfig.node.json",
+    "tsconfig.next.json",
+    "eslint.mjs"
+  ],
+  "exports": {
+    "./eslint": "./eslint.mjs",
+    "./tsconfig.base.json": "./tsconfig.base.json",
+    "./tsconfig.node.json": "./tsconfig.node.json",
+    "./tsconfig.next.json": "./tsconfig.next.json"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.14.0",
+    "eslint": "^9.14.0",
+    "typescript-eslint": "^8.14.0"
+  }
+}

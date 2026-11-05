@@ -1,0 +1,576 @@
+openapi: 3.1.0
+info:
+  title: Dostavka SaaS — S0 API (identity, tenancy, plans-flags)
+  version: 0.1.0
+  description: |
+    S0 sprint shartnomasi. Manba: docs/01_prd/03_S0_spetsifikatsiya_va_hodisalar.md.
+    Umumiy qoidalar:
+    - Xato formati: `{code, message_uz, message_ru, details}`.
+    - Do'konga tegishli so'rovlarda `X-Tenant-Id` majburiy; foydalanuvchi a'zo bo'lmagan do'kon uchun 404 qaytadi (403 emas).
+    - Holatni o'zgartiruvchi so'rovlar (auth'dan tashqari) `Idempotency-Key` (UUID) talab qiladi.
+    - Summalar butun son (tiyin); vaqt ISO-8601 UTC.
+    - Ro'yxatlar kursor bilan sahifalanadi: `?limit=&cursor=`.
+servers:
+  - url: /
+tags:
+  - { name: auth }
+  - { name: tenancy }
+  - { name: features }
+  - { name: admin }
+security:
+  - bearer: []
+paths:
+  /v1/auth/otp/request:
+    post:
+      tags: [auth]
+      operationId: requestOtp
+      security: []
+      summary: SMS kod so'rash (I-1)
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/OtpRequest' } } } }
+      responses:
+        '202': { description: Kod yuborildi, content: { application/json: { schema: { $ref: '#/components/schemas/OtpRequested' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '423': { $ref: '#/components/responses/Error' }
+        '429': { $ref: '#/components/responses/Error' }
+  /v1/auth/otp/verify:
+    post:
+      tags: [auth]
+      operationId: verifyOtp
+      security: []
+      summary: Kodni tekshirish (I-2, I-4, I-5)
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/OtpVerify' } } } }
+      responses:
+        '200': { $ref: '#/components/responses/SignIn' }
+        '401': { $ref: '#/components/responses/Error' }
+        '422': { $ref: '#/components/responses/Error' }
+        '423': { $ref: '#/components/responses/Error' }
+  /v1/auth/telegram:
+    post:
+      tags: [auth]
+      operationId: signInTelegram
+      security: []
+      summary: Telegram mini-ilova initData (I-3)
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TelegramSignIn' } } } }
+      responses:
+        '200': { $ref: '#/components/responses/SignIn' }
+        '401': { $ref: '#/components/responses/Error' }
+        '422': { $ref: '#/components/responses/Error' }
+  /v1/auth/refresh:
+    post:
+      tags: [auth]
+      operationId: refreshSession
+      security: []
+      summary: Yangilash tokeni aylanishi (I-6)
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/RefreshRequest' } } } }
+      responses:
+        '200': { description: Yangi tokenlar, content: { application/json: { schema: { $ref: '#/components/schemas/Tokens' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+  /v1/auth/logout:
+    post:
+      tags: [auth]
+      operationId: logout
+      summary: Sessiyani tugatish
+      responses:
+        '204': { description: Tugatildi }
+        '401': { $ref: '#/components/responses/Error' }
+  /v1/auth/totp/enroll:
+    post:
+      tags: [auth]
+      operationId: enrollTotp
+      summary: TOTP kalitini yaratish (I-5)
+      responses:
+        '200': { description: Kalit, content: { application/json: { schema: { $ref: '#/components/schemas/TotpEnrollment' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+  /v1/auth/totp/confirm:
+    post:
+      tags: [auth]
+      operationId: confirmTotp
+      summary: TOTP ni yoqish (birinchi kod bilan)
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TotpCode' } } } }
+      responses:
+        '200': { description: Ikkinchi omilli tokenlar, content: { application/json: { schema: { $ref: '#/components/schemas/Tokens' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+  /v1/auth/totp/verify:
+    post:
+      tags: [auth]
+      operationId: verifyTotp
+      security: []
+      summary: Kirishda ikkinchi omil (I-5)
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TotpVerify' } } } }
+      responses:
+        '200': { description: Tokenlar, content: { application/json: { schema: { $ref: '#/components/schemas/Tokens' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+  /v1/me:
+    get:
+      tags: [auth]
+      operationId: getMe
+      responses:
+        '200': { description: Joriy foydalanuvchi, content: { application/json: { schema: { $ref: '#/components/schemas/Me' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+  /v1/tenants:
+    post:
+      tags: [tenancy]
+      operationId: createTenant
+      summary: Do'kon yaratish (T-1, T-2)
+      parameters: [{ $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TenantCreate' } } } }
+      responses:
+        '201': { description: Yaratildi, content: { application/json: { schema: { $ref: '#/components/schemas/Tenant' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+  /v1/tenants/{id}:
+    parameters: [{ name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+    get:
+      tags: [tenancy]
+      operationId: getTenant
+      parameters: [{ $ref: '#/components/parameters/TenantId' }]
+      responses:
+        '200': { description: Do'kon, content: { application/json: { schema: { $ref: '#/components/schemas/Tenant' } } } }
+        '404': { $ref: '#/components/responses/Error' }
+    patch:
+      tags: [tenancy]
+      operationId: updateTenant
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/TenantUpdate' } } } }
+      responses:
+        '200': { description: Yangilandi, content: { application/json: { schema: { $ref: '#/components/schemas/Tenant' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/branches:
+    get:
+      tags: [tenancy]
+      operationId: listBranches
+      parameters: [{ $ref: '#/components/parameters/TenantId' }]
+      responses:
+        '200': { description: Filiallar, content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { $ref: '#/components/schemas/Branch' } } } } } } }
+        '404': { $ref: '#/components/responses/Error' }
+    post:
+      tags: [tenancy]
+      operationId: createBranch
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/BranchCreate' } } } }
+      responses:
+        '201': { description: Yaratildi, content: { application/json: { schema: { $ref: '#/components/schemas/Branch' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+  /v1/invites:
+    get:
+      tags: [tenancy]
+      operationId: listInvites
+      parameters: [{ $ref: '#/components/parameters/TenantId' }]
+      responses:
+        '200': { description: Kutilayotgan takliflar, content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { $ref: '#/components/schemas/Invite' } } } } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+    post:
+      tags: [tenancy]
+      operationId: createInvite
+      summary: Xodim taklif qilish (T-3, T-5)
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/InviteCreate' } } } }
+      responses:
+        '201': { description: Yuborildi, content: { application/json: { schema: { $ref: '#/components/schemas/Invite' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/invites/{token}/accept:
+    post:
+      tags: [tenancy]
+      operationId: acceptInvite
+      parameters:
+        - { name: token, in: path, required: true, schema: { type: string } }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      responses:
+        '200': { description: Qabul qilindi, content: { application/json: { schema: { $ref: '#/components/schemas/Member' } } } }
+        '404': { $ref: '#/components/responses/Error' }
+        '410': { $ref: '#/components/responses/Error' }
+  /v1/members:
+    get:
+      tags: [tenancy]
+      operationId: listMembers
+      parameters:
+        - { $ref: '#/components/parameters/TenantId' }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 50 } }
+        - { name: cursor, in: query, schema: { type: string } }
+      responses:
+        '200': { description: Xodimlar, content: { application/json: { schema: { $ref: '#/components/schemas/MemberList' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/members/{id}:
+    patch:
+      tags: [tenancy]
+      operationId: updateMember
+      summary: Rol yoki holatni o'zgartirish (T-6)
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+        - { $ref: '#/components/parameters/TenantId' }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/MemberUpdate' } } } }
+      responses:
+        '200': { description: Yangilandi, content: { application/json: { schema: { $ref: '#/components/schemas/Member' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+  /v1/features:
+    get:
+      tags: [features]
+      operationId: listFeatures
+      summary: Do'kon uchun hisoblangan funksiyalar (F-1…F-3)
+      parameters: [{ $ref: '#/components/parameters/TenantId' }]
+      responses:
+        '200': { description: Funksiyalar, content: { application/json: { schema: { $ref: '#/components/schemas/FeatureList' } } } }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/features/{key}:
+    patch:
+      tags: [features]
+      operationId: toggleFeature
+      summary: Funksiyani yoqish/o'chirish (F-2, F-3, F-5, F-6)
+      parameters:
+        - { name: key, in: path, required: true, schema: { type: string } }
+        - { $ref: '#/components/parameters/TenantId' }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [enabled], additionalProperties: false, properties: { enabled: { type: boolean } } } } } }
+      responses:
+        '200': { description: Yangilandi, content: { application/json: { schema: { $ref: '#/components/schemas/Feature' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '422': { $ref: '#/components/responses/Error' }
+  /v1/admin/plans:
+    get:
+      tags: [admin]
+      operationId: adminListPlans
+      responses:
+        '200': { description: Paket versiyalari, content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { $ref: '#/components/schemas/Plan' } } } } } } }
+        '403': { $ref: '#/components/responses/Error' }
+    post:
+      tags: [admin]
+      operationId: adminCreatePlan
+      summary: Paketning yangi (qoralama) versiyasi
+      parameters: [{ $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/PlanDraft' } } } }
+      responses:
+        '201': { description: Yaratildi, content: { application/json: { schema: { $ref: '#/components/schemas/Plan' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+  /v1/admin/plans/{id}/publish:
+    post:
+      tags: [admin]
+      operationId: adminPublishPlan
+      summary: Versiyani chop etish (F-4)
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      responses:
+        '200': { description: Chop etildi, content: { application/json: { schema: { $ref: '#/components/schemas/Plan' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+  /v1/admin/flags:
+    get:
+      tags: [admin]
+      operationId: adminListFlags
+      responses:
+        '200': { description: Platforma kalitlari, content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { $ref: '#/components/schemas/PlatformFlag' } } } } } } }
+        '403': { $ref: '#/components/responses/Error' }
+  /v1/admin/flags/{key}:
+    patch:
+      tags: [admin]
+      operationId: adminSetFlag
+      summary: Avariya o'chirgichi (F-1)
+      parameters:
+        - { name: key, in: path, required: true, schema: { type: string } }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [platform_enabled], additionalProperties: false, properties: { platform_enabled: { type: boolean } } } } } }
+      responses:
+        '200': { description: Yangilandi, content: { application/json: { schema: { $ref: '#/components/schemas/PlatformFlag' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/admin/tenants/{id}/plan:
+    post:
+      tags: [admin]
+      operationId: adminSetTenantPlan
+      summary: Do'kon paketini o'zgartirish (billing S7 gacha qo'lda)
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [plan_code], additionalProperties: false, properties: { plan_code: { $ref: '#/components/schemas/PlanCode' } } } } } }
+      responses:
+        '200': { description: O'zgartirildi, content: { application/json: { schema: { $ref: '#/components/schemas/Tenant' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+components:
+  securitySchemes:
+    bearer: { type: http, scheme: bearer, bearerFormat: JWT }
+  parameters:
+    TenantId: { name: X-Tenant-Id, in: header, required: true, schema: { type: string, format: uuid } }
+    IdempotencyKey: { name: Idempotency-Key, in: header, required: true, schema: { type: string, format: uuid } }
+  responses:
+    Error: { description: Xato, content: { application/json: { schema: { $ref: '#/components/schemas/Error' } } } }
+    SignIn:
+      description: Kirish natijasi (tokenlar yoki ikkinchi omil talabi)
+      content: { application/json: { schema: { oneOf: [{ $ref: '#/components/schemas/SignInResult' }, { $ref: '#/components/schemas/MfaChallenge' }] } } }
+  schemas:
+    Error:
+      type: object
+      required: [code, message_uz, message_ru, details]
+      additionalProperties: false
+      properties:
+        code: { type: string, examples: ['validation.tin_invalid'] }
+        message_uz: { type: string }
+        message_ru: { type: string }
+        details: { type: object, additionalProperties: true }
+    PlanCode: { type: string, enum: [start, biznes, pro, tarmoq] }
+    Role: { type: string, enum: [owner, manager, picker, cashier, dispatcher, accountant, marketer, courier] }
+    InviteRole: { type: string, enum: [manager, picker, cashier, dispatcher, accountant, marketer, courier] }
+    ConsentInput:
+      type: object
+      required: [document, version]
+      additionalProperties: false
+      properties:
+        document: { type: string, enum: [customer_offer, privacy_policy] }
+        version: { type: string }
+    OtpRequest:
+      type: object
+      required: [phone]
+      additionalProperties: false
+      properties: { phone: { type: string, pattern: '^\+998[0-9]{9}$' } }
+    OtpRequested:
+      type: object
+      required: [expires_in, retry_after]
+      properties: { expires_in: { type: integer }, retry_after: { type: integer } }
+    OtpVerify:
+      type: object
+      required: [phone, code]
+      additionalProperties: false
+      properties:
+        phone: { type: string, pattern: '^\+998[0-9]{9}$' }
+        code: { type: string, pattern: '^[0-9]{6}$' }
+        consents: { type: array, items: { $ref: '#/components/schemas/ConsentInput' } }
+        marketing_consent: { type: boolean }
+    TelegramSignIn:
+      type: object
+      required: [init_data]
+      additionalProperties: false
+      properties:
+        init_data: { type: string }
+        consents: { type: array, items: { $ref: '#/components/schemas/ConsentInput' } }
+        marketing_consent: { type: boolean }
+    RefreshRequest:
+      type: object
+      required: [refresh_token]
+      additionalProperties: false
+      properties: { refresh_token: { type: string } }
+    Tokens:
+      type: object
+      required: [access_token, refresh_token, expires_in]
+      properties:
+        access_token: { type: string }
+        refresh_token: { type: string }
+        expires_in: { type: integer, description: Soniyalarda (900) }
+    SignInResult:
+      allOf:
+        - { $ref: '#/components/schemas/Tokens' }
+        - type: object
+          required: [is_new_user, user]
+          properties:
+            is_new_user: { type: boolean }
+            user: { $ref: '#/components/schemas/Me' }
+    MfaChallenge:
+      type: object
+      required: [mfa_required, mfa_token]
+      properties:
+        mfa_required: { type: boolean, const: true }
+        mfa_token: { type: string }
+    TotpEnrollment:
+      type: object
+      required: [secret, otpauth_uri]
+      properties: { secret: { type: string }, otpauth_uri: { type: string } }
+    TotpCode:
+      type: object
+      required: [code]
+      additionalProperties: false
+      properties: { code: { type: string, pattern: '^[0-9]{6}$' } }
+    TotpVerify:
+      type: object
+      required: [mfa_token, code]
+      additionalProperties: false
+      properties: { mfa_token: { type: string }, code: { type: string, pattern: '^[0-9]{6}$' } }
+    Membership:
+      type: object
+      required: [member_id, tenant_id, tenant_name, role, status]
+      properties:
+        member_id: { type: string, format: uuid }
+        tenant_id: { type: string, format: uuid }
+        tenant_name: { type: string }
+        role: { $ref: '#/components/schemas/Role' }
+        status: { type: string, enum: [active, suspended] }
+    Me:
+      type: object
+      required: [id, phone_masked, locale, totp_enabled, is_platform_admin, memberships]
+      properties:
+        id: { type: string, format: uuid }
+        phone_masked: { type: [string, 'null'] }
+        locale: { type: string, enum: [uz, ru] }
+        telegram_linked: { type: boolean }
+        totp_enabled: { type: boolean }
+        is_platform_admin: { type: boolean }
+        memberships: { type: array, items: { $ref: '#/components/schemas/Membership' } }
+    TenantCreate:
+      type: object
+      required: [name, tin]
+      additionalProperties: false
+      properties:
+        name: { type: string, minLength: 2, maxLength: 120 }
+        tin: { type: string, description: STIR — aynan 9 ta raqam }
+    TenantUpdate:
+      type: object
+      additionalProperties: false
+      properties:
+        name: { type: string, minLength: 2, maxLength: 120 }
+        tin: { type: string }
+        status: { type: string, enum: [active] }
+    Tenant:
+      type: object
+      required: [id, name, tin, status, plan, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        tin: { type: string }
+        status: { type: string, enum: [draft, active, suspended] }
+        plan:
+          type: object
+          required: [code, version]
+          properties: { code: { $ref: '#/components/schemas/PlanCode' }, version: { type: integer } }
+        created_at: { type: string, format: date-time }
+    BranchCreate:
+      type: object
+      required: [name, address]
+      additionalProperties: false
+      properties:
+        name: { type: string, minLength: 2, maxLength: 120 }
+        address: { type: string, minLength: 3, maxLength: 300 }
+        lat: { type: number, minimum: -90, maximum: 90 }
+        lng: { type: number, minimum: -180, maximum: 180 }
+    Branch:
+      type: object
+      required: [id, name, address]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        address: { type: string }
+        lat: { type: [number, 'null'] }
+        lng: { type: [number, 'null'] }
+    InviteCreate:
+      type: object
+      required: [phone, role]
+      additionalProperties: false
+      properties:
+        phone: { type: string, pattern: '^\+998[0-9]{9}$' }
+        role: { $ref: '#/components/schemas/InviteRole' }
+    Invite:
+      type: object
+      required: [id, role, status, expires_at]
+      properties:
+        id: { type: string, format: uuid }
+        role: { $ref: '#/components/schemas/InviteRole' }
+        phone_masked: { type: string }
+        status: { type: string, enum: [pending, accepted, expired] }
+        expires_at: { type: string, format: date-time }
+    Member:
+      type: object
+      required: [id, user_id, role, status, tenant_id]
+      properties:
+        id: { type: string, format: uuid }
+        user_id: { type: string, format: uuid }
+        tenant_id: { type: string, format: uuid }
+        role: { $ref: '#/components/schemas/Role' }
+        status: { type: string, enum: [active, suspended] }
+        phone_masked: { type: [string, 'null'] }
+        created_at: { type: string, format: date-time }
+    MemberUpdate:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        role: { $ref: '#/components/schemas/Role' }
+        status: { type: string, enum: [active, suspended] }
+    MemberList:
+      type: object
+      required: [items, next_cursor, limit]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/Member' } }
+        next_cursor: { type: [string, 'null'] }
+        limit:
+          type: object
+          required: [used, max]
+          properties: { used: { type: integer }, max: { type: [integer, 'null'] } }
+    Feature:
+      type: object
+      required: [key, enabled, platform_enabled, in_plan, shop_enabled, min_plan, requires, toggled_by]
+      properties:
+        key: { type: string }
+        enabled: { type: boolean, description: 'can(tenant, key) natijasi' }
+        platform_enabled: { type: boolean }
+        in_plan: { type: boolean }
+        shop_enabled: { type: boolean }
+        min_plan: { type: string }
+        requires: { type: array, items: { type: string } }
+        blocked_by: { type: array, items: { type: string }, description: Yoqilmagan bog'liqliklar }
+        toggled_by: { type: string }
+    PlanLimits:
+      type: object
+      properties:
+        orders_month: { type: [integer, 'null'] }
+        branches: { type: [integer, 'null'] }
+        staff: { type: [integer, 'null'] }
+        integrations: { type: [integer, 'null'] }
+    FeatureList:
+      type: object
+      required: [plan, items]
+      properties:
+        plan:
+          type: object
+          required: [code, version, name, limits]
+          properties:
+            code: { $ref: '#/components/schemas/PlanCode' }
+            version: { type: integer }
+            name: { type: string }
+            price_tiyin: { type: [integer, 'null'] }
+            limits: { $ref: '#/components/schemas/PlanLimits' }
+            migrate_at: { type: [string, 'null'], format: date-time, description: Eski shartlar tugash sanasi (F-4) }
+        items: { type: array, items: { $ref: '#/components/schemas/Feature' } }
+    PlanDraft:
+      type: object
+      required: [code, name, limits, features]
+      additionalProperties: false
+      properties:
+        code: { $ref: '#/components/schemas/PlanCode' }
+        name: { type: string }
+        price_tiyin: { type: [integer, 'null'], minimum: 0 }
+        limits: { $ref: '#/components/schemas/PlanLimits' }
+        features: { type: array, items: { type: string } }
+    Plan:
+      type: object
+      required: [id, code, version, name, status, limits, features]
+      properties:
+        id: { type: string, format: uuid }
+        code: { $ref: '#/components/schemas/PlanCode' }
+        version: { type: integer }
+        name: { type: string }
+        status: { type: string, enum: [draft, published, archived] }
+        price_tiyin: { type: [integer, 'null'] }
+        limits: { $ref: '#/components/schemas/PlanLimits' }
+        features: { type: array, items: { type: string } }
+        published_at: { type: [string, 'null'], format: date-time }
+    PlatformFlag:
+      type: object
+      required: [key, platform_enabled, min_plan, toggled_by]
+      properties:
+        key: { type: string }
+        description: { type: string }
+        platform_enabled: { type: boolean }
+        min_plan: { type: string }
+        toggled_by: { type: string }

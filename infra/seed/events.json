@@ -1,0 +1,162 @@
+{
+  "_izoh": "Manba: S0 spetsifikatsiya, 5-bo'lim. Nomlash obyekt.harakat (o'tgan zamon). Shaxsiy ma'lumot xususiyatlarga yozilmaydi (faqat ID). Sxemaga mos kelmagan hodisa rad etiladi.",
+  "common_fields": [
+    "event_id",
+    "ts (UTC)",
+    "tenant_id",
+    "actor_id",
+    "source (vitrina|katalog|telegram|agent|panel|kuryer)"
+  ],
+  "events": [
+    {
+      "name": "auth.signed_up",
+      "properties": "usul (sms|telegram)",
+      "used_by": "voronka"
+    },
+    {
+      "name": "auth.signed_in",
+      "properties": "usul",
+      "used_by": "voronka"
+    },
+    {
+      "name": "auth.otp_locked",
+      "properties": "telefon_hash",
+      "used_by": "xavfsizlik"
+    },
+    {
+      "name": "consent.accepted",
+      "properties": "hujjat, versiya, kanal",
+      "used_by": "huquqiy"
+    },
+    {
+      "name": "consent.revoked",
+      "properties": "hujjat, versiya, kanal",
+      "used_by": "huquqiy"
+    },
+    {
+      "name": "store.viewed",
+      "properties": "store_id",
+      "used_by": "voronka"
+    },
+    {
+      "name": "product.viewed",
+      "properties": "product_id, pozitsiya",
+      "used_by": "tavsiya, voronka"
+    },
+    {
+      "name": "search.performed",
+      "properties": "so'rov, natija_soni",
+      "used_by": "natijasiz qidiruv"
+    },
+    {
+      "name": "cart.item_added",
+      "properties": "product_id, miqdor, narx",
+      "used_by": "savat tahlili"
+    },
+    {
+      "name": "cart.item_removed",
+      "properties": "product_id, miqdor",
+      "used_by": "savat tahlili"
+    },
+    {
+      "name": "checkout.started",
+      "properties": "summa, slot",
+      "used_by": "voronka"
+    },
+    {
+      "name": "order.placed",
+      "properties": "order_id, summa, tolov_turi, kanal(source)",
+      "used_by": "asosiy KPI"
+    },
+    {
+      "name": "payment.authorized",
+      "properties": "provayder, summa",
+      "used_by": "moliya"
+    },
+    {
+      "name": "payment.captured",
+      "properties": "provayder, summa",
+      "used_by": "moliya"
+    },
+    {
+      "name": "payment.failed",
+      "properties": "provayder, sabab",
+      "used_by": "moliya"
+    },
+    {
+      "name": "payment.refunded",
+      "properties": "provayder, summa, sabab",
+      "used_by": "moliya"
+    },
+    {
+      "name": "order.picked",
+      "properties": "almashtirishlar, tugadi_soni",
+      "used_by": "operatsiya"
+    },
+    {
+      "name": "delivery.channel_selected",
+      "properties": "channel(own|pool|third_party), narx, urinish",
+      "used_by": "kuryer tahlili"
+    },
+    {
+      "name": "delivery.offer_accepted",
+      "properties": "courier_id, kutish_s",
+      "used_by": "SLA"
+    },
+    {
+      "name": "delivery.offer_expired",
+      "properties": "courier_id, kutish_s",
+      "used_by": "SLA"
+    },
+    {
+      "name": "order.delivered",
+      "properties": "vaqt",
+      "used_by": "SLA"
+    },
+    {
+      "name": "order.failed",
+      "properties": "sabab",
+      "used_by": "SLA"
+    },
+    {
+      "name": "stock.out_marked",
+      "properties": "product_id, branch_id",
+      "used_by": "qoldiq aniqligi"
+    },
+    {
+      "name": "points.earned",
+      "properties": "ball, order_id",
+      "used_by": "sodiqlik ledgeri"
+    },
+    {
+      "name": "points.spent",
+      "properties": "ball, order_id",
+      "used_by": "sodiqlik ledgeri"
+    },
+    {
+      "name": "points.expired",
+      "properties": "ball",
+      "used_by": "sodiqlik ledgeri"
+    },
+    {
+      "name": "review.submitted",
+      "properties": "target(shop|courier), baho",
+      "used_by": "reyting"
+    },
+    {
+      "name": "feature.toggled",
+      "properties": "kalit, eski, yangi",
+      "used_by": "billing, audit"
+    },
+    {
+      "name": "plan.changed",
+      "properties": "eski, yangi",
+      "used_by": "billing"
+    },
+    {
+      "name": "ai.request",
+      "properties": "xizmat, tokenlar, natija",
+      "used_by": "AI xarajati"
+    }
+  ]
+}

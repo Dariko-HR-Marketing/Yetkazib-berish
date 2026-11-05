@@ -1,0 +1,189 @@
+{
+  "_izoh": "Manba: Owner-Team prototipi (7 panel roli × 12 ruxsat). 0 = yo'q, 1 = o'qish/cheklangan, 2 = to'liq. Kuryer — alohida ilova roli (o'z topshiriqlari, naqd balansi, hujjatlari). Platforma admini — alohida (Admin-* ekranlar).",
+  "levels": {
+    "0": "yo'q",
+    "1": "o'qish yoki cheklangan",
+    "2": "to'liq"
+  },
+  "roles": [
+    {
+      "key": "owner",
+      "name_uz": "Egasi"
+    },
+    {
+      "key": "manager",
+      "name_uz": "Menejer"
+    },
+    {
+      "key": "picker",
+      "name_uz": "Yig’uvchi"
+    },
+    {
+      "key": "cashier",
+      "name_uz": "Kassir"
+    },
+    {
+      "key": "dispatcher",
+      "name_uz": "Dispetcher"
+    },
+    {
+      "key": "accountant",
+      "name_uz": "Buxgalter"
+    },
+    {
+      "key": "marketer",
+      "name_uz": "Marketolog"
+    },
+    {
+      "key": "courier",
+      "name_uz": "Kuryer",
+      "app": "courier"
+    }
+  ],
+  "permissions": [
+    {
+      "area": "Buyurtmalar",
+      "by_role": {
+        "owner": 2,
+        "manager": 2,
+        "picker": 1,
+        "cashier": 1,
+        "dispatcher": 2,
+        "accountant": 1,
+        "marketer": 1
+      }
+    },
+    {
+      "area": "Yig’ish",
+      "by_role": {
+        "owner": 2,
+        "manager": 2,
+        "picker": 2,
+        "cashier": 0,
+        "dispatcher": 1,
+        "accountant": 0,
+        "marketer": 0
+      }
+    },
+    {
+      "area": "Dispetcher va kuryerlar",
+      "by_role": {
+        "owner": 2,
+        "manager": 2,
+        "picker": 0,
+        "cashier": 0,
+        "dispatcher": 2,
+        "accountant": 0,
+        "marketer": 0
+      }
+    },
+    {
+      "area": "Katalog va narx",
+      "by_role": {
+        "owner": 2,
+        "manager": 2,
+        "picker": 0,
+        "cashier": 0,
+        "dispatcher": 0,
+        "accountant": 1,
+        "marketer": 1
+      }
+    },
+    {
+      "area": "Qoldiq va “Tugadi”",
+      "by_role": {
+        "owner": 2,
+        "manager": 2,
+        "picker": 2,
+        "cashier": 1,
+        "dispatcher": 0,
+        "accountant": 1,
+        "marketer": 0
+      }
+    },
+    {
+      "area": "Kassa va kuryer naqdi",
+      "by_role": {
+        "owner": 2,
+        "manager": 1,
+        "picker": 0,
+        "cashier": 2,
+        "dispatcher": 0,
+        "accountant": 2,
+        "marketer": 0
+      }
+    },
+    {
+      "area": "Pul oqimi va moliya",
+      "by_role": {
+        "owner": 2,
+        "manager": 1,
+        "picker": 0,
+        "cashier": 0,
+        "dispatcher": 0,
+        "accountant": 2,
+        "marketer": 0
+      }
+    },
+    {
+      "area": "Sodiqlik, ball, kampaniyalar",
+      "by_role": {
+        "owner": 2,
+        "manager": 1,
+        "picker": 0,
+        "cashier": 0,
+        "dispatcher": 0,
+        "accountant": 1,
+        "marketer": 2
+      }
+    },
+    {
+      "area": "Analitika va hisobotlar",
+      "by_role": {
+        "owner": 2,
+        "manager": 2,
+        "picker": 0,
+        "cashier": 0,
+        "dispatcher": 1,
+        "accountant": 2,
+        "marketer": 2
+      }
+    },
+    {
+      "area": "Mijoz 360 (maskalangan)",
+      "by_role": {
+        "owner": 1,
+        "manager": 1,
+        "picker": 0,
+        "cashier": 0,
+        "dispatcher": 0,
+        "accountant": 0,
+        "marketer": 1
+      }
+    },
+    {
+      "area": "Jamoa va rollar",
+      "by_role": {
+        "owner": 2,
+        "manager": 1,
+        "picker": 0,
+        "cashier": 0,
+        "dispatcher": 0,
+        "accountant": 0,
+        "marketer": 0
+      }
+    },
+    {
+      "area": "To’lov va integratsiya sozlamalari",
+      "by_role": {
+        "owner": 2,
+        "manager": 0,
+        "picker": 0,
+        "cashier": 0,
+        "dispatcher": 0,
+        "accountant": 1,
+        "marketer": 0
+      }
+    }
+  ]
+}

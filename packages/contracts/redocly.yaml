@@ -1,0 +1,7 @@
+extends: [minimal]
+rules:
+  no-unused-components: warn
+  operation-4xx-response: off
+  operation-summary: off
+  tag-description: off
+  security-defined: off

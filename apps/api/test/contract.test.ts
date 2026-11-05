@@ -1,0 +1,152 @@
+import Ajv2020 from "ajv/dist/2020";
+import addFormats from "ajv-formats";
+import { loadOpenApi } from "@dostavka/contracts";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { addStaff, boot, call, CONSENTS, lastCode, makeAdmin, makeOwner, signUp, telegramInitData, totpCode, type Call, type Harness } from "./helpers";
+
+let h: Harness;
+beforeAll(async () => { h = await boot(); });
+afterAll(async () => { await h.close(); });
+beforeEach(async () => { await h.reset(); });
+
+type Spec = ReturnType<typeof loadOpenApi> & { paths: Record<string, Record<string, { operationId: string; requestBody?: { content: { "application/json": { schema: unknown } } }; responses: Record<string, unknown> }>> };
+const spec = loadOpenApi() as unknown as Spec;
+const ajv = new Ajv2020({ strict: false, allErrors: true });
+addFormats(ajv);
+ajv.addSchema({ $id: "api", components: spec.components });
+
+function responseSchema(method: string, path: string, status: number): unknown {
+  const op = spec.paths[path]?.[method];
+  if (!op) throw new Error(`Shartnomada yo'q: ${method.toUpperCase()} ${path}`);
+  let r = op.responses[String(status)] as { $ref?: string; content?: { "application/json": { schema: unknown } } } | undefined;
+  if (!r) throw new Error(`Shartnomada ${method.toUpperCase()} ${path} uchun ${status} javobi yo'q`);
+  if (r.$ref) r = (spec.components as unknown as { responses: Record<string, typeof r> }).responses[r.$ref.split("/").pop()!];
+  return r?.content?.["application/json"].schema;
+}
+
+const checked: string[] = [];
+const rewrite = (n: unknown): unknown => {
+  if (Array.isArray(n)) return n.map(rewrite);
+  if (n && typeof n === "object") return Object.fromEntries(Object.entries(n).map(([k, v]) => [k, k === "$ref" && typeof v === "string" ? v.replace(/^#\//, "api#/") : rewrite(v)]));
+  return n;
+};
+const compile = (schema: unknown) => ajv.compile(rewrite(schema) as object);
+
+/** So'rov tanasi (muvaffaqiyatli holatda) va javobni OpenAPI sxemasi bo'yicha tekshiradi. */
+async function op(method: "get" | "post" | "patch", template: string, actual: string, status: number, o: Call = {}) {
+  const spc = spec.paths[template]?.[method];
+  if (!spc) throw new Error(`Shartnomada yo'q: ${method.toUpperCase()} ${template}`);
+  if (status < 300 && o.body !== undefined && spc.requestBody) {
+    const rv = compile(spc.requestBody.content["application/json"].schema);
+    expect(rv(o.body), `so'rov ${method.toUpperCase()} ${template}: ${JSON.stringify(rv.errors)}`).toBe(true);
+  }
+  const res = await call(h, method, actual, o).expect(status);
+  const schema = responseSchema(method, template, status);
+  if (schema) {
+    const v = compile(schema);
+    expect(v(res.body), `javob ${method.toUpperCase()} ${template} ${status}: ${JSON.stringify(v.errors)}`).toBe(true);
+  }
+  checked.push(`${method} ${template}`);
+  return res;
+}
+
+describe("OpenAPI shartnomasi", () => {
+  it("shartnoma sxemalari kompilyatsiya bo'ladi", () => {
+    for (const name of Object.keys(spec.components.schemas)) expect(() => ajv.compile({ $ref: `api#/components/schemas/${name}` })).not.toThrow();
+  });
+
+  it("har bir marshrut shartnomada bor va aksincha (shartnoma ↔ kod)", () => {
+    const stack = (h.app.getHttpAdapter().getInstance() as { _router: { stack: { route?: { path: string; methods: Record<string, boolean> } }[] } })._router.stack;
+    const routes = new Set<string>();
+    for (const l of stack) if (l.route) for (const m of Object.keys(l.route.methods)) routes.add(`${m} ${l.route.path.replace(/:(\w+)/g, "{$1}")}`);
+    const contract = new Set<string>();
+    for (const [p, ops] of Object.entries(spec.paths)) for (const m of Object.keys(ops)) if (["get", "post", "patch", "put", "delete"].includes(m)) contract.add(`${m} ${p.replace(/\{token\}/, "{token}")}`);
+    const norm = (s: Set<string>) => [...s].map((x) => x.replace(/\{\w+\}/g, "{}")).sort();
+    expect(norm(routes)).toEqual(norm(contract));
+  });
+
+  it("javoblar shartnomaga mos: auth", async () => {
+    const phone = "+998901000001";
+    await op("post", "/v1/auth/otp/request", "/v1/auth/otp/request", 202, { body: { phone } });
+    await op("post", "/v1/auth/otp/request", "/v1/auth/otp/request", 429, { body: { phone } });
+    await op("post", "/v1/auth/otp/request", "/v1/auth/otp/request", 400, { body: { phone: "123" } });
+    const code = lastCode(h, phone);
+    await op("post", "/v1/auth/otp/verify", "/v1/auth/otp/verify", 422, { body: { phone, code } });
+    const ok = await op("post", "/v1/auth/otp/verify", "/v1/auth/otp/verify", 200, { body: { phone, code, consents: CONSENTS } });
+    await op("post", "/v1/auth/otp/verify", "/v1/auth/otp/verify", 401, { body: { phone, code: "000000" } });
+    await op("get", "/v1/me", "/v1/me", 200, { token: ok.body.access_token });
+    await op("get", "/v1/me", "/v1/me", 401);
+    const tg = telegramInitData("123456:TEST-BOT-TOKEN", { id: 5 }, Math.floor(h.clock.now().getTime() / 1000));
+    await op("post", "/v1/auth/telegram", "/v1/auth/telegram", 200, { body: { init_data: tg, consents: CONSENTS } });
+    await op("post", "/v1/auth/telegram", "/v1/auth/telegram", 401, { body: { init_data: tg + "x" } });
+    const rf = await op("post", "/v1/auth/refresh", "/v1/auth/refresh", 200, { body: { refresh_token: ok.body.refresh_token } });
+    const enr = await op("post", "/v1/auth/totp/enroll", "/v1/auth/totp/enroll", 200, { token: rf.body.access_token, key: null });
+    await op("post", "/v1/auth/totp/confirm", "/v1/auth/totp/confirm", 400, { token: rf.body.access_token, key: null, body: { code: "000000" } });
+    const conf = await op("post", "/v1/auth/totp/confirm", "/v1/auth/totp/confirm", 200, { token: rf.body.access_token, key: null, body: { code: totpCode(enr.body.secret, h) } });
+    h.clock.advance(61_000);
+    await call(h, "post", "/v1/auth/otp/request", { body: { phone } }).expect(202);
+    const mfa = await op("post", "/v1/auth/otp/verify", "/v1/auth/otp/verify", 200, { body: { phone, code: lastCode(h, phone) } });
+    expect(mfa.body.mfa_required).toBe(true);
+    h.clock.advance(30_000);
+    await op("post", "/v1/auth/totp/verify", "/v1/auth/totp/verify", 200, { key: null, body: { mfa_token: mfa.body.mfa_token, code: totpCode(enr.body.secret, h) } });
+    await op("post", "/v1/auth/logout", "/v1/auth/logout", 204, { token: conf.body.access_token, key: null });
+    await op("post", "/v1/auth/refresh", "/v1/auth/refresh", 401, { body: { refresh_token: conf.body.refresh_token } }); // chiqishdan keyin
+  });
+
+  it("javoblar shartnomaga mos: tenancy, features, admin", async () => {
+    const o = await makeOwner(h, "+998901000001");
+    const T = { token: o.token, tenant: o.tenantId };
+    await op("post", "/v1/tenants", "/v1/tenants", 400, { token: o.token, body: { name: "Yangi", tin: "1" } });
+    const s2 = await signUp(h, "+998901000009");
+    await op("post", "/v1/tenants", "/v1/tenants", 201, { token: s2.token, body: { name: "Ikkinchi", tin: "222222222" } });
+    await op("get", "/v1/tenants/{id}", `/v1/tenants/${o.tenantId}`, 200, T);
+    await op("get", "/v1/tenants/{id}", `/v1/tenants/${o.tenantId}`, 404, { token: o.token, tenant: "00000000-0000-4000-8000-000000000000" });
+    await op("patch", "/v1/tenants/{id}", `/v1/tenants/${o.tenantId}`, 200, { ...T, body: { status: "active" } });
+    await op("get", "/v1/branches", "/v1/branches", 200, T);
+    await op("post", "/v1/branches", "/v1/branches", 201, { ...T, body: { name: "Markaz", address: "Chilonzor 1", lat: 41.3, lng: 69.2 } });
+    await op("get", "/v1/invites", "/v1/invites", 200, T);
+    await op("post", "/v1/invites", "/v1/invites", 201, { ...T, body: { phone: "+998901000002", role: "picker" } });
+    await op("get", "/v1/members", "/v1/members", 200, T);
+    const staff = await addStaff(h, o, "+998901000003", "manager");
+    const list = await call(h, "get", "/v1/members", T).expect(200);
+    const mid = list.body.items.find((m: { role: string }) => m.role === "manager").id;
+    await op("patch", "/v1/members/{id}", `/v1/members/${mid}`, 200, { ...T, body: { role: "cashier" } });
+    expect(staff.token).toBeTruthy();
+    const feats = await op("get", "/v1/features", "/v1/features", 200, T);
+    expect(feats.body.items).toHaveLength(21);
+    await op("patch", "/v1/features/{key}", "/v1/features/stock.visible", 200, { ...T, body: { enabled: false } });
+    await op("patch", "/v1/features/{key}", "/v1/features/catalog.marketplace_listing", 403, { ...T, body: { enabled: true } });
+    await op("patch", "/v1/features/{key}", "/v1/features/payment.cash", 200, { ...T, body: { enabled: false } });
+    await op("patch", "/v1/features/{key}", "/v1/features/delivery.own_couriers", 200, { ...T, body: { enabled: false } });
+    await op("patch", "/v1/features/{key}", "/v1/features/payment.cash", 422, { ...T, body: { enabled: true } });
+
+    const admin = await makeAdmin(h);
+    const A = { token: admin.token };
+    const plans = await op("get", "/v1/admin/plans", "/v1/admin/plans", 200, A);
+    const biznes = plans.body.items.find((p: { code: string }) => p.code === "biznes");
+    const draft = await op("post", "/v1/admin/plans", "/v1/admin/plans", 201, { ...A, body: { code: "biznes", name: "Biznes", price_tiyin: biznes.price_tiyin, limits: biznes.limits, features: biznes.features } });
+    await op("post", "/v1/admin/plans/{id}/publish", `/v1/admin/plans/${draft.body.id}/publish`, 200, A);
+    await op("post", "/v1/admin/plans/{id}/publish", `/v1/admin/plans/${draft.body.id}/publish`, 409, A);
+    await op("get", "/v1/admin/flags", "/v1/admin/flags", 200, A);
+    await op("patch", "/v1/admin/flags/{key}", "/v1/admin/flags/stock.visible", 200, { ...A, body: { platform_enabled: true } });
+    await op("patch", "/v1/admin/flags/{key}", "/v1/admin/flags/zzz", 404, { ...A, body: { platform_enabled: true } });
+    await op("post", "/v1/admin/tenants/{id}/plan", `/v1/admin/tenants/${o.tenantId}/plan`, 200, { ...A, body: { plan_code: "biznes" } });
+    await op("post", "/v1/admin/tenants/{id}/plan", `/v1/admin/tenants/${o.tenantId}/plan`, 403, { token: o.token, body: { plan_code: "biznes" } });
+
+    // taklifni qabul qilish
+    await call(h, "post", "/v1/invites", { ...T, body: { phone: "+998901000055", role: "courier" } }).expect(201);
+    const tok = [...h.sms.outbox].reverse().find((m) => m.phone === "+998901000055")!.text.match(/\/taklif\/([\w-]+)/)![1]!;
+    const inv = await signUp(h, "+998901000055");
+    await op("post", "/v1/invites/{token}/accept", `/v1/invites/${tok}/accept`, 200, { token: inv.token });
+    await op("post", "/v1/invites/{token}/accept", `/v1/invites/${tok}/accept`, 404, { token: inv.token });
+  });
+
+  it("shartnoma o'zgarmasligini kafolatlovchi: har operatsiya testda ishlatilgan", () => {
+    const used = new Set(checked);
+    const missing: string[] = [];
+    for (const [p, ops] of Object.entries(spec.paths)) for (const m of Object.keys(ops)) if (["get", "post", "patch"].includes(m) && !used.has(`${m} ${p}`)) missing.push(`${m} ${p}`);
+    // bu test oldingi ikki test natijasiga tayanadi (bir faylda ketma-ket)
+    expect(missing).toEqual([]);
+  });
+
+});
