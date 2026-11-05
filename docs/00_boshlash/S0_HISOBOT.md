@@ -118,4 +118,4 @@ Reja va qarorlar (D1–D17): `S1_REJA.md`.
 
 Qilinmagan / keyingi: import «bekor qilish» (undo), zal/ombor bo'linishi, ierarxik kategoriya, rasm yuklash (S3 bilan), MXIK avtomatik to'ldirish (AI, S7), ommaviy vitrina o'qishi (S2).
 Inson ko'rib chiqishi: ruxsatlar (`catalog:*`, `stock:*`), RLS (0009), import parseri (`parsers.ts`, zip-bomba chegarasi).
-Eslatma: E2E'dagi «refresh bilan tiklanish» testi to'liq yurishlarda vaqti-vaqti bilan yiqiladi (E2E API jurnali endi `stdout: pipe` bilan ko'rinadi).
+Tuzatildi: yangilash tokeni bir vaqtda ikki marta yuborilganda API sessiyani «qayta ishlatish» deb bekor qilardi (CI jurnalida `reuse` ko'rindi). BFF endi bir xil token uchun natijani 10 soniya umumlashtiradi.
