@@ -1,0 +1,27 @@
+{
+  "extends": "@dostavka/config/tsconfig.next.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "isolatedModules": true
+  },
+  "include": [
+    ".next/types/**/*.ts",
+    "next-env.d.ts",
+    "src",
+    "tailwind.config.ts",
+    ".next-e2e/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

@@ -286,6 +286,13 @@ describe("F-6: har o'zgarish hodisa va audit yozuvi", () => {
     expect((await h.admin.query("select count(*)::int as n from events where name = 'feature.toggled' and tenant_id is null")).rows[0].n).toBe(1);
   });
 
+  it("kalitlar feature_flags.json tartibida qaytadi (prototipdagi guruh tartibi)", async () => {
+    const o = await makeOwner(h, "+998901000001");
+    const r = await call(h, "get", "/v1/features", { token: o.token, tenant: o.tenantId }).expect(200);
+    expect(r.body.items[0].key).toBe("storefront.own");
+    expect(r.body.items.slice(0, 3).map((i: { key: string }) => i.key)).toEqual(["storefront.own", "storefront.custom_domain", "catalog.marketplace_listing"]);
+  });
+
   it("GET /v1/features barcha 21 ta kalitni qaytaradi", async () => {
     const o = await makeOwner(h, "+998901000001");
     expect((await features(o)).by).toHaveProperty("storefront.own");

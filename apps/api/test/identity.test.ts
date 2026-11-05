@@ -319,3 +319,10 @@ describe("/v1/me", () => {
     expect(me.body.memberships).toEqual([]);
   });
 });
+
+describe("dev SMS qutisi", () => {
+  it("DEV_SMS_INBOX o'chiq bo'lsa (standart) 404; SMS kodlari HTTP orqali oshkor bo'lmaydi", async () => {
+    await requestOtp().expect(202);
+    await call(h, "get", `/v1/_dev/sms?phone=${encodeURIComponent(PHONE)}`).expect(404);
+  });
+});

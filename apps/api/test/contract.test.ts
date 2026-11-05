@@ -58,7 +58,7 @@ describe("OpenAPI shartnomasi", () => {
   it("har bir marshrut shartnomada bor va aksincha (shartnoma ↔ kod)", () => {
     const stack = (h.app.getHttpAdapter().getInstance() as { _router: { stack: { route?: { path: string; methods: Record<string, boolean> } }[] } })._router.stack;
     const routes = new Set<string>();
-    for (const l of stack) if (l.route) for (const m of Object.keys(l.route.methods)) routes.add(`${m} ${l.route.path.replace(/:(\w+)/g, "{$1}")}`);
+    for (const l of stack) if (l.route) for (const m of Object.keys(l.route.methods)) if (!l.route.path.startsWith("/v1/_dev")) routes.add(`${m} ${l.route.path.replace(/:(\w+)/g, "{$1}")}`);
     const contract = new Set<string>();
     for (const [p, ops] of Object.entries(spec.paths)) for (const m of Object.keys(ops)) if (["get", "post", "patch", "put", "delete"].includes(m)) contract.add(`${m} ${p.replace(/\{token\}/, "{token}")}`);
     const norm = (s: Set<string>) => [...s].map((x) => x.replace(/\{\w+\}/g, "{}")).sort();

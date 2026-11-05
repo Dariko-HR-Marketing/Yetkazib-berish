@@ -37,9 +37,9 @@ Arxiv yig'ilganda barcha hujjat va prototiplar o'zaro solishtirildi. Arxivda tuz
 | O12 | Domen, Telegram bot nomi, brend | Siz | S0 |
 | O13 | Umumiy katalogda tartiblash adolatliligi (reklama va reyting og'irligi) | Qaror | S7 |
 
-## C. S0 rejalashtirishda topilgan yangi ziddiyatlar (2026-11-05, Claude Code) — qaror kutilmoqda
+## C. S0 rejalashtirishda topilgan yangi ziddiyatlar (2026-11-05, Claude Code)
 
-Hech biri taxmin bilan hal qilinmagan. Har birida tavsiya bor; javobingizgacha kod yozilmaydi (S0 rejasi tasdig'igacha).
+**Holat: Z13–Z20 va Z1 — tavsiya bo'yicha TASDIQLANGAN (2026-11-05) va S0'da amalga oshirilgan. Z21 (O6, O7, O10, O12) — hali ochiq.** Qarorlarning tafsiloti: `S0_HISOBOT.md` §5.
 
 | # | Qayerda | Ziddiyat / noaniqlik | Tavsiya |
 | --- | --- | --- | --- |

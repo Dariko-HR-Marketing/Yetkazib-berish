@@ -1,0 +1,28 @@
+# Lokal ishlab chiqish: PostgreSQL 16 va Redis. (Z16: PostGIS S0'da kerak emas; S4'da `postgis/postgis:16-3.4` ga almashtiriladi.)
+#   docker compose -f infra/docker-compose.yml up -d
+#   cp .env.example .env && pnpm db:migrate
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dostavka
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dostavka}
+      POSTGRES_DB: dostavka
+    ports: ["127.0.0.1:5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dostavka -d dostavka"]
+      interval: 5s
+      retries: 10
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    ports: ["127.0.0.1:6379:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 10
+volumes:
+  pgdata:

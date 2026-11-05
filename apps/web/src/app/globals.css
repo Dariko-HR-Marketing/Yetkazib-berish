@@ -1,0 +1,12 @@
+@import "@dostavka/ui/tokens.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; }
+  body { @apply bg-bg font-sans text-body text-ink antialiased; padding-bottom: var(--safe-bottom); }
+  a { @apply text-brand-dark underline-offset-2 hover:underline; }
+  :focus-visible { outline: 2px solid var(--c-brand); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+}

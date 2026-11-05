@@ -1,0 +1,62 @@
+name: CI
+on:
+  push:
+  pull_request:
+
+concurrency: { group: "ci-${{ github.ref }}", cancel-in-progress: true }
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env: { POSTGRES_USER: dostavka, POSTGRES_PASSWORD: dostavka, POSTGRES_DB: dostavka_test }
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U dostavka" --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:7
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgresql://dostavka:dostavka@127.0.0.1:5432/dostavka_test
+      TEST_APP_DATABASE_URL: postgresql://dostavka_app:dostavka_app@127.0.0.1:5432/dostavka_test
+      E2E_DATABASE_URL: postgresql://dostavka:dostavka@127.0.0.1:5432/dostavka_e2e
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - name: typecheck
+        run: pnpm typecheck
+      - name: lint
+        run: pnpm lint
+      - name: test (birlik va integratsiya: API, i18n, contracts, web)
+        run: pnpm test
+      - name: build + JS byudjeti (<= 170 KB gzip)
+        run: pnpm build
+      - name: E2E (Playwright: 360/768/1024/1440, uz/ru, a11y, Telegram)
+        run: |
+          pnpm --filter @dostavka/web exec playwright install --with-deps chromium
+          pnpm --filter @dostavka/web e2e
+      - name: Playwright hisoboti
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with: { name: playwright-traces, path: apps/web/test-results, retention-days: 7 }
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - name: Kutubxonalar zaifligi
+        run: pnpm audit --prod --audit-level high
+      - name: Sirlar skaneri
+        uses: gitleaks/gitleaks-action@v2
+        env: { GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}" }

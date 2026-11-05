@@ -24,13 +24,13 @@ export async function seed(databaseUrl: string, dir = SEED_DIR): Promise<void> {
   await c.connect();
   try {
     await c.query("begin");
-    for (const f of flagsJson.flags) {
+    for (const [i, f] of flagsJson.flags.entries()) {
       await c.query(
-        `insert into feature_flags (key, description, min_plan, default_on_for_shop, toggled_by, requires, platform_enabled)
-         values ($1,$2,$3,$4,$5,$6,$7)
+        `insert into feature_flags (key, description, min_plan, default_on_for_shop, toggled_by, requires, platform_enabled, position)
+         values ($1,$2,$3,$4,$5,$6,$7,$8)
          on conflict (key) do update set description = excluded.description, min_plan = excluded.min_plan,
-           default_on_for_shop = excluded.default_on_for_shop, toggled_by = excluded.toggled_by, requires = excluded.requires`,
-        [f.key, f.description, f.min_plan, f.default_on_for_shop ?? true, f.toggled_by, f.requires, !PLATFORM_OFF_BY_DEFAULT.has(f.key)],
+           default_on_for_shop = excluded.default_on_for_shop, toggled_by = excluded.toggled_by, requires = excluded.requires, position = excluded.position`,
+        [f.key, f.description, f.min_plan, f.default_on_for_shop ?? true, f.toggled_by, f.requires, !PLATFORM_OFF_BY_DEFAULT.has(f.key), i],
       );
     }
     for (const p of plansJson.plans) {

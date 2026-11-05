@@ -61,7 +61,7 @@ export class FeaturesService {
     const t = await tx.query<{ plan_code: string; plan_version: number; plan_migrate_at: Date | null }>("select plan_code, plan_version, plan_migrate_at from tenants where id = $1", [tenantId]);
     if (!t.rows[0]) throw new ApiError(404, "not_found");
     const plan = await effectivePlan(tx, t.rows[0], this.clock.now());
-    const flags = (await tx.query<FlagRow>("select key, description, min_plan, toggled_by, requires, platform_enabled, default_on_for_shop from feature_flags order by key")).rows;
+    const flags = (await tx.query<FlagRow>("select key, description, min_plan, toggled_by, requires, platform_enabled, default_on_for_shop from feature_flags order by position, key")).rows;
     const shop = new Map((await tx.query<{ feature_key: string; enabled: boolean }>("select feature_key, enabled from tenant_features where tenant_id = $1", [tenantId])).rows.map((r) => [r.feature_key, r.enabled]));
     const byKey = new Map(flags.map((f) => [f.key, f]));
     const memo = new Map<string, boolean>();

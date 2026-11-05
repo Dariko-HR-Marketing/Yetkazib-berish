@@ -1,0 +1,5 @@
+{
+  "extends": "@dostavka/config/tsconfig.next.json",
+  "compilerOptions": { "plugins": [], "incremental": false, "jsx": "react-jsx" },
+  "include": ["src"]
+}

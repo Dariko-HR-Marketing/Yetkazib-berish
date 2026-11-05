@@ -22,6 +22,8 @@ const schema = z.object({
   APP_BASE_URL: z.string().default("http://localhost:3000"),
   CORS_ORIGINS: z.string().default("http://localhost:3000"),
   EVENTS_DISPATCH: z.enum(["on", "off"]).default("off"),
+  /** Faqat dev/e2e: mock SMS qutisini HTTP orqali o'qish. Productionda yoqib bo'lmaydi. */
+  DEV_SMS_INBOX: z.enum(["on", "off"]).default("off"),
 });
 
 export type Config = z.infer<typeof schema>;
@@ -33,6 +35,7 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     if (cfg.JWT_SECRET === DEV_JWT || cfg.DATA_ENCRYPTION_KEY === DEV_ENC_KEY || cfg.PHONE_HASH_PEPPER.startsWith("dev-")) {
       throw new Error("Production uchun JWT_SECRET, DATA_ENCRYPTION_KEY va PHONE_HASH_PEPPER o'rnatilishi shart");
     }
+    if (cfg.DEV_SMS_INBOX === "on") throw new Error("Production'da DEV_SMS_INBOX yoqilmaydi");
     if (!cfg.TELEGRAM_BOT_TOKEN) throw new Error("Production uchun TELEGRAM_BOT_TOKEN kerak");
   }
   if (Buffer.from(cfg.DATA_ENCRYPTION_KEY, "base64").length !== 32) throw new Error("DATA_ENCRYPTION_KEY 32 bayt (base64) bo'lishi kerak");

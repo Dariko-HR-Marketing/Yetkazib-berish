@@ -1,0 +1,63 @@
+/* design_tokens.json (prototiplardan) -> CSS o'zgaruvchilari. Telegram mavzusi bo'lsa, --tg-* orqali ustiga yoziladi. */
+:root {
+  --c-brand: #0b7a4b;
+  --c-brand-dark: #075c38;
+  --c-brand-soft: #e6f2ec;
+  --c-ink: #16181b;
+  --c-ink-2: #3c4248;
+  --c-muted: #5e656c;
+  --c-muted-2: #9aa1a7;
+  --c-bg: #f6f7f4;
+  --c-surface: #ffffff;
+  --c-border: #e4e7e3;
+  --c-border-strong: #dce0dc;
+  --c-divider: #eef0ed;
+  --c-info: #154ba8;
+  --c-info-soft: #e5eef8;
+  --c-warning: #7a3e06;
+  --c-warning-soft: #fff6e0;
+  --c-danger: #9f2d12;
+  --c-danger-soft: #fbe9e4;
+  --c-on-brand: #ffffff;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 12px;
+  --r-xl: 16px;
+  --fs-caption: 12px;
+  --fs-body-sm: 13px;
+  --fs-body: 14px;
+  --fs-body-lg: 16px;
+  --touch: 44px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --c-brand: #34c38a;
+    --c-brand-dark: #5ad9a6;
+    --c-brand-soft: #12372a;
+    --c-ink: #f2f4f1;
+    --c-ink-2: #d4d9d4;
+    --c-muted: #a6aeb4;
+    --c-muted-2: #7c858c;
+    --c-bg: #101214;
+    --c-surface: #1a1d20;
+    --c-border: #2a2e32;
+    --c-border-strong: #353a3f;
+    --c-divider: #23272a;
+    --c-info: #8db8f5;
+    --c-info-soft: #172a45;
+    --c-warning: #f1b53c;
+    --c-warning-soft: #3a2a0a;
+    --c-danger: #ff9b84;
+    --c-danger-soft: #3d1a12;
+    --c-on-brand: #04170f;
+  }
+}
+:root[data-theme="dark"] {
+  --c-brand: #34c38a; --c-brand-dark: #5ad9a6; --c-brand-soft: #12372a; --c-ink: #f2f4f1; --c-ink-2: #d4d9d4;
+  --c-muted: #a6aeb4; --c-muted-2: #7c858c; --c-bg: #101214; --c-surface: #1a1d20; --c-border: #2a2e32;
+  --c-border-strong: #353a3f; --c-divider: #23272a; --c-info: #8db8f5; --c-info-soft: #172a45;
+  --c-warning: #f1b53c; --c-warning-soft: #3a2a0a; --c-danger: #ff9b84; --c-danger-soft: #3d1a12; --c-on-brand: #04170f;
+}
