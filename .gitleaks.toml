@@ -1,0 +1,16 @@
+# Faqat ma'lum soxta (dev/test) qiymatlar joylashgan fayllar istisno. Haqiqiy sirlar repoga qo'yilmaydi (CLAUDE.md §9).
+title = "dostavka gitleaks"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Soxta dev/test qiymatlar va eskirgan arxiv"
+paths = [
+  '''docs/99_arxiv_eski/''',
+  '''\.env\.example$''',
+  '''apps/api/vitest\.config\.ts$''',
+  '''apps/web/playwright\.config\.ts$''',
+  '''apps/web/e2e/''',
+  '''apps/api/test/''',
+]
