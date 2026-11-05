@@ -1,4 +1,5 @@
-import { applyDecorators, CanActivate, ExecutionContext, Injectable, SetMetadata } from "@nestjs/common";
+import { applyDecorators, CanActivate, ExecutionContext, Inject, Injectable, SetMetadata } from "@nestjs/common";
+import { CONFIG, type Config } from "../config";
 import { Reflector } from "@nestjs/core";
 import { ApiError } from "./errors";
 import { hasPermission, MFA_ROLES } from "./rbac";
@@ -25,7 +26,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
  */
 @Injectable()
 export class AccessGuard implements CanActivate {
-  constructor(private readonly reflector: Reflector, private readonly tokens: TokenService, private readonly db: DbService) {}
+  constructor(private readonly reflector: Reflector, private readonly tokens: TokenService, private readonly db: DbService, @Inject(CONFIG) private readonly cfg: Config) {}
 
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
     const h = ctx.getHandler();
@@ -46,7 +47,8 @@ export class AccessGuard implements CanActivate {
     if (!user) throw new ApiError(401, "auth.token_invalid");
     req.auth = { userId: user.id, amr: claims.amr, sid: claims.sid };
     req.user = { id: user.id, isPlatformAdmin: user.is_platform_admin, locale: user.locale };
-    const hasTotp = claims.amr.includes("totp");
+    // Sinov rejimida (OPEN_LOGIN) ikkinchi omil talab qilinmaydi.
+    const hasTotp = claims.amr.includes("totp") || (this.cfg.OPEN_LOGIN === "on" && claims.amr.includes("open"));
 
     if (get<boolean>(K.admin)) {
       if (!user.is_platform_admin) throw new ApiError(403, "permission.denied");

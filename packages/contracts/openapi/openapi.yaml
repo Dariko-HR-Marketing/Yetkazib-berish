@@ -32,6 +32,25 @@ paths:
       responses:
         '200': { description: Ishlayapti, content: { application/json: { schema: { type: object, required: [status], properties: { status: { type: string, const: ok } } } } } }
         '503': { $ref: '#/components/responses/Error' }
+  /v1/auth/config:
+    get:
+      tags: [auth]
+      operationId: authConfig
+      security: []
+      summary: Kirish shaklini sozlash (sinov rejimi yoqilganmi)
+      responses:
+        '200': { description: Sozlama, content: { application/json: { schema: { type: object, required: [open_login], properties: { open_login: { type: boolean } } } } } }
+  /v1/auth/open:
+    post:
+      tags: [auth]
+      operationId: openLogin
+      security: []
+      summary: "VAQTINCHA sinov rejimi: faqat telefon raqami bilan kirish (SMS, TOTP, rozilik yo'q). OPEN_LOGIN o'chiq bo'lsa 404"
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [phone], additionalProperties: false, properties: { phone: { type: string, examples: ['+998901234567'] } } } } } }
+      responses:
+        '200': { description: Kirildi, content: { application/json: { schema: { $ref: '#/components/schemas/SignInResult' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
   /v1/auth/otp/request:
     post:
       tags: [auth]

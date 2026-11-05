@@ -1,15 +1,16 @@
-import { Body, Controller, HttpCode, Get, Post, Put, Req } from "@nestjs/common";
+import { Body, Controller, HttpCode, Get, Inject, Post, Put, Req } from "@nestjs/common";
+import { CONFIG, type Config } from "../../config";
 import { NoIdempotency, Public } from "../../common/access";
 import type { AppRequest } from "../../common/request-context";
 import { parse } from "../../common/validate";
 import { ConsentsService, marketingDto } from "./consents.service";
 import { IdentityService } from "./identity.service";
 import { SessionService } from "./session.service";
-import { otpRequestDto, otpVerifyDto, refreshDto, telegramDto, totpCodeDto, totpVerifyDto } from "./identity.dto";
+import { openLoginDto, otpRequestDto, otpVerifyDto, refreshDto, telegramDto, totpCodeDto, totpVerifyDto } from "./identity.dto";
 
 @Controller("v1")
 export class IdentityController {
-  constructor(private readonly identity: IdentityService, private readonly sessions: SessionService, private readonly consents: ConsentsService) {}
+  constructor(private readonly identity: IdentityService, private readonly sessions: SessionService, private readonly consents: ConsentsService, @Inject(CONFIG) private readonly cfg: Config) {}
 
   @Public() @NoIdempotency() @Post("auth/otp/request") @HttpCode(202)
   requestOtp(@Body() body: unknown) {
@@ -20,6 +21,17 @@ export class IdentityController {
   verifyOtp(@Body() body: unknown, @Req() req: AppRequest) {
     const d = parse(otpVerifyDto, body);
     return this.identity.verifyOtp(d.phone, d.code, { consents: d.consents, marketing_consent: d.marketing_consent, ip: req.ip });
+  }
+
+  /** Veb kirish shaklini sozlash uchun: sinov rejimi yoqilganmi. */
+  @Public() @Get("auth/config")
+  authConfig() {
+    return { open_login: this.cfg.OPEN_LOGIN === "on" };
+  }
+
+  @Public() @NoIdempotency() @Post("auth/open") @HttpCode(200)
+  openLogin(@Body() body: unknown, @Req() req: AppRequest) {
+    return this.identity.openSignIn(parse(openLoginDto, body).phone, req.ip);
   }
 
   @Public() @NoIdempotency() @Post("auth/telegram") @HttpCode(200)

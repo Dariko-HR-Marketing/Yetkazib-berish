@@ -125,6 +125,25 @@ export class IdentityService {
     }
   }
 
+  // ---------------------------------------------------------------- SINOV REJIMI
+  /** OPEN_LOGIN=on: SMS kod, TOTP va rozilik talab qilinmaydi. Soxta rozilik yozuvlari YARATILMAYDI (faqat audit). */
+  async openSignIn(phone: string, ip?: string | null): Promise<SignInResponse> {
+    if (this.cfg.OPEN_LOGIN !== "on") throw new ApiError(404, "not_found");
+    const now = this.clock.now();
+    const out = await this.db.tx({}, async (tx) => {
+      const ex = await tx.query<{ id: string }>("select id from users where phone = $1", [phone]);
+      let userId = ex.rows[0]?.id;
+      const isNew = !userId;
+      if (!userId) userId = (await tx.query<{ id: string }>("insert into users (phone, last_seen_at) values ($1,$2) returning id", [phone, now])).rows[0]!.id;
+      else await tx.query("update users set last_seen_at = $2 where id = $1", [userId, now]);
+      await tx.query("select set_config('app.user_id', $1, true)", [userId]);
+      await this.audit.record(tx, { actorId: userId, action: "auth.open_login", entity: "user", entityId: userId, ip });
+      return { userId, isNew };
+    });
+    const tokens = await this.sessions.issue(out.userId, ["open"]);
+    return { ...tokens, is_new_user: out.isNew, user: await this.me(out.userId) };
+  }
+
   // ---------------------------------------------------------------- I-3
   async signInTelegram(initData: string, opts: SignInOpts): Promise<SignInResponse> {
     const tg = this.telegram.verifyInitData(initData);

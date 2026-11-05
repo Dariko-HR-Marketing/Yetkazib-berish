@@ -68,6 +68,8 @@ describe("OpenAPI shartnomasi", () => {
 
   it("javoblar shartnomaga mos: auth", async () => {
     await op("get", "/v1/health", "/v1/health", 200);
+    expect((await op("get", "/v1/auth/config", "/v1/auth/config", 200)).body).toEqual({ open_login: false });
+    await op("post", "/v1/auth/open", "/v1/auth/open", 404, { body: { phone: "+998901234567" } }); // sinov rejimi o'chiq
     const phone = "+998901000001";
     await op("post", "/v1/auth/otp/request", "/v1/auth/otp/request", 202, { body: { phone } });
     await op("post", "/v1/auth/otp/request", "/v1/auth/otp/request", 429, { body: { phone } });

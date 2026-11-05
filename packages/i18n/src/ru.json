@@ -264,5 +264,7 @@
  "import.err.price_jump": "Цена изменилась более чем на {percent}% — нужно подтверждение",
  "import.err.too_long": "Слишком длинный текст",
  "import.err.quantity_invalid": "Неверный остаток",
- "import.err.status_unknown": "Статус не распознан: «{value}»"
+ "import.err.status_unknown": "Статус не распознан: «{value}»",
+ "login.test_mode": "Тестовый режим: SMS-код и второй фактор временно отключены. Введите только номер телефона",
+ "login.enter": "Войти"
 }

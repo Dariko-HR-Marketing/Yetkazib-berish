@@ -41,3 +41,16 @@ Test bazasi `dostavka_test` (har ishga tushirishda noldan quriladi), E2E — `do
 ## Asosiy qoidalar (qisqacha)
 
 Pul — tiyinda butun son; vaqt — UTC; har so'rovda `X-Tenant-Id` (begona do'kon → 404); o'zgartiruvchi so'rovlarda `Idempotency-Key`; ilova DB roli (`dostavka_app`) RLS'ni chetlab o'ta olmaydi; audit va rozilik jadvallari o'zgarmas; loglarda telefon maskalanadi.
+
+## Vaqtincha sinov rejimi (OPEN_LOGIN)
+
+Sinov bosqichida SMS kod, ikkinchi omil (TOTP) va rozilik so'rovlarini o'chirib, faqat telefon raqami bilan kirish mumkin:
+
+```bash
+OPEN_LOGIN=on pnpm --filter @dostavka/api start
+```
+
+- **Xavfsiz emas**: istalgan raqam bilan istalgan hisobga kiriladi. Standart holatda **o'chiq**.
+- `NODE_ENV=production` da faqat `OPEN_LOGIN_CONFIRM=I-UNDERSTAND-NO-AUTH` bilan yoqiladi (aks holda API ishga tushmaydi).
+- Soxta rozilik yozuvlari yaratilmaydi; har kirish auditga (`auth.open_login`) yoziladi.
+- Rasmiy ishga tushirishdan oldin `OPEN_LOGIN=off` qiling — oddiy SMS/Telegram + TOTP oqimi o'zgarishsiz saqlangan.

@@ -30,6 +30,13 @@ const schema = z.object({
   DEV_SMS_INBOX: z.enum(["on", "off"]).default("off"),
   /** Yurist tasdiqlamagan (draft) hujjatlarni akcept qilishga ruxsat. Standart: productionda o'chiq (faqat staging/dev). */
   LEGAL_ALLOW_DRAFT: z.enum(["on", "off"]).optional(),
+  /**
+   * VAQTINCHA SINOV REJIMI: SMS kod, ikkinchi omil (TOTP) va rozilik so'rovlarisiz, faqat telefon raqami bilan kirish.
+   * Xavfsiz emas: istalgan raqam bilan istalgan hisobga kiriladi. Standart: o'chiq. Productionda faqat
+   * OPEN_LOGIN_CONFIRM=I-UNDERSTAND-NO-AUTH bilan yoqiladi (ikki marta ongli tasdiq).
+   */
+  OPEN_LOGIN: z.enum(["on", "off"]).default("off"),
+  OPEN_LOGIN_CONFIRM: z.string().default(""),
 });
 
 export type Config = Omit<z.infer<typeof schema>, "LEGAL_ALLOW_DRAFT"> & { LEGAL_ALLOW_DRAFT: "on" | "off" };
@@ -44,9 +51,11 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     }
     if (cfg.DEV_SMS_INBOX === "on") throw new Error("Production'da DEV_SMS_INBOX yoqilmaydi");
     if (!cfg.TELEGRAM_BOT_TOKEN) throw new Error("Production uchun TELEGRAM_BOT_TOKEN kerak");
+    if (cfg.OPEN_LOGIN === "on" && cfg.OPEN_LOGIN_CONFIRM !== OPEN_LOGIN_PHRASE) throw new Error(`Production'da OPEN_LOGIN faqat OPEN_LOGIN_CONFIRM=${OPEN_LOGIN_PHRASE} bilan yoqiladi`);
   }
   if (Buffer.from(cfg.DATA_ENCRYPTION_KEY, "base64").length !== 32) throw new Error("DATA_ENCRYPTION_KEY 32 bayt (base64) bo'lishi kerak");
   return cfg;
 }
 
+export const OPEN_LOGIN_PHRASE = "I-UNDERSTAND-NO-AUTH";
 export const CONFIG = Symbol("CONFIG");

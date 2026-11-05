@@ -264,5 +264,7 @@
  "import.err.price_jump": "Narx {percent}% dan ko'p o'zgargan — tasdiq kerak",
  "import.err.too_long": "Matn juda uzun",
  "import.err.quantity_invalid": "Qoldiq noto'g'ri",
- "import.err.status_unknown": "Holat tanilmadi: «{value}»"
+ "import.err.status_unknown": "Holat tanilmadi: «{value}»",
+ "login.test_mode": "Sinov rejimi: SMS kod va ikkinchi omil vaqtincha o'chirilgan. Faqat telefon raqamini kiriting",
+ "login.enter": "Kirish"
 }

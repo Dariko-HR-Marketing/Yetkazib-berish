@@ -5,7 +5,7 @@
  */
 export const AT = "dst_at";
 export const RT = "dst_rt";
-const TOKEN_PATHS = new Set(["auth/otp/verify", "auth/telegram", "auth/totp/verify", "auth/totp/confirm", "auth/refresh"]);
+const TOKEN_PATHS = new Set(["auth/open", "auth/otp/verify", "auth/telegram", "auth/totp/verify", "auth/totp/confirm", "auth/refresh"]);
 
 export const issuesTokens = (path: string) => TOKEN_PATHS.has(path);
 

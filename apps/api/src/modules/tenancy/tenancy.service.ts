@@ -30,7 +30,7 @@ export class TenancyService {
     return this.db.tx({ userId, tenantId: id }, async (tx) => {
       // Do'kon egasi SaaS ofertasi va DPA ni qabul qilishi shart (Onboard-Shop, 4-qadam); javob oldidan hech narsa yozilmaydi.
       const ev = await this.legal.evaluate(tx, { tenantId: id }, "shop", d.consents);
-      if (ev.missing.length) throw new ApiError(422, "consent.required", { documents: ev.missing, scope: "shop" });
+      if (ev.missing.length && this.cfg.OPEN_LOGIN !== "on") throw new ApiError(422, "consent.required", { documents: ev.missing, scope: "shop" });
       const plan = (await tx.query<{ version: number }>("select version from plans where code = 'start' and status = 'published' order by version desc limit 1")).rows[0];
       if (!plan) throw new ApiError(500, "internal_error", { reason: "start_plan_missing" });
       const t = (await tx.query<TenantRow>(

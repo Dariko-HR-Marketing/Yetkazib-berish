@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { Button, Input } from "@dostavka/ui";
 import { ApiError, NetworkError, api } from "@/lib/api";
 import { useI18n } from "@/lib/i18n";
+import { useOpenLogin } from "@/lib/auth-config";
 import { getSession, setSession, signIn } from "@/lib/session";
 import { MainAction, tgInitData } from "@/lib/telegram";
 import type { Me } from "@/lib/use-session";
@@ -37,6 +38,7 @@ export default function LoginPage() {
   const error = err === null ? null : err instanceof ApiError ? err.text(locale) : err instanceof NetworkError ? t("ui.error_network") : t("ui.error_generic");
   const [cooldown, setCooldown] = useState(0);
   const tgTried = useRef(false);
+  const openLogin = useOpenLogin();
 
   const fail = setErr;
 
@@ -96,6 +98,13 @@ export default function LoginPage() {
     } finally { setBusy(false); }
   }, [code, docs, fail, handleSignIn, marketing, needConsent, phone, telegram]);
 
+  // VAQTINCHA sinov rejimi: faqat telefon raqami (SMS kod, ikkinchi omil va rozilik so'ralmaydi).
+  const openSignIn = useCallback(async () => {
+    setBusy(true); setError(null);
+    try { await finish(await api<Authed>("/v1/auth/open", { method: "POST", auth: false, body: { phone: normalize(phone) } })); }
+    catch (e) { fail(e); } finally { setBusy(false); }
+  }, [fail, finish, phone]);
+
   const verifyMfa = useCallback(async () => {
     setBusy(true); setError(null);
     try { await finish(await api<Authed>("/v1/auth/totp/verify", { method: "POST", auth: false, body: { mfa_token: mfaToken, code } })); }
@@ -133,6 +142,16 @@ export default function LoginPage() {
         <MainAction text={t("login.verify")} onClick={verify} disabled={!canSubmit && !(tgInitData() && needConsent && accepted)} loading={busy}>{t("login.verify")}</MainAction>
         <Button variant="ghost" onClick={sendCode} disabled={cooldown > 0 || busy}>{cooldown > 0 ? t("login.resend_in", { seconds: cooldown }) : t("login.resend")}</Button>
         <Button variant="ghost" onClick={() => { setStep("phone"); setError(null); setDocs([]); }}>{t("ui.back")}</Button>
+      </CenterCard>
+    );
+  }
+
+  if (openLogin) {
+    return (
+      <CenterCard title={t("login.title")} subtitle={t("login.subtitle")}>
+        <p role="note" className="rounded-md border border-line-strong bg-bg p-3 text-body-sm font-semibold">{t("login.test_mode")}</p>
+        <Input id="phone" label={t("login.phone")} type="tel" inputMode="tel" autoComplete="tel" value={phone} onChange={(e) => setPhone(e.target.value.length < 5 ? "+998 " : pretty(e.target.value))} error={error} hint="+998 90 123 45 67" autoFocus />
+        <MainAction text={t("login.enter")} onClick={openSignIn} disabled={!validPhone} loading={busy}>{t("login.enter")}</MainAction>
       </CenterCard>
     );
   }
