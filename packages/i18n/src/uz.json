@@ -148,5 +148,6 @@
  "legal.hash": "Matn xeshi: {hash}",
  "legal.open_new_tab": "yangi oynada ochiladi",
  "shop.accept_docs": "Do'kon nomidan quyidagi shartlarni qabul qilaman:",
- "login.read": "o'qish"
+ "login.read": "o'qish",
+ "rate.limited": "Juda ko'p so'rov. {seconds} soniyadan keyin urinib ko'ring"
 }

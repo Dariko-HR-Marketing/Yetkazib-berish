@@ -13,6 +13,7 @@ info:
 servers:
   - url: /
 tags:
+  - { name: system }
   - { name: auth }
   - { name: tenancy }
   - { name: features }
@@ -21,6 +22,15 @@ tags:
 security:
   - bearer: []
 paths:
+  /v1/health:
+    get:
+      tags: [system]
+      operationId: getHealth
+      security: []
+      summary: Tirikligi tekshiruvi (baza va Redis)
+      responses:
+        '200': { description: Ishlayapti, content: { application/json: { schema: { type: object, required: [status], properties: { status: { type: string, const: ok } } } } } }
+        '503': { $ref: '#/components/responses/Error' }
   /v1/auth/otp/request:
     post:
       tags: [auth]

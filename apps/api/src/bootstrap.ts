@@ -4,6 +4,8 @@ import type { NestExpressApplication } from "@nestjs/platform-express";
 import type { NextFunction, Request, Response } from "express";
 import { AppLogger } from "./common/logger";
 import { requestIdMiddleware } from "./common/request-id.middleware";
+import { rateLimitMiddleware } from "./common/rate-limit";
+import { RedisService } from "./redis.service";
 import { AppModule } from "./app.module";
 import { CONFIG, type Config } from "./config";
 
@@ -14,6 +16,7 @@ export async function createApp(opts: { quiet?: boolean } = {}): Promise<NestExp
   app.set("trust proxy", 1);
   app.useBodyParser("json", { limit: "100kb" });
   app.use(requestIdMiddleware as (req: Request, res: Response, next: NextFunction) => void);
+  app.use(rateLimitMiddleware(app.get(RedisService), cfg));
   app.use((_req: Request, res: Response, next: NextFunction) => {
     res.setHeader("X-Content-Type-Options", "nosniff");
     res.setHeader("Cache-Control", "no-store");

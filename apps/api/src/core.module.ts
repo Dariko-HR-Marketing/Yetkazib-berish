@@ -7,10 +7,12 @@ import { IdempotencyInterceptor } from "./common/idempotency.interceptor";
 import { LoggingInterceptor } from "./common/logging.interceptor";
 import { CONFIG, loadConfig } from "./config";
 import { DbService } from "./db/db.service";
+import { HealthController } from "./health.controller";
 import { RedisService } from "./redis.service";
 
 @Global()
 @Module({
+  controllers: [HealthController],
   providers: [
     { provide: CONFIG, useFactory: () => loadConfig() },
     Clock, DbService, RedisService,

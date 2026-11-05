@@ -22,6 +22,9 @@ const schema = z.object({
   APP_BASE_URL: z.string().default("http://localhost:3000"),
   CORS_ORIGINS: z.string().default("http://localhost:3000"),
   EVENTS_DISPATCH: z.enum(["on", "off"]).default("off"),
+  /** IP bo'yicha so'rovlar chegarasi (daqiqada): kirish endpointlari va umumiy. */
+  RATE_LIMIT_AUTH_PER_MIN: z.coerce.number().int().positive().default(30),
+  RATE_LIMIT_API_PER_MIN: z.coerce.number().int().positive().default(600),
   /** Faqat dev/e2e: mock SMS qutisini HTTP orqali o'qish. Productionda yoqib bo'lmaydi. */
   DEV_SMS_INBOX: z.enum(["on", "off"]).default("off"),
   /** Yurist tasdiqlamagan (draft) hujjatlarni akcept qilishga ruxsat. Standart: productionda o'chiq (faqat staging/dev). */

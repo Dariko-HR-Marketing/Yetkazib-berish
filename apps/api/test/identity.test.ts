@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { CONFIG, type Config } from "../src/config";
 import { boot, call, CONSENTS, lastCode, makeOwner, signUp, telegramInitData, totpCode, type Harness, SHOP_CONSENTS } from "./helpers";
 
 let h: Harness;
@@ -325,5 +326,23 @@ describe("dev SMS qutisi", () => {
   it("DEV_SMS_INBOX o'chiq bo'lsa (standart) 404; SMS kodlari HTTP orqali oshkor bo'lmaydi", async () => {
     await requestOtp().expect(202);
     await call(h, "get", `/v1/_dev/sms?phone=${encodeURIComponent(PHONE)}`).expect(404);
+  });
+});
+
+describe("IP bo'yicha so'rovlar cheklovi", () => {
+  it("kirish endpointlari: chegaradan keyin 429 rate.limited + Retry-After; boshqa chelak ta'sirlanmaydi", async () => {
+    const c = h.app.get<Config>(CONFIG);
+    const old = c.RATE_LIMIT_AUTH_PER_MIN;
+    c.RATE_LIMIT_AUTH_PER_MIN = 5;
+    try {
+      for (let i = 0; i < 5; i++) await call(h, "post", "/v1/auth/otp/request", { body: { phone: "bad" } }).expect(400);
+      const r = await call(h, "post", "/v1/auth/otp/request", { body: { phone: "bad" } }).expect(429);
+      expect(r.body.code).toBe("rate.limited");
+      expect(r.body.message_uz).toMatch(/\d+ soniya/);
+      expect(r.body.message_ru).toMatch(/\d+ сек/);
+      expect(Number(r.headers["retry-after"])).toBeGreaterThan(0);
+      await call(h, "get", "/v1/legal/documents?audience=customer").expect(200); // 'api' chelagi alohida
+      await call(h, "get", "/v1/health").expect(200); // health cheklanmaydi
+    } finally { c.RATE_LIMIT_AUTH_PER_MIN = old; }
   });
 });
