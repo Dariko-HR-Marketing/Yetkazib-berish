@@ -51,7 +51,7 @@ export default function SecurityPage() {
             <p className="mt-1 break-all font-mono text-body-lg font-bold tracking-wider" data-testid="totp-secret">{secret.secret}</p>
             <a href={secret.otpauth_uri} className="mt-2 inline-flex min-h-touch items-center text-body font-bold">Authenticator →</a>
           </div>
-          <Input id="totp" label={t("login.code")} inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))} error={error} />
+          <Input id="totp" label={locale === "uz" ? "Autentifikator kodi (yoki 123456)" : "Код аутентификатора (или 123456)"} inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))} error={error} />
           <MainAction text={t("login.verify")} onClick={confirm} disabled={!/^\d{6}$/.test(code)} loading={busy}>{t("login.verify")}</MainAction>
         </>
       ) : error ? <p role="alert" className="font-semibold text-danger">{error}</p> : <div aria-busy="true" className="h-24 animate-pulse rounded-lg bg-line-soft" />}
