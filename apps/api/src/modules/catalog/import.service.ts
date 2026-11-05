@@ -80,7 +80,7 @@ export class ImportService {
     });
     if (!seen.has("name_uz") && !seen.has("name_ru") && !seen.has("sku") && !seen.has("barcode")) throw new ApiError(422, "import.no_columns", { columns: ignored.slice(0, 20) });
     const data = table.slice(1);
-    if (data.length > IMPORT_MAX_ROWS) throw new ApiError(422, "import.too_many_rows", { max: IMPORT_MAX_ROWS });
+    if (data.length > IMPORT_MAX_ROWS) throw new ApiError(422, "import.too_many_rows", { max: IMPORT_MAX_ROWS }, { max: IMPORT_MAX_ROWS });
     const rows: ParsedRow[] = [];
     const errors: ImportRowError[] = [];
     data.forEach((cells, i) => {
