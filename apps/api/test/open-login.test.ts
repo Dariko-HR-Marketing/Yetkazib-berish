@@ -1,6 +1,6 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { loadConfig } from "../src/config";
-import { boot, call, type Harness } from "./helpers";
+import { boot, call, makeOwner, signUp, type Harness } from "./helpers";
 
 /** VAQTINCHA sinov rejimi (OPEN_LOGIN=on). Alohida ilova nusxasi; qolgan testlar rejim o'chiq holatda. */
 let h: Harness;
@@ -46,6 +46,14 @@ describe("OPEN_LOGIN: telefon raqami bilan to'g'ridan-to'g'ri kirish", () => {
     const r = await call(h, "post", "/v1/auth/open", { body: { phone: PHONE } }).expect(200);
     expect(r.body.mfa_required).toBeUndefined();
     expect(r.body.access_token).toBeTruthy();
+  });
+
+  it("eski SMS bilan kirgan egasi sessiyasi ham ikkinchi omilsiz ishlaydi; SMS+TOTP yoqilgan hisob ham to'g'ridan-to'g'ri kiradi", async () => {
+    const o = await makeOwner(h, "+998901000077"); // SMS + do'kon + TOTP (amr: otp, totp) — oddiy oqim bilan yaratilgan
+    await h.admin.query("update users set totp_enabled = true where id = $1", [o.userId]);
+    h.clock.advance(61_000);
+    const smsOnly = await signUp(h, o.phone); // TOTP yoqilgan bo'lsa ham mfa_required qaytmaydi
+    await call(h, "post", "/v1/branches", { token: smsOnly.token, tenant: o.tenantId, body: { name: "Markaz", address: "Toshkent, Chilonzor" } }).expect(201);
   });
 
   it("yangilash tokeni ishlaydi va sinov sessiyasi saqlanadi", async () => {

@@ -186,7 +186,7 @@ export class IdentityService {
 
   private async completeSignIn(userId: string, isNew: boolean): Promise<SignInResponse> {
     const u = await this.db.tx({ userId }, (tx) => tx.query<{ totp_enabled: boolean }>("select totp_enabled from users where id = $1", [userId]));
-    if (u.rows[0]?.totp_enabled) return { mfa_required: true, mfa_token: await this.tokens.signMfa(userId) };
+    if (u.rows[0]?.totp_enabled && this.cfg.OPEN_LOGIN !== "on") return { mfa_required: true, mfa_token: await this.tokens.signMfa(userId) };
     const tokens = await this.sessions.issue(userId, ["otp"]);
     return { ...tokens, is_new_user: isNew, user: await this.me(userId) };
   }

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@dostavka/ui";
 import { ApiError, NetworkError, api } from "@/lib/api";
+import { useOpenLogin } from "@/lib/auth-config";
 import { useI18n } from "@/lib/i18n";
 import { getSession, updateAmr } from "@/lib/session";
 import { MainAction } from "@/lib/telegram";
@@ -21,13 +22,16 @@ export default function SecurityPage() {
 
   const fail = useCallback((e: unknown) => setError(e instanceof ApiError ? e.text(locale) : e instanceof NetworkError ? t("ui.error_network") : t("ui.error_generic")), [locale, t]);
 
-  useEffect(() => {
-    if (!ready) return;
-    if (getSession()?.amr.includes("totp")) { router.replace("/jamoa"); return; }
-    api<{ secret: string; otpauth_uri: string }>("/v1/auth/totp/enroll", { method: "POST" }).then(setSecret).catch(fail);
-  }, [ready, router, fail]);
+  const openLogin = useOpenLogin();
 
-  if (!ready) return <PageSkeleton />;
+  useEffect(() => {
+    if (!ready || openLogin === null) return;
+    // Sinov rejimida ikkinchi omil talab qilinmaydi: sahifa o'tkazib yuboriladi.
+    if (openLogin || getSession()?.amr.includes("totp")) { router.replace(openLogin ? "/katalog" : "/jamoa"); return; }
+    api<{ secret: string; otpauth_uri: string }>("/v1/auth/totp/enroll", { method: "POST" }).then(setSecret).catch(fail);
+  }, [ready, openLogin, router, fail]);
+
+  if (!ready || openLogin === null || openLogin) return <PageSkeleton />;
 
   const confirm = async () => {
     setBusy(true); setError(null);

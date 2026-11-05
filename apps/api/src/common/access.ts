@@ -48,7 +48,7 @@ export class AccessGuard implements CanActivate {
     req.auth = { userId: user.id, amr: claims.amr, sid: claims.sid };
     req.user = { id: user.id, isPlatformAdmin: user.is_platform_admin, locale: user.locale };
     // Sinov rejimida (OPEN_LOGIN) ikkinchi omil talab qilinmaydi.
-    const hasTotp = claims.amr.includes("totp") || (this.cfg.OPEN_LOGIN === "on" && claims.amr.includes("open"));
+    const hasTotp = claims.amr.includes("totp") || this.cfg.OPEN_LOGIN === "on"; // eski (SMS bilan kirgan) sessiyalar ham
 
     if (get<boolean>(K.admin)) {
       if (!user.is_platform_admin) throw new ApiError(403, "permission.denied");
