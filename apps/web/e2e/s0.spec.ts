@@ -153,3 +153,41 @@ test("tarmoq uzilganda xato ko'rsatiladi (oflayn holat)", async ({ page, context
   await context.setOffline(false);
 });
 
+
+test("tokenlar brauzer JavaScript'iga ko'rinmaydi: httpOnly cookie, localStorage'da token yo'q, CSRF (Origin) tekshiruvi", async ({ page, request, context }) => {
+  await ownerFlow(page, request, "+998901110020", "BFF Do'kon");
+  const cookies = await context.cookies();
+  const at = cookies.find((c) => c.name === "dst_at");
+  const rt = cookies.find((c) => c.name === "dst_rt");
+  expect(at).toMatchObject({ httpOnly: true, path: "/" });
+  expect(rt).toMatchObject({ httpOnly: true, path: "/v1/auth" });
+  const visible = await page.evaluate(() => ({ cookie: document.cookie, ls: JSON.stringify(Object.entries(localStorage)), ss: JSON.stringify(Object.entries(sessionStorage)) }));
+  expect(visible.cookie).not.toMatch(/dst_/);
+  for (const secret of [at!.value, rt!.value]) {
+    expect(visible.ls).not.toContain(secret);
+    expect(visible.ss).not.toContain(secret);
+  }
+  expect(JSON.parse(visible.ls).flat().join("|")).toContain("signedIn");
+
+  // boshqa saytdan kelgan o'zgartiruvchi so'rov rad etiladi (cookie yuborilgan bo'lsa ham)
+  const evil = await page.request.post("/v1/auth/logout", { headers: { Origin: "https://evil.example" } });
+  expect(evil.status()).toBe(403);
+  expect((await evil.json()).details.reason).toBe("csrf");
+  await expect(page.request.get("/v1/me").then((r) => r.status())).resolves.toBe(200); // sessiya saqlanib qoldi
+
+  // chiqish cookie'larni o'chiradi
+  await page.reload();
+  await page.getByRole("button", { name: "Chiqish" }).click();
+  await expect(page).toHaveURL(/kirish/);
+  const after = await context.cookies();
+  expect(after.find((c) => c.name === "dst_at")).toBeUndefined();
+  expect((await page.request.get("/v1/me")).status()).toBe(401);
+});
+
+test("kirish tokeni cookie'si tugaganda sessiya yangilash tokeni bilan jimgina tiklanadi", async ({ page, request, context }) => {
+  await ownerFlow(page, request, "+998901110021", "Yangilash Do'kon");
+  await context.clearCookies({ name: "dst_at" }); // 15 daqiqa o'tgandek
+  await page.reload();
+  await expect(page.getByRole("heading", { name: "Jamoa" })).toBeVisible(); // refresh cookie bilan tiklandi
+  expect((await context.cookies()).find((c) => c.name === "dst_at")).toBeDefined();
+});

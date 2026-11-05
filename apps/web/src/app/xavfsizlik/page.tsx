@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@dostavka/ui";
 import { ApiError, NetworkError, api } from "@/lib/api";
 import { useI18n } from "@/lib/i18n";
-import { decodeAmr, getSession, updateTokens } from "@/lib/session";
+import { getSession, updateAmr } from "@/lib/session";
 import { MainAction } from "@/lib/telegram";
 import { useRequireSession } from "@/lib/use-session";
 import { CenterCard, PageSkeleton } from "@/components/shell";
@@ -23,7 +23,7 @@ export default function SecurityPage() {
 
   useEffect(() => {
     if (!ready) return;
-    if (decodeAmr(getSession()!.access).includes("totp")) { router.replace("/jamoa"); return; }
+    if (getSession()?.amr.includes("totp")) { router.replace("/jamoa"); return; }
     api<{ secret: string; otpauth_uri: string }>("/v1/auth/totp/enroll", { method: "POST" }).then(setSecret).catch(fail);
   }, [ready, router, fail]);
 
@@ -32,8 +32,8 @@ export default function SecurityPage() {
   const confirm = async () => {
     setBusy(true); setError(null);
     try {
-      const r = await api<{ access_token: string; refresh_token: string }>("/v1/auth/totp/confirm", { method: "POST", body: { code } });
-      updateTokens(r.access_token, r.refresh_token);
+      const r = await api<{ amr: string[] }>("/v1/auth/totp/confirm", { method: "POST", body: { code } });
+      updateAmr(r.amr);
       router.replace("/jamoa");
     } catch (e) { fail(e); } finally { setBusy(false); }
   };

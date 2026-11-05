@@ -4,15 +4,16 @@ import { useRouter } from "next/navigation";
 import { Button, Input } from "@dostavka/ui";
 import { ApiError, NetworkError, api } from "@/lib/api";
 import { useI18n } from "@/lib/i18n";
-import { decodeAmr, getSession, setSession } from "@/lib/session";
+import { getSession, setSession, signIn } from "@/lib/session";
 import { MainAction, tgInitData } from "@/lib/telegram";
 import type { Me } from "@/lib/use-session";
 import { CenterCard } from "@/components/shell";
 import { ConsentBox, type ConsentDoc } from "@/components/consent-box";
 
 type Step = "phone" | "code" | "mfa";
-interface Tokens { access_token: string; refresh_token: string }
-type SignIn = (Tokens & { is_new_user: boolean }) | { mfa_required: true; mfa_token: string };
+/** BFF tokenlarni cookie'ga o'tkazadi; brauzerga faqat amr (ikkinchi omil belgisi) qaytadi. */
+interface Authed { amr: string[] }
+type SignIn = (Authed & { is_new_user: boolean }) | { mfa_required: true; mfa_token: string };
 
 const normalize = (v: string) => { const d = v.replace(/\D/g, ""); const n = d.startsWith("998") ? d : "998" + d; return "+" + n.slice(0, 12); };
 const pretty = (v: string) => { const d = normalize(v).slice(1); return `+${d.slice(0, 3)} ${d.slice(3, 5)} ${d.slice(5, 8)} ${d.slice(8, 10)} ${d.slice(10, 12)}`.trim(); };
@@ -41,8 +42,8 @@ export default function LoginPage() {
 
   useEffect(() => { if (cooldown <= 0) return; const id = setTimeout(() => setCooldown((c) => c - 1), 1000); return () => clearTimeout(id); }, [cooldown]);
 
-  const finish = useCallback(async (tok: Tokens) => {
-    setSession({ access: tok.access_token, refresh: tok.refresh_token, tenantId: null, amr: decodeAmr(tok.access_token) });
+  const finish = useCallback(async (tok: Authed) => {
+    signIn(tok.amr ?? []);
     const me = await api<Me>("/v1/me");
     const pending = sessionStorage.getItem("dostavka.invite");
     const active = me.memberships.find((m) => m.status === "active");
@@ -97,7 +98,7 @@ export default function LoginPage() {
 
   const verifyMfa = useCallback(async () => {
     setBusy(true); setError(null);
-    try { await finish(await api<Tokens>("/v1/auth/totp/verify", { method: "POST", auth: false, body: { mfa_token: mfaToken, code } })); }
+    try { await finish(await api<Authed>("/v1/auth/totp/verify", { method: "POST", auth: false, body: { mfa_token: mfaToken, code } })); }
     catch (e) { fail(e); } finally { setBusy(false); }
   }, [code, fail, finish, mfaToken]);
 

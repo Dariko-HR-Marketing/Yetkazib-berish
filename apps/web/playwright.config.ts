@@ -11,6 +11,7 @@ export const API_URL = `http://127.0.0.1:${API_PORT}`;
 export default defineConfig({
   testDir: "./e2e",
   timeout: 60_000,
+  expect: { timeout: 10_000 }, // CI mashinalari sekinroq; kesh va yangilash oqimlari uchun zaxira
   fullyParallel: false,
   workers: 1,
   reporter: [["list"]],
@@ -36,6 +37,9 @@ export default defineConfig({
         TELEGRAM_BOT_TOKEN: BOT_TOKEN,
         CORS_ORIGINS: `http://127.0.0.1:${WEB_PORT}`,
         EVENTS_DISPATCH: "off",
+        // E2E bitta IP (127.0.0.1) dan yuzlab so'rov yuboradi; IP cheklovi API testlarida tekshiriladi.
+        RATE_LIMIT_AUTH_PER_MIN: "100000",
+        RATE_LIMIT_API_PER_MIN: "100000",
       },
     },
     {

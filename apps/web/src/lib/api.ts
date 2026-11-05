@@ -1,5 +1,5 @@
 import type { Locale } from "@dostavka/i18n";
-import { getSession, setSession, updateTokens } from "./session";
+import { getSession, setSession, updateAmr } from "./session";
 
 export class ApiError extends Error {
   constructor(public status: number, public code: string, public message_uz: string, public message_ru: string, public details: Record<string, unknown> = {}) {
@@ -18,15 +18,14 @@ const uuid = () => (typeof crypto !== "undefined" && "randomUUID" in crypto ? cr
 interface Opts { method?: string; body?: unknown; tenant?: boolean; auth?: boolean; key?: string; noRetry?: boolean }
 
 let refreshing: Promise<boolean> | null = null;
+/** Yangilash tokeni httpOnly cookie'da: tanasiz so'rov, BFF uni o'zi qo'shadi. */
 async function refresh(): Promise<boolean> {
   refreshing ??= (async () => {
-    const s = getSession();
-    if (!s) return false;
     try {
-      const r = await fetch("/v1/auth/refresh", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ refresh_token: s.refresh }) });
+      const r = await fetch("/v1/auth/refresh", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
       if (!r.ok) { setSession(null); return false; }
-      const j = (await r.json()) as { access_token: string; refresh_token: string };
-      updateTokens(j.access_token, j.refresh_token);
+      const j = (await r.json()) as { amr?: string[] };
+      updateAmr(j.amr ?? []);
       return true;
     } catch { return false; }
   })().finally(() => { refreshing = null; });
@@ -44,7 +43,6 @@ export async function api<T = unknown>(path: string, o: Opts = {}): Promise<T> {
     const s = getSession();
     const headers: Record<string, string> = { Accept: "application/json", "Accept-Language": localeGetter() };
     if (o.body !== undefined) headers["Content-Type"] = "application/json";
-    if (o.auth !== false && s) headers.Authorization = `Bearer ${s.access}`;
     if (o.tenant && s?.tenantId) headers["X-Tenant-Id"] = s.tenantId;
     if (key && o.auth !== false && !path.startsWith("/v1/auth/")) headers["Idempotency-Key"] = key;
     try {
@@ -56,7 +54,8 @@ export async function api<T = unknown>(path: string, o: Opts = {}): Promise<T> {
   let res = await run();
   if (res.status === 401 && !o.noRetry && o.auth !== false && getSession()) {
     const body = (await res.clone().json().catch(() => null)) as { code?: string } | null;
-    if (body?.code === "auth.token_invalid" && (await refresh())) res = await run();
+    // Kirish tokeni cookie'si muddati o'tgach so'rov tokensiz keladi (auth.unauthorized) yoki imzo eskirgan (auth.token_invalid).
+    if ((body?.code === "auth.token_invalid" || body?.code === "auth.unauthorized") && (await refresh())) res = await run();
   }
   if (res.status === 204) return undefined as T;
   const json = (await res.json().catch(() => null)) as Record<string, unknown> | null;

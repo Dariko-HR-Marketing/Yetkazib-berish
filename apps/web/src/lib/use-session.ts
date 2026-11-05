@@ -24,6 +24,6 @@ export function useRequireSession(): { me: Me | null; ready: boolean; session: S
     let alive = true;
     api<Me>("/v1/me").then((m) => { if (alive) { setMe(m); setReady(true); } }).catch(() => { if (alive) router.replace("/kirish"); });
     return () => { alive = false; };
-  }, [router, session?.access]);
+  }, [router, session?.signedIn]);
   return { me, ready, session };
 }

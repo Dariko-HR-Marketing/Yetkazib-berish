@@ -72,13 +72,13 @@ Maxsus e'tibor so'raladigan joylar:
 | 2 | T-5 (Z17) | Egasi limitga kiradi → Start'da **3-taklif** rad etiladi (spetsifikatsiyadagi «4-taklif» emas) |
 | 3 | OpenAPI bitta fayl | Reja 4 faylni nazarda tutgan; $ref'lar va validatorlar soddaligi uchun bitta `openapi.yaml` |
 | 4 | PostGIS yo'q (Z16-a) | `branches.lat/lng` + `zone_geojson`; PostGIS S4'da |
-| 5 | Tokenlar `localStorage`'da | XSS xavfi. Yengillashtirish: qat'iy CSP, React escape. **Tavsiya:** S1'da Next.js BFF + httpOnly cookie. Insonning qarori kerak |
+| 5 | ~~Tokenlar `localStorage`'da~~ → **hal qilindi** (2026-11-05) | Next.js BFF proksi (`apps/web/src/app/v1/[...path]/route.ts`): tokenlar httpOnly cookie'da (`dst_at` / `dst_rt`, yangilash tokeni faqat `/v1/auth` yo'lida), brauzer JS ularni ko'rmaydi; HTTPS'da `SameSite=None; Secure; Partitioned` (Telegram Web iframe uchun), CSRF — Origin tekshiruvi + CSP `frame-ancestors`. **Insonning ko'rib chiqishi kerak** (`lib/bff.ts`, `route.ts`) |
 | 6 | `DEV_SMS_INBOX` | Faqat e2e uchun mock SMS'ni HTTP orqali o'qish; productionda config yoqishga yo'l qo'ymaydi (test bor) |
 | 7 | `PATCH /tenants {status:"active"}` | KYC/oferta imzolash (Onboard-Shop 4-qadam) S0 doirasida emas: egasi faollashtira oladi |
 | 8 | Egalik berish | S0'da yo'q (`role=owner` PATCH rad etiladi); oxirgi egani o'zgartirib bo'lmaydi |
 | 9 | `plan.changed` 30 kunlik ogohlantirish | Hodisa va `plan_migrate_at` yoziladi, interfeysda sana ko'rinadi; SMS/Telegram xabarnomasi (notifications moduli) S2+ |
 | 10 | `ai.external_agents` (`owner+platform`) | Platforma darajasida yoqiq; «beta»ni platforma o'chirgichi bilan boshqarish mumkin. Tasdiq kerak |
-| 11 | Qidiruvni cheklash | SMS kod: telefon bo'yicha (60 s, 5 xato). **IP bo'yicha umumiy throttling yo'q** (spetsifikatsiya §7 «so'rovlar soni cheklanadi») — S1 oldidan qo'shish kerak |
+| 11 | ~~IP bo'yicha cheklash yo'q~~ → **hal qilindi** | Redis, kirish endpointlari 30/daq, qolgan API 600/daq (`RATE_LIMIT_*`), 429 `rate.limited` + `Retry-After`; Redis ishlamasa fail-open (monitoring S1) |
 
 ## 6. O'lchanmagan yoki qilinmagan
 
@@ -93,3 +93,11 @@ Maxsus e'tibor so'raladigan joylar:
 ## 7. Keyingi qadam
 
 S1 — katalog, qoldiq, Excel import, MXIK. **S0 tugamaguncha S1 ga o'tilmaydi:** avval (a) O7 — mas'ul tayinlanishi va §4 bo'yicha ko'rib chiqish, (b) CI'ning GitHub'da yashil bo'lishi, (c) §5.5 (tokenlar saqlovi) bo'yicha qaror.
+
+## 8. Yangilanish (2026-11-05, keyingi sessiya)
+
+- **CI:** `ci.yml` YAML xatosi tufayli birinchi ikki yurishda umuman ishga tushmagan edi (tuzatildi, actionlint bilan). Keyin `check` job (typecheck, lint, test, build, E2E) GitHub'da yashil; `security` job'da pullik gitleaks-action o'rniga bepul CLI qo'yildi.
+- **Oferta/rozilik:** `OFERTA_JORIY_ETISH.md` — versiyalash, kuchga kiritish (placeholder'siz), qayta akcept, do'kon akcepti, marketing roziligi.
+- **Tokenlar:** BFF + httpOnly cookie (yuqoridagi §5.5).
+- **IP cheklovi** va `GET /v1/health`.
+- Testlar: API 188, i18n 6, contracts 5, web 21, E2E 44+.

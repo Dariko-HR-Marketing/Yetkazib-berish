@@ -1,5 +1,3 @@
-const API_URL = process.env.API_URL ?? "http://127.0.0.1:4000";
-
 const csp = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' https://telegram.org" + (process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""),
@@ -19,10 +17,7 @@ export default {
   distDir: process.env.NEXT_DIST_DIR ?? ".next",
   eslint: { ignoreDuringBuilds: true }, // lint alohida CI qadamida (eslint.config.mjs)
   transpilePackages: ["@dostavka/ui", "@dostavka/i18n", "@dostavka/contracts"],
-  // Brauzer API'ga bir origin orqali murojaat qiladi (CORS va Telegram uchun qulay).
-  async rewrites() {
-    return [{ source: "/v1/:path*", destination: `${API_URL}/v1/:path*` }];
-  },
+  // /v1/* so'rovlari src/app/v1/[...path]/route.ts (BFF proksi) orqali o'tadi: API_URL ish vaqtida o'qiladi, tokenlar httpOnly cookie'da.
   async headers() {
     return [{
       source: "/:path*",
