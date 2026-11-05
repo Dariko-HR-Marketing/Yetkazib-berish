@@ -34,11 +34,11 @@ jobs:
         run: pnpm typecheck
       - name: lint
         run: pnpm lint
-      - name: test (birlik va integratsiya: API, i18n, contracts, web)
+      - name: "test (birlik va integratsiya: API, i18n, contracts, web)"
         run: pnpm test
       - name: build + JS byudjeti (<= 170 KB gzip)
         run: pnpm build
-      - name: E2E (Playwright: 360/768/1024/1440, uz/ru, a11y, Telegram)
+      - name: "E2E (Playwright: 360/768/1024/1440, uz/ru, a11y, Telegram)"
         run: |
           pnpm --filter @dostavka/web exec playwright install --with-deps chromium
           pnpm --filter @dostavka/web e2e
