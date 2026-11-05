@@ -71,7 +71,7 @@ export default function TeamPage() {
   };
 
   return (
-    <Shell title={t("team.title")} subtitle={t("team.subtitle")} tenantName={membership.tenant_name}
+    <Shell role={membership.role} title={t("team.title")} subtitle={t("team.subtitle")} tenantName={membership.tenant_name}
       actions={data && <Badge tone={data.limit.max !== null && data.limit.used >= data.limit.max ? "warning" : "neutral"}>{data.limit.max === null ? t("team.limit_unlimited", { used: data.limit.used }) : t("team.limit", { used: data.limit.used, limit: data.limit.max })}</Badge>}>
       {loading && !data ? <div className="flex flex-col gap-3" aria-busy="true"><Skeleton className="h-12" /><Skeleton className="h-12" /><Skeleton className="h-12" /></div>
         : error ? <ErrorState message={error} onRetry={load} retryLabel={t("ui.retry")} />

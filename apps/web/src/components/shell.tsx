@@ -20,11 +20,19 @@ export function LangSwitch() {
 }
 
 /** Ichki sahifalar uchun qobiq: navigatsiya, til, chiqish. 360 px dan boshlab: nav gorizontal aylanadi. */
-export function Shell({ title, subtitle, tenantName, children, actions }: { title: string; subtitle?: string; tenantName?: string; children: ReactNode; actions?: ReactNode }) {
+/** Rolga ko'ra bo'limlar (roles_permissions.json: katalog va qoldiq). Server baribir tekshiradi; bu faqat qulaylik uchun. */
+const CATALOG_ROLES = new Set(["owner", "manager", "accountant", "marketer", "picker", "cashier"]);
+const IMPORT_ROLES = new Set(["owner", "manager"]);
+
+export function Shell({ title, subtitle, tenantName, children, actions, role }: { title: string; subtitle?: string; tenantName?: string; children: ReactNode; actions?: ReactNode; role?: string }) {
   const { t } = useI18n();
   const path = usePathname();
   const router = useRouter();
-  const nav = [{ href: "/jamoa", label: t("nav.team") }, { href: "/paket", label: t("nav.plan") }];
+  const nav = [
+    ...(role && CATALOG_ROLES.has(role) ? [{ href: "/katalog", label: t("nav.catalog") }] : []),
+    ...(role && IMPORT_ROLES.has(role) ? [{ href: "/import", label: t("nav.import") }] : []),
+    { href: "/jamoa", label: t("nav.team") }, { href: "/paket", label: t("nav.plan") },
+  ];
   const logout = async () => {
     try { await api("/v1/auth/logout", { method: "POST", noRetry: true }); } catch { /* sessiya baribir tozalanadi */ }
     setSession(null);

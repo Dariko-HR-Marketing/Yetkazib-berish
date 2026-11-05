@@ -71,7 +71,7 @@ export default function PlanPage() {
   const on = data?.items.filter((i) => i.enabled).length ?? 0;
 
   return (
-    <Shell title={t("plan.title")} tenantName={membership.tenant_name} subtitle={data ? t("plan.subtitle", { plan: data.plan.name }) : undefined}
+    <Shell role={membership.role} title={t("plan.title")} tenantName={membership.tenant_name} subtitle={data ? t("plan.subtitle", { plan: data.plan.name }) : undefined}
       actions={data && <Badge tone="ok">{data.plan.price_tiyin === null ? t("plan.price_contract") : data.plan.price_tiyin === 0 ? t("plan.free") : t("plan.price_month", { price: money(data.plan.price_tiyin) })}</Badge>}>
       {error ? <ErrorState message={error} onRetry={load} retryLabel={t("ui.retry")} />
         : !data ? <div className="flex flex-col gap-3" aria-busy="true"><Skeleton className="h-24" /><Skeleton className="h-64" /></div>
