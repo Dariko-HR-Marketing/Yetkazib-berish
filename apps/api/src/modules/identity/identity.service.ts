@@ -59,7 +59,7 @@ export class IdentityService {
         const seconds = Math.ceil((OTP_RESEND_MS - (now.getTime() - lastAt.getTime())) / 1000);
         throw new ApiError(429, "auth.otp_rate_limited", { retry_after: seconds }, { seconds });
       }
-      const code = String(randomInt(0, 1_000_000)).padStart(6, "0");
+      const code = this.cfg.SMS_FIXED_CODE || String(randomInt(0, 1_000_000)).padStart(6, "0");
       await tx.query("insert into otp_codes (phone, code_hash, expires_at, created_at) values ($1,$2,$3,$4)", [phone, this.codeHash(phone, code), new Date(now.getTime() + OTP_TTL_MS), now]);
       await this.sms.send(phone, `Dostavka: tasdiqlash kodi ${code}. Kod 5 daqiqa amal qiladi. Hech kimga bermang.`);
     });

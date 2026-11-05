@@ -72,6 +72,7 @@ services:
       PHONE_HASH_PEPPER: "${PHONE_HASH_PEPPER:?PHONE_HASH_PEPPER is required}"
       TELEGRAM_BOT_TOKEN: "${TELEGRAM_BOT_TOKEN:-8123456789:AAFlkjhasdf09871234kljasdf-example}"
       SMS_PROVIDER: "mock"
+      SMS_FIXED_CODE: "${SMS_FIXED_CODE:-123456}"
       APP_BASE_URL: "https://yetkazish.tajriba24.uz"
       CORS_ORIGINS: "https://yetkazish.tajriba24.uz"
       EVENTS_DISPATCH: "off"

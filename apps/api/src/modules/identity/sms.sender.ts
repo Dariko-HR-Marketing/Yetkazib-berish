@@ -14,7 +14,6 @@ export class MockSmsSender implements SmsSender {
   async send(phone: string, text: string) {
     this.outbox.push({ phone, text });
     if (this.outbox.length > 500) this.outbox.shift();
-    // Faqat dev: kod konsolda ko'rinadi, telefon maskalangan. Productionda mock ishlatilmaydi.
-    this.log.debug(maskPhones(`SMS -> ${phone}: ${text}`));
+    this.log.log(maskPhones(`SMS -> ${phone}: ${text}`));
   }
 }

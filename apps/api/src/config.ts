@@ -19,6 +19,7 @@ const schema = z.object({
   PHONE_HASH_PEPPER: z.string().min(16).default("dev-pepper-0123456789"),
   TELEGRAM_BOT_TOKEN: z.string().default(""),
   SMS_PROVIDER: z.enum(["mock"]).default("mock"),
+  SMS_FIXED_CODE: z.string().optional(),
   APP_BASE_URL: z.string().default("http://localhost:3000"),
   CORS_ORIGINS: z.string().default("http://localhost:3000"),
   EVENTS_DISPATCH: z.enum(["on", "off"]).default("off"),
