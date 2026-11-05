@@ -2,7 +2,7 @@ FROM node:22-alpine AS build
 RUN corepack enable
 WORKDIR /repo
 COPY . .
-RUN pnpm install --frozen-lockfile && pnpm --filter @dostavka/api... build && pnpm --filter @dostavka/api deploy --prod /out
+RUN pnpm install --frozen-lockfile && pnpm --filter @dostavka/api... build && pnpm --filter @dostavka/api deploy --legacy --prod /out
 RUN cp -r apps/api/dist /out/dist
 
 FROM node:22-alpine
