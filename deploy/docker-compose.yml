@@ -1,0 +1,131 @@
+name: dostavka
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: dostavka-postgres
+    restart: unless-stopped
+    mem_limit: 384m
+    command: ["postgres", "-c", "shared_buffers=64MB", "-c", "max_connections=30"]
+    environment:
+      POSTGRES_USER: dostavka
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      POSTGRES_DB: dostavka
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - default
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dostavka -d dostavka"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  redis:
+    image: redis:7-alpine
+    container_name: dostavka-redis
+    restart: unless-stopped
+    mem_limit: 128m
+    command: ["redis-server", "--maxmemory", "64mb", "--maxmemory-policy", "allkeys-lru", "--save", "", "--appendonly", "no"]
+    volumes:
+      - redisdata:/data
+    networks:
+      - default
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  api:
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+    container_name: dostavka-api
+    restart: unless-stopped
+    mem_limit: 450m
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: "4000"
+      NODE_OPTIONS: "--max-old-space-size=300"
+      DATABASE_URL: "postgresql://dostavka:${POSTGRES_PASSWORD}@postgres:5432/dostavka"
+      APP_DATABASE_URL: "postgresql://dostavka_app:${APP_DB_PASSWORD}@postgres:5432/dostavka"
+      APP_DB_PASSWORD: "${APP_DB_PASSWORD:?APP_DB_PASSWORD is required}"
+      REDIS_URL: "redis://redis:6379/0"
+      JWT_SECRET: "${JWT_SECRET:?JWT_SECRET is required}"
+      DATA_ENCRYPTION_KEY: "${DATA_ENCRYPTION_KEY:?DATA_ENCRYPTION_KEY is required}"
+      PHONE_HASH_PEPPER: "${PHONE_HASH_PEPPER:?PHONE_HASH_PEPPER is required}"
+      TELEGRAM_BOT_TOKEN: "${TELEGRAM_BOT_TOKEN:-8123456789:AAFlkjhasdf09871234kljasdf-example}"
+      SMS_PROVIDER: "mock"
+      APP_BASE_URL: "https://yetkazish.tajriba24.uz"
+      CORS_ORIGINS: "https://yetkazish.tajriba24.uz"
+      EVENTS_DISPATCH: "off"
+      DEV_SMS_INBOX: "off"
+      LEGAL_ALLOW_DRAFT: "on"
+    networks:
+      - default
+      - vps_default
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O- http://127.0.0.1:4000/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  web:
+    build:
+      context: ..
+      dockerfile: apps/web/Dockerfile
+    container_name: dostavka-web
+    restart: unless-stopped
+    mem_limit: 450m
+    depends_on:
+      api:
+        condition: service_started
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      NODE_OPTIONS: "--max-old-space-size=300"
+      API_URL: "http://dostavka-api:4000"
+      NEXT_TELEMETRY_DISABLED: "1"
+    networks:
+      - default
+      - vps_default
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O- http://127.0.0.1:3000/ || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  default:
+  vps_default:
+    external: true
+
+volumes:
+  pgdata:
+  redisdata:

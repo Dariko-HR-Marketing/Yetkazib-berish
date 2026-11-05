@@ -10,3 +10,4 @@ playwright-report/
 test-results/
 *.tsbuildinfo
 .next-e2e/
+powershell.cmd
