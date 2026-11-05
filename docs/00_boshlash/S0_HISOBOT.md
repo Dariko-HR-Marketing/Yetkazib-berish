@@ -7,7 +7,7 @@ Ish tartibi: `CLAUDE.md` §5 va `BIRINCHI_TOPSHIRIQ.md`. Qarorlar: Z13–Z21 (ZI
 | Nima | Holat |
 | --- | --- |
 | Monorepo (pnpm + Turborepo): `apps/{api,web}`, `packages/{ui,contracts,config,i18n}`, `infra/` | ✅ |
-| OpenAPI 3.1 (`packages/contracts/openapi/openapi.yaml`, 29 operatsiya), xato formati `{code, message_uz, message_ru, details}` | ✅ |
+| OpenAPI 3.1 (`packages/contracts/openapi/openapi.yaml`, 27 operatsiya), xato formati `{code, message_uz, message_ru, details}` | ✅ |
 | Migratsiyalar (7 ta, faqat oldinga, checksum nazorati) + RLS + seed (`plans.json`, `feature_flags.json`) | ✅ |
 | NestJS: `identity`, `tenancy`, `plans-flags`, `audit-events` | ✅ |
 | `apps/web`: kirish (SMS + Telegram), do'kon yaratish, TOTP, jamoa/taklif, «Paket va funksiyalar» — uz/ru | ✅ |
