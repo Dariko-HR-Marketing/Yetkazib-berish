@@ -74,6 +74,7 @@ const PAGES: { name: string; path: string; auth: boolean }[] = [
   { name: "kirish", path: "/kirish", auth: false },
   { name: "jamoa", path: "/jamoa", auth: true },
   { name: "paket", path: "/paket", auth: true },
+  { name: "hujjat", path: "/hujjat/customer_offer", auth: false },
 ];
 
 for (const lang of ["uz", "ru"] as const) {
@@ -87,6 +88,7 @@ for (const lang of ["uz", "ru"] as const) {
         if (pg.auth) await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
         if (pg.name === "paket") await expect(page.locator("[data-feature]").first()).toBeVisible();
         if (pg.name === "jamoa") await expect(page.locator("tbody tr").first()).toBeVisible();
+        if (pg.name === "hujjat") await expect(page.locator("article h1")).toBeVisible();
         await audit(page, pg.name, w);
         await page.screenshot({ path: `${SHOTS}/${pg.name}-${lang}-${w}.png`, fullPage: true });
         await ctx.close();

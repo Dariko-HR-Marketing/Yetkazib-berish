@@ -8,11 +8,11 @@ import { decodeAmr, getSession, setSession } from "@/lib/session";
 import { MainAction, tgInitData } from "@/lib/telegram";
 import type { Me } from "@/lib/use-session";
 import { CenterCard } from "@/components/shell";
+import { ConsentBox, type ConsentDoc } from "@/components/consent-box";
 
 type Step = "phone" | "code" | "mfa";
 interface Tokens { access_token: string; refresh_token: string }
 type SignIn = (Tokens & { is_new_user: boolean }) | { mfa_required: true; mfa_token: string };
-const CONSENTS = [{ document: "customer_offer", version: "2026-11-05" }, { document: "privacy_policy", version: "2026-11-05" }];
 
 const normalize = (v: string) => { const d = v.replace(/\D/g, ""); const n = d.startsWith("998") ? d : "998" + d; return "+" + n.slice(0, 12); };
 const pretty = (v: string) => { const d = normalize(v).slice(1); return `+${d.slice(0, 3)} ${d.slice(3, 5)} ${d.slice(5, 8)} ${d.slice(8, 10)} ${d.slice(10, 12)}`.trim(); };
@@ -24,7 +24,9 @@ export default function LoginPage() {
   const [phone, setPhone] = useState("+998 ");
   const [code, setCode] = useState("");
   const [mfaToken, setMfaToken] = useState("");
-  const [needConsent, setNeedConsent] = useState(false);
+  // Server qaytargan, hali qabul qilinmagan (yoki yangi versiyali) hujjatlar; versiyalar qattiq kodlanmagan.
+  const [docs, setDocs] = useState<ConsentDoc[]>([]);
+  const needConsent = docs.length > 0;
   const [accepted, setAccepted] = useState(false);
   const [marketing, setMarketing] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -57,12 +59,12 @@ export default function LoginPage() {
   const telegram = useCallback(async (withConsent: boolean) => {
     setBusy(true); setError(null);
     try {
-      const r = await api<SignIn>("/v1/auth/telegram", { method: "POST", auth: false, body: { init_data: tgInitData(), ...(withConsent ? { consents: CONSENTS, marketing_consent: marketing } : {}) } });
+      const r = await api<SignIn>("/v1/auth/telegram", { method: "POST", auth: false, body: { init_data: tgInitData(), ...(withConsent ? { consents: docs.map((d) => ({ document: d.document, version: d.version })), marketing_consent: marketing } : {}) } });
       await handleSignIn(r);
     } catch (e) {
-      if (e instanceof ApiError && e.code === "consent.required") { setNeedConsent(true); setStep("code"); } else fail(e);
+      if (e instanceof ApiError && e.code === "consent.required") { setDocs((e.details.documents as ConsentDoc[]) ?? []); setStep("code"); } else fail(e);
     } finally { setBusy(false); }
-  }, [fail, handleSignIn, marketing]);
+  }, [docs, fail, handleSignIn, marketing]);
 
   useEffect(() => {
     if (tgTried.current || !tgInitData()) return;
@@ -85,13 +87,13 @@ export default function LoginPage() {
     if (tgInitData() && needConsent && !code) { await telegram(true); return; }
     setBusy(true); setError(null);
     try {
-      const body = { phone: normalize(phone), code, ...(needConsent ? { consents: CONSENTS, marketing_consent: marketing } : {}) };
+      const body = { phone: normalize(phone), code, ...(needConsent ? { consents: docs.map((d) => ({ document: d.document, version: d.version })), marketing_consent: marketing } : {}) };
       const r = await api<SignIn>("/v1/auth/otp/verify", { method: "POST", auth: false, body });
       await handleSignIn(r);
     } catch (e) {
-      if (e instanceof ApiError && e.code === "consent.required") { setNeedConsent(true); setError(null); } else fail(e);
+      if (e instanceof ApiError && e.code === "consent.required") { setDocs((e.details.documents as ConsentDoc[]) ?? []); setErr(null); setAccepted(false); } else fail(e);
     } finally { setBusy(false); }
-  }, [code, fail, handleSignIn, marketing, needConsent, phone, telegram]);
+  }, [code, docs, fail, handleSignIn, marketing, needConsent, phone, telegram]);
 
   const verifyMfa = useCallback(async () => {
     setBusy(true); setError(null);
@@ -119,21 +121,17 @@ export default function LoginPage() {
           <Input id="code" label={t("login.code")} inputMode="numeric" autoComplete="one-time-code" maxLength={6} value={code} onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))} error={error} autoFocus />
         )}
         {needConsent && (
-          <div className="flex flex-col gap-3 rounded-lg bg-brand-soft p-3">
-            <label className="flex min-h-touch items-start gap-3 text-body">
-              <input type="checkbox" className="mt-1 h-5 w-5 accent-[var(--c-brand)]" checked={accepted} onChange={(e) => setAccepted(e.target.checked)} />
-              <span>{t("login.accept_terms", { offer: t("login.offer"), privacy: t("login.privacy") })}</span>
-            </label>
+          <ConsentBox docs={docs} accepted={accepted} onChange={setAccepted} intro={t("consent.accept_docs")}>
             <label className="flex min-h-touch items-start gap-3 text-body">
               <input type="checkbox" className="mt-1 h-5 w-5 accent-[var(--c-brand)]" checked={marketing} onChange={(e) => setMarketing(e.target.checked)} />
               <span>{t("login.marketing")}</span>
             </label>
-          </div>
+          </ConsentBox>
         )}
         {needConsent && error && <p role="alert" className="text-body-sm font-semibold text-danger">{error}</p>}
         <MainAction text={t("login.verify")} onClick={verify} disabled={!canSubmit && !(tgInitData() && needConsent && accepted)} loading={busy}>{t("login.verify")}</MainAction>
         <Button variant="ghost" onClick={sendCode} disabled={cooldown > 0 || busy}>{cooldown > 0 ? t("login.resend_in", { seconds: cooldown }) : t("login.resend")}</Button>
-        <Button variant="ghost" onClick={() => { setStep("phone"); setError(null); setNeedConsent(false); }}>{t("ui.back")}</Button>
+        <Button variant="ghost" onClick={() => { setStep("phone"); setError(null); setDocs([]); }}>{t("ui.back")}</Button>
       </CenterCard>
     );
   }

@@ -45,8 +45,9 @@ export async function login(page: Page, request: APIRequestContext, phone: strin
 export async function ownerFlow(page: Page, request: APIRequestContext, phone: string, name = "Yashil Savat"): Promise<string> {
   await login(page, request, phone);
   await expect(page).toHaveURL(/dokon-yaratish/);
-  await page.getByLabel(/Do'kon nomi|Название магазина/).fill(name);
+  await page.getByLabel(/^(Do'kon nomi|Название магазина)$/).fill(name);
   await page.getByLabel(/STIR|ИНН/).fill("123456789");
+  await page.getByRole("checkbox").check(); // SaaS oferta va DPA akcepti
   await page.getByRole("button", { name: /Do'kon yaratish|Создать магазин/ }).click();
   await expect(page).toHaveURL(/xavfsizlik/);
   const secret = (await page.getByTestId("totp-secret").textContent())!.trim();

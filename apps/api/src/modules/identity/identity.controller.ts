@@ -1,14 +1,15 @@
-import { Body, Controller, HttpCode, Get, Post, Req } from "@nestjs/common";
+import { Body, Controller, HttpCode, Get, Post, Put, Req } from "@nestjs/common";
 import { NoIdempotency, Public } from "../../common/access";
 import type { AppRequest } from "../../common/request-context";
 import { parse } from "../../common/validate";
+import { ConsentsService, marketingDto } from "./consents.service";
 import { IdentityService } from "./identity.service";
 import { SessionService } from "./session.service";
 import { otpRequestDto, otpVerifyDto, refreshDto, telegramDto, totpCodeDto, totpVerifyDto } from "./identity.dto";
 
 @Controller("v1")
 export class IdentityController {
-  constructor(private readonly identity: IdentityService, private readonly sessions: SessionService) {}
+  constructor(private readonly identity: IdentityService, private readonly sessions: SessionService, private readonly consents: ConsentsService) {}
 
   @Public() @NoIdempotency() @Post("auth/otp/request") @HttpCode(202)
   requestOtp(@Body() body: unknown) {
@@ -56,5 +57,16 @@ export class IdentityController {
   @Get("me")
   me(@Req() req: AppRequest) {
     return this.identity.me(req.auth!.userId);
+  }
+
+  @Get("me/consents")
+  myConsents(@Req() req: AppRequest) {
+    return this.consents.mine(req.auth!.userId);
+  }
+
+  /** Marketing roziligi xizmat roziligidan alohida: istalgan payt berish/qaytarib olish (consent.accepted / consent.revoked). */
+  @Put("me/consents/marketing")
+  setMarketing(@Body() body: unknown, @Req() req: AppRequest) {
+    return this.consents.setMarketing(req.auth!.userId, parse(marketingDto, body).granted, req.ip);
   }
 }

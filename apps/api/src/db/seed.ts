@@ -1,4 +1,5 @@
-import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { Client } from "pg";
 
@@ -46,11 +47,36 @@ export async function seed(databaseUrl: string, dir = SEED_DIR): Promise<void> {
         await c.query("insert into plan_features (plan_id, feature_key) values ($1, $2)", [ins.rows[0]!.id, key]);
       }
     }
+    await seedLegal(c, dir);
     await c.query("commit");
   } catch (e) {
     await c.query("rollback");
     throw e;
   } finally {
     await c.end();
+  }
+}
+
+
+/**
+ * Hujjat matnlari (infra/seed/legal/<key>.<locale>.md): fayl mazmuni oxirgi versiyadan farq qilsa, yangi QORALAMA versiya yaratiladi.
+ * Amaldagi (effective) versiyaga tegilmaydi; kuchga kiritish — admin API (POST /v1/admin/legal/{id}/publish).
+ */
+async function seedLegal(c: Client, dir: string) {
+  const root = join(dir, "legal");
+  if (!existsSync(join(root, "manifest.json"))) return;
+  const manifest = JSON.parse(readFileSync(join(root, "manifest.json"), "utf8")) as { documents: { key: string; title_uz: string; title_ru?: string; audience: string }[] };
+  for (const d of manifest.documents) {
+    for (const locale of ["uz", "ru"] as const) {
+      const file = join(root, `${d.key}.${locale}.md`);
+      if (!existsSync(file)) continue; // ru tarjimasi (O3) hali yo'q
+      const body = readFileSync(file, "utf8");
+      const hash = createHash("sha256").update(body).digest("hex");
+      const last = await c.query<{ version: number; text_hash: string }>("select version, text_hash from legal_documents where key = $1 and locale = $2 order by version desc limit 1", [d.key, locale]);
+      if (last.rows[0]?.text_hash === hash) continue;
+      await c.query(
+        `insert into legal_documents (key, locale, version, title, audience, body_md, text_hash) values ($1,$2,$3,$4,$5,$6,$7)`,
+        [d.key, locale, (last.rows[0]?.version ?? 0) + 1, locale === "ru" ? (d.title_ru ?? d.title_uz) : d.title_uz, d.audience, body, hash]);
+    }
   }
 }

@@ -24,12 +24,15 @@ const schema = z.object({
   EVENTS_DISPATCH: z.enum(["on", "off"]).default("off"),
   /** Faqat dev/e2e: mock SMS qutisini HTTP orqali o'qish. Productionda yoqib bo'lmaydi. */
   DEV_SMS_INBOX: z.enum(["on", "off"]).default("off"),
+  /** Yurist tasdiqlamagan (draft) hujjatlarni akcept qilishga ruxsat. Standart: productionda o'chiq (faqat staging/dev). */
+  LEGAL_ALLOW_DRAFT: z.enum(["on", "off"]).optional(),
 });
 
-export type Config = z.infer<typeof schema>;
+export type Config = Omit<z.infer<typeof schema>, "LEGAL_ALLOW_DRAFT"> & { LEGAL_ALLOW_DRAFT: "on" | "off" };
 
 export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
-  const cfg = schema.parse(env);
+  const parsed = schema.parse(env);
+  const cfg = { ...parsed, LEGAL_ALLOW_DRAFT: parsed.LEGAL_ALLOW_DRAFT ?? (parsed.NODE_ENV === "production" ? "off" : "on") } as Config;
   if (cfg.NODE_ENV === "production") {
     // CLAUDE.md §9: haqiqiy sir repoda yo'q; productionda dev qiymatlar bilan ishga tushmaydi.
     if (cfg.JWT_SECRET === DEV_JWT || cfg.DATA_ENCRYPTION_KEY === DEV_ENC_KEY || cfg.PHONE_HASH_PEPPER.startsWith("dev-")) {

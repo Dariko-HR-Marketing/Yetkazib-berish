@@ -38,8 +38,11 @@ test("kirish: noto'g'ri raqam rad etiladi, kod 5 marta xato -> blok, to'g'ri kod
 test("egasi: kirish -> do'kon yaratish (STIR xatosi) -> TOTP -> jamoa", async ({ page, request }) => {
   await login(page, request, OWNER);
   await expect(page).toHaveURL(/dokon-yaratish/);
-  await page.getByLabel("Do'kon nomi").fill("Yashil Savat");
+  await page.getByLabel("Do'kon nomi", { exact: true }).fill("Yashil Savat");
   await page.getByLabel(/STIR/).fill("12345678");
+  await expect(page.getByRole("button", { name: "Do'kon yaratish" })).toBeDisabled(); // akcept qilinmaguncha tugma yopiq
+  await page.getByRole("link", { name: /SaaS litsenziya ofertasi/ }).first().waitFor();
+  await page.getByRole("checkbox").check();
   await page.getByRole("button", { name: "Do'kon yaratish" }).click();
   await expect(alertOf(page)).toContainText("STIR 9 ta raqamdan iborat");
   await page.getByLabel(/STIR/).fill("123456789");

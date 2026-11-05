@@ -1,0 +1,30 @@
+{
+ "_izoh": "Matnlar yurist tasdig'igacha LOYIHA (draft). Fayl o'zgarsa, seed yangi qoralama versiya yaratadi; kuchga kiritish — admin API orqali (placeholder'lar to'ldirilgach). Rus tarjimasi (O3) kutilmoqda: fayl nomi <key>.ru.md.",
+ "documents": [
+  {
+   "key": "customer_offer",
+   "title_uz": "Xaridor uchun ommaviy oferta",
+   "audience": "customer"
+  },
+  {
+   "key": "shop_saas_offer",
+   "title_uz": "Do'kon uchun SaaS litsenziya ofertasi",
+   "audience": "shop"
+  },
+  {
+   "key": "shop_dpa",
+   "title_uz": "Ma'lumot qayta ishlash kelishuvi (DPA)",
+   "audience": "shop"
+  },
+  {
+   "key": "courier_agreement",
+   "title_uz": "Kuryer shartnomasi va ilova qoidalari",
+   "audience": "courier"
+  },
+  {
+   "key": "privacy_policy",
+   "title_uz": "Maxfiylik siyosati",
+   "audience": "customer"
+  }
+ ]
+}

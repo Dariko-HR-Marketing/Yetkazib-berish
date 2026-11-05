@@ -7,7 +7,7 @@ import { DbService, type Tx } from "../../db/db.service";
 import { randomInt } from "node:crypto";
 import { EventsService } from "../audit-events/events.service";
 import { AuditService } from "../audit-events/audit.service";
-import { consentsSatisfied, LEGAL_DOCS, MARKETING_DOC, REQUIRED_CONSENTS, textHash } from "./legal";
+import { LegalService, MARKETING, type ConsentInput, type MissingDoc } from "../legal/legal.service";
 import { SMS_SENDER, type SmsSender } from "./sms.sender";
 import { SessionService, type Tokens } from "./session.service";
 import { TelegramService } from "./telegram.service";
@@ -20,8 +20,7 @@ export const OTP_RESEND_MS = 60 * 1000;
 export const OTP_MAX_FAILS = 5;
 export const OTP_LOCK_MS = 15 * 60 * 1000;
 
-type ConsentIn = { document: string; version: string }[] | undefined;
-export interface SignInOpts { consents?: ConsentIn; marketing_consent?: boolean; ip?: string | null }
+export interface SignInOpts { consents?: ConsentInput[]; marketing_consent?: boolean; ip?: string | null }
 
 export type SignInResponse = (Tokens & { is_new_user: boolean; user: unknown }) | { mfa_required: true; mfa_token: string };
 
@@ -38,6 +37,7 @@ export class IdentityService {
     private readonly telegram: TelegramService,
     private readonly events: EventsService,
     private readonly audit: AuditService,
+    private readonly legal: LegalService,
   ) {}
 
   private codeHash(phone: string, code: string) {
@@ -73,7 +73,7 @@ export class IdentityService {
       | { k: "locked"; retryAfter: number }
       | { k: "expired" }
       | { k: "invalid"; left: number }
-      | { k: "consent" }
+      | { k: "consent"; docs: MissingDoc[] }
       | { k: "ok"; userId: string; isNew: boolean };
     // Holat o'zgarishi (urinishlar, blok) xato bilan birga saqlanishi kerak -> natija tranzaksiyadan keyin xatoga aylanadi.
     const out = await this.db.tx<Out>({}, async (tx) => {
@@ -99,7 +99,10 @@ export class IdentityService {
 
       const existing = await tx.query<{ id: string }>("select id from users where phone = $1", [phone]);
       const isNew = existing.rowCount === 0;
-      if (isNew && !consentsSatisfied(opts.consents)) return { k: "consent" };
+      // Yangi foydalanuvchi — barcha hujjatlar; mavjud — faqat yangi versiyasi chiqqanlar (qayta akcept).
+      if (existing.rows[0]) await tx.query("select set_config('app.user_id', $1, true)", [existing.rows[0].id]);
+      const ev = await this.legal.evaluate(tx, { userId: existing.rows[0]?.id }, "customer", opts.consents);
+      if (ev.missing.length) return { k: "consent", docs: ev.missing };
 
       await tx.query("update otp_codes set consumed_at = $2 where id = $1", [row.id, now]);
       let userId = existing.rows[0]?.id;
@@ -109,7 +112,7 @@ export class IdentityService {
       } else {
         await tx.query("update users set last_seen_at = $2 where id = $1", [userId, now]);
       }
-      await this.afterAuth(tx, userId, isNew, "sms", opts);
+      await this.afterAuth(tx, userId, isNew, "sms", opts, ev.toRecord);
       return { k: "ok", userId, isNew };
     });
 
@@ -117,7 +120,7 @@ export class IdentityService {
       case "locked": throw new ApiError(423, "auth.otp_locked", { retry_after: out.retryAfter });
       case "expired": throw new ApiError(401, "auth.otp_expired");
       case "invalid": throw new ApiError(401, "auth.otp_invalid", { attempts_left: out.left }, { left: out.left });
-      case "consent": throw new ApiError(422, "consent.required", { documents: REQUIRED_CONSENTS });
+      case "consent": throw new ApiError(422, "consent.required", { documents: out.docs });
       default: return this.completeSignIn(out.userId, out.isNew);
     }
   }
@@ -126,10 +129,12 @@ export class IdentityService {
   async signInTelegram(initData: string, opts: SignInOpts): Promise<SignInResponse> {
     const tg = this.telegram.verifyInitData(initData);
     const now = this.clock.now();
-    const out = await this.db.tx<{ k: "consent" } | { k: "ok"; userId: string; isNew: boolean }>({}, async (tx) => {
+    const out = await this.db.tx<{ k: "consent"; docs: MissingDoc[] } | { k: "ok"; userId: string; isNew: boolean }>({}, async (tx) => {
       const existing = await tx.query<{ id: string }>("select id from users where telegram_id = $1", [tg.id]);
       const isNew = existing.rowCount === 0;
-      if (isNew && !consentsSatisfied(opts.consents)) return { k: "consent" };
+      if (existing.rows[0]) await tx.query("select set_config('app.user_id', $1, true)", [existing.rows[0].id]);
+      const ev = await this.legal.evaluate(tx, { userId: existing.rows[0]?.id }, "customer", opts.consents);
+      if (ev.missing.length) return { k: "consent", docs: ev.missing };
       let userId = existing.rows[0]?.id;
       if (!userId) {
         const ins = await tx.query<{ id: string }>("insert into users (telegram_id, locale, last_seen_at) values ($1,$2,$3) returning id", [tg.id, tg.language_code === "ru" ? "ru" : "uz", now]);
@@ -137,28 +142,26 @@ export class IdentityService {
       } else {
         await tx.query("update users set last_seen_at = $2 where id = $1", [userId, now]);
       }
-      await this.afterAuth(tx, userId, isNew, "telegram", opts);
+      await this.afterAuth(tx, userId, isNew, "telegram", opts, ev.toRecord);
       return { k: "ok", userId, isNew };
     });
-    if (out.k === "consent") throw new ApiError(422, "consent.required", { documents: REQUIRED_CONSENTS });
+    if (out.k === "consent") throw new ApiError(422, "consent.required", { documents: out.docs });
     return this.completeSignIn(out.userId, out.isNew);
   }
 
   /** Rozilik yozuvlari (I-4) va kirish hodisalari. `tx` kontekstiga foydalanuvchi qo'yiladi (RLS: consents). */
-  private async afterAuth(tx: Tx, userId: string, isNew: boolean, method: "sms" | "telegram", opts: SignInOpts) {
+  private async afterAuth(tx: Tx, userId: string, isNew: boolean, method: "sms" | "telegram", opts: SignInOpts, toRecord: { key: string; version: number; text_hash: string }[]) {
     await tx.query("select set_config('app.user_id', $1, true)", [userId]);
     const source = method === "telegram" ? "telegram" : "panel";
-    if (isNew) {
-      const docs = [...REQUIRED_CONSENTS];
-      if (opts.marketing_consent) docs.push({ document: MARKETING_DOC.document, version: MARKETING_DOC.version });
-      for (const d of docs) {
-        await tx.query(`insert into consents (user_id, document, version, action, channel, ip, text_hash, created_at) values ($1,$2,$3,'accepted',$4,$5,$6,$7)`,
-          [userId, d.document, d.version, method, cleanIp(opts.ip), textHash(d.document, d.version), this.clock.now()]);
-        await this.events.emit(tx, "consent.accepted", { document: d.document, version: d.version, channel: method }, { actorId: userId, source });
-      }
-      await this.audit.record(tx, { actorId: userId, action: "consent.accepted", entity: "user", entityId: userId, after: { documents: docs.map((d) => `${d.document}@${d.version}`) }, ip: opts.ip });
-      await this.events.emit(tx, "auth.signed_up", { method }, { actorId: userId, source });
+    const rows = toRecord.map((d) => ({ document: d.key, version: String(d.version), hash: d.text_hash }));
+    if (isNew && opts.marketing_consent) rows.push({ document: MARKETING.document, version: MARKETING.version, hash: MARKETING.text_hash });
+    for (const d of rows) {
+      await tx.query(`insert into consents (user_id, document, version, action, channel, ip, text_hash, created_at) values ($1,$2,$3,'accepted',$4,$5,$6,$7)`,
+        [userId, d.document, d.version, method, cleanIp(opts.ip), d.hash, this.clock.now()]);
+      await this.events.emit(tx, "consent.accepted", { document: d.document, version: d.version, channel: method }, { actorId: userId, source });
     }
+    if (rows.length) await this.audit.record(tx, { actorId: userId, action: "consent.accepted", entity: "user", entityId: userId, after: { documents: rows.map((d) => `${d.document}@${d.version}`) }, ip: opts.ip });
+    if (isNew) await this.events.emit(tx, "auth.signed_up", { method }, { actorId: userId, source });
     await this.events.emit(tx, "auth.signed_in", { method }, { actorId: userId, source });
   }
 
@@ -220,4 +223,3 @@ function cleanIp(ip?: string | null): string | null {
   return /^[0-9a-fA-F:.]+$/.test(v) ? v : null;
 }
 
-export { LEGAL_DOCS };

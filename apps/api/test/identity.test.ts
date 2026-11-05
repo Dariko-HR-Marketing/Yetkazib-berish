@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { boot, call, CONSENTS, lastCode, makeOwner, signUp, telegramInitData, totpCode, type Harness } from "./helpers";
+import { boot, call, CONSENTS, lastCode, makeOwner, signUp, telegramInitData, totpCode, type Harness, SHOP_CONSENTS } from "./helpers";
 
 let h: Harness;
 const PHONE = "+998901234567";
@@ -140,14 +140,15 @@ describe("I-4: birinchi kirishda oferta va maxfiylik akcepti", () => {
     const code = lastCode(h, PHONE);
     const r = await verify(code).expect(422);
     expect(r.body.code).toBe("consent.required");
-    expect(r.body.details.documents).toEqual(CONSENTS);
+    expect(r.body.details.documents.map((d: { document: string; version: string }) => ({ document: d.document, version: d.version }))).toEqual(CONSENTS);
+    expect(r.body.details.documents[0]).toMatchObject({ title: expect.any(String), text_hash: expect.stringMatching(/^[0-9a-f]{64}$/) });
     expect((await h.admin.query("select count(*)::int as n from users")).rows[0].n).toBe(0);
     await verify(code, { consents: CONSENTS }).expect(200); // xuddi shu kod bilan davom etish mumkin
   });
 
   it("eskirgan versiya bilan akcept qabul qilinmaydi", async () => {
     await requestOtp().expect(202);
-    await verify(lastCode(h, PHONE), { consents: [{ document: "customer_offer", version: "1999-01-01" }, { document: "privacy_policy", version: "1999-01-01" }] }).expect(422);
+    await verify(lastCode(h, PHONE), { consents: [{ document: "customer_offer", version: "999" }, { document: "privacy_policy", version: "999" }] }).expect(422);
   });
 
   it("akcept consents jadvaliga hujjat, versiya, kanal, IP va matn xeshi bilan yoziladi; marketing alohida", async () => {
@@ -183,7 +184,7 @@ describe("I-4: birinchi kirishda oferta va maxfiylik akcepti", () => {
 describe("I-5: egasi, buxgalter, admin uchun ikkinchi omil", () => {
   it("TOTP'siz egasi do'kon endpointlariga kira olmaydi (403 auth.mfa_required)", async () => {
     const s = await signUp(h, PHONE);
-    const t = await call(h, "post", "/v1/tenants", { token: s.token, body: { name: "Do'kon", tin: "123456789" } }).expect(201);
+    const t = await call(h, "post", "/v1/tenants", { token: s.token, body: { consents: SHOP_CONSENTS, name: "Do'kon", tin: "123456789" } }).expect(201);
     const r = await call(h, "get", `/v1/members`, { token: s.token, tenant: t.body.id }).expect(403);
     expect(r.body.code).toBe("auth.mfa_required");
   });

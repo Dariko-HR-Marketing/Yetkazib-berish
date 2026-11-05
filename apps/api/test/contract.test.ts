@@ -1,8 +1,9 @@
 import Ajv2020 from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import { loadOpenApi } from "@dostavka/contracts";
+import { PLACEHOLDER } from "../src/modules/legal/legal.service";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { addStaff, boot, call, CONSENTS, lastCode, makeAdmin, makeOwner, signUp, telegramInitData, totpCode, type Call, type Harness } from "./helpers";
+import { addStaff, boot, call, CONSENTS, lastCode, makeAdmin, makeOwner, signUp, telegramInitData, totpCode, type Call, type Harness, SHOP_CONSENTS } from "./helpers";
 
 let h: Harness;
 beforeAll(async () => { h = await boot(); });
@@ -33,7 +34,7 @@ const rewrite = (n: unknown): unknown => {
 const compile = (schema: unknown) => ajv.compile(rewrite(schema) as object);
 
 /** So'rov tanasi (muvaffaqiyatli holatda) va javobni OpenAPI sxemasi bo'yicha tekshiradi. */
-async function op(method: "get" | "post" | "patch", template: string, actual: string, status: number, o: Call = {}) {
+async function op(method: "get" | "post" | "patch" | "put", template: string, actual: string, status: number, o: Call = {}) {
   const spc = spec.paths[template]?.[method];
   if (!spc) throw new Error(`Shartnomada yo'q: ${method.toUpperCase()} ${template}`);
   if (status < 300 && o.body !== undefined && spc.requestBody) {
@@ -96,9 +97,9 @@ describe("OpenAPI shartnomasi", () => {
   it("javoblar shartnomaga mos: tenancy, features, admin", async () => {
     const o = await makeOwner(h, "+998901000001");
     const T = { token: o.token, tenant: o.tenantId };
-    await op("post", "/v1/tenants", "/v1/tenants", 400, { token: o.token, body: { name: "Yangi", tin: "1" } });
+    await op("post", "/v1/tenants", "/v1/tenants", 400, { token: o.token, body: { consents: SHOP_CONSENTS, name: "Yangi", tin: "1" } });
     const s2 = await signUp(h, "+998901000009");
-    await op("post", "/v1/tenants", "/v1/tenants", 201, { token: s2.token, body: { name: "Ikkinchi", tin: "222222222" } });
+    await op("post", "/v1/tenants", "/v1/tenants", 201, { token: s2.token, body: { consents: SHOP_CONSENTS, name: "Ikkinchi", tin: "222222222" } });
     await op("get", "/v1/tenants/{id}", `/v1/tenants/${o.tenantId}`, 200, T);
     await op("get", "/v1/tenants/{id}", `/v1/tenants/${o.tenantId}`, 404, { token: o.token, tenant: "00000000-0000-4000-8000-000000000000" });
     await op("patch", "/v1/tenants/{id}", `/v1/tenants/${o.tenantId}`, 200, { ...T, body: { status: "active" } });
@@ -141,10 +142,30 @@ describe("OpenAPI shartnomasi", () => {
     await op("post", "/v1/invites/{token}/accept", `/v1/invites/${tok}/accept`, 404, { token: inv.token });
   });
 
+  it("javoblar shartnomaga mos: hujjatlar va rozilik", async () => {
+    await op("get", "/v1/legal/documents", "/v1/legal/documents?audience=customer", 200);
+    await op("get", "/v1/legal/documents", "/v1/legal/documents?audience=zzz", 400);
+    await op("get", "/v1/legal/documents/{key}", "/v1/legal/documents/customer_offer", 200);
+    await op("get", "/v1/legal/documents/{key}", "/v1/legal/documents/customer_offer?version=77", 404);
+    // oferta yangi versiyasi chiqishidan oldin (eski versiya bilan) ro'yxatdan o'tiladi
+    const s = await signUp(h, "+998901000099");
+    await op("get", "/v1/me/consents", "/v1/me/consents", 200, { token: s.token });
+    await op("put", "/v1/me/consents/marketing", "/v1/me/consents/marketing", 200, { token: s.token, body: { granted: true } });
+    const admin = await makeAdmin(h);
+    const A = { token: admin.token };
+    const list = await op("get", "/v1/admin/legal", "/v1/admin/legal", 200, A);
+    const offer = list.body.items.find((i: { key: string }) => i.key === "customer_offer");
+    await op("post", "/v1/admin/legal/{id}/publish", `/v1/admin/legal/${offer.id}/publish`, 422, { ...A, body: {} });
+    const cur = await call(h, "get", "/v1/legal/documents/customer_offer").expect(200);
+    const draft = await op("post", "/v1/admin/legal", "/v1/admin/legal", 201, { ...A, body: { key: "customer_offer", locale: "uz", title: "Oferta", body_md: cur.body.body_md.replace(PLACEHOLDER, "Dariko MChJ") } });
+    await op("post", "/v1/admin/legal/{id}/publish", `/v1/admin/legal/${draft.body.id}/publish`, 200, { ...A, body: {} });
+    await op("post", "/v1/admin/legal/{id}/publish", `/v1/admin/legal/${draft.body.id}/publish`, 409, { ...A, body: {} });
+  });
+
   it("shartnoma o'zgarmasligini kafolatlovchi: har operatsiya testda ishlatilgan", () => {
     const used = new Set(checked);
     const missing: string[] = [];
-    for (const [p, ops] of Object.entries(spec.paths)) for (const m of Object.keys(ops)) if (["get", "post", "patch"].includes(m) && !used.has(`${m} ${p}`)) missing.push(`${m} ${p}`);
+    for (const [p, ops] of Object.entries(spec.paths)) for (const m of Object.keys(ops)) if (["get", "post", "patch", "put"].includes(m) && !used.has(`${m} ${p}`)) missing.push(`${m} ${p}`);
     // bu test oldingi ikki test natijasiga tayanadi (bir faylda ketma-ket)
     expect(missing).toEqual([]);
   });

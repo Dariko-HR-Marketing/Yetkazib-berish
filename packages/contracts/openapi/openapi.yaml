@@ -17,6 +17,7 @@ tags:
   - { name: tenancy }
   - { name: features }
   - { name: admin }
+  - { name: legal }
 security:
   - bearer: []
 paths:
@@ -108,6 +109,82 @@ paths:
       responses:
         '200': { description: Joriy foydalanuvchi, content: { application/json: { schema: { $ref: '#/components/schemas/Me' } } } }
         '401': { $ref: '#/components/responses/Error' }
+  /v1/me/consents:
+    get:
+      tags: [auth]
+      operationId: listMyConsents
+      summary: Har hujjat bo'yicha oxirgi rozilik holati
+      responses:
+        '200': { description: Rozilik holatlari, content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { $ref: '#/components/schemas/ConsentState' } } } } } } }
+        '401': { $ref: '#/components/responses/Error' }
+  /v1/me/consents/marketing:
+    put:
+      tags: [auth]
+      operationId: setMarketingConsent
+      summary: Marketing roziligini berish yoki qaytarib olish (xizmat roziligidan alohida)
+      parameters: [{ $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [granted], additionalProperties: false, properties: { granted: { type: boolean } } } } } }
+      responses:
+        '200': { description: Holat, content: { application/json: { schema: { type: object, required: [document, granted], properties: { document: { type: string, const: marketing }, granted: { type: boolean } } } } } }
+        '401': { $ref: '#/components/responses/Error' }
+  /v1/legal/documents:
+    get:
+      tags: [legal]
+      operationId: listLegalDocuments
+      security: []
+      summary: Akcept qilinadigan joriy hujjat versiyalari (ommaviy)
+      parameters:
+        - { name: audience, in: query, schema: { type: string, enum: [customer, shop, courier] } }
+        - { name: Accept-Language, in: header, schema: { type: string, enum: [uz, ru] } }
+      responses:
+        '200': { description: Hujjatlar, content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { $ref: '#/components/schemas/LegalDocumentView' } } } } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '503': { $ref: '#/components/responses/Error' }
+  /v1/legal/documents/{key}:
+    get:
+      tags: [legal]
+      operationId: getLegalDocument
+      security: []
+      summary: Hujjat matni (markdown). `version` berilmasa — joriy versiya
+      parameters:
+        - { name: key, in: path, required: true, schema: { $ref: '#/components/schemas/LegalKey' } }
+        - { name: version, in: query, schema: { type: integer, minimum: 1 } }
+        - { name: Accept-Language, in: header, schema: { type: string, enum: [uz, ru] } }
+      responses:
+        '200': { description: Hujjat, content: { application/json: { schema: { $ref: '#/components/schemas/LegalDocument' } } } }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/admin/legal:
+    get:
+      tags: [admin]
+      operationId: adminListLegal
+      responses:
+        '200': { description: Barcha versiyalar (matnsiz), content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { $ref: '#/components/schemas/LegalAdminItem' } } } } } } }
+        '403': { $ref: '#/components/responses/Error' }
+    post:
+      tags: [admin]
+      operationId: adminCreateLegalDraft
+      summary: Hujjatning yangi (qoralama) versiyasi
+      parameters: [{ $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/LegalDraftInput' } } } }
+      responses:
+        '201': { description: Yaratildi, content: { application/json: { schema: { $ref: '#/components/schemas/LegalAdminItem' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+  /v1/admin/legal/{id}/publish:
+    post:
+      tags: [admin]
+      operationId: adminPublishLegal
+      summary: Kuchga kiritish (to'ldirilmagan joylar qolsa 422 legal.placeholders_remain)
+      parameters:
+        - { name: id, in: path, required: true, schema: { type: string, format: uuid } }
+        - { $ref: '#/components/parameters/IdempotencyKey' }
+      requestBody: { required: false, content: { application/json: { schema: { type: object, additionalProperties: false, properties: { effective_from: { type: string, format: date-time } } } } } }
+      responses:
+        '200': { description: Kuchga kirdi, content: { application/json: { schema: { $ref: '#/components/schemas/LegalPublished' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+        '422': { $ref: '#/components/responses/Error' }
   /v1/tenants:
     post:
       tags: [tenancy]
@@ -322,6 +399,61 @@ components:
         message_uz: { type: string }
         message_ru: { type: string }
         details: { type: object, additionalProperties: true }
+    LegalKey: { type: string, enum: [customer_offer, privacy_policy, shop_saas_offer, shop_dpa, courier_agreement] }
+    ConsentState:
+      type: object
+      required: [document, version, action, at]
+      properties: { document: { type: string }, version: { type: string }, action: { type: string, enum: [accepted, revoked] }, at: { type: string, format: date-time } }
+    LegalDocumentView:
+      type: object
+      required: [key, title, version, locale, translated, status, effective_from, text_hash]
+      properties:
+        key: { $ref: '#/components/schemas/LegalKey' }
+        title: { type: string }
+        version: { type: string }
+        locale: { type: string, enum: [uz, ru] }
+        translated: { type: boolean, description: "false: so'ralgan tilda tarjima yo'q, o'zbekcha ko'rsatilmoqda" }
+        status: { type: string, enum: [draft, effective, retired], description: "draft — yurist tasdiqlamagan (faqat staging/dev)" }
+        effective_from: { type: [string, 'null'], format: date-time }
+        text_hash: { type: string, pattern: '^[0-9a-f]{64}$' }
+    LegalDocument:
+      allOf:
+        - { $ref: '#/components/schemas/LegalDocumentView' }
+        - { type: object, required: [body_md], properties: { body_md: { type: string } } }
+    LegalAdminItem:
+      type: object
+      required: [id, key, locale, version, title, audience, status, text_hash]
+      properties:
+        id: { type: string, format: uuid }
+        key: { $ref: '#/components/schemas/LegalKey' }
+        locale: { type: string, enum: [uz, ru] }
+        version: { type: string }
+        title: { type: string }
+        audience: { type: string, enum: [customer, shop, courier] }
+        status: { type: string, enum: [draft, effective, retired] }
+        effective_from: { type: [string, 'null'], format: date-time }
+        text_hash: { type: string }
+        placeholders: { type: array, items: { type: string }, description: "To'ldirilmagan joylar (draft yaratilganda)" }
+    LegalDraftInput:
+      type: object
+      required: [key, locale, title, body_md]
+      additionalProperties: false
+      properties:
+        key: { $ref: '#/components/schemas/LegalKey' }
+        locale: { type: string, enum: [uz, ru] }
+        title: { type: string, minLength: 3, maxLength: 200 }
+        body_md: { type: string, minLength: 200 }
+    LegalPublished:
+      type: object
+      required: [id, key, locale, version, status, effective_from, text_hash]
+      properties:
+        id: { type: string, format: uuid }
+        key: { $ref: '#/components/schemas/LegalKey' }
+        locale: { type: string }
+        version: { type: string }
+        status: { type: string, const: effective }
+        effective_from: { type: string, format: date-time }
+        text_hash: { type: string }
     PlanCode: { type: string, enum: [start, biznes, pro, tarmoq] }
     Role: { type: string, enum: [owner, manager, picker, cashier, dispatcher, accountant, marketer, courier] }
     InviteRole: { type: string, enum: [manager, picker, cashier, dispatcher, accountant, marketer, courier] }
@@ -330,8 +462,8 @@ components:
       required: [document, version]
       additionalProperties: false
       properties:
-        document: { type: string, enum: [customer_offer, privacy_policy] }
-        version: { type: string }
+        document: { type: string, enum: [customer_offer, privacy_policy, shop_saas_offer, shop_dpa] }
+        version: { type: string, description: "Hujjatning joriy versiyasi (GET /v1/legal/documents)" }
     OtpRequest:
       type: object
       required: [phone]
@@ -425,6 +557,7 @@ components:
       properties:
         name: { type: string, minLength: 2, maxLength: 120 }
         tin: { type: string, description: STIR — aynan 9 ta raqam }
+        consents: { type: array, maxItems: 4, items: { $ref: '#/components/schemas/ConsentInput' }, description: "SaaS oferta va DPA akcepti (shop_saas_offer, shop_dpa); bo'lmasa 422 consent.required" }
     TenantUpdate:
       type: object
       additionalProperties: false

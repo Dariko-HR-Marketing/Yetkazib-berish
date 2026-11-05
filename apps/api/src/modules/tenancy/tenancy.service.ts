@@ -10,6 +10,8 @@ import { maskPhone } from "../identity/identity.service";
 import { SMS_SENDER, type SmsSender } from "../identity/sms.sender";
 import { effectivePlan, nextPlan, type EffectivePlan, type TenantPlanRef } from "../plans-flags/plans";
 import { FeaturesService } from "../plans-flags/features.service";
+import { LegalService, type ConsentInput } from "../legal/legal.service";
+import { EventsService } from "../audit-events/events.service";
 
 export const INVITE_TTL_MS = 72 * 3600 * 1000;
 
@@ -20,12 +22,15 @@ const tenantDto = (t: TenantRow) => ({ id: t.id, name: t.name, tin: t.tin, statu
 export class TenancyService {
   constructor(private readonly db: DbService, private readonly clock: Clock, private readonly audit: AuditService,
               @Inject(SMS_SENDER) private readonly sms: SmsSender, @Inject(CONFIG) private readonly cfg: Config,
-              private readonly features: FeaturesService) {}
+              private readonly features: FeaturesService, private readonly legal: LegalService, private readonly events: EventsService) {}
 
   // ---------------------------------------------------------------- T-1
-  async createTenant(userId: string, d: { name: string; tin: string }, ip?: string | null) {
+  async createTenant(userId: string, d: { name: string; tin: string; consents?: ConsentInput[] }, ip?: string | null) {
     const id = randomUUID();
     return this.db.tx({ userId, tenantId: id }, async (tx) => {
+      // Do'kon egasi SaaS ofertasi va DPA ni qabul qilishi shart (Onboard-Shop, 4-qadam); javob oldidan hech narsa yozilmaydi.
+      const ev = await this.legal.evaluate(tx, { tenantId: id }, "shop", d.consents);
+      if (ev.missing.length) throw new ApiError(422, "consent.required", { documents: ev.missing, scope: "shop" });
       const plan = (await tx.query<{ version: number }>("select version from plans where code = 'start' and status = 'published' order by version desc limit 1")).rows[0];
       if (!plan) throw new ApiError(500, "internal_error", { reason: "start_plan_missing" });
       const t = (await tx.query<TenantRow>(
@@ -34,6 +39,12 @@ export class TenancyService {
       const m = (await tx.query<{ id: string }>("insert into memberships (tenant_id, user_id, role) values ($1,$2,'owner') returning id", [id, userId])).rows[0]!;
       await this.audit.record(tx, { tenantId: id, actorId: userId, action: "tenant.created", entity: "tenant", entityId: id, after: { name: d.name, plan: "start" }, ip });
       await this.audit.record(tx, { tenantId: id, actorId: userId, action: "member.role_set", entity: "membership", entityId: m.id, after: { role: "owner" }, ip });
+      for (const c of ev.toRecord) {
+        await tx.query(`insert into consents (user_id, tenant_id, document, version, action, channel, ip, text_hash, created_at) values ($1,$2,$3,$4,'accepted','panel',$5,$6,$7)`,
+          [userId, id, c.key, String(c.version), cleanIp(ip), c.text_hash, this.clock.now()]);
+        await this.events.emit(tx, "consent.accepted", { document: c.key, version: String(c.version), channel: "panel" }, { tenantId: id, actorId: userId, source: "panel" });
+      }
+      await this.audit.record(tx, { tenantId: id, actorId: userId, action: "consent.accepted", entity: "tenant", entityId: id, after: { documents: ev.toRecord.map((c) => `${c.key}@${c.version}`) }, ip });
       return tenantDto(t);
     });
   }
@@ -196,4 +207,10 @@ export class TenancyService {
   async limitsOf(tenantId: string) {
     return this.features.resolved(tenantId).then((r) => r.plan.limits);
   }
+}
+
+function cleanIp(ip?: string | null): string | null {
+  if (!ip) return null;
+  const v = ip.replace(/^::ffff:/, "");
+  return /^[0-9a-fA-F:.]+$/.test(v) ? v : null;
 }

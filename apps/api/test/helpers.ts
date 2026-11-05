@@ -10,10 +10,20 @@ import { DbService } from "../src/db/db.service";
 import { EventsDispatcher } from "../src/modules/audit-events/events.dispatcher";
 import { FeaturesService } from "../src/modules/plans-flags/features.service";
 import { MockSmsSender } from "../src/modules/identity/sms.sender";
-import { LEGAL_DOCS } from "../src/modules/identity/legal";
 import { PLATFORM_OFF_BY_DEFAULT } from "../src/db/seed";
 
-export const CONSENTS = Object.entries(LEGAL_DOCS).map(([document, version]) => ({ document, version }));
+/** Joriy hujjat versiyalari (bazadan, boot() va reset() to'ldiradi): xaridor va do'kon egasi uchun. */
+export const CONSENTS: { document: string; version: string }[] = [];
+export const SHOP_CONSENTS: { document: string; version: string }[] = [];
+async function loadConsents(admin: Pool) {
+  const r = await admin.query<{ key: string; version: number; audience: string }>(
+    "select distinct on (key) key, version, audience from legal_documents where locale = 'uz' and status in ('effective', 'draft') order by key, (status = 'effective') desc, version desc");
+  CONSENTS.length = 0; SHOP_CONSENTS.length = 0;
+  for (const d of r.rows) {
+    if (d.audience === "customer") CONSENTS.push({ document: d.key, version: String(d.version) });
+    if (d.audience === "shop") SHOP_CONSENTS.push({ document: d.key, version: String(d.version) });
+  }
+}
 
 export interface Harness {
   app: NestExpressApplication;
@@ -33,6 +43,7 @@ export async function boot(): Promise<Harness> {
   const app = await createApp({ quiet: true });
   await app.init();
   const admin = new Pool({ connectionString: process.env.DATABASE_URL, max: 4 });
+  await loadConsents(admin);
   const h: Harness = {
     app, admin,
     clock: app.get(Clock), sms: app.get(MockSmsSender), db: app.get(DbService), redis: app.get(RedisService),
@@ -41,6 +52,11 @@ export async function boot(): Promise<Harness> {
     async close() { await app.close(); await admin.end(); },
     async reset() {
       h.clock.reset();
+      await admin.query("set session_replication_role = replica");
+      await admin.query("delete from legal_documents where version > 1");
+      await admin.query("update legal_documents set status = 'draft', effective_from = null, published_by = null");
+      await admin.query("set session_replication_role = default");
+      await loadConsents(admin);
       h.sms.outbox.length = 0;
       await admin.query("set session_replication_role = replica");
       await admin.query("truncate users, otp_codes, otp_locks, refresh_tokens, idempotency_keys, tenants, consents, events, audit_log restart identity cascade");
@@ -97,7 +113,7 @@ export async function enableTotp(h: Harness, s: Session): Promise<Session & { se
 /** Egasi: SMS + do'kon + TOTP. */
 export async function makeOwner(h: Harness, phone: string, tin = "123456789", name = "Yashil Savat") {
   const s = await signUp(h, phone);
-  const t0 = await call(h, "post", "/v1/tenants", { token: s.token, body: { name, tin } }).expect(201);
+  const t0 = await call(h, "post", "/v1/tenants", { token: s.token, body: { name, tin, consents: SHOP_CONSENTS } }).expect(201);
   const owner = await enableTotp(h, s);
   return { ...owner, tenantId: t0.body.id as string };
 }

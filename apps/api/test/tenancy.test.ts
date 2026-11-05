@@ -1,5 +1,5 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { addStaff, boot, call, idem, invite, makeAdmin, makeOwner, renew, signUp, type Harness } from "./helpers";
+import { addStaff, boot, call, idem, invite, makeAdmin, makeOwner, renew, signUp, type Harness, SHOP_CONSENTS } from "./helpers";
 
 let h: Harness;
 const OWNER = "+998901000001";
@@ -10,7 +10,7 @@ beforeEach(async () => { await h.reset(); });
 describe("T-1: do'kon yaratish", () => {
   it("qoralama holatda, foydalanuvchi egasi, paket Start", async () => {
     const s = await signUp(h, OWNER);
-    const r = await call(h, "post", "/v1/tenants", { token: s.token, body: { name: "Yashil Savat", tin: "123456789" } }).expect(201);
+    const r = await call(h, "post", "/v1/tenants", { token: s.token, body: { consents: SHOP_CONSENTS, name: "Yashil Savat", tin: "123456789" } }).expect(201);
     expect(r.body).toMatchObject({ name: "Yashil Savat", tin: "123456789", status: "draft", plan: { code: "start", version: 1 } });
     const m = (await h.admin.query("select role, status, user_id from memberships where tenant_id = $1", [r.body.id])).rows;
     expect(m).toEqual([{ role: "owner", status: "active", user_id: s.userId }]);
@@ -19,7 +19,7 @@ describe("T-1: do'kon yaratish", () => {
   });
 
   it("autentifikatsiyasiz — 401", async () => {
-    await call(h, "post", "/v1/tenants", { body: { name: "X Do'kon", tin: "123456789" } }).expect(401);
+    await call(h, "post", "/v1/tenants", { body: { consents: SHOP_CONSENTS, name: "X Do'kon", tin: "123456789" } }).expect(401);
   });
 
   it("yaratish audit jurnaliga yoziladi", async () => {
@@ -47,7 +47,7 @@ describe("T-1: do'kon yaratish", () => {
 describe("T-2: STIR tekshiruvi", () => {
   it.each(["12345678", "1234567890", "12345678a", "", "123 456 789"])("STIR %j rad etiladi (uz/ru xabar bilan)", async (tin) => {
     const s = await signUp(h, OWNER);
-    const r = await call(h, "post", "/v1/tenants", { token: s.token, body: { name: "Do'kon", tin } }).expect(400);
+    const r = await call(h, "post", "/v1/tenants", { token: s.token, body: { consents: SHOP_CONSENTS, name: "Do'kon", tin } }).expect(400);
     expect(r.body.code).toBe("validation.tin_invalid");
     expect(r.body.message_uz).toMatch(/STIR/);
     expect(r.body.message_ru).toMatch(/ИНН/);
@@ -56,14 +56,14 @@ describe("T-2: STIR tekshiruvi", () => {
 
   it("qisqa nom — validation.failed", async () => {
     const s = await signUp(h, OWNER);
-    const r = await call(h, "post", "/v1/tenants", { token: s.token, body: { name: "A", tin: "123456789" } }).expect(400);
+    const r = await call(h, "post", "/v1/tenants", { token: s.token, body: { consents: SHOP_CONSENTS, name: "A", tin: "123456789" } }).expect(400);
     expect(r.body.code).toBe("validation.failed");
     expect(r.body.details.issues[0].path).toBe("name");
   });
 
   it("noma'lum maydon rad etiladi (strict)", async () => {
     const s = await signUp(h, OWNER);
-    await call(h, "post", "/v1/tenants", { token: s.token, body: { name: "Do'kon", tin: "123456789", plan_code: "pro" } }).expect(400);
+    await call(h, "post", "/v1/tenants", { token: s.token, body: { consents: SHOP_CONSENTS, name: "Do'kon", tin: "123456789", plan_code: "pro" } }).expect(400);
   });
 });
 
@@ -313,7 +313,7 @@ describe("RBAC va umumiy qoidalar", () => {
 
   it("Idempotency-Key majburiy; takroriy so'rov bitta natija beradi; boshqa tana bilan — 422", async () => {
     const s = await signUp(h, OWNER);
-    const body = { name: "Do'kon A", tin: "123456789" };
+    const body = { name: "Do'kon A", tin: "123456789", consents: SHOP_CONSENTS };
     await call(h, "post", "/v1/tenants", { token: s.token, body, key: null }).expect(400).then((r) => expect(r.body.code).toBe("idempotency.key_required"));
     const key = idem();
     const r1 = await call(h, "post", "/v1/tenants", { token: s.token, body, key }).expect(201);
@@ -327,15 +327,15 @@ describe("RBAC va umumiy qoidalar", () => {
   it("xato bo'lganda kalit saqlanmaydi — tuzatib qayta yuborish mumkin", async () => {
     const s = await signUp(h, OWNER);
     const key = idem();
-    await call(h, "post", "/v1/tenants", { token: s.token, body: { name: "Do'kon", tin: "bad" }, key }).expect(400);
-    await call(h, "post", "/v1/tenants", { token: s.token, body: { name: "Do'kon", tin: "123456789" }, key }).expect(201); // kalit xatoda bo'shatilgan
-    await call(h, "post", "/v1/tenants", { token: s.token, body: { name: "Do'kon", tin: "123456789" }, key }).expect(201).then((r) => expect(r.headers["idempotent-replayed"]).toBe("true"));
+    await call(h, "post", "/v1/tenants", { token: s.token, body: { consents: SHOP_CONSENTS, name: "Do'kon", tin: "bad" }, key }).expect(400);
+    await call(h, "post", "/v1/tenants", { token: s.token, body: { consents: SHOP_CONSENTS, name: "Do'kon", tin: "123456789" }, key }).expect(201); // kalit xatoda bo'shatilgan
+    await call(h, "post", "/v1/tenants", { token: s.token, body: { consents: SHOP_CONSENTS, name: "Do'kon", tin: "123456789" }, key }).expect(201).then((r) => expect(r.headers["idempotent-replayed"]).toBe("true"));
   });
 
   it("parallel bir xil Idempotency-Key — bitta do'kon", async () => {
     const s = await signUp(h, OWNER);
     const key = idem();
-    const rs = await Promise.all([1, 2, 3].map(() => call(h, "post", "/v1/tenants", { token: s.token, body: { name: "Do'kon", tin: "123456789" }, key })));
+    const rs = await Promise.all([1, 2, 3].map(() => call(h, "post", "/v1/tenants", { token: s.token, body: { consents: SHOP_CONSENTS, name: "Do'kon", tin: "123456789" }, key })));
     expect(rs.every((r) => [201, 409].includes(r.status))).toBe(true);
     expect(rs.some((r) => r.status === 201)).toBe(true);
     expect((await h.admin.query("select count(*)::int as n from tenants")).rows[0].n).toBe(1);
