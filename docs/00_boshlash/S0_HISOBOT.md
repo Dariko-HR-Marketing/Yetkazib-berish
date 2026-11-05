@@ -101,3 +101,21 @@ S1 — katalog, qoldiq, Excel import, MXIK. **S0 tugamaguncha S1 ga o'tilmaydi:*
 - **Tokenlar:** BFF + httpOnly cookie (yuqoridagi §5.5).
 - **IP cheklovi** va `GET /v1/health`.
 - Testlar: API 188, i18n 6, contracts 5, web 21, E2E 44+.
+
+## 9. S1 (katalog, qoldiq, import) — holat (2026-11-05)
+
+Reja va qarorlar (D1–D17): `S1_REJA.md`.
+
+| Nima | Holat |
+| --- | --- |
+| Migratsiya 0009: `categories`, `products`, `stock`, `stock_movements` (o'zgarmas), `import_jobs` + RLS, tenantlararo murakkab FK | ✅ |
+| API: kategoriya, mahsulot (kursor, qidiruv, MXIK filtri), qoldiq (o'rnatish/tuzatish/«Tugadi»), import (preview/apply, CSV+XLSX) | ✅ |
+| OpenAPI: +17 operatsiya, shartnoma ↔ kod testi | ✅ |
+| Veb: `/katalog`, `/import` (uz/ru, 360–1440, axe) | ✅ |
+| Mezon: 1 000 mahsulot import ≤ 60 s | ✅ ~3 s (API testi) |
+| Mezon: «Tugadi» ≤ 5 s | ✅ keshsiz o'qish (ommaviy vitrina — S2) |
+| Testlar: API 214, web 25, E2E 63 | ✅ lokal |
+
+Qilinmagan / keyingi: import «bekor qilish» (undo), zal/ombor bo'linishi, ierarxik kategoriya, rasm yuklash (S3 bilan), MXIK avtomatik to'ldirish (AI, S7), ommaviy vitrina o'qishi (S2).
+Inson ko'rib chiqishi: ruxsatlar (`catalog:*`, `stock:*`), RLS (0009), import parseri (`parsers.ts`, zip-bomba chegarasi).
+Eslatma: E2E'dagi «refresh bilan tiklanish» testi to'liq yurishlarda vaqti-vaqti bilan yiqiladi (E2E API jurnali endi `stdout: pipe` bilan ko'rinadi).

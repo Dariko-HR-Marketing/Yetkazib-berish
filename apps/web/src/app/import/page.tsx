@@ -108,7 +108,7 @@ export default function ImportPage() {
         <div className="flex flex-col gap-4">
           <Card className="flex flex-col gap-4">
             <div className="flex flex-wrap items-center gap-3">
-              <input ref={input} id="import-file" type="file" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="sr-only" onChange={(e) => { void pick(e.target.files?.[0]); e.target.value = ""; }} />
+              <input ref={input} id="import-file" aria-label={t("import.choose")} type="file" accept=".xlsx,.csv,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" className="sr-only" onChange={(e) => { void pick(e.target.files?.[0]); e.target.value = ""; }} />
               <Button onClick={() => input.current?.click()} loading={busy === "read"}>{t("import.choose")}</Button>
               <Button variant="ghost" onClick={downloadTemplate}>{t("import.template")}</Button>
               {file && <span className="break-all text-body font-semibold">{file.name}</span>}

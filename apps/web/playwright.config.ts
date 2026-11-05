@@ -24,6 +24,7 @@ export default defineConfig({
   webServer: [
     {
       command: "node ../api/dist/main.js",
+      stdout: "pipe", // refresh rad etilish sabablari (WARN) E2E jurnalida ko'rinsin
       url: `${API_URL}/v1/_dev/sms`,
       reuseExistingServer: false,
       timeout: 60_000,

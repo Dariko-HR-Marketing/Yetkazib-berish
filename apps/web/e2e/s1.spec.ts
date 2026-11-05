@@ -1,15 +1,20 @@
 import { expect, test, type Page } from "@playwright/test";
 import { ownerFlow } from "./helpers";
 
-test.use({ viewport: { width: 390, height: 900 } });
 test.describe.configure({ mode: "serial" });
+let page: Page; // barcha testlar bitta kirgan egasi sessiyasida (ketma-ket)
+test.beforeAll(async ({ browser, request }) => {
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 900 } });
+  page = await ctx.newPage();
+  await ownerFlow(page, request, OWNER);
+});
+test.afterAll(async () => { await page.context().close(); });
 
 const OWNER = "+998903330001";
 const alertOf = (p: Page) => p.locator('[role="alert"]:not(#__next-route-announcer__)');
 const row = (p: Page, name: string) => p.getByTestId("product-row").filter({ hasText: name });
 
-test("katalog: filial -> mahsulot (takroriy shtrix-kod rad etiladi) -> qoldiq -> «Tugadi» -> filtr", async ({ page, request }) => {
-  await ownerFlow(page, request, OWNER);
+test("katalog: filial -> mahsulot (takroriy shtrix-kod rad etiladi) -> qoldiq -> «Tugadi» -> filtr", async () => {
   await page.getByRole("link", { name: "Katalog va qoldiq" }).click();
   await expect(page.getByText("Avval filial qo'shing")).toBeVisible();
   await page.getByLabel("Filial nomi").fill("Markaziy");
@@ -21,7 +26,7 @@ test("katalog: filial -> mahsulot (takroriy shtrix-kod rad etiladi) -> qoldiq ->
     await page.getByRole("button", { name: "Mahsulot qo'shish" }).click();
     await page.getByLabel("Nomi (o'zbekcha)").fill(name);
     await page.getByLabel("Narx, so'm").fill(price);
-    if (extra.barcode) await page.getByLabel("Shtrix-kod").fill(extra.barcode);
+    if (extra.barcode) await page.getByLabel("Shtrix-kod", { exact: true }).fill(extra.barcode);
     if (extra.qty) await page.getByLabel("Qoldiq (tanlangan filialda)").fill(extra.qty);
     await page.getByRole("button", { name: "Saqlash", exact: true }).click();
   };
@@ -32,7 +37,7 @@ test("katalog: filial -> mahsulot (takroriy shtrix-kod rad etiladi) -> qoldiq ->
 
   await add("Non", "4 000", { barcode: "4780000000001" });
   await expect(page.getByText("Bu shtrix-kodli mahsulot allaqachon bor")).toBeVisible();
-  await page.getByLabel("Shtrix-kod").fill("4780000000002");
+  await page.getByLabel("Shtrix-kod", { exact: true }).fill("4780000000002");
   await page.getByRole("button", { name: "Saqlash", exact: true }).click();
   await expect(row(page, "Non")).toBeVisible();
   await expect(row(page, "Non").getByText("Tugadi", { exact: true }).first()).toBeVisible(); // qoldiq kiritilmagan
@@ -60,7 +65,7 @@ test("katalog: filial -> mahsulot (takroriy shtrix-kod rad etiladi) -> qoldiq ->
   expect(await alertOf(page).count()).toBe(0);
 });
 
-test("import: ko'rib chiqish (hech narsa saqlanmaydi) -> xatolar -> tasdiqlash -> katalogda ko'rinadi; 30% narx sakrashi tasdiq talab qiladi", async ({ page }) => {
+test("import: ko'rib chiqish (hech narsa saqlanmaydi) -> xatolar -> tasdiqlash -> katalogda ko'rinadi; 30% narx sakrashi tasdiq talab qiladi", async () => {
   await page.goto("/import");
   const csv = ["nomi,narx,shtrix-kod,qoldiq", "Olma,9000,4780000000010,5", "Banan,xato,4780000000011,3", '"Sut 3,2%",20000,4780000000001,10'].join("\n");
   await page.locator("#import-file").setInputFiles({ name: "katalog.csv", mimeType: "text/csv", buffer: Buffer.from(csv, "utf8") });
@@ -72,7 +77,7 @@ test("import: ko'rib chiqish (hech narsa saqlanmaydi) -> xatolar -> tasdiqlash -
   // hali saqlanmagan
   const apply = page.getByRole("button", { name: "Importni boshlash" });
   await apply.click();
-  await expect(page.getByText(/Import yakunlandi: 1 ta yangi, 0 ta yangilandi/)).toBeVisible();
+  await expect(page.getByText(/Import yakunlandi: 1 ta yangi, 0 ta yangilandi/).first()).toBeVisible();
   await expect(page.getByText(/⚠ 2/)).toBeVisible(); // tarix: 2 xato (narx noto'g'ri + sakrash)
 
   await page.getByRole("link", { name: "Katalogga o'tish" }).click();
@@ -85,14 +90,15 @@ test("import: ko'rib chiqish (hech narsa saqlanmaydi) -> xatolar -> tasdiqlash -
   await page.locator("#import-file").setInputFiles({ name: "narx.csv", mimeType: "text/csv", buffer: Buffer.from(csv2, "utf8") });
   await page.getByLabel(/30% dan ko'p o'zgargan 1 ta mahsulotni/).check();
   await page.getByRole("button", { name: "Importni boshlash" }).click();
-  await expect(page.getByText(/Import yakunlandi: 0 ta yangi, 1 ta yangilandi/)).toBeVisible();
+  await expect(page.getByText(/Import yakunlandi: 0 ta yangi, 1 ta yangilandi/).first()).toBeVisible();
   await page.goto("/katalog");
   await expect(row(page, "Sut 3,2%")).toContainText("20 000");
 });
 
-test("rus tili: katalog va import matnlari", async ({ page }) => {
-  await page.addInitScript(() => { try { localStorage.setItem("dostavka.locale", "ru"); } catch { /* */ } });
+test("rus tili: katalog va import matnlari", async () => {
   await page.goto("/katalog");
+  await page.evaluate(() => { try { localStorage.setItem("dostavka.locale", "ru"); } catch { /* */ } });
+  await page.reload();
   await expect(page.getByRole("heading", { level: 1, name: "Каталог и остатки" })).toBeVisible();
   await expect(page.getByRole("button", { name: /^Заканчиваются/ })).toBeVisible();
   await page.goto("/import");

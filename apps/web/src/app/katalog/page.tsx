@@ -177,6 +177,7 @@ export default function CatalogPage() {
       const s = await api<StockView>(`/v1/products/${p.id}/stock/out`, { method: "POST", tenant: true, body: { branch_id: branchId, out: !p.stock.out_marked } });
       setItems((xs) => xs.map((x) => (x.id === p.id ? { ...x, stock: s } : x)));
       if (canRead) setSummary(await api<Summary>(`/v1/catalog/summary?branch_id=${branchId}`, { tenant: true }));
+      if (filter === "low" || filter === "out") await load(); // holat o'zgargach ro'yxat filtrga mos qayta tuziladi
     } catch (e) { fail(e); }
   };
 
