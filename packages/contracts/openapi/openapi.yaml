@@ -19,6 +19,7 @@ tags:
   - { name: features }
   - { name: admin }
   - { name: legal }
+  - { name: catalog }
 security:
   - bearer: []
 paths:
@@ -388,6 +389,210 @@ paths:
         '200': { description: O'zgartirildi, content: { application/json: { schema: { $ref: '#/components/schemas/Tenant' } } } }
         '403': { $ref: '#/components/responses/Error' }
         '404': { $ref: '#/components/responses/Error' }
+  /v1/categories:
+    get:
+      tags: [catalog]
+      operationId: listCategories
+      parameters: [{ $ref: '#/components/parameters/TenantId' }]
+      responses:
+        '200': { description: Kategoriyalar, content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { $ref: '#/components/schemas/Category' } } } } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+    post:
+      tags: [catalog]
+      operationId: createCategory
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/CategoryInput' } } } }
+      responses:
+        '201': { description: Yaratildi, content: { application/json: { schema: { $ref: '#/components/schemas/Category' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+  /v1/categories/{id}:
+    patch:
+      tags: [catalog]
+      operationId: updateCategory
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/CategoryInput' } } } }
+      responses:
+        '200': { description: Yangilandi, content: { application/json: { schema: { $ref: '#/components/schemas/Category' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [catalog]
+      operationId: deleteCategory
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: O'chirildi (mahsulotlar kategoriyasiz qoladi), content: { application/json: { schema: { $ref: '#/components/schemas/IdOnly' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/products:
+    get:
+      tags: [catalog]
+      operationId: listProducts
+      summary: Mahsulotlar (kursor bilan); filial berilsa qoldiq shu filial bo'yicha, aks holda jami
+      parameters:
+        - { $ref: '#/components/parameters/TenantId' }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 50 } }
+        - { name: cursor, in: query, schema: { type: string } }
+        - { name: q, in: query, schema: { type: string, maxLength: 100 } }
+        - { name: category_id, in: query, schema: { type: string, format: uuid } }
+        - { name: status, in: query, schema: { type: string, enum: [active, hidden, archived] } }
+        - { name: branch_id, in: query, schema: { type: string, format: uuid } }
+        - { name: stock, in: query, schema: { type: string, enum: [out, low, in] } }
+        - { name: mxik, in: query, schema: { type: string, enum: [missing] } }
+      responses:
+        '200': { description: Mahsulotlar, content: { application/json: { schema: { $ref: '#/components/schemas/ProductPage' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+    post:
+      tags: [catalog]
+      operationId: createProduct
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ProductCreate' } } } }
+      responses:
+        '201': { description: Yaratildi, content: { application/json: { schema: { $ref: '#/components/schemas/Product' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+  /v1/stock:
+    get:
+      tags: [catalog]
+      operationId: listStock
+      summary: 'Qoldiq ko''rinishi (yig''uvchi/kassir uchun: stock:read). Mahsulotlar ro''yxati bilan bir xil shakl'
+      parameters:
+        - { $ref: '#/components/parameters/TenantId' }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 50 } }
+        - { name: cursor, in: query, schema: { type: string } }
+        - { name: q, in: query, schema: { type: string, maxLength: 100 } }
+        - { name: branch_id, in: query, schema: { type: string, format: uuid } }
+        - { name: stock, in: query, schema: { type: string, enum: [out, low, in] } }
+      responses:
+        '200': { description: Qoldiq, content: { application/json: { schema: { $ref: '#/components/schemas/ProductPage' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/catalog/summary:
+    get:
+      tags: [catalog]
+      operationId: catalogSummary
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { name: branch_id, in: query, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: Panel sarlavhasi, content: { application/json: { schema: { $ref: '#/components/schemas/CatalogSummary' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/products/{id}:
+    get:
+      tags: [catalog]
+      operationId: getProduct
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }, { name: branch_id, in: query, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: Mahsulot, content: { application/json: { schema: { $ref: '#/components/schemas/Product' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+    patch:
+      tags: [catalog]
+      operationId: updateProduct
+      summary: Tahrirlash. Narx o'zgarishi auditga oldin/keyin bilan yoziladi (A-1)
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ProductUpdate' } } } }
+      responses:
+        '200': { description: Yangilandi, content: { application/json: { schema: { $ref: '#/components/schemas/Product' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [catalog]
+      operationId: archiveProduct
+      summary: Arxivlash (tarix saqlanadi)
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: Arxivlandi, content: { application/json: { schema: { $ref: '#/components/schemas/IdOnly' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/products/{id}/stock:
+    put:
+      tags: [catalog]
+      operationId: setStock
+      summary: Qoldiqni mutlaq qiymatga o'rnatish (miqdor mingdan bir birlikda)
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/StockSet' } } } }
+      responses:
+        '200': { description: Yangi holat, content: { application/json: { schema: { $ref: '#/components/schemas/StockView' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/products/{id}/stock/adjust:
+    post:
+      tags: [catalog]
+      operationId: adjustStock
+      summary: Qoldiqni o'zgartirish (+/-). Noldan pastga tushmaydi (422 stock.negative)
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/StockAdjust' } } } }
+      responses:
+        '200': { description: Yangi holat, content: { application/json: { schema: { $ref: '#/components/schemas/StockView' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '422': { $ref: '#/components/responses/Error' }
+  /v1/products/{id}/stock/out:
+    post:
+      tags: [catalog]
+      operationId: markStockOut
+      summary: «Tugadi deb belgilash» / «Sotuvga qaytarish» (hodisa stock.out_marked)
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/StockOut' } } } }
+      responses:
+        '200': { description: Yangi holat, content: { application/json: { schema: { $ref: '#/components/schemas/StockView' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/products/{id}/stock/movements:
+    get:
+      tags: [catalog]
+      operationId: listStockMovements
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }, { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }]
+      responses:
+        '200': { description: Harakatlar (yangidan eskiga), content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { $ref: '#/components/schemas/StockMovement' } } } } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/catalog/imports:
+    get:
+      tags: [catalog]
+      operationId: listImports
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 20 } }]
+      responses:
+        '200': { description: Import tarixi, content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { $ref: '#/components/schemas/ImportJob' } } } } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+    post:
+      tags: [catalog]
+      operationId: runImport
+      summary: Excel/CSV import. `preview` — hech narsa yozilmaydi; `apply` — xato qatorlar o'tkaziladi, qolganlari yoziladi
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/ImportRequest' } } } }
+      responses:
+        '200': { description: Natija, content: { application/json: { schema: { $ref: '#/components/schemas/ImportResult' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '413': { $ref: '#/components/responses/Error' }
+        '422': { $ref: '#/components/responses/Error' }
+  /v1/catalog/imports/{id}:
+    get:
+      tags: [catalog]
+      operationId: getImport
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: Import va xatolar, content: { application/json: { schema: { $ref: '#/components/schemas/ImportJobDetail' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
 components:
   securitySchemes:
     bearer: { type: http, scheme: bearer, bearerFormat: JWT }
@@ -717,3 +922,159 @@ components:
         platform_enabled: { type: boolean }
         min_plan: { type: string }
         toggled_by: { type: string }
+    IdOnly: { type: object, required: [id], properties: { id: { type: string, format: uuid } } }
+    Category:
+      type: object
+      required: [id, name_uz, name_ru, sort]
+      properties: { id: { type: string, format: uuid }, name_uz: { type: string }, name_ru: { type: [string, 'null'] }, sort: { type: integer } }
+    CategoryInput:
+      type: object
+      additionalProperties: false
+      properties: { name_uz: { type: string, minLength: 1, maxLength: 120 }, name_ru: { type: [string, 'null'], maxLength: 120 }, sort: { type: integer, minimum: 0 } }
+    StockView:
+      type: object
+      required: [quantity_milli, reserved_milli, available_milli, out_marked, state]
+      description: Miqdorlar mingdan bir birlikda (1 dona = 1000; 1,08 kg = 1080). mavjud = qoldiq − band; stop-listda 0
+      properties:
+        quantity_milli: { type: integer }
+        reserved_milli: { type: integer }
+        available_milli: { type: integer }
+        out_marked: { type: boolean }
+        state: { type: string, enum: [out, low, in] }
+    Product:
+      type: object
+      required: [id, category_id, name_uz, name_ru, sku, barcode, mxik, unit, price_tiyin, status, stock, created_at, updated_at]
+      properties:
+        id: { type: string, format: uuid }
+        category_id: { type: [string, 'null'], format: uuid }
+        name_uz: { type: string }
+        name_ru: { type: [string, 'null'] }
+        sku: { type: [string, 'null'] }
+        barcode: { type: [string, 'null'] }
+        mxik: { type: [string, 'null'] }
+        unit: { type: string, enum: [piece, kg, l] }
+        price_tiyin: { type: integer }
+        status: { type: string, enum: [active, hidden, archived] }
+        description_uz: { type: [string, 'null'] }
+        description_ru: { type: [string, 'null'] }
+        stock: { $ref: '#/components/schemas/StockView' }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+    ProductPage:
+      type: object
+      required: [items, next_cursor]
+      properties: { items: { type: array, items: { $ref: '#/components/schemas/Product' } }, next_cursor: { type: [string, 'null'] } }
+    ProductCreate:
+      type: object
+      required: [name_uz, price_tiyin]
+      additionalProperties: false
+      properties:
+        name_uz: { type: string, minLength: 1, maxLength: 200 }
+        name_ru: { type: [string, 'null'], maxLength: 200 }
+        sku: { type: [string, 'null'], maxLength: 64 }
+        barcode: { type: [string, 'null'], pattern: '^[0-9]{6,14}$' }
+        mxik: { type: [string, 'null'], pattern: '^[0-9]{17}$' }
+        unit: { type: string, enum: [piece, kg, l], default: piece }
+        price_tiyin: { type: integer, minimum: 0, description: "Butun son, tiyin (so'm × 100)" }
+        category_id: { type: [string, 'null'], format: uuid }
+        status: { type: string, enum: [active, hidden], default: active }
+        description_uz: { type: [string, 'null'], maxLength: 2000 }
+        description_ru: { type: [string, 'null'], maxLength: 2000 }
+    ProductUpdate:
+      type: object
+      minProperties: 1
+      additionalProperties: false
+      properties:
+        name_uz: { type: string, minLength: 1, maxLength: 200 }
+        name_ru: { type: [string, 'null'], maxLength: 200 }
+        sku: { type: [string, 'null'], maxLength: 64 }
+        barcode: { type: [string, 'null'], pattern: '^[0-9]{6,14}$' }
+        mxik: { type: [string, 'null'], pattern: '^[0-9]{17}$' }
+        unit: { type: string, enum: [piece, kg, l] }
+        price_tiyin: { type: integer, minimum: 0 }
+        category_id: { type: [string, 'null'], format: uuid }
+        status: { type: string, enum: [active, hidden, archived] }
+        description_uz: { type: [string, 'null'], maxLength: 2000 }
+        description_ru: { type: [string, 'null'], maxLength: 2000 }
+    CatalogSummary:
+      type: object
+      required: [products, mxik_missing, out, low, last_import_at]
+      properties: { products: { type: integer }, mxik_missing: { type: integer }, out: { type: integer }, low: { type: integer }, last_import_at: { type: [string, 'null'], format: date-time } }
+    StockSet:
+      type: object
+      required: [branch_id, quantity_milli]
+      additionalProperties: false
+      properties: { branch_id: { type: string, format: uuid }, quantity_milli: { type: integer, minimum: 0 }, note: { type: string, maxLength: 200 } }
+    StockAdjust:
+      type: object
+      required: [branch_id, delta_milli]
+      additionalProperties: false
+      properties: { branch_id: { type: string, format: uuid }, delta_milli: { type: integer, not: { const: 0 } }, note: { type: string, maxLength: 200 } }
+    StockOut:
+      type: object
+      required: [branch_id, out]
+      additionalProperties: false
+      properties: { branch_id: { type: string, format: uuid }, out: { type: boolean } }
+    StockMovement:
+      type: object
+      required: [id, branch_id, delta_milli, quantity_after_milli, reason, source, note, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        branch_id: { type: string, format: uuid }
+        delta_milli: { type: integer }
+        quantity_after_milli: { type: integer }
+        reason: { type: string, enum: [set, adjust, import, sale, out_marked, back_on_sale] }
+        source: { type: string }
+        note: { type: [string, 'null'] }
+        created_at: { type: string, format: date-time }
+    ImportRequest:
+      type: object
+      required: [format, content_base64, mode]
+      additionalProperties: false
+      properties:
+        format: { type: string, enum: [csv, xlsx] }
+        content_base64: { type: string, description: "Fayl base64 ko'rinishida (8 MB gacha, 5 000 qatorgacha)" }
+        mode: { type: string, enum: [preview, apply] }
+        branch_id: { type: string, format: uuid, description: "Qoldiq ustuni bo'lsa; bitta filial bo'lsa ixtiyoriy" }
+        confirm_price_jumps: { type: boolean, default: false, description: "Narx 30% dan ko'p o'zgargan qatorlarni tasdiqlash" }
+    ImportRowError:
+      type: object
+      required: [row, code]
+      properties:
+        row: { type: integer, description: Fayldagi qator raqami (1 = sarlavha) }
+        code: { type: string, description: 'price_missing, price_invalid, name_missing, unit_unknown, barcode_invalid, mxik_invalid, duplicate_in_file, duplicate_barcode, duplicate_sku, ambiguous_match, price_jump, ...' }
+        field: { type: string }
+        params: { type: object, additionalProperties: true }
+    ImportResult:
+      type: object
+      required: [mode, job_id, total_rows, created, updated, unchanged, errors, skipped_price_jumps, price_jumps, ignored_columns, duration_ms]
+      properties:
+        mode: { type: string, enum: [preview, apply] }
+        job_id: { type: [string, 'null'], format: uuid }
+        total_rows: { type: integer }
+        created: { type: integer }
+        updated: { type: integer }
+        unchanged: { type: integer }
+        errors: { type: array, items: { $ref: '#/components/schemas/ImportRowError' } }
+        skipped_price_jumps: { type: integer }
+        price_jumps: { type: array, items: { type: object, required: [row, old_tiyin, new_tiyin], properties: { row: { type: integer }, old_tiyin: { type: integer }, new_tiyin: { type: integer } } } }
+        ignored_columns: { type: array, items: { type: string } }
+        duration_ms: { type: integer }
+    ImportJob:
+      type: object
+      required: [id, format, status, total_rows, created_count, updated_count, error_count, skipped_price_jumps, duration_ms, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        format: { type: string, enum: [csv, xlsx] }
+        status: { type: string }
+        total_rows: { type: integer }
+        created_count: { type: integer }
+        updated_count: { type: integer }
+        error_count: { type: integer }
+        skipped_price_jumps: { type: integer }
+        duration_ms: { type: [integer, 'null'] }
+        created_at: { type: string, format: date-time }
+    ImportJobDetail:
+      allOf:
+        - { $ref: '#/components/schemas/ImportJob' }
+        - { type: object, required: [errors], properties: { errors: { type: array, items: { $ref: '#/components/schemas/ImportRowError' } } } }

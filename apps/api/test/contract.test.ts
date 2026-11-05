@@ -34,7 +34,7 @@ const rewrite = (n: unknown): unknown => {
 const compile = (schema: unknown) => ajv.compile(rewrite(schema) as object);
 
 /** So'rov tanasi (muvaffaqiyatli holatda) va javobni OpenAPI sxemasi bo'yicha tekshiradi. */
-async function op(method: "get" | "post" | "patch" | "put", template: string, actual: string, status: number, o: Call = {}) {
+async function op(method: "get" | "post" | "patch" | "put" | "delete", template: string, actual: string, status: number, o: Call = {}) {
   const spc = spec.paths[template]?.[method];
   if (!spc) throw new Error(`Shartnomada yo'q: ${method.toUpperCase()} ${template}`);
   if (status < 300 && o.body !== undefined && spc.requestBody) {
@@ -163,10 +163,42 @@ describe("OpenAPI shartnomasi", () => {
     await op("post", "/v1/admin/legal/{id}/publish", `/v1/admin/legal/${draft.body.id}/publish`, 409, { ...A, body: {} });
   });
 
+  it("javoblar shartnomaga mos: katalog, qoldiq, import", async () => {
+    const o = await makeOwner(h, "+998901000001");
+    const T = { token: o.token, tenant: o.tenantId };
+    const br = await op("post", "/v1/branches", "/v1/branches", 201, { ...T, body: { name: "Markaz", address: "Chilonzor 1" } });
+    const cat = await op("post", "/v1/categories", "/v1/categories", 201, { ...T, body: { name_uz: "Sut", name_ru: "Молочные" } });
+    await op("post", "/v1/categories", "/v1/categories", 409, { ...T, body: { name_uz: "sut" } });
+    await op("get", "/v1/categories", "/v1/categories", 200, T);
+    await op("patch", "/v1/categories/{id}", `/v1/categories/${cat.body.id}`, 200, { ...T, body: { sort: 2 } });
+    const p = await op("post", "/v1/products", "/v1/products", 201, { ...T, body: { name_uz: "Sut", price_tiyin: 1250000, unit: "l", category_id: cat.body.id, barcode: "4780000000001" } });
+    await op("post", "/v1/products", "/v1/products", 409, { ...T, body: { name_uz: "Sut 2", price_tiyin: 1, barcode: "4780000000001" } });
+    await op("post", "/v1/products", "/v1/products", 400, { ...T, body: { name_uz: "", price_tiyin: 1.5 } });
+    await op("get", "/v1/products", "/v1/products?limit=10", 200, T);
+    await op("get", "/v1/stock", "/v1/stock?stock=out", 200, T);
+    await op("get", "/v1/catalog/summary", "/v1/catalog/summary", 200, T);
+    await op("get", "/v1/products/{id}", `/v1/products/${p.body.id}?branch_id=${br.body.id}`, 200, T);
+    await op("get", "/v1/products/{id}", "/v1/products/00000000-0000-4000-8000-000000000000", 404, T);
+    await op("patch", "/v1/products/{id}", `/v1/products/${p.body.id}`, 200, { ...T, body: { price_tiyin: 1300000 } });
+    await op("put", "/v1/products/{id}/stock", `/v1/products/${p.body.id}/stock`, 200, { ...T, body: { branch_id: br.body.id, quantity_milli: 1080 } });
+    await op("post", "/v1/products/{id}/stock/adjust", `/v1/products/${p.body.id}/stock/adjust`, 200, { ...T, body: { branch_id: br.body.id, delta_milli: 1000 } });
+    await op("post", "/v1/products/{id}/stock/adjust", `/v1/products/${p.body.id}/stock/adjust`, 422, { ...T, body: { branch_id: br.body.id, delta_milli: -999999 } });
+    await op("post", "/v1/products/{id}/stock/out", `/v1/products/${p.body.id}/stock/out`, 200, { ...T, body: { branch_id: br.body.id, out: true } });
+    await op("get", "/v1/products/{id}/stock/movements", `/v1/products/${p.body.id}/stock/movements`, 200, T);
+    const csv = Buffer.from("nomi,narx,qoldiq\nNon,4000,5\nXato,abc,1\n").toString("base64");
+    const imp = await op("post", "/v1/catalog/imports", "/v1/catalog/imports", 200, { ...T, body: { format: "csv", content_base64: csv, mode: "apply" } });
+    await op("post", "/v1/catalog/imports", "/v1/catalog/imports", 200, { ...T, body: { format: "csv", content_base64: csv, mode: "preview" } });
+    await op("post", "/v1/catalog/imports", "/v1/catalog/imports", 422, { ...T, body: { format: "csv", content_base64: Buffer.from("x,y\n1,2").toString("base64"), mode: "apply" } });
+    await op("get", "/v1/catalog/imports", "/v1/catalog/imports", 200, T);
+    await op("get", "/v1/catalog/imports/{id}", `/v1/catalog/imports/${imp.body.job_id}`, 200, T);
+    await op("delete", "/v1/products/{id}", `/v1/products/${p.body.id}`, 200, T);
+    await op("delete", "/v1/categories/{id}", `/v1/categories/${cat.body.id}`, 200, T);
+  });
+
   it("shartnoma o'zgarmasligini kafolatlovchi: har operatsiya testda ishlatilgan", () => {
     const used = new Set(checked);
     const missing: string[] = [];
-    for (const [p, ops] of Object.entries(spec.paths)) for (const m of Object.keys(ops)) if (["get", "post", "patch", "put"].includes(m) && !used.has(`${m} ${p}`)) missing.push(`${m} ${p}`);
+    for (const [p, ops] of Object.entries(spec.paths)) for (const m of Object.keys(ops)) if (["get", "post", "patch", "put", "delete"].includes(m) && !used.has(`${m} ${p}`)) missing.push(`${m} ${p}`);
     // bu test oldingi ikki test natijasiga tayanadi (bir faylda ketma-ket)
     expect(missing).toEqual([]);
   });

@@ -34,7 +34,7 @@ describe("i18n", () => {
 
   it("matnlarda kirill va lotin aralashmasligi (uz — faqat lotin, ru — kirill)", () => {
     for (const [k, v] of Object.entries(messages.uz)) expect(v, k).not.toMatch(/[Ѐ-ӿ]/);
-    const brand = new Set(["Start", "Biznes", "Pro", "Tarmoq", "Dostavka", "Telegram", "SMS", "TOTP", "STIR", "POS/ERP", "Idempotency", "Key", "AI", "PIN", "MFA", "POS", "ERP", "SaaS", "DPA"]);
+    const brand = new Set(["Start", "Biznes", "Pro", "Tarmoq", "Dostavka", "Telegram", "SMS", "TOTP", "STIR", "POS/ERP", "Idempotency", "Key", "AI", "PIN", "MFA", "POS", "ERP", "SaaS", "DPA", "xlsx", "csv", "CSV", "Excel", "Google", "Sheets", "SKU", "MB"]);
     for (const [k, v] of Object.entries(messages.ru)) {
       const latinWords = (v.replace(/\{[^}]*\}/g, "").match(/[A-Za-z]+/g) ?? []).filter((w) => !brand.has(w) && !/^(select|plural|one|few|many|other|staff|branches)$/.test(w));
       expect(latinWords, `${k}: ruscha matnda lotin so'zlar`).toEqual([]);

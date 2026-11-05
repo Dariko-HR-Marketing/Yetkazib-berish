@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
 import type { NestExpressApplication } from "@nestjs/platform-express";
+import { json } from "express";
 import type { NextFunction, Request, Response } from "express";
 import { AppLogger } from "./common/logger";
 import { requestIdMiddleware } from "./common/request-id.middleware";
@@ -14,6 +15,8 @@ export async function createApp(opts: { quiet?: boolean } = {}): Promise<NestExp
   const cfg = app.get<Config>(CONFIG);
   app.disable("x-powered-by");
   app.set("trust proxy", 1);
+  // Import: base64 fayl (8 MB -> ~11 MB). Faqat shu yo'lda kattaroq chegara; qolgan hamma joyda 100 KB.
+  app.use("/v1/catalog/imports", json({ limit: "12mb" }));
   app.useBodyParser("json", { limit: "100kb" });
   app.use(requestIdMiddleware as (req: Request, res: Response, next: NextFunction) => void);
   app.use(rateLimitMiddleware(app.get(RedisService), cfg));

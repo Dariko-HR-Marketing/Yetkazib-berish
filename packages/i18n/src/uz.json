@@ -149,5 +149,16 @@
  "legal.open_new_tab": "yangi oynada ochiladi",
  "shop.accept_docs": "Do'kon nomidan quyidagi shartlarni qabul qilaman:",
  "login.read": "o'qish",
- "rate.limited": "Juda ko'p so'rov. {seconds} soniyadan keyin urinib ko'ring"
+ "rate.limited": "Juda ko'p so'rov. {seconds} soniyadan keyin urinib ko'ring",
+ "validation.barcode_invalid": "Shtrix-kod 6–14 ta raqamdan iborat bo'lishi kerak",
+ "validation.mxik_invalid": "MXIK kodi 17 ta raqamdan iborat bo'lishi kerak",
+ "catalog.duplicate_barcode": "Bu shtrix-kodli mahsulot allaqachon bor",
+ "catalog.duplicate_sku": "Bu artikulli mahsulot allaqachon bor",
+ "catalog.category_exists": "Bunday nomli kategoriya allaqachon bor",
+ "stock.negative": "Qoldiq noldan kam bo'lishi mumkin emas",
+ "import.invalid_file": "Fayl o'qilmadi. .xlsx yoki .csv yuklang",
+ "import.too_large": "Fayl juda katta (8 MB gacha)",
+ "import.no_columns": "Fayldan ustunlar tanilmadi. Birinchi qatorda sarlavha bo'lishi kerak (nomi, narx, shtrix-kod…)",
+ "import.too_many_rows": "Faylda {max} tadan ortiq qator bor. Bo'lib yuklang",
+ "import.branch_required": "Qoldiq ustuni uchun filialni tanlang"
 }
