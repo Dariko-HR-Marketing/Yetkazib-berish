@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Do'kon ochish</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+</style>
+</helmet>
+<div style="min-height: 900px; display: flex; flex-wrap: wrap; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+
+<aside style="flex: 1 1 260px; max-width: 320px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px; padding: 28px 24px; background: #0F1A14; color: #FFFFFF">
+<div style="display: flex; align-items: center; gap: 10px"><div style="width: 34px; height: 34px; border-radius: 9px; background: #FFFFFF; color: #0F1A14; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px">DD</div><b style="font-size: 16px">Do'kon ochish</b></div>
+<ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px">
+<sc-for list="{{ steps }}" as="s" hint-placeholder-count="5">
+<li style="{{ s.style }}"><span style="{{ s.dot }}">{{ s.mark }}</span><span style="display: flex; flex-direction: column"><b style="font-size: 14px">{{ s.title }}</b><span style="font-size: 12px; color: #C9D4CD">{{ s.sub }}</span></span></li>
+</sc-for>
+</ol>
+<span style="margin-top: auto; font-size: 12.5px; line-height: 18px; color: #C9D4CD">14 kun bepul · karta talab qilinmaydi. Yordam: [telefon]</span>
+</aside>
+
+<main style="flex: 999 1 520px; min-width: 0; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 32px; padding: 32px clamp(16px, 3vw, 40px)">
+<section style="flex: 1 1 420px; max-width: 620px; display: flex; flex-direction: column; gap: 18px">
+<span style="font-size: 13px; font-weight: 700; color: #0B7A4B">{{ stepLabel }}</span>
+
+<sc-if value="{{ s1 }}" hint-placeholder-val="{{ true }}">
+<h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 800">Hisob yarating</h1>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600">Telefon raqami<input type="tel" value="+998 91 000 00 00" style="height: 50px; box-sizing: border-box; padding: 0 14px; border: 1px solid #C9CEC8; border-radius: 12px; font: 600 16px Manrope, sans-serif"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600">Ismingiz<input type="text" value="Aziz Karimov" style="height: 50px; box-sizing: border-box; padding: 0 14px; border: 1px solid #C9CEC8; border-radius: 12px; font: 500 16px Manrope, sans-serif"></label>
+<span style="font-size: 13px; color: #5E656C">Keyingi qadamda SMS kod bilan tasdiqlaysiz.</span>
+</sc-if>
+
+<sc-if value="{{ s2 }}" hint-placeholder-val="{{ false }}">
+<h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 800">Biznesingiz haqida</h1>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600">Do'kon nomi<input type="text" value="Yashil Savat" style="height: 50px; box-sizing: border-box; padding: 0 14px; border: 1px solid #C9CEC8; border-radius: 12px; font: 600 16px Manrope, sans-serif"></label>
+<fieldset style="margin: 0; padding: 0; border: none; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px"><legend style="font-size: 13px; font-weight: 600; padding-bottom: 8px">Turi — kerakli modullar avtomatik yoqiladi</legend>
+<label style="display: flex; gap: 8px; align-items: center; min-height: 52px; padding: 0 12px; border-radius: 12px; border: 1px solid #DCE0DC; font-size: 14px"><input type="radio" name="t" style="margin: 0; accent-color: #0B7A4B">Kichik do'kon</label>
+<label style="display: flex; gap: 8px; align-items: center; min-height: 52px; padding: 0 12px; border-radius: 12px; border: 2px solid #0B7A4B; font-size: 14px"><input type="radio" name="t" checked style="margin: 0; accent-color: #0B7A4B">Supermarket</label>
+<label style="display: flex; gap: 8px; align-items: center; min-height: 52px; padding: 0 12px; border-radius: 12px; border: 1px solid #DCE0DC; font-size: 14px"><input type="radio" name="t" style="margin: 0; accent-color: #0B7A4B">Kafe / restoran</label>
+<label style="display: flex; gap: 8px; align-items: center; min-height: 52px; padding: 0 12px; border-radius: 12px; border: 1px solid #DCE0DC; font-size: 14px"><input type="radio" name="t" style="margin: 0; accent-color: #0B7A4B">Nooziq-ovqat</label>
+</fieldset>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600">STIR (ixtiyoriy, ishga tushishdan oldin majburiy)<input type="text" placeholder="9 xonali" style="height: 50px; box-sizing: border-box; padding: 0 14px; border: 1px solid #C9CEC8; border-radius: 12px; font: 500 16px Manrope, sans-serif"></label>
+</sc-if>
+
+<sc-if value="{{ s3 }}" hint-placeholder-val="{{ false }}">
+<h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 800">Internet-do'kon ko'rinishi</h1>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600">Manzil<span style="display: flex; align-items: center; height: 50px; padding: 0 14px; border: 1px solid #C9CEC8; border-radius: 12px; font-size: 15px; background: #FFFFFF"><input type="text" value="yashilsavat" aria-label="Subdomen" style="width: 120px; border: none; outline: none; font: 700 15px Manrope, sans-serif">.[domen].uz<span style="margin-left: auto; color: #075C38; font-weight: 700; font-size: 13px">bo'sh ✓</span></span></label>
+<div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 13px; font-weight: 600">Asosiy rang</span><div style="display: flex; gap: 10px">
+<sc-for list="{{ colors }}" as="c" hint-placeholder-count="5"><button type="button" onClick="{{ c.pick }}" aria-label="{{ c.label }}" style="{{ c.style }}"></button></sc-for>
+</div></div>
+<button type="button" style="align-self: flex-start; height: 80px; width: 220px; border-radius: 14px; border: 1.5px dashed #8A9199; background: #FFFFFF; font: 600 14px Manrope, sans-serif; color: #3C4248">Logotip yuklash</button>
+</sc-if>
+
+<sc-if value="{{ s4 }}" hint-placeholder-val="{{ false }}">
+<h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 800">Katalog</h1>
+<label style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 14px; border: 2px solid #0B7A4B; background: #FFFFFF; font-size: 14px"><span style="display: flex; gap: 8px; align-items: center"><input type="radio" name="cat" checked style="margin: 0; accent-color: #0B7A4B"><b>Excel / CSV yuklash</b></span><span style="color: #5E656C">Shablon: sku, nom, kategoriya, birlik, narx, qoldiq. Xatolar qatori bilan ko'rsatiladi.</span></label>
+<label style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 14px; border: 1px solid #DCE0DC; background: #FFFFFF; font-size: 14px"><span style="display: flex; gap: 8px; align-items: center"><input type="radio" name="cat" style="margin: 0; accent-color: #0B7A4B"><b>Tayyor kategoriyalar bilan qo'lda</b></span><span style="color: #5E656C">Supermarket uchun 24 ta kategoriya shabloni.</span></label>
+<label style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 14px; border: 1px solid #DCE0DC; background: #FFFFFF; font-size: 14px"><span style="display: flex; gap: 8px; align-items: center"><input type="radio" name="cat" style="margin: 0; accent-color: #0B7A4B"><b>Bizning jamoa yuklaydi</b></span><span style="color: #5E656C">Biznes tarifida bepul: faylni yuboring, 1 ish kunida.</span></label>
+</sc-if>
+
+<sc-if value="{{ s5 }}" hint-placeholder-val="{{ false }}">
+<h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 800">To'lov va yetkazish</h1>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #DCE0DC"><b style="font-size: 15px">Onlayn to'lov — sizning hisobingizga</b><div style="display: flex; flex-wrap: wrap; gap: 8px"><button type="button" style="height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 14px Manrope, sans-serif">Payme ulash</button><button type="button" style="height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 14px Manrope, sans-serif">CLICK ulash</button></div><span style="font-size: 12.5px; color: #5E656C">Hozircha ulanmasa — faqat naqd va karta kuryerda rejimida ishga tushasiz.</span></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<label style="display: flex; flex-direction: column; gap: 4px; padding: 14px; border-radius: 14px; border: 2px solid #0B7A4B; background: #FFFFFF; font-size: 14px"><span style="display: flex; gap: 8px; align-items: center"><input type="radio" name="dlv" checked style="margin: 0; accent-color: #0B7A4B"><b>O'z kuryerlarim</b></span><span style="color: #5E656C">Kuryer ilovasi bepul</span></label>
+<label style="display: flex; flex-direction: column; gap: 4px; padding: 14px; border-radius: 14px; border: 1px solid #DCE0DC; background: #FFFFFF; font-size: 14px"><span style="display: flex; gap: 8px; align-items: center"><input type="radio" name="dlv" style="margin: 0; accent-color: #0B7A4B"><b>Faqat olib ketish</b></span><span style="color: #5E656C">Kuryer keyin qo'shiladi</span></label>
+</div>
+<label style="display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 14px; font-weight: 600">Yetkazish radiusi, km<input type="text" value="3" style="width: 80px; height: 44px; box-sizing: border-box; padding: 0 12px; border: 1px solid #C9CEC8; border-radius: 10px; font: 600 15px Manrope, sans-serif"></label>
+</sc-if>
+
+<sc-if value="{{ done }}" hint-placeholder-val="{{ false }}">
+<h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 800">Do'koningiz tayyor</h1>
+<span style="font-size: 15px; line-height: 22px; color: #3C4248">yashilsavat.[domen].uz ochildi. Sinov muddati: 14 kun. Birinchi sinov buyurtmasini o'zingiz bering — butun jarayonni ko'rasiz.</span>
+<a href="Owner-Dashboard.dc.html" style="align-self: flex-start; display: flex; align-items: center; height: 52px; padding: 0 22px; border-radius: 14px; background: #0B7A4B; color: #FFFFFF; font-weight: 700; text-decoration: none">Panelga o'tish</a>
+</sc-if>
+
+<div style="display: flex; justify-content: space-between; gap: 8px; padding-top: 8px; border-top: 1px solid #E4E7E3">
+<button type="button" onClick="{{ back }}" style="{{ backStyle }}">Orqaga</button>
+<button type="button" onClick="{{ next }}" style="{{ nextStyle }}">{{ nextText }}</button>
+</div>
+</section>
+
+<div aria-label="Jonli ko'rinish" role="img" style="flex: 0 1 300px; display: flex; flex-direction: column; align-items: center; gap: 10px">
+<span style="font-size: 12.5px; font-weight: 700; color: #5E656C">Jonli ko'rinish</span>
+<div style="width: 280px; height: 560px; box-sizing: border-box; border: 9px solid #16181B; border-radius: 36px; overflow: hidden; background: #FFFFFF; display: flex; flex-direction: column; gap: 10px; padding: 14px">
+<div style="display: flex; align-items: center; gap: 8px"><div style="{{ logoStyle }}">YS</div><b style="font-size: 14px">Yashil Savat</b></div>
+<div style="{{ bannerStyle }}">Kunlik mahsulotlar uyingizga</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px"><div style="height: 90px; border-radius: 10px; background: #F1F3F0"></div><div style="height: 90px; border-radius: 10px; background: #F1F3F0"></div><div style="height: 90px; border-radius: 10px; background: #F1F3F0"></div><div style="height: 90px; border-radius: 10px; background: #F1F3F0"></div></div>
+<div style="{{ cartStyle }}">Savatni ko'rish</div>
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { step: 1, color: '#0B7A4B' };
+}
+renderVals() {
+const st = this.state.step, col = this.state.color;
+const defs = [['Hisob', 'telefon va SMS kod'], ['Biznes', 'nom va turi'], ['Ko’rinish', 'manzil, rang, logotip'], ['Katalog', 'CSV yoki qo’lda'], ['To’lov va yetkazish', 'Payme/CLICK, hudud']];
+const steps = defs.map(([title, sub], i) => {
+const n = i + 1, done = n < st, cur = n === st;
+return { title, sub, mark: done ? '✓' : String(n),
+style: 'display: flex; gap: 12px; align-items: center; padding: 10px; border-radius: 12px; ' + (cur ? 'background: #24332A;' : ''),
+dot: 'flex: none; width: 28px; height: 28px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; ' + (done ? 'background: #3FB37F; color: #0F1A14;' : cur ? 'background: #FFFFFF; color: #0F1A14;' : 'border: 1px solid #5E6B63; color: #C9D4CD;') };
+});
+const colors = ['#0B7A4B', '#1D5FD1', '#B4441F', '#7A3E9D', '#16181B'].map((c) => ({ label: 'Rang ' + c, pick: () => this.setState({ color: c }),
+style: 'width: 44px; height: 44px; border-radius: 22px; background: ' + c + '; border: ' + (c === col ? '3px solid #FFFFFF; box-shadow: 0 0 0 2px ' + c : '0') + '; cursor: pointer;' }));
+return {
+steps, colors,
+s1: st === 1, s2: st === 2, s3: st === 3, s4: st === 4, s5: st === 5, done: st === 6,
+stepLabel: st <= 5 ? st + '-qadam / 5' : 'Tayyor',
+nextText: st === 5 ? 'Do’konni ochish' : st === 6 ? 'Boshidan ko’rish' : 'Davom etish',
+nextStyle: 'height: 50px; padding: 0 24px; border-radius: 12px; border: none; background: #0B7A4B; color: #FFFFFF; font: 700 15px Manrope, sans-serif;',
+backStyle: 'height: 50px; padding: 0 18px; border-radius: 12px; border: 1px solid #C9CEC8; background: #FFFFFF; color: #16181B; font: 700 15px Manrope, sans-serif;' + (st === 1 || st === 6 ? ' visibility: hidden;' : ''),
+next: () => this.setState({ step: st === 6 ? 1 : st + 1 }),
+back: () => this.setState({ step: Math.max(1, st - 1) }),
+logoStyle: 'width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-weight: 800; font-size: 11px; background: ' + col + ';',
+bannerStyle: 'padding: 14px; border-radius: 14px; color: #FFFFFF; font-weight: 700; font-size: 14px; background: ' + col + ';',
+cartStyle: 'margin-top: auto; height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-weight: 700; font-size: 13px; background: ' + col + ';'
+};
+}
+}
+</script>
+</body>
+</html>

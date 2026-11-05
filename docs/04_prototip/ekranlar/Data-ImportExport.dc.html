@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Import va eksport</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid #EEF0ED;font-size:13.5px;white-space:nowrap}
+th{font-size:12px;font-weight:700;color:#5E656C;text-transform:uppercase;letter-spacing:.04em}
+</style>
+</helmet>
+<div style="min-height: 900px; display: flex; flex-wrap: wrap; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+
+<nav aria-label="Do'kon paneli" style="flex: 1 1 220px; max-width: 260px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px; padding: 20px 14px; background: #16181B; color: #FFFFFF">
+<div style="display: flex; align-items: center; gap: 10px; padding: 4px 8px 16px"><div style="width: 34px; height: 34px; border-radius: 9px; background: #0B7A4B; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px">YS</div><span style="display: flex; flex-direction: column"><b style="font-size: 15px">Yashil Savat</b><span style="font-size: 12px; color: #C9CED3">Egasi</span></span></div>
+<a href="Sales-Report.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Sotuv hisoboti</a>
+<a href="Panel-Catalog.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Katalog</a>
+<a href="Data-ImportExport.dc.html" aria-current="page" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; background: #2E3237; color: #FFFFFF; font-weight: 700; font-size: 14px; text-decoration: none">Import / eksport</a>
+<a href="Reports-Scheduler.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Hisobotlar</a>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; padding: 24px 28px">
+<div style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 26px; line-height: 32px; font-weight: 800">Import va eksport</h1><span style="font-size: 14px; color: #5E656C">Excel, CSV va Google Sheets · har yuklash auditga yoziladi va bekor qilinishi mumkin</span></div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+<section style="flex: 2 1 480px; display: flex; flex-direction: column; gap: 14px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="display: flex; justify-content: space-between; align-items: center"><b style="font-size: 17px">Import</b><span style="font-size: 13px; color: #5E656C">{{ stepLabel }}</span></div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px"><sc-for list="{{ bar }}" as="b" hint-placeholder-count="4"><div style="display: flex; flex-direction: column; gap: 4px"><div style="{{ b.style }}"></div><span style="font-size: 12px; font-weight: 700; color: #3C4248">{{ b.label }}</span></div></sc-for></div>
+
+<sc-if value="{{ s1 }}" hint-placeholder-val="{{ true }}">
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<span style="padding: 12px; border-radius: 12px; border: 2px solid #0B7A4B; font-size: 13.5px; font-weight: 700">Mahsulotlar va narxlar</span>
+<span style="padding: 12px; border-radius: 12px; border: 1px solid #DCE0DC; font-size: 13.5px; font-weight: 600">Qoldiq (filial)</span>
+<span style="padding: 12px; border-radius: 12px; border: 1px solid #DCE0DC; font-size: 13.5px; font-weight: 600">Mijozlar bazasi</span>
+<span style="padding: 12px; border-radius: 12px; border: 1px solid #DCE0DC; font-size: 13.5px; font-weight: 600">Promokodlar</span>
+<span style="padding: 12px; border-radius: 12px; border: 1px solid #DCE0DC; font-size: 13.5px; font-weight: 600">Xizmat hududlari</span>
+<span style="padding: 12px; border-radius: 12px; border: 1px solid #DCE0DC; font-size: 13.5px; font-weight: 600">Xodimlar</span>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 24px; border-radius: 14px; border: 1.5px dashed #8A9199; background: #FAFBF9; text-align: center"><b style="font-size: 15px">Faylni shu yerga tashlang</b><span style="font-size: 13px; color: #5E656C">.xlsx, .csv · 10 MB gacha · yoki Google Sheets havolasi</span><a href="#shablon" style="font-size: 13px; font-weight: 700">Shablonni yuklab olish</a></div>
+<span style="font-size: 13px; color: #3C4248">Tanlangan: <b>katalog_noyabr.xlsx</b> · 418 qator</span>
+</sc-if>
+
+<sc-if value="{{ s2 }}" hint-placeholder-val="{{ false }}">
+<table style="width: 100%; border-collapse: collapse"><thead><tr><th scope="col">Fayldagi ustun</th><th scope="col">Platforma maydoni</th><th scope="col">Namuna</th></tr></thead><tbody>
+<tr><td>Артикул</td><td><b>SKU</b> ✓</td><td>MILK-32</td></tr>
+<tr><td>Наименование</td><td><b>Nomi (ruscha)</b> ✓</td><td>Молоко 3,2%</td></tr>
+<tr><td>Nomi</td><td><b>Nomi (o'zbekcha)</b> ✓</td><td>Sut 3,2%</td></tr>
+<tr><td>Цена</td><td><b>Narx, so'm</b> ✓</td><td>12500</td></tr>
+<tr><td>Остаток</td><td><b>Qoldiq</b> ✓</td><td>22</td></tr>
+<tr><td>Штрихкод</td><td><select aria-label="Штрихкод ustuni uchun maydon" style="height: 34px; border: 1px solid #E8A33D; border-radius: 8px; font: 600 13px Manrope, sans-serif"><option>Shtrix-kod — tanlang</option></select></td><td>4780000000000</td></tr>
+</tbody></table>
+<span style="font-size: 12.5px; color: #5E656C">Ustunlar nomi bo'yicha avtomatik moslashtirildi; moslash keyingi importlar uchun eslab qolinadi.</span>
+</sc-if>
+
+<sc-if value="{{ s3 }}" hint-placeholder-val="{{ false }}">
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<div style="padding: 14px; border-radius: 12px; background: #E6F2EC; color: #075C38"><b style="font-size: 22px">398</b><br><span style="font-size: 13px">yangilanadi</span></div>
+<div style="padding: 14px; border-radius: 12px; background: #E5EEF8; color: #154BA8"><b style="font-size: 22px">14</b><br><span style="font-size: 13px">yangi mahsulot</span></div>
+<div style="padding: 14px; border-radius: 12px; background: #FBE9E4; color: #9F2D12"><b style="font-size: 22px">6</b><br><span style="font-size: 13px">xato — o'tkaziladi</span></div>
+</div>
+<table style="width: 100%; border-collapse: collapse"><thead><tr><th scope="col">Qator</th><th scope="col">Xato</th></tr></thead><tbody>
+<tr><td>57</td><td>Narx bo'sh</td></tr><tr><td>112</td><td>Birlik «шт» tanilmadi → «dona» deb olinsinmi?</td></tr><tr><td>240</td><td>SKU takrorlangan (MILK-32)</td></tr>
+</tbody></table>
+<span style="font-size: 12.5px; color: #5E656C">Narx 30% dan ortiq o'zgargan 9 mahsulot alohida tasdiqlanadi.</span>
+</sc-if>
+
+<sc-if value="{{ s4 }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 14px; background: #E6F2EC; color: #075C38"><b style="font-size: 18px">Import yakunlandi</b><span style="font-size: 14px">398 yangilandi · 14 qo'shildi · 6 o'tkazildi. Xatolar faylini yuklab oling va tuzatib qayta yuklang.</span></div>
+<div style="display: flex; gap: 8px"><button type="button" style="height: 42px; padding: 0 14px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 13px Manrope, sans-serif">Xatolar fayli</button><button type="button" style="height: 42px; padding: 0 14px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 13px Manrope, sans-serif; color: #9F2D12">Importni bekor qilish</button></div>
+</sc-if>
+
+<div style="display: flex; justify-content: space-between; padding-top: 8px; border-top: 1px solid #EEF0ED"><button type="button" onClick="{{ back }}" style="{{ backStyle }}">Orqaga</button><button type="button" onClick="{{ next }}" style="height: 46px; padding: 0 18px; border-radius: 12px; border: none; background: #0B7A4B; color: #FFFFFF; font: 700 14px Manrope, sans-serif">{{ nextText }}</button></div>
+</section>
+
+<section style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 17px">Eksport</b>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600">Ma'lumot<select style="height: 44px; padding: 0 10px; border: 1px solid #C9CEC8; border-radius: 10px; font: 500 14px Manrope, sans-serif; background: #FFFFFF"><option>Buyurtmalar va qatorlar</option><option>Mahsulotlar va qoldiq</option><option>Mijozlar (marketing roziligi bilan)</option><option>To'lovlar va qaytarishlar</option><option>Kuryer topshirishlari va treklari</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600">Davr<select style="height: 44px; padding: 0 10px; border: 1px solid #C9CEC8; border-radius: 10px; font: 500 14px Manrope, sans-serif; background: #FFFFFF"><option>Oktabr 2026</option></select></label>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<button type="button" style="height: 44px; border-radius: 10px; border: none; background: #16181B; color: #FFFFFF; font: 700 13px Manrope, sans-serif">Excel</button>
+<button type="button" style="height: 44px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 13px Manrope, sans-serif">CSV</button>
+<button type="button" style="height: 44px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 13px Manrope, sans-serif">PDF</button>
+<button type="button" style="height: 44px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 13px Manrope, sans-serif">Google Sheets</button>
+</div>
+<span style="font-size: 12.5px; line-height: 18px; color: #5E656C">Katta eksport fonda tayyorlanadi va tayyor bo'lgach Telegram/emailga havola keladi. Xaridor telefoni faqat egasi va menejer rolida eksport qilinadi.</span>
+</section>
+</div>
+
+<section style="display: flex; flex-direction: column; gap: 6px; padding: 16px 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Tarix</b>
+<div style="overflow-x: auto"><table style="width: 100%; min-width: 700px; border-collapse: collapse"><thead><tr><th scope="col">Sana</th><th scope="col">Amal</th><th scope="col">Ma'lumot</th><th scope="col">Natija</th><th scope="col">Kim</th></tr></thead><tbody>
+<tr><td>05.11 08:12</td><td>Import</td><td>katalog_noyabr.xlsx</td><td>412 ✓ · 6 xato</td><td>Aziz</td></tr>
+<tr><td>04.11 22:30</td><td>Eksport (avto)</td><td>Kunlik savdo · PDF</td><td>Telegramga yuborildi</td><td>tizim</td></tr>
+<tr><td>01.11 09:00</td><td>Eksport</td><td>To'lovlar · Excel</td><td>2 140 qator</td><td>Moliya</td></tr>
+</tbody></table></div>
+</section>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { st: 1 };
+}
+renderVals() {
+const st = this.state.st;
+const labels = ['Fayl', 'Ustunlar', 'Tekshiruv', 'Natija'];
+const bar = labels.map((label, i) => ({ label, style: 'height: 6px; border-radius: 3px; background: ' + (i < st ? '#0B7A4B' : '#DCE0DC') + ';' }));
+return {
+bar, s1: st === 1, s2: st === 2, s3: st === 3, s4: st === 4,
+stepLabel: st + ' / 4',
+nextText: st === 3 ? 'Import qilish (412 qator)' : st === 4 ? 'Yangi import' : 'Davom etish',
+backStyle: 'height: 46px; padding: 0 16px; border-radius: 12px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 14px Manrope, sans-serif;' + (st === 1 || st === 4 ? ' visibility: hidden;' : ''),
+next: () => this.setState({ st: st === 4 ? 1 : st + 1 }),
+back: () => this.setState({ st: Math.max(1, st - 1) })
+};
+}
+}
+</script>
+</body>
+</html>

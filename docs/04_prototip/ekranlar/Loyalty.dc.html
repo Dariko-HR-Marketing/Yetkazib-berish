@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Sodiqlik dasturi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 100%; min-width: 1024px; height: 100%; min-height: 900px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; padding: 26px 40px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5E656C">Yashil Savat · Marketing · Sodiqlik</span><h1 style="margin: 0; font-size: 26px; line-height: 34px; font-weight: 800">Sodiqlik dasturi: ball, daraja, promo-kod</h1></div>
+<div style="display: flex; gap: 8px"><span style="padding: 8px 12px; border-radius: 10px; background: #E6F2EC; color: #075C38; font-size: 13px; font-weight: 800">Faol · 1 482 a'zo</span><button type="button" style="height: 36px; padding: 0 16px; border-radius: 10px; border: none; background: #0B7A4B; color: #FFFFFF; font-size: 13px; font-weight: 800; cursor: pointer">Saqlash</button></div>
+</div>
+
+<div style="display: flex; gap: 16px; flex: 1; min-height: 0">
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 14.5px">Asosiy keshbek</b>
+<div style="display: flex; gap: 6px"><sc-for list="{{ rates }}" as="r" hint-placeholder-count="4"><button type="button" aria-pressed="{{ r.pressed }}" onClick="{{ r.pick }}" style="{{ r.style }}">{{ r.t }}</button></sc-for></div>
+<span style="font-size: 12px; color: #5E656C">Ball topshirilgandan keyin 24 soatda tushadi (qaytarish bo'lsa bekor bo'ladi)</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 14.5px">Ball bilan to'lash chegarasi</b>
+<div style="display: flex; gap: 6px"><sc-for list="{{ caps }}" as="r" hint-placeholder-count="3"><button type="button" aria-pressed="{{ r.pressed }}" onClick="{{ r.pick }}" style="{{ r.style }}">{{ r.t }}</button></sc-for></div>
+<span style="font-size: 12px; color: #5E656C">1 ball = 1 so'm · amal qilish muddati 90 kun · yetkazish narxiga ishlatilmaydi</span>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="display: flex; justify-content: space-between; align-items: center"><b style="font-size: 14.5px">Darajalar (oxirgi 90 kundagi xarid)</b><button type="button" role="switch" aria-checked="{{ tiersOn }}" onClick="{{ toggleTiers }}" style="{{ tierSwitch }}"><span style="width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF"></span></button></div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; opacity: {{ tiersOpacity }}">
+<sc-for list="{{ tiers }}" as="t" hint-placeholder-count="3"><div style="display: flex; flex-direction: column; gap: 4px; padding: 12px; border-radius: 12px; background: {{ t.bg }}; color: {{ t.fg }}"><b style="font-size: 15px">{{ t.n }}</b><span style="font-size: 12.5px">{{ t.from }}</span><b style="font-size: 20px">{{ t.rate }}</b><span style="font-size: 12px; opacity: .85">{{ t.members }}</span></div></sc-for>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 14.5px">Promo-kodlar</b>
+<div style="display: grid; grid-template-columns: 1.1fr 1.3fr .8fr .8fr; gap: 6px; font-size: 12px; font-weight: 800; color: #5E656C"><span>KOD</span><span>SHART</span><span>ISHLATILDI</span><span>HOLAT</span></div>
+<sc-for list="{{ promos }}" as="p" hint-placeholder-count="4"><div style="display: grid; grid-template-columns: 1.1fr 1.3fr .8fr .8fr; gap: 6px; font-size: 12.5px; padding: 6px 0; border-top: 1px solid #EEF0ED; align-items: center"><code style="font: 700 12.5px ui-monospace, Menlo, monospace">{{ p.c }}</code><span>{{ p.d }}</span><span>{{ p.u }}</span><span><span style="{{ p.st }}">{{ p.s }}</span></span></div></sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #16181B; color: #FFFFFF">
+<b style="font-size: 14.5px">Iqtisodiyot (oyiga, prognoz)</b>
+<sc-for list="{{ econ }}" as="e" hint-placeholder-count="5"><div style="display: flex; justify-content: space-between; font-size: 13px"><span style="color: #C9CED3">{{ e.t }}</span><b style="color: {{ e.c }}">{{ e.v }}</b></div></sc-for>
+<span style="font-size: 11.5px; line-height: 16px; color: #9AA1A7">Oktabr tushumi 132,6 mln so'm asosida. Ballarning ~70% i ishlatiladi deb hisoblangan.</span>
+</div>
+</div>
+<div style="display: flex; gap: 8px; padding: 10px 14px; border-radius: 12px; background: #E5EEF8; color: #154BA8; font-size: 12.5px"><b>v2:</b><span>Taklif qil — ball ol (referal), tug'ilgan kun bali, bir nechta do'kon uchun umumiy ball.</span></div>
+</div>
+
+<aside style="flex: none; width: 300px; display: flex; flex-direction: column; align-items: center; gap: 8px">
+<span style="font-size: 12.5px; font-weight: 700; color: #5E656C">Xaridor ko'radi</span>
+<div style="width: 290px; height: 600px; box-sizing: border-box; border: 9px solid #16181B; border-radius: 36px; overflow: hidden; display: flex; flex-direction: column; gap: 10px; padding: 16px 12px; background: #F6F7F4">
+<b style="font-size: 16px">Ballarim</b>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 14px; border-radius: 16px; background: #0B7A4B; color: #FFFFFF"><span style="font-size: 12px; opacity: .85">Balans</span><b style="font-size: 26px">{{ phone.balance }}</b><span style="font-size: 12px">{{ phone.tier }}</span></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 12px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="font-size: 12px; color: #5E656C">{{ phone.nextLabel }}</span><div style="height: 8px; border-radius: 4px; background: #EEF0ED"><div style="width: 62%; height: 100%; border-radius: 4px; background: #F1B53C"></div></div><span style="font-size: 11.5px; color: #5E656C">{{ phone.nextText }}</span></div>
+<sc-for list="{{ phone.hist }}" as="h" hint-placeholder-count="4"><div style="display: flex; justify-content: space-between; font-size: 12px; padding: 6px 2px; border-bottom: 1px solid #EEF0ED"><span>{{ h.t }}<br><span style="color: #5E656C">{{ h.d }}</span></span><b style="color: {{ h.c }}">{{ h.v }}</b></div></sc-for>
+<div style="padding: 10px; border-radius: 12px; background: #FFF6E0; color: #7A3E06; font-size: 12px; line-height: 16px">{{ phone.tip }}</div>
+</div>
+</aside>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { rate: 2, cap: 30, tiers: true };
+}
+renderVals() {
+const st = this.state;
+const fmt = (n) => Math.round(n).toLocaleString('ru-RU').replace(/ /g, ' ');
+const btn = (on) => 'flex: 1; height: 40px; border-radius: 10px; font-size: 14px; font-weight: 800; cursor: pointer; ' + (on ? 'border: 1px solid #0B7A4B; background: #0B7A4B; color: #FFFFFF;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;');
+const rates = [1, 2, 3, 5].map((r) => ({ t: r + '%', pressed: st.rate === r ? 'true' : 'false', pick: () => this.setState({ rate: r }), style: btn(st.rate === r) }));
+const caps = [20, 30, 50].map((c) => ({ t: c + '% gacha', pressed: st.cap === c ? 'true' : 'false', pick: () => this.setState({ cap: c }), style: btn(st.cap === c) }));
+const T = [['Bronza', 'har kim', 0, 1036, '#F1F3F0', '#16181B'], ['Kumush', '500 000 so’mdan', 1, 338, '#DCE0DC', '#16181B'], ['Oltin', '1 500 000 so’mdan', 3, 108, '#F1B53C', '#16181B']];
+const tiers = T.map((t) => ({ n: t[0], from: t[1], rate: (st.rate + (st.tiers ? t[2] : 0)) + '%', members: t[3] + ' a’zo', bg: t[4], fg: t[5] }));
+const avg = st.tiers ? (1036 * st.rate + 338 * (st.rate + 1) + 108 * (st.rate + 3)) / 1482 : st.rate;
+const rev = 132.6e6;
+const cost = rev * avg / 100 * 0.7;
+const econ = [['O’rtacha keshbek', avg.toFixed(2).replace('.', ',') + '%', '#FFFFFF'], ['Ball xarajati', fmt(cost) + ' so’m', '#F1C995'], ['Tushumdan ulushi', (cost / rev * 100).toFixed(1).replace('.', ',') + '%', '#F1C995'], ['Kutilgan qayta xarid', '+12–18%', '#8FD3B0'], ['Qo’shimcha tushum (maqsad)', fmt(rev * 0.06) + ' so’m', '#8FD3B0']].map((e) => ({ t: e[0], v: e[1], c: e[2] }));
+const pst = (on) => 'padding: 2px 8px; border-radius: 6px; font-size: 11.5px; font-weight: 700; ' + (on ? 'background: #E6F2EC; color: #075C38;' : 'background: #F1F3F0; color: #5E656C;');
+const promos = [['XUSH10', 'Birinchi buyurtma −10%, 150 ming so’mdan', '214', 1], ['SUT5', 'Sut mahsulotlari −5%, 30-noyabrgacha', '96', 1], ['QAYT20', '30 kun xarid qilmaganlarga 20 000', '41', 1], ['YOZ2026', 'Yozgi aksiya', '388', 0]].map((p) => ({ c: p[0], d: p[1], u: p[2], s: p[3] ? 'Faol' : 'Tugagan', st: pst(p[3]) }));
+const myRate = st.rate + (st.tiers ? 1 : 0);
+const phone = { balance: '14 820 ball', tier: st.tiers ? 'Kumush · har xariddan ' + myRate + '%' : 'Har xariddan ' + myRate + '%',
+nextLabel: st.tiers ? 'Oltin darajagacha' : 'Ball muddati', nextText: st.tiers ? '930 000 / 1 500 000 so’m · 90 kun ichida' : '3 200 ball 12-dekabrda tugaydi',
+hist: [['A-104512', 'bugun', '+' + fmt(48440 * myRate / 100)], ['A-104377 · to’lovda', '1-noyabr', '−8 000'], ['A-104290', '28-oktabr', '+' + fmt(96500 * myRate / 100)], ['Xush kelibsiz', '20-oktabr', '+10 000']].map((h) => ({ t: h[0], d: h[1], v: h[2], c: h[2][0] === '+' ? '#0B7A4B' : '#9F2D12' })),
+tip: 'Keyingi buyurtmada ' + st.cap + '% gacha ball bilan to’lash mumkin' };
+return { rates, caps, tiers, econ, promos, phone, tiersOn: st.tiers ? 'true' : 'false', tiersOpacity: st.tiers ? '1' : '.4',
+tierSwitch: 'width: 46px; height: 26px; border-radius: 13px; border: none; padding: 3px; cursor: pointer; display: flex; ' + (st.tiers ? 'background: #0B7A4B; justify-content: flex-end;' : 'background: #C9CED3; justify-content: flex-start;'),
+toggleTiers: () => this.setState({ tiers: !st.tiers }) };
+}
+}
+</script>
+</body>
+</html>

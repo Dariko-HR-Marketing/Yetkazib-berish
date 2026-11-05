@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Xaridor: ro'yxatdan o'tish va roziliklar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B; overflow: hidden">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 18px 16px 12px; background: #FFFFFF; border-bottom: 1px solid #E4E7E3">
+<div style="display: flex; justify-content: space-between; align-items: center"><b style="font-size: 17px">Yashil Savat</b><div role="group" aria-label="Til / Язык" style="display: flex; padding: 3px; border-radius: 10px; background: #F1F3F0"><sc-for list="{{ langs }}" as="l" hint-placeholder-count="2"><button type="button" aria-pressed="{{ l.pressed }}" onClick="{{ l.pick }}" style="{{ l.style }}">{{ l.t }}</button></sc-for></div></div>
+<div style="display: flex; gap: 4px"><sc-for list="{{ steps }}" as="s" hint-placeholder-count="3"><span style="{{ s.style }}"></span></sc-for></div>
+<span style="font-size: 12px; color: #5E656C">{{ stepLabel }}</span>
+</div>
+
+<sc-if value="{{ isPhone }}">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 14px; padding: 22px 16px">
+<b style="font-size: 22px; line-height: 28px">{{ L.phoneTitle }}</b>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; font-weight: 700; color: #3C4248">{{ L.phone }}<span style="height: 52px; display: flex; align-items: center; padding: 0 14px; border-radius: 12px; border: 1.5px solid #0B7A4B; background: #FFFFFF; font-size: 17px; font-weight: 700; color: #16181B">+998 90 123 45 12</span></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; font-weight: 700; color: #3C4248">{{ L.code }}<span style="height: 52px; display: flex; align-items: center; padding: 0 14px; border-radius: 12px; border: 1px solid #DCE0DC; background: #FFFFFF; font-size: 20px; font-weight: 800; letter-spacing: .3em; color: #16181B">4 8 2 1 · ·</span></label>
+<span style="font-size: 12px; color: #5E656C">{{ L.or }}</span>
+<span style="height: 46px; border-radius: 12px; border: 1px solid #DCE0DC; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: #1F5F96">Telegram</span>
+<div style="flex: 1"></div>
+<button type="button" onClick="{{ toConsent }}" style="height: 52px; border-radius: 14px; border: none; background: #0B7A4B; color: #FFFFFF; font-size: 16px; font-weight: 800; cursor: pointer">{{ L.next }}</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isConsent }}">
+<div style="flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 10px; padding: 14px 16px">
+<b style="font-size: 18px; line-height: 24px">{{ L.consentTitle }}</b>
+<span style="font-size: 12.5px; line-height: 17px; color: #3C4248">{{ L.consentSub }}</span>
+<span style="font-size: 11.5px; font-weight: 800; letter-spacing: .05em; color: #5E656C">{{ L.required }}</span>
+<sc-for list="{{ req }}" as="r" hint-placeholder-count="4">
+<div style="display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 12px; background: #FFFFFF; border: 1px solid {{ r.border }}">
+<button type="button" role="checkbox" aria-checked="{{ r.on }}" aria-label="{{ r.t }}" onClick="{{ r.toggle }}" style="{{ r.box }}">{{ r.mark }}</button>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 13.5px">{{ r.t }}</b><span style="font-size: 11.5px; line-height: 16px; color: #5E656C">{{ r.d }}</span></span>
+<button type="button" onClick="{{ r.open }}" style="border: none; background: transparent; color: #0B7A4B; font-size: 12px; font-weight: 800; cursor: pointer; padding: 2px 0">{{ L.read }}</button>
+</div>
+</sc-for>
+<span style="font-size: 11.5px; font-weight: 800; letter-spacing: .05em; color: #5E656C; margin-top: 4px">{{ L.optional }}</span>
+<sc-for list="{{ opt }}" as="o" hint-placeholder-count="3">
+<div style="display: flex; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 13.5px">{{ o.t }}</b><span style="font-size: 11.5px; line-height: 16px; color: #5E656C">{{ o.d }}</span></span>
+<button type="button" role="switch" aria-checked="{{ o.on }}" aria-label="{{ o.t }}" onClick="{{ o.toggle }}" style="{{ o.sw }}"><span style="width: 18px; height: 18px; border-radius: 50%; background: #FFFFFF"></span></button>
+</div>
+</sc-for>
+<span style="font-size: 11px; line-height: 15px; color: #5E656C">{{ L.note }}</span>
+</div>
+<div style="padding: 12px 16px 18px; background: #FFFFFF; border-top: 1px solid #E4E7E3"><button type="button" onClick="{{ accept }}" aria-disabled="{{ cantAccept }}" style="{{ acceptStyle }}">{{ acceptLabel }}</button></div>
+</sc-if>
+
+<sc-if value="{{ isDone }}">
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 24px; text-align: center">
+<span style="width: 72px; height: 72px; border-radius: 50%; background: #E6F2EC; color: #0B7A4B; display: flex; align-items: center; justify-content: center; font-size: 34px; font-weight: 800">✓</span>
+<b style="font-size: 20px">{{ L.doneTitle }}</b>
+<span style="font-size: 13.5px; line-height: 19px; color: #3C4248">{{ L.doneText }}</span>
+<span style="padding: 8px 12px; border-radius: 10px; background: #FFFFFF; border: 1px solid #E4E7E3; font-size: 11.5px; color: #5E656C; font-family: ui-monospace, Menlo, monospace">{{ receipt }}</span>
+<button type="button" onClick="{{ restart }}" style="margin-top: 6px; height: 46px; padding: 0 20px; border-radius: 12px; border: 1px solid #DCE0DC; background: #FFFFFF; font-size: 14px; font-weight: 800; cursor: pointer">{{ L.again }}</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ sheet }}">
+<div style="position: absolute; inset: 0; background: rgba(22,24,27,.45); display: flex; align-items: flex-end">
+<div style="width: 100%; max-height: 70%; display: flex; flex-direction: column; gap: 8px; padding: 18px 16px 22px; border-radius: 20px 20px 0 0; background: #FFFFFF">
+<b style="font-size: 16px">{{ sheetTitle }}</b>
+<span style="font-size: 11.5px; color: #5E656C">v1.0 · 2026-12-01 · uz / ru · PDF</span>
+<sc-for list="{{ sheetLines }}" as="x" hint-placeholder-count="4"><div style="display: flex; gap: 8px; font-size: 12.5px; line-height: 17px"><b style="color: #0B7A4B">•</b><span>{{ x }}</span></div></sc-for>
+<button type="button" onClick="{{ closeSheet }}" style="margin-top: 6px; height: 44px; border-radius: 12px; border: none; background: #16181B; color: #FFFFFF; font-size: 14px; font-weight: 800; cursor: pointer">{{ L.close }}</button>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { lang: 'uz', stage: 'consent', req: [false, false, false, false], opt: [false, false, false], sheet: -1 };
+}
+renderVals() {
+const st = this.state;
+const T = {
+uz: { phoneTitle: 'Telefon raqamingiz', phone: 'Telefon', code: 'SMS kod', or: 'yoki', next: 'Davom etish', consentTitle: 'Shartlar va roziliklar', consentSub: 'Majburiylarisiz xizmat ishlamaydi. Ixtiyoriylarini keyin ham yoqish mumkin.', required: 'MAJBURIY', optional: 'IXTIYORIY', read: 'O’qish', note: 'Har bir belgi versiya, vaqt va qurilma bilan saqlanadi; nusxasi Telegram’ga yuboriladi. Rozilikni istalgan vaqtda “Rozilik va maxfiylik” bo’limida qaytarib olasiz.', accept: 'Qabul qilaman', acceptN: (n) => 'Yana ' + n + ' ta belgi', doneTitle: 'Xush kelibsiz!', doneText: 'Hujjatlar nusxasi Telegram’ga yuborildi. Xaridni boshlashingiz mumkin.', again: 'Namunani qayta ko’rish', close: 'Yopish', steps: ['1/3 · Telefon', '2/3 · Shartlar va roziliklar', '3/3 · Tayyor'],
+req: [['Xaridor ofertasi', 'Do’kon bilan oldi-sotdi va platforma xizmati shartlari'], ['Maxfiylik siyosati', 'Qanday ma’lumot, nima uchun, kimga va qancha muddat'], ['Xizmat uchun ma’lumot roziligi', 'Telefon, ism, manzil, buyurtma va ilovadagi harakatlar'], ['18 yoshga to’lganman', 'Yoki ota-onam (vasiyim) roziligi bor']],
+opt: [['Aksiya va eslatmalar', 'Telegram va SMS, 09:00–21:00'], ['Reklama platformalari', 'Meta va Google’ga xeshlangan hodisalar (AQSh)'], ['Shaxsiy tavsiyalar va AI profili', 'Oila soni, sevimli brendlar']],
+sheets: [['Oferta: asosiy bandlar', ['Sotuvchi — do’kon; platforma — axborot xizmati', 'Kartadan +10% band qilinadi, faqat haqiqiy summa yechiladi', 'Muqobil — siz tanlagan qoida bo’yicha', 'Sifatsiz yoki yetishmagan mahsulot uchun pul to’liq qaytadi']], ['Maxfiylik: asosiy bandlar', ['Shaxsiy ma’lumot sotilmaydi', 'Kuryer manzilni faqat yetkazish vaqtida ko’radi', 'Meta va Google’ga faqat alohida rozilik bilan', 'Ma’lumotni olish va o’chirish — ilovadan']], ['Xizmat roziligi', ['Muddat: hisob yopilguncha', 'Cheklar soliq qonuni bo’yicha 5 yil saqlanadi', 'Qaytarib olinsa hisob yopiladi']], ['Yosh tasdig’i', ['Platformadan 18 yoshdan foydalaniladi', 'Yoshroq foydalanuvchi — ota-ona roziligi bilan']]] },
+ru: { phoneTitle: 'Ваш номер телефона', phone: 'Телефон', code: 'SMS-код', or: 'или', next: 'Продолжить', consentTitle: 'Условия и согласия', consentSub: 'Без обязательных сервис не работает. Необязательные можно включить позже.', required: 'ОБЯЗАТЕЛЬНО', optional: 'ПО ЖЕЛАНИЮ', read: 'Читать', note: 'Каждая отметка сохраняется с версией, временем и устройством; копия придёт в Telegram. Отозвать согласие можно в разделе «Согласия и приватность».', accept: 'Принимаю', acceptN: (n) => 'Осталось отметок: ' + n, doneTitle: 'Добро пожаловать!', doneText: 'Копии документов отправлены в Telegram. Можно начинать покупки.', again: 'Посмотреть пример снова', close: 'Закрыть', steps: ['1/3 · Телефон', '2/3 · Условия и согласия', '3/3 · Готово'],
+req: [['Оферта для покупателя', 'Условия купли-продажи с магазином и сервиса платформы'], ['Политика конфиденциальности', 'Какие данные, зачем, кому и на какой срок'], ['Согласие на обработку данных для сервиса', 'Телефон, имя, адрес, заказы и действия в приложении'], ['Мне исполнилось 18 лет', 'Или есть согласие родителей (опекуна)']],
+opt: [['Акции и напоминания', 'Telegram и SMS, 09:00–21:00'], ['Рекламные платформы', 'Хешированные события в Meta и Google (США)'], ['Персональные рекомендации и AI-профиль', 'Состав семьи, любимые бренды']],
+sheets: [['Оферта: главное', ['Продавец — магазин; платформа — информационный сервис', 'С карты блокируется +10%, списывается только фактическая сумма', 'Замена — по выбранному вами правилу', 'За некачественный или недостающий товар деньги вернутся полностью']], ['Приватность: главное', ['Персональные данные не продаются', 'Курьер видит адрес только во время доставки', 'В Meta и Google — только с отдельным согласием', 'Получить и удалить данные — в приложении']], ['Согласие для сервиса', ['Срок: до закрытия аккаунта', 'Чеки хранятся 5 лет по налоговому закону', 'При отзыве аккаунт закрывается']], ['Подтверждение возраста', ['Платформой пользуются с 18 лет', 'Младше — с согласия родителей']]] }
+};
+const L = T[st.lang];
+const langs = [['uz', 'UZ'], ['ru', 'RU']].map((l) => ({ t: l[1], pressed: st.lang === l[0] ? 'true' : 'false', pick: () => this.setState({ lang: l[0] }),
+style: 'height: 30px; padding: 0 10px; border-radius: 8px; border: none; font-size: 12.5px; font-weight: 800; cursor: pointer; ' + (st.lang === l[0] ? 'background: #16181B; color: #FFFFFF;' : 'background: transparent; color: #5E656C;') }));
+const idx = { phone: 0, consent: 1, done: 2 }[st.stage];
+const steps = [0, 1, 2].map((i) => ({ style: 'flex: 1; height: 4px; border-radius: 2px; background: ' + (i <= idx ? '#0B7A4B' : '#E4E7E3') + ';' }));
+const req = L.req.map((r, i) => { const on = st.req[i];
+return { t: r[0], d: r[1], on: on ? 'true' : 'false', mark: on ? '✓' : '', border: on ? '#0B7A4B' : '#E4E7E3',
+box: 'flex: none; width: 24px; height: 24px; border-radius: 7px; font-size: 14px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; ' + (on ? 'border: none; background: #0B7A4B; color: #FFFFFF;' : 'border: 2px solid #C9CED3; background: #FFFFFF; color: #FFFFFF;'),
+toggle: () => { const a = st.req.slice(); a[i] = !a[i]; this.setState({ req: a }); }, open: () => this.setState({ sheet: i }) }; });
+const opt = L.opt.map((o, i) => { const on = st.opt[i];
+return { t: o[0], d: o[1], on: on ? 'true' : 'false', toggle: () => { const a = st.opt.slice(); a[i] = !a[i]; this.setState({ opt: a }); },
+sw: 'flex: none; width: 42px; height: 24px; border-radius: 12px; border: none; padding: 3px; cursor: pointer; display: flex; ' + (on ? 'background: #0B7A4B; justify-content: flex-end;' : 'background: #C9CED3; justify-content: flex-start;') }; });
+const left = st.req.filter((x) => !x).length;
+const sh = st.sheet >= 0 ? L.sheets[st.sheet] : ['', []];
+const optCodes = ['MKT', 'ADS', 'AI'].filter((c, i) => st.opt[i]).join(',') || '—';
+return { L, langs, steps, req, opt, stepLabel: L.steps[idx],
+isPhone: st.stage === 'phone', isConsent: st.stage === 'consent', isDone: st.stage === 'done',
+cantAccept: left ? 'true' : 'false', acceptLabel: left ? L.acceptN(left) : L.accept,
+acceptStyle: 'width: 100%; height: 52px; border-radius: 14px; border: none; font-size: 16px; font-weight: 800; cursor: pointer; ' + (left ? 'background: #DCE0DC; color: #7A8188;' : 'background: #0B7A4B; color: #FFFFFF;'),
+accept: () => { if (!left) this.setState({ stage: 'done' }); },
+toConsent: () => this.setState({ stage: 'consent' }),
+restart: () => this.setState({ stage: 'phone', req: [false, false, false, false], opt: [false, false, false] }),
+receipt: 'OFR-C v1.0 · PRV v1.0 · SRV ✓ · ' + optCodes + ' · ' + (st.lang === 'uz' ? 'uz' : 'ru') + ' · 2026-11-05 12:58',
+sheet: st.sheet >= 0, sheetTitle: sh[0], sheetLines: sh[1], closeSheet: () => this.setState({ sheet: -1 }) };
+}
+}
+</script>
+</body>
+</html>

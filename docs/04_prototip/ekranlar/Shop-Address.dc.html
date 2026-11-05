@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Manzilni tanlash</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+input::placeholder{color:#7A8087}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B; overflow: hidden">
+
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 16px 20px 12px">
+<div style="display: flex; align-items: center; gap: 10px">
+<div style="width: 36px; height: 36px; border-radius: 10px; background: {{accent}}; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px">DD</div>
+<div style="display: flex; flex-direction: column">
+<span style="font-weight: 700; font-size: 16px; line-height: 20px">Demo Do'kon</span>
+<span style="font-size: 12px; line-height: 16px; color: #5E656C">08:00–22:00 · bugun ochiq</span>
+</div>
+</div>
+<button type="button" aria-label="Til: o'zbekcha" style="height: 36px; padding: 0 12px; border-radius: 18px; border: 1px solid #DCE0DC; background: #FFFFFF; font: 600 13px Manrope, sans-serif; color: #16181B">UZ · RU</button>
+</div>
+
+<div style="position: relative; height: 300px; margin: 0 16px; border-radius: 16px; overflow: hidden; background: #E3E8E2">
+<div style="position: absolute; left: 0; top: 96px; width: 390px; height: 14px; background: #F4F5F1"></div>
+<div style="position: absolute; left: 0; top: 214px; width: 390px; height: 10px; background: #F4F5F1"></div>
+<div style="position: absolute; left: 120px; top: 0; width: 12px; height: 300px; background: #F4F5F1"></div>
+<div style="position: absolute; left: 262px; top: 0; width: 16px; height: 300px; background: #F4F5F1"></div>
+<div style="position: absolute; left: 24px; top: 24px; width: 80px; height: 58px; border-radius: 6px; background: #D5DCD3"></div>
+<div style="position: absolute; left: 146px; top: 128px; width: 100px; height: 70px; border-radius: 6px; background: #D5DCD3"></div>
+<div style="position: absolute; left: 292px; top: 24px; width: 50px; height: 58px; border-radius: 6px; background: #CFE3D6"></div>
+<div style="position: absolute; left: 24px; top: 236px; width: 80px; height: 50px; border-radius: 6px; background: #D5DCD3"></div>
+<div style="position: absolute; left: 160px; top: 100px; width: 36px; height: 48px; display: flex; flex-direction: column; align-items: center">
+<svg width="36" height="44" viewBox="0 0 36 44" role="img" aria-label="Tanlangan nuqta"><path d="M18 2C9.7 2 3 8.6 3 16.8 3 28 18 42 18 42s15-14 15-25.2C33 8.6 26.3 2 18 2z" fill="#0B7A4B"/><circle cx="18" cy="17" r="6" fill="#FFFFFF"/></svg>
+</div>
+<div style="position: absolute; right: 12px; bottom: 12px; display: flex; flex-direction: column; gap: 8px">
+<button type="button" aria-label="Mening joylashuvim" style="width: 44px; height: 44px; border-radius: 22px; border: none; background: #FFFFFF; box-shadow: 0 1px 3px rgba(0,0,0,.15); display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16181B" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></button>
+</div>
+<div style="position: absolute; left: 12px; bottom: 12px; padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,.92); font-size: 12px; line-height: 16px; color: #5E656C">Xaritani surib nuqtani aniqlang</div>
+</div>
+
+<div style="flex: 1; display: flex; flex-direction: column; gap: 12px; padding: 16px 16px 0">
+<h1 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 800">Qayerga yetkazamiz?</h1>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3C4248">Manzil
+<input type="text" value="Mustaqillik ko'chasi, 12" style="height: 48px; box-sizing: border-box; padding: 0 14px; border: 1px solid #C9CEC8; border-radius: 12px; font: 500 15px Manrope, sans-serif; color: #16181B; background: #FFFFFF"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3C4248">Mo'ljal
+<input type="text" placeholder="Masalan: maktab qarshisi, ko'k darvoza" style="height: 48px; box-sizing: border-box; padding: 0 14px; border: 1px solid #C9CEC8; border-radius: 12px; font: 500 15px Manrope, sans-serif; color: #16181B; background: #FFFFFF"></label>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3C4248">Podyezd<input type="text" value="2" style="height: 44px; box-sizing: border-box; padding: 0 12px; border: 1px solid #C9CEC8; border-radius: 12px; font: 500 15px Manrope, sans-serif; background: #FFFFFF"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3C4248">Qavat<input type="text" value="4" style="height: 44px; box-sizing: border-box; padding: 0 12px; border: 1px solid #C9CEC8; border-radius: 12px; font: 500 15px Manrope, sans-serif; background: #FFFFFF"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3C4248">Xonadon<input type="text" value="17" style="height: 44px; box-sizing: border-box; padding: 0 12px; border: 1px solid #C9CEC8; border-radius: 12px; font: 500 15px Manrope, sans-serif; background: #FFFFFF"></label>
+</div>
+<div style="display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px; background: #E6F2EC; color: #075C38; font-size: 13px; line-height: 18px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#075C38" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l4 4 10-10"/></svg>
+<span><b>Xizmat hududida</b> · Markaziy filial · yetkazish 10 000 so'm · ~35 daqiqa</span>
+</div>
+</div>
+
+<div style="padding: 16px">
+<a href="Shop-Catalog.dc.html" style="display: flex; align-items: center; justify-content: center; height: 54px; border-radius: 14px; background: {{accent}}; color: #FFFFFF; font-weight: 700; font-size: 16px; text-decoration: none">Katalogga o'tish</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#0B7A4B","options":["#0B7A4B","#1D5FD1","#B4441F","#16181B"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#0B7A4B' };
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Ichki: Mijoz 360</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 100%; min-width: 1024px; height: 100%; min-height: 900px; box-sizing: border-box; display: flex; flex-direction: column; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 40px; background: #16181B; color: #FFFFFF; font-size: 12.5px"><b>ICHKI TAHLIL · faqat ruxsatli xodimlar</b><span style="color: #C9CED3">Har ko'rish audit jurnaliga yoziladi · telefon va manzil yashirilgan</span></div>
+<div style="flex: 1; display: flex; gap: 16px; padding: 22px 40px">
+<aside style="flex: none; width: 250px; display: flex; flex-direction: column; gap: 8px">
+<b style="font-size: 18px">Mijoz 360</b>
+<span style="height: 38px; display: flex; align-items: center; padding: 0 12px; border-radius: 10px; background: #FFFFFF; border: 1px solid #DCE0DC; font-size: 13px; color: #9AA1A7">ID yoki buyurtma raqami</span>
+<sc-for list="{{ list }}" as="c" hint-placeholder-count="3"><button type="button" onClick="{{ c.pick }}" aria-pressed="{{ c.pressed }}" style="{{ c.style }}"><b style="font-size: 14px">{{ c.id }}</b><span style="font-size: 12px; color: #5E656C">{{ c.sub }}</span><span style="{{ c.segStyle }}">{{ c.seg }}</span></button></sc-for>
+</aside>
+<main style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: flex-end"><div style="display: flex; flex-direction: column; gap: 2px"><b style="font-size: 22px">{{ c.id }} · {{ c.name }}</b><span style="font-size: 13px; color: #5E656C">{{ c.meta }}</span></div><span style="{{ c.consentStyle }}">{{ c.consent }}</span></div>
+<div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{ c.kpi }}" as="k" hint-placeholder-count="6"><div style="display: flex; flex-direction: column; gap: 3px; padding: 12px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="font-size: 11.5px; color: #5E656C">{{ k.t }}</span><b style="font-size: 17px; color: {{ k.c }}">{{ k.v }}</b><span style="font-size: 11px; color: #5E656C">{{ k.s }}</span></div></sc-for>
+</div>
+<div style="display: grid; grid-template-columns: 1.3fr 1fr; gap: 12px; flex: 1; min-height: 0">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 14.5px">Keyingi xarid prognozi</b>
+<div style="display: grid; grid-template-columns: 1.6fr .8fr 1fr 1fr; gap: 8px; font-size: 11.5px; font-weight: 800; color: #5E656C"><span>MAHSULOT</span><span>SIKL</span><span>OXIRGI</span><span>KEYINGI</span></div>
+<sc-for list="{{ c.next }}" as="n" hint-placeholder-count="4"><div style="display: grid; grid-template-columns: 1.6fr .8fr 1fr 1fr; gap: 8px; font-size: 13px; padding: 6px 0; border-top: 1px solid #EEF0ED"><b>{{ n.p }}</b><span>{{ n.c }}</span><span>{{ n.l }}</span><b style="color: {{ n.col }}">{{ n.n }}</b></div></sc-for>
+<b style="font-size: 14.5px; margin-top: 6px">Qiziqishlar (90 kun, og'irlik bilan)</b>
+<sc-for list="{{ c.interests }}" as="i" hint-placeholder-count="5"><div style="display: flex; align-items: center; gap: 8px; font-size: 12.5px"><span style="width: 130px">{{ i.t }}</span><div style="flex: 1; height: 8px; border-radius: 4px; background: #EEF0ED"><div style="height: 100%; border-radius: 4px; background: #0B7A4B; width: {{ i.w }}"></div></div><span style="width: 36px; text-align: right; color: #5E656C">{{ i.w }}</span></div></sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 14px; background: #0B7A4B; color: #FFFFFF">
+<b style="font-size: 14.5px">Keyingi eng yaxshi harakat</b>
+<sc-for list="{{ c.actions }}" as="a" hint-placeholder-count="3"><div style="display: flex; gap: 8px; font-size: 12.5px; line-height: 17px"><b>{{ a.n }}.</b><span>{{ a.t }}</span></div></sc-for>
+<span style="font-size: 11.5px; color: #DDF0E6">Avtomatik: qoidalar bo'yicha · marketing roziligi tekshiriladi</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 14.5px">So'nggi hodisalar</b>
+<sc-for list="{{ c.events }}" as="e" hint-placeholder-count="5"><div style="display: flex; gap: 10px; font-size: 12.5px; padding: 4px 0; border-bottom: 1px solid #EEF0ED"><span style="width: 92px; flex: none; color: #5E656C">{{ e.t }}</span><code style="flex: none; width: 130px; font: 600 11.5px ui-monospace, Menlo, monospace; color: #075C38">{{ e.k }}</code><span>{{ e.d }}</span></div></sc-for>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { sel: 0 };
+}
+renderVals() {
+const st = this.state;
+const segCss = { 'Sodiq': 'background: #E6F2EC; color: #075C38;', 'Ketish xavfi': 'background: #FBE9E4; color: #9F2D12;', 'Yangi': 'background: #E5EEF8; color: #154BA8;' };
+const C = [
+{ id: 'C-10482', name: 'Bekzod R.', sub: 'Yunusobod · 38 buyurtma', seg: 'Sodiq', meta: 'Mijoz 14 oydan beri · o’zbek tili · Telegram orqali · asosiy usul: Humo karta', consent: 'Rozilik: xizmat ✓ · marketing ✓ · reklama ✗',
+kpi: [['Segment (RFM)', 'Sodiq', '5-5-4', '#075C38'], ['CLV, 6 oy', '2,9 mln', 'so’m, prognoz', '#16181B'], ['Ketish xavfi', '6%', 'past', '#075C38'], ['Narxga sezgirlik', 'Past', 'aksiyada +4%', '#16181B'], ['Brendga sodiqlik', 'Yuqori', 'sut, non', '#16181B'], ['Muqobilga moyillik', '82%', 'qabul qiladi', '#16181B']],
+next: [['Sut 3,2% 1 l', '3 kun', 'bugun', '8-noyabr', '#16181B'], ['Non “Buxanka”', '1 kun', 'bugun', 'ertaga', '#7A3E06'], ['Tuxum C1', '6 kun', '30-oktabr', '5-noyabr · bugun', '#9F2D12'], ['Guruch Devzira', '21 kun', '20-oktabr', '10-noyabr', '#16181B']],
+interests: [['Sut mahsulotlari', 92], ['Non', 78], ['Sabzavot', 55], ['Go’sht', 34], ['Shirinlik', 12]],
+actions: ['Ertaga 09:00 Telegram: “Non va tuxum tugayotgandir — odatdagi savat”', 'Kupon kerak emas (narxga sezgirlik past)', 'Yangi mahsulot sinovi: Tvorog 9% (o’xshash xaridorlar)'],
+events: [['bugun 14:41', 'review', 'Do’kon ★5, kuryer ★5'], ['bugun 14:38', 'order_delivered', 'A-104512 · 48 440'], ['bugun 08:12', 'view_item', 'Tvorog 9%'], ['1-noyabr', 'order_delivered', 'A-104377 · 112 300'], ['1-noyabr', 'notify_me', 'Laktozasiz sut 1,5%']] },
+{ id: 'C-09917', name: 'Malika S.', sub: 'Chilonzor · 21 buyurtma', seg: 'Ketish xavfi', meta: 'Mijoz 9 oydan beri · rus tili · vitrina orqali · asosiy usul: Click', consent: 'Rozilik: xizmat ✓ · marketing ✓ · reklama ✗ (05.11 qaytarib olindi)',
+kpi: [['Segment (RFM)', 'Ketish xavfi', '2-4-3', '#9F2D12'], ['CLV, 6 oy', '1,1 mln', 'so’m, prognoz', '#16181B'], ['Ketish xavfi', '64%', '19 kun buyurtma yo’q', '#9F2D12'], ['Narxga sezgirlik', 'Yuqori', 'aksiyada +38%', '#16181B'], ['Brendga sodiqlik', 'Past', '', '#16181B'], ['Muqobilga moyillik', '41%', 'ko’p rad etadi', '#7A3E06']],
+next: [['Smetana 15%', '7 kun', '17-oktabr', 'kechikkan', '#9F2D12'], ['Kefir 2,5%', '5 kun', '17-oktabr', 'kechikkan', '#9F2D12'], ['Olma 1 kg', '10 kun', '17-oktabr', 'kechikkan', '#9F2D12'], ['Non', '2 kun', '17-oktabr', 'kechikkan', '#9F2D12']],
+interests: [['Sut mahsulotlari', 70], ['Meva', 64], ['Non', 48], ['Uy-ro’zg’or', 22], ['Go’sht', 10]],
+actions: ['Oxirgi sharh: “Qadoq yomon” — muammo hal qilingani haqida xabar', 'QAYT20 kuponi (20 000 so’m) — narxga sezgir', 'Muqobil: “faqat shu brend” standart qilib qo’yish'],
+events: [['17-oktabr', 'review', 'Do’kon ★3 · “Qadoq yomon”'], ['17-oktabr', 'order_delivered', 'A-104210 · 64 800'], ['16-oktabr', 'substitution_rejected', 'Kefir → boshqa brend'], ['3-noyabr', 'cart_abandoned', '3 mahsulot · 41 200'], ['3-noyabr', 'exit_reason', '“Yetkazish narxi qimmat”']] },
+{ id: 'C-11530', name: 'Anvar T.', sub: 'Sergeli · 2 buyurtma', seg: 'Yangi', meta: 'Mijoz 12 kundan beri · o’zbek tili · Instagram reklamasidan (UTM) · naqd', consent: 'Rozilik: xizmat ✓ · marketing ✗ · reklama ✗',
+kpi: [['Segment (RFM)', 'Yangi', '4-1-2', '#154BA8'], ['CLV, 6 oy', '—', 'ma’lumot kam', '#16181B'], ['Ketish xavfi', '—', '2 buyurtma', '#16181B'], ['Narxga sezgirlik', '—', '', '#16181B'], ['Brendga sodiqlik', '—', '', '#16181B'], ['Muqobilga moyillik', '0%', '1 marta rad', '#7A3E06']],
+next: [['Guruch', '—', '3-noyabr', 'ma’lumot kam', '#5E656C'], ['Mol go’shti', '—', '3-noyabr', 'ma’lumot kam', '#5E656C']],
+interests: [['Go’sht', 60], ['Guruch va don', 52], ['Sabzavot', 30], ['Non', 18], ['Sut mahsulotlari', 8]],
+actions: ['Marketing roziligi yo’q — xabar yuborilmaydi', 'Ilova ichida: birinchi 3 buyurtma yo’lboshchisi', 'Yetishmagan 3 mahsulot uchun qaytarish bajarilganini tekshirish'],
+events: [['3-noyabr', 'order_delivered', 'A-104355 · 3 mahsulot yetishmadi'], ['3-noyabr', 'refund', '36 500 so’m'], ['3-noyabr', 'review', 'Do’kon ★1'], ['24-oktabr', 'first_order', 'utm_source=instagram'], ['24-oktabr', 'sign_up', 'SMS orqali']] }
+];
+const list = C.map((c, i) => ({ id: c.id, sub: c.sub, seg: c.seg, pressed: st.sel === i ? 'true' : 'false', pick: () => this.setState({ sel: i }),
+segStyle: 'align-self: flex-start; padding: 2px 8px; border-radius: 6px; font-size: 11.5px; font-weight: 700; ' + segCss[c.seg],
+style: 'display: flex; flex-direction: column; gap: 3px; padding: 12px; border-radius: 12px; text-align: left; cursor: pointer; color: #16181B; background: #FFFFFF; ' + (st.sel === i ? 'border: 2px solid #0B7A4B;' : 'border: 1px solid #E4E7E3;') }));
+const x = C[st.sel];
+const c = { id: x.id, name: x.name, meta: x.meta, consent: x.consent,
+consentStyle: 'padding: 6px 10px; border-radius: 8px; background: #FFFFFF; border: 1px solid #DCE0DC; font-size: 12px; font-weight: 700',
+kpi: x.kpi.map((k) => ({ t: k[0], v: k[1], s: k[2], c: k[3] })),
+next: x.next.map((n) => ({ p: n[0], c: n[1], l: n[2], n: n[3], col: n[4] })),
+interests: x.interests.map((i) => ({ t: i[0], w: i[1] + '%' })),
+actions: x.actions.map((t, i) => ({ n: i + 1, t })),
+events: x.events.map((e) => ({ t: e[0], k: e[1], d: e[2] })) };
+return { list, c };
+}
+}
+</script>
+</body>
+</html>

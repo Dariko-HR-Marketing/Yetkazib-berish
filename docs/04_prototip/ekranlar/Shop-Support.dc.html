@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Murojaat yuborish</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+textarea::placeholder{color:#7A8087}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; padding: 8px 16px 16px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+
+<div style="display: flex; align-items: center; gap: 4px; margin-left: -12px">
+<a href="Shop-Tracking.dc.html" aria-label="Buyurtmaga qaytish" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16181B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>
+<div style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 18px; font-weight: 800">Muammo haqida xabar</h1><span style="font-size: 12.5px; color: #5E656C">A-104512 · topshirildi 14:38</span></div>
+</div>
+
+<fieldset style="margin: 0; padding: 0; border: none; display: flex; flex-direction: column; gap: 8px">
+<legend style="font-size: 14px; font-weight: 700; padding-bottom: 8px">Qaysi mahsulot?</legend>
+<label style="display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid #DCE0DC; background: #FFFFFF; font-size: 14px"><input type="radio" name="item" style="margin: 0; accent-color: #0B7A4B">Olma, qizil · 1,08 kg</label>
+<label style="display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 14px; border-radius: 12px; border: 2px solid {{accent}}; background: #FFFFFF; font-size: 14px"><input type="radio" name="item" checked style="margin: 0; accent-color: #0B7A4B">Non, tandir · 2 dona</label>
+<label style="display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid #DCE0DC; background: #FFFFFF; font-size: 14px"><input type="radio" name="item" style="margin: 0; accent-color: #0B7A4B">Butun buyurtma</label>
+</fieldset>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 14px; font-weight: 700">Nima bo'ldi?</span>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<button type="button" aria-pressed="true" style="height: 40px; padding: 0 14px; border-radius: 20px; border: none; background: #16181B; color: #FFFFFF; font: 600 13px Manrope, sans-serif">Shikastlangan</button>
+<button type="button" aria-pressed="false" style="height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B; font: 600 13px Manrope, sans-serif">Yetib kelmadi</button>
+<button type="button" aria-pressed="false" style="height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B; font: 600 13px Manrope, sans-serif">Boshqa mahsulot</button>
+<button type="button" aria-pressed="false" style="height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B; font: 600 13px Manrope, sans-serif">Kechikdi</button>
+<button type="button" aria-pressed="false" style="height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B; font: 600 13px Manrope, sans-serif">Boshqa</button>
+</div>
+</div>
+
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 700">Izoh
+<textarea rows="3" placeholder="Qisqacha yozing" style="box-sizing: border-box; padding: 12px 14px; border: 1px solid #C9CEC8; border-radius: 12px; font: 500 15px Manrope, sans-serif; resize: none; background: #FFFFFF">Bitta non ezilgan holda keldi</textarea></label>
+
+<div style="display: flex; gap: 8px">
+<div style="width: 76px; height: 76px; border-radius: 12px; background: #F5EBDA; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #7A3E06; font-weight: 700">surat 1</div>
+<button type="button" style="width: 76px; height: 76px; border-radius: 12px; border: 1.5px dashed #8A9199; background: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font: 600 12px Manrope, sans-serif; color: #3C4248"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#3C4248" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Surat</button>
+</div>
+
+<div style="flex: 1"></div>
+<div style="padding: 12px 14px; border-radius: 12px; background: #E5EEF8; color: #154BA8; font-size: 13px; line-height: 19px">Operator odatda 10 daqiqa ichida javob beradi. Qaytarish kerak bo'lsa, to'lov usulingizga qaytariladi.</div>
+<button type="button" style="height: 56px; border-radius: 14px; border: none; background: {{accent}}; color: #FFFFFF; font: 700 16px Manrope, sans-serif">Murojaatni yuborish</button>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#0B7A4B","options":["#0B7A4B","#1D5FD1","#B4441F","#16181B"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#0B7A4B' };
+}
+}
+</script>
+</body>
+</html>

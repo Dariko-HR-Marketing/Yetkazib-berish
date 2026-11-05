@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Panel — moliya</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+</style>
+</helmet>
+<div style="min-height: 900px; display: flex; flex-wrap: wrap; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+
+<nav aria-label="Panel bo'limlari" style="flex: 1 1 220px; max-width: 260px; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px; padding: 20px 14px; background: #16181B; color: #FFFFFF">
+<div style="display: flex; align-items: center; gap: 10px; padding: 4px 8px 20px"><div style="width: 34px; height: 34px; border-radius: 9px; background: #0B7A4B; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px">DD</div><span style="display: flex; flex-direction: column"><b style="font-size: 15px">Demo Do'kon</b><span style="font-size: 12px; color: #C9CED3">Moliya</span></span></div>
+<a href="Panel-Orders.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Buyurtmalar</a>
+<a href="Panel-Finance.dc.html" aria-current="page" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; background: #2E3237; color: #FFFFFF; font-weight: 700; font-size: 14px; text-decoration: none">Moliya va hisobot</a>
+<a href="Panel-Support.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Murojaatlar</a>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px; padding: 24px 28px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 26px; line-height: 32px; font-weight: 800">Kun yakuni solishtiruvi</h1><span style="font-size: 14px; color: #5E656C">Buyurtmalar ↔ to'lovlar ↔ qaytarishlar · barcha filiallar</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<label style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 12px; border-radius: 10px; border: 1px solid #DCE0DC; background: #FFFFFF; font-size: 14px; font-weight: 600">Sana<input type="date" value="2026-11-04" style="border: none; font: 700 14px Manrope, sans-serif; background: transparent"></label>
+<button type="button" style="height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 14px Manrope, sans-serif; color: #16181B">Eksport CSV</button>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="font-size: 12.5px; font-weight: 600; color: #5E656C">Buyurtmalar</span><b style="font-size: 24px">23</b><span style="font-size: 12px; color: #5E656C">20 yakunlangan · 3 bekor</span></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="font-size: 12.5px; font-weight: 600; color: #5E656C">To'langan</span><b style="font-size: 24px">1 284 000</b><span style="font-size: 12px; color: #5E656C">so'm · onlayn + naqd</span></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="font-size: 12.5px; font-weight: 600; color: #5E656C">Qaytarilgan</span><b style="font-size: 24px">31 500</b><span style="font-size: 12px; color: #5E656C">so'm · 1 ta</span></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="font-size: 12.5px; font-weight: 600; color: #5E656C">Naqd (kuryerlarda)</span><b style="font-size: 24px">412 440</b><span style="font-size: 12px; color: #5E656C">so'm · topshirilishi kerak</span></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 14px; background: #E6F2EC; border: 1px solid #BFDCCB"><span style="font-size: 12.5px; font-weight: 600; color: #075C38">Sof tushum</span><b style="font-size: 24px; color: #075C38">1 252 500</b><span style="font-size: 12px; color: #075C38">so'm</span></div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section style="flex: 1 1 380px; display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="display: flex; justify-content: space-between"><b style="font-size: 16px">Nomuvofiqliklar</b><span style="padding: 2px 8px; border-radius: 8px; background: #FDF1E3; color: #7A3E06; font-size: 12px; font-weight: 700">2</span></div>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px; border-radius: 12px; background: #FFFAF3; border: 1px solid #F1C995"><span style="font-size: 13.5px; line-height: 19px"><b>A-104488</b> · bekor qilingan, lekin to'lov qaytarilmagan<br><span style="color: #5E656C">Payme · 64 000 so'm · 11:20</span></span><button type="button" style="flex: none; height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 13px Manrope, sans-serif; color: #16181B">Qaytarish yaratish</button></div>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px; border-radius: 12px; background: #FFFAF3; border: 1px solid #F1C995"><span style="font-size: 13.5px; line-height: 19px"><b>Kuryer Jasur</b> · naqd hali topshirilmagan<br><span style="color: #5E656C">3 buyurtma · 162 440 so'm</span></span><button type="button" style="flex: none; height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 13px Manrope, sans-serif; color: #16181B">Qabul qilindi</button></div>
+<span style="font-size: 12.5px; color: #5E656C">Takroriy undirish: 0 — tekshirildi.</span>
+</section>
+
+<section style="flex: 1 1 380px; display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Tasdiq kutayotgan qaytarishlar</b>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 12px; border: 1px solid #DCE0DC">
+<div style="display: flex; justify-content: space-between; font-size: 14px"><span><b>A-104512</b> · Non, shikastlangan</span><b>4 000 so'm</b></div>
+<span style="font-size: 13px; color: #5E656C">So'radi: yordam xizmati (Malika) · surat ilova qilingan · naqd to'lov</span>
+<sc-if value="{{ open }}" hint-placeholder-val="{{ true }}">
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px"><button type="button" onClick="{{ reject }}" style="height: 44px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 14px Manrope, sans-serif; color: #9F2D12">Rad etish</button><button type="button" onClick="{{ approve }}" style="height: 44px; border-radius: 10px; border: none; background: #0B7A4B; font: 700 14px Manrope, sans-serif; color: #FFFFFF">Tasdiqlash</button></div>
+</sc-if>
+<sc-if value="{{ closed }}" hint-placeholder-val="{{ false }}">
+<div style="{{ resultStyle }}">{{ resultText }}</div>
+</sc-if>
+</div>
+<span style="font-size: 12.5px; line-height: 18px; color: #5E656C">Qaytarish summasi to'lovdan oshmaydi; har qaror auditga yoziladi. Onlayn to'lov provayder orqali qaytariladi.</span>
+</section>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { decision: null };
+}
+renderVals() {
+const d = this.state.decision;
+return {
+open: d === null,
+closed: d !== null,
+resultText: d === 'yes' ? 'Tasdiqlandi · 4 000 so’m xaridorga qaytariladi' : 'Rad etildi · sabab yordam xizmatiga yuborildi',
+resultStyle: 'padding: 10px 12px; border-radius: 10px; font-size: 13.5px; font-weight: 700; ' + (d === 'yes' ? 'background: #E6F2EC; color: #075C38;' : 'background: #FBE9E4; color: #9F2D12;'),
+approve: () => this.setState({ decision: 'yes' }),
+reject: () => this.setState({ decision: 'no' })
+};
+}
+}
+</script>
+</body>
+</html>

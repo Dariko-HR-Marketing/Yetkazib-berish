@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Internet-do'kon sozlamalari</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+</style>
+</helmet>
+<div style="min-height: 900px; display: flex; flex-wrap: wrap; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+
+<nav aria-label="Do'kon paneli" style="flex: 1 1 220px; max-width: 260px; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px; padding: 20px 14px; background: #16181B; color: #FFFFFF">
+<div style="display: flex; align-items: center; gap: 10px; padding: 4px 8px 20px"><div style="width: 34px; height: 34px; border-radius: 9px; background: #0B7A4B; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px">YS</div><span style="display: flex; flex-direction: column"><b style="font-size: 15px">Yashil Savat</b><span style="font-size: 12px; color: #C9CED3">Egasi</span></span></div>
+<a href="Owner-Dashboard.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Bosh sahifa</a>
+<a href="Panel-Catalog.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Katalog</a>
+<a href="Owner-Storefront.dc.html" aria-current="page" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; background: #2E3237; color: #FFFFFF; font-weight: 700; font-size: 14px; text-decoration: none">Internet-do'kon</a>
+<a href="Owner-Billing.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Tarif va to'lov</a>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 28px; padding: 24px 28px; align-items: flex-start">
+<section style="flex: 1 1 420px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px"><h1 style="margin: 0; font-size: 26px; line-height: 32px; font-weight: 800">Internet-do'kon</h1><button type="button" style="height: 44px; padding: 0 18px; border-radius: 10px; border: none; background: #0B7A4B; color: #FFFFFF; font: 700 14px Manrope, sans-serif">Nashr qilish</button></div>
+
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Brend</b>
+<div style="display: flex; align-items: center; gap: 14px"><div style="{{ logoStyle }}">YS</div><button type="button" style="height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 13px Manrope, sans-serif">Logotipni almashtirish</button></div>
+<span style="font-size: 13px; font-weight: 600">Asosiy rang</span>
+<div style="display: flex; gap: 10px"><sc-for list="{{ colors }}" as="c" hint-placeholder-count="5"><button type="button" onClick="{{ c.pick }}" aria-label="{{ c.label }}" style="{{ c.style }}"></button></sc-for></div>
+<span style="font-size: 12.5px; color: #5E656C">Matn kontrasti avtomatik tekshiriladi: oq matn o'qilmasa rang qabul qilinmaydi.</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Bosh sahifa</b>
+<label style="display: flex; align-items: center; justify-content: space-between; min-height: 44px; font-size: 14px">Aksiya banneri<input type="checkbox" checked="{{ banner }}" onChange="{{ toggleBanner }}" style="width: 22px; height: 22px; accent-color: #0B7A4B"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600">Banner matni<input type="text" value="Kunlik mahsulotlar 40 daqiqada" style="height: 44px; box-sizing: border-box; padding: 0 12px; border: 1px solid #C9CEC8; border-radius: 10px; font: 500 14px Manrope, sans-serif"></label>
+<span style="font-size: 13px; font-weight: 600">Kategoriyalar tartibi (sudrab o'zgartiriladi)</span>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 0 12px; border-radius: 10px; background: #F6F7F4; font-size: 14px"><span aria-hidden="true" style="color: #8A9199">⋮⋮</span>Meva-sabzavot</div>
+<div style="display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 0 12px; border-radius: 10px; background: #F6F7F4; font-size: 14px"><span aria-hidden="true" style="color: #8A9199">⋮⋮</span>Sut mahsulotlari</div>
+<div style="display: flex; align-items: center; gap: 10px; min-height: 40px; padding: 0 12px; border-radius: 10px; background: #F6F7F4; font-size: 14px"><span aria-hidden="true" style="color: #8A9199">⋮⋮</span>Non</div>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Manzil va tillar</b>
+<div style="display: flex; justify-content: space-between; font-size: 14px"><span>yashilsavat.[domen].uz</span><span style="color: #075C38; font-weight: 700">faol</span></div>
+<div style="display: flex; justify-content: space-between; align-items: center; font-size: 14px"><span>O'z domeningiz (Biznes)</span><button type="button" style="height: 36px; padding: 0 12px; border-radius: 8px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 13px Manrope, sans-serif">Ulash</button></div>
+<div style="display: flex; justify-content: space-between; font-size: 14px"><span>Tillar</span><span>O'zbekcha · Русский</span></div>
+</div>
+</section>
+
+<div style="flex: 0 1 320px; display: flex; flex-direction: column; align-items: center; gap: 10px">
+<span style="font-size: 12.5px; font-weight: 700; color: #5E656C">Xaridor shunday ko'radi</span>
+<div role="img" aria-label="Vitrina ko'rinishi" style="width: 300px; height: 600px; box-sizing: border-box; border: 9px solid #16181B; border-radius: 38px; overflow: hidden; background: #FFFFFF; display: flex; flex-direction: column; gap: 10px; padding: 14px">
+<div style="display: flex; align-items: center; gap: 8px"><div style="{{ logoSmall }}">YS</div><span style="display: flex; flex-direction: column"><b style="font-size: 14px">Yashil Savat</b><span style="font-size: 11px; color: #5E656C">07:00–23:00</span></span></div>
+<sc-if value="{{ banner }}" hint-placeholder-val="{{ true }}"><div style="{{ bannerStyle }}">Kunlik mahsulotlar 40 daqiqada</div></sc-if>
+<div style="display: flex; gap: 6px"><span style="padding: 6px 10px; border-radius: 14px; background: #F1F3F0; font-size: 11.5px; font-weight: 600">Meva-sabzavot</span><span style="padding: 6px 10px; border-radius: 14px; background: #F1F3F0; font-size: 11.5px; font-weight: 600">Sut</span><span style="padding: 6px 10px; border-radius: 14px; background: #F1F3F0; font-size: 11.5px; font-weight: 600">Non</span></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px"><div style="height: 100px; border-radius: 10px; background: #F1F3F0"></div><div style="height: 100px; border-radius: 10px; background: #F1F3F0"></div><div style="height: 100px; border-radius: 10px; background: #F1F3F0"></div><div style="height: 100px; border-radius: 10px; background: #F1F3F0"></div></div>
+<div style="{{ cartStyle }}">Savatni ko'rish</div>
+</div>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { color: '#0B7A4B', banner: true };
+}
+renderVals() {
+const col = this.state.color;
+const colors = ['#0B7A4B', '#1D5FD1', '#B4441F', '#7A3E9D', '#16181B'].map((c) => ({ label: 'Rang ' + c, pick: () => this.setState({ color: c }),
+style: 'width: 44px; height: 44px; border-radius: 22px; cursor: pointer; background: ' + c + '; border: ' + (c === col ? '3px solid #FFFFFF; box-shadow: 0 0 0 2px ' + c : '0') + ';' }));
+return {
+colors,
+banner: this.state.banner,
+toggleBanner: () => this.setState({ banner: !this.state.banner }),
+logoStyle: 'width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-weight: 800; background: ' + col + ';',
+logoSmall: 'width: 32px; height: 32px; border-radius: 9px; display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-weight: 800; font-size: 11px; background: ' + col + ';',
+bannerStyle: 'padding: 16px; border-radius: 14px; color: #FFFFFF; font-weight: 700; font-size: 15px; background: ' + col + ';',
+cartStyle: 'margin-top: auto; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-weight: 700; font-size: 13px; background: ' + col + ';'
+};
+}
+}
+</script>
+</body>
+</html>

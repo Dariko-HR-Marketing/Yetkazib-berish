@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>To'lov usuli</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B; overflow: hidden">
+<div style="display: flex; align-items: center; gap: 12px; padding: 18px 16px 12px; background: #FFFFFF; border-bottom: 1px solid #E4E7E3">
+<button type="button" onClick="{{ back }}" aria-label="Orqaga" style="width: 40px; height: 40px; border-radius: 12px; border: 1px solid #E4E7E3; background: #FFFFFF; font-size: 18px; cursor: pointer">←</button>
+<div style="display: flex; flex-direction: column"><b style="font-size: 17px">{{ head }}</b><span style="font-size: 12.5px; color: #5E656C">Buyurtma A-104512 · Yashil Savat</span></div>
+</div>
+
+<sc-if value="{{ isChoose }}">
+<div style="flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 10px; padding: 14px 16px">
+<div style="display: flex; justify-content: space-between; align-items: baseline; padding: 12px 14px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="font-size: 13.5px; color: #3C4248">To'lanadi</span><b style="font-size: 22px">48 440 so'm</b></div>
+<sc-for list="{{ groups }}" as="g" hint-placeholder-count="3">
+<span style="font-size: 12px; font-weight: 800; letter-spacing: .05em; color: #5E656C; margin-top: 4px">{{ g.title }}</span>
+<sc-for list="{{ g.items }}" as="m" hint-placeholder-count="3">
+<button type="button" onClick="{{ m.pick }}" aria-pressed="{{ m.pressed }}" aria-disabled="{{ m.disabled }}" style="{{ m.style }}">
+<span style="{{ m.logoStyle }}">{{ m.logo }}</span>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px; text-align: left"><b style="font-size: 14.5px">{{ m.name }}</b><span style="font-size: 12px; color: #5E656C">{{ m.sub }}</span></span>
+<span style="{{ m.radioStyle }}"></span>
+</button>
+</sc-for>
+</sc-for>
+<div style="display: flex; gap: 8px; padding: 10px 12px; border-radius: 12px; background: #E5EEF8; color: #154BA8; font-size: 12px; line-height: 17px"><b aria-hidden="true">i</b><span>Kartadan 53 284 so'm band qilinadi. Muqobil mahsulot bo'lsa, faqat haqiqiy summa yechiladi, qolgani darhol qaytadi.</span></div>
+</div>
+<div style="padding: 12px 16px 20px; background: #FFFFFF; border-top: 1px solid #E4E7E3; display: flex; flex-direction: column; gap: 8px">
+<button type="button" onClick="{{ pay }}" style="height: 52px; border-radius: 14px; border: none; background: #0B7A4B; color: #FFFFFF; font-size: 16px; font-weight: 800; cursor: pointer">{{ payLabel }}</button>
+<span style="font-size: 11.5px; color: #5E656C; text-align: center">Karta ma'lumotlari do'konga ko'rinmaydi · himoyalangan ulanish</span>
+</div>
+</sc-if>
+
+<sc-if value="{{ isConfirm }}">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 16px; padding: 22px 16px">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 22px 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; text-align: center">
+<span style="{{ sel.logoStyle }}">{{ sel.logo }}</span>
+<b style="font-size: 18px">{{ step.title }}</b>
+<span style="font-size: 13.5px; line-height: 19px; color: #3C4248">{{ step.text }}</span>
+<sc-if value="{{ step.otp }}">
+<div style="display: flex; gap: 8px; margin-top: 4px"><sc-for list="{{ otpCells }}" as="o" hint-placeholder-count="6"><span style="width: 40px; height: 48px; border-radius: 10px; border: 1.5px solid {{ o.border }}; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 800">{{ o.v }}</span></sc-for></div>
+<span style="font-size: 12px; color: #5E656C">Kod +998 90 *** 45 12 raqamiga yuborildi · 0:48</span>
+</sc-if>
+</div>
+<div style="display: flex; justify-content: space-between; font-size: 13.5px; padding: 0 4px"><span style="color: #5E656C">Summa</span><b>{{ step.amount }}</b></div>
+<button type="button" onClick="{{ confirm }}" style="height: 52px; border-radius: 14px; border: none; background: #0B7A4B; color: #FFFFFF; font-size: 16px; font-weight: 800; cursor: pointer">{{ step.cta }}</button>
+<button type="button" onClick="{{ back }}" style="height: 44px; border-radius: 12px; border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B; font-size: 14px; font-weight: 700; cursor: pointer">Boshqa usulni tanlash</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isDone }}">
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 24px; text-align: center">
+<span style="width: 72px; height: 72px; border-radius: 50%; background: #E6F2EC; color: #0B7A4B; display: flex; align-items: center; justify-content: center; font-size: 34px; font-weight: 800">✓</span>
+<b style="font-size: 20px">{{ doneTitle }}</b>
+<span style="font-size: 14px; line-height: 20px; color: #3C4248">{{ doneText }}</span>
+<button type="button" onClick="{{ reset }}" style="margin-top: 8px; height: 48px; padding: 0 22px; border-radius: 14px; border: none; background: #16181B; color: #FFFFFF; font-size: 15px; font-weight: 800; cursor: pointer">Buyurtmani kuzatish</button>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { sel: 0, stage: 'choose' };
+}
+renderVals() {
+const M = [
+{ id: 'payme', name: 'Payme', sub: 'Ilovada tasdiqlash', logo: 'Pm', color: '#00A8B5', kind: 'wallet' },
+{ id: 'click', name: 'Click', sub: 'Ilovada tasdiqlash', logo: 'Cl', color: '#1F5F96', kind: 'wallet' },
+{ id: 'uzum', name: 'Uzum Bank', sub: 'Ilovada tasdiqlash', logo: 'Uz', color: '#6B3FD9', kind: 'wallet' },
+{ id: 'card', name: 'Humo •••• 4417', sub: 'Saqlangan karta · SMS kod', logo: 'H', color: '#0B7A4B', kind: 'otp' },
+{ id: 'newcard', name: 'Yangi karta', sub: 'Uzcard, Humo · SMS kod', logo: '+', color: '#5E656C', kind: 'otp' },
+{ id: 'gpay', name: 'Visa / Mastercard, Google Pay', sub: 'Keyingi versiyada', logo: 'V', color: '#9AA1A7', kind: 'token', disabled: true },
+{ id: 'cash', name: 'Naqd kuryerga', sub: 'Aniq summani tayyorlab qo’ying', logo: 'So', color: '#7A3E06', kind: 'cash' },
+{ id: 'bnpl', name: 'Muddatli to’lov', sub: '300 000 so’mdan boshlab', logo: '%', color: '#9AA1A7', kind: 'bnpl', disabled: true }
+];
+const groupsDef = [['HAMYONLAR', [0, 1, 2]], ['KARTALAR', [3, 4, 5]], ['BOSHQA', [6, 7]]];
+const s = this.state.sel;
+const logoStyle = (m, big) => 'flex: none; width: ' + (big ? 56 : 40) + 'px; height: ' + (big ? 56 : 40) + 'px; border-radius: 12px; background: ' + m.color + '; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: ' + (big ? 18 : 14) + 'px;';
+const groups = groupsDef.map((g) => ({ title: g[0], items: g[1].map((k) => {
+const m = M[k]; const on = k === s;
+return { name: m.name, sub: m.sub, logo: m.logo, logoStyle: logoStyle(m), pressed: on ? 'true' : 'false', disabled: m.disabled ? 'true' : 'false',
+pick: () => { if (!m.disabled) this.setState({ sel: k }); },
+style: 'display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; background: #FFFFFF; cursor: ' + (m.disabled ? 'not-allowed' : 'pointer') + '; opacity: ' + (m.disabled ? '.5' : '1') + '; ' + (on ? 'border: 2px solid #0B7A4B;' : 'border: 1px solid #E4E7E3;'),
+radioStyle: 'flex: none; width: 20px; height: 20px; border-radius: 50%; box-sizing: border-box; ' + (on ? 'border: 6px solid #0B7A4B;' : 'border: 2px solid #C9CED3;') };
+}) }));
+const m = M[s];
+const steps = {
+wallet: { title: m.name + ' ilovasiga o’tilmoqda', text: 'Ilovada to’lovni tasdiqlang. Tasdiqlangach, shu sahifaga avtomatik qaytasiz.', cta: 'Ilovada tasdiqladim', amount: '48 440 so’m', otp: false },
+otp: { title: 'SMS kodni kiriting', text: 'Karta egasining telefoniga yuborilgan 6 xonali kodni kiriting. Karta raqami Payme’da token sifatida saqlanadi.', cta: 'Tasdiqlash', amount: '53 284 so’m band qilinadi', otp: true },
+token: { title: 'Google Pay', text: 'Barmoq izi yoki ekran qulfi bilan tasdiqlang. Karta raqami do’konga uzatilmaydi.', cta: 'Tasdiqlash', amount: '53 284 so’m band qilinadi', otp: false },
+cash: { title: 'Naqd to’lov', text: 'Kuryerga 48 440 so’m to’laysiz. Kuryerda QR orqali to’lash ham mumkin.', cta: 'Buyurtmani tasdiqlash', amount: '48 440 so’m', otp: false }
+};
+const step = steps[m.kind] || steps.wallet;
+const otpCells = ['4', '8', '2', '', '', ''].map((v, i) => ({ v, border: i === 3 ? '#0B7A4B' : '#DCE0DC' }));
+const stage = this.state.stage;
+const payLabel = m.kind === 'cash' ? 'Buyurtmani tasdiqlash' : m.kind === 'wallet' ? m.name + ' orqali to’lash' : 'To’lash · 48 440 so’m';
+const heads = { choose: 'To’lov usuli', confirm: 'Tasdiqlash', done: 'Tayyor' };
+return {
+groups, payLabel, step, otpCells,
+sel: { logo: m.logo, logoStyle: logoStyle(m, true) },
+head: heads[stage],
+isChoose: stage === 'choose', isConfirm: stage === 'confirm', isDone: stage === 'done',
+doneTitle: m.kind === 'cash' ? 'Buyurtma tasdiqlandi' : 'To’lov qabul qilindi',
+doneText: m.kind === 'cash' ? 'Kuryerga 48 440 so’m to’laysiz. Elektron chek topshirilgach Telegram’ga keladi.' : 'Elektron chek (MXIK kodlari bilan) Telegram’ga yuborildi. Summa o’zgarsa, farq avtomatik qaytariladi.',
+pay: () => this.setState({ stage: 'confirm' }),
+confirm: () => this.setState({ stage: 'done' }),
+back: () => this.setState({ stage: 'choose' }),
+reset: () => this.setState({ stage: 'choose', sel: 0 })
+};
+}
+}
+</script>
+</body>
+</html>

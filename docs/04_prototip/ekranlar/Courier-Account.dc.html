@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Kuryer: hisobim, daromad va naqd</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #16181B; font-family: Manrope, system-ui, sans-serif; color: #FFFFFF; overflow: hidden">
+<div style="display: flex; flex-direction: column; gap: 12px; padding: 20px 16px 12px">
+<div style="display: flex; gap: 10px; align-items: center"><span style="width: 46px; height: 46px; border-radius: 50%; background: #0B7A4B; display: flex; align-items: center; justify-content: center; font-weight: 800">J</span><div style="display: flex; flex-direction: column"><b style="font-size: 17px">Jasur</b><span style="font-size: 12px; color: #C9CED3">4,86 ★ · indeks 92 · Yashil Savat</span></div></div>
+<div role="tablist" style="display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: #2A2D31"><sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3"><button type="button" role="tab" aria-selected="{{ t.sel }}" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.t }}</button></sc-for></div>
+</div>
+
+<sc-if value="{{ isEarn }}">
+<div style="flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 12px; padding: 4px 16px 16px">
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 16px; background: #0B7A4B"><span style="font-size: 12.5px; opacity: .85">Bu hafta (3–9 noyabr)</span><b style="font-size: 30px">1 248 000 so'm</b><span style="font-size: 12.5px; opacity: .85">Dushanba kuni Humo •••• 2290 kartaga</span></div>
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px"><sc-for list="{{ parts }}" as="p" hint-placeholder-count="3"><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px; border-radius: 12px; background: #2A2D31"><span style="font-size: 11px; color: #9AA1A7">{{ p.t }}</span><b style="font-size: 14px">{{ p.v }}</b></div></sc-for></div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: 14px; background: #2A2D31">
+<div style="display: flex; justify-content: space-between; font-size: 12.5px"><b>Soliq: o'zini o'zi band</b><span style="color: #9AA1A7">41,6 / 100 mln</span></div>
+<div style="height: 6px; border-radius: 3px; background: #3C4248"><div style="width: 42%; height: 100%; border-radius: 3px; background: #8FD3B0"></div></div>
+<span style="font-size: 11.5px; line-height: 16px; color: #9AA1A7">Yillik daromad 100 mln so'mdan oshsa, soliqni do'kon soliq agenti sifatida ushlab qoladi.</span>
+</div>
+<b style="font-size: 14px">To'lovlar tarixi</b>
+<sc-for list="{{ payouts }}" as="p" hint-placeholder-count="4"><div style="display: flex; justify-content: space-between; padding: 10px 12px; border-radius: 12px; background: #2A2D31; font-size: 13px"><span style="display: flex; flex-direction: column"><b>{{ p.w }}</b><span style="font-size: 11.5px; color: #9AA1A7">{{ p.d }}</span></span><b style="color: #8FD3B0">{{ p.v }}</b></div></sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isCash }}">
+<div style="flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 12px; padding: 4px 16px 16px">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: {{ cashBg }}"><span style="font-size: 12.5px; opacity: .85">Qo'limdagi naqd</span><b style="font-size: 30px">{{ cash }}</b><div style="height: 6px; border-radius: 3px; background: rgba(255,255,255,.2)"><div style="height: 100%; border-radius: 3px; background: #FFFFFF; width: {{ cashW }}"></div></div><span style="font-size: 12px; opacity: .85">Limit 1 500 000 so'm · smena oxirida kassaga</span></div>
+<b style="font-size: 14px">Naqd buyurtmalar (bugun)</b>
+<sc-for list="{{ cashOrders }}" as="o" hint-placeholder-count="4"><div style="display: flex; justify-content: space-between; padding: 10px 12px; border-radius: 12px; background: #2A2D31; font-size: 13px"><span style="display: flex; flex-direction: column"><b>{{ o.n }}</b><span style="font-size: 11.5px; color: #9AA1A7">{{ o.t }} · chek ✓</span></span><b>{{ o.v }}</b></div></sc-for>
+<button type="button" onClick="{{ handover }}" style="{{ hoStyle }}">{{ hoLabel }}</button>
+<span style="font-size: 11.5px; color: #9AA1A7">Kassir summani panelda tasdiqlaydi; farq bo'lsa dalolatnoma tuziladi.</span>
+</div>
+</sc-if>
+
+<sc-if value="{{ isDocs }}">
+<div style="flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 8px; padding: 4px 16px 16px">
+<sc-for list="{{ docs }}" as="d" hint-placeholder-count="7"><div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border-radius: 12px; background: #2A2D31"><span style="display: flex; flex-direction: column; gap: 2px"><b style="font-size: 13.5px">{{ d.t }}</b><span style="font-size: 11.5px; color: #9AA1A7">{{ d.d }}</span></span><span style="{{ d.st }}">{{ d.s }}</span></div></sc-for>
+<span style="font-size: 11.5px; line-height: 16px; color: #9AA1A7">Hujjat muddati tugashidan 30 kun oldin eslatma keladi; tugasa, smena avtomatik bloklanadi.</span>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { tab: 0, handed: false };
+}
+renderVals() {
+const st = this.state;
+const tabs = ['Daromad', 'Naqd', 'Hujjatlar'].map((t, i) => ({ t, sel: st.tab === i ? 'true' : 'false', pick: () => this.setState({ tab: i }),
+style: 'flex: 1; height: 36px; border-radius: 9px; border: none; font-size: 13px; font-weight: 800; cursor: pointer; ' + (st.tab === i ? 'background: #FFFFFF; color: #16181B;' : 'background: transparent; color: #C9CED3;') }));
+const parts = [['Yetkazish', '52 × 18 000'], ['Choy puli', '312 000'], ['Bonus ×1,1', 'kiritilgan']].map((p) => ({ t: p[0], v: p[1] }));
+const payouts = [['27 okt – 2 noy', 'to’landi 3-noyabr', '1 184 000'], ['20–26 okt', 'to’landi 27-oktabr', '1 096 000'], ['13–19 okt', 'to’landi 20-oktabr', '1 210 000']].map((p) => ({ w: p[0], d: p[1], v: p[2] }));
+const cashOrders = [['A-104512', '14:38', '48 440'], ['A-104498', '12:10', '126 300'], ['A-104471', '10:55', '84 900'], ['+ yana 6 ta', 'bugun', '152 800']].map((o) => ({ n: o[0], t: o[1], v: o[2] }));
+const docs = [['Pasport (ID-karta)', 'JShShIR tasdiqlangan', 'Tasdiqlangan', 1], ['O’zini o’zi band qilganlik', 'my.soliq.uz · faol', 'Tasdiqlangan', 1], ['Haydovchilik guvohnomasi', 'Amal qiladi: 2027-08', 'Tasdiqlangan', 1], ['Kuryer shartnomasi v1.0', 'SMS kod bilan · 2026-12-01', 'Imzolangan', 1], ['Geolokatsiya roziligi', 'faqat smena vaqtida', 'Berilgan', 1], ['Sanitariya ko’rigi (termosumka)', 'Keyingisi: 2026-11-20', '15 kun qoldi', 0], ['O’quv modullari', '5 / 5 · 3-daraja', 'Bajarilgan', 1]].map((d) => ({ t: d[0], d: d[1], s: d[2], st: 'flex: none; padding: 4px 9px; border-radius: 7px; font-size: 11.5px; font-weight: 800; ' + (d[3] ? 'background: #0B7A4B; color: #FFFFFF;' : 'background: #F1B53C; color: #16181B;') }));
+const cashV = st.handed ? 0 : 412440;
+return { tabs, parts, payouts, cashOrders, docs, isEarn: st.tab === 0, isCash: st.tab === 1, isDocs: st.tab === 2,
+cash: cashV.toLocaleString('ru-RU').replace(/ /g, ' ') + ' so’m', cashW: (cashV / 1500000 * 100).toFixed(0) + '%', cashBg: st.handed ? '#2A2D31' : '#7A3E06',
+hoLabel: st.handed ? 'Topshirildi ✓ · kassir tasdig’i kutilmoqda' : 'Kassaga topshirish · 412 440', handover: () => this.setState({ handed: true }),
+hoStyle: 'height: 50px; border-radius: 14px; border: none; font-size: 15px; font-weight: 800; cursor: pointer; ' + (st.handed ? 'background: #E6F2EC; color: #075C38;' : 'background: #FFFFFF; color: #16181B;') };
+}
+}
+</script>
+</body>
+</html>

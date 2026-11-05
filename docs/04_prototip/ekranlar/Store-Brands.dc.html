@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Har do'konga o'z internet-do'koni</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1060px; box-sizing: border-box; padding: 48px 64px; display: flex; flex-direction: column; gap: 24px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0B7A4B">Bitta shablon — har xil do'konlar</span><h1 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 800">Har do'kon o'z brendi, katalogi va manzili bilan internet-do'kon oladi</h1></div>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px">
+<sc-for list="{{ stores }}" as="s" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 16px">
+<div style="width: 330px; height: 640px; box-sizing: border-box; border: 10px solid #16181B; border-radius: 40px; overflow: hidden; background: #FFFFFF; display: flex; flex-direction: column">
+<div style="display: flex; align-items: center; gap: 10px; padding: 16px 14px 10px">
+<div style="{{ s.logoStyle }}">{{ s.mono }}</div>
+<div style="display: flex; flex-direction: column"><b style="font-size: 15px">{{ s.name }}</b><span style="font-size: 11.5px; color: #5E656C">{{ s.hours }}</span></div>
+</div>
+<div style="{{ s.bannerStyle }}"><b style="font-size: 17px; line-height: 22px">{{ s.banner }}</b><span style="font-size: 12px; opacity: .9">{{ s.bannerSub }}</span></div>
+<div style="display: flex; gap: 6px; padding: 12px 14px; overflow: hidden">
+<sc-for list="{{ s.cats }}" as="c" hint-placeholder-count="3"><span style="flex: none; padding: 6px 10px; border-radius: 14px; background: #F1F3F0; font-size: 12px; font-weight: 600">{{ c }}</span></sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 0 14px">
+<sc-for list="{{ s.items }}" as="it" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 8px; border-radius: 12px; border: 1px solid #E4E7E3"><div style="{{ s.imgStyle }}"></div><span style="font-size: 12.5px; font-weight: 600; line-height: 16px">{{ it.n }}</span><span style="display: flex; justify-content: space-between; align-items: center"><b style="font-size: 12.5px">{{ it.p }}</b><span style="{{ s.plusStyle }}">+</span></span></div>
+</sc-for>
+</div>
+<div style="flex: 1"></div>
+<div style="{{ s.cartStyle }}">Savat · {{ s.cart }}</div>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center"><b style="font-size: 15px">{{ s.domain }}</b><span style="font-size: 13px; color: #3C4248">{{ s.meta }}</span></div>
+</div>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1060}}'>
+class Component extends DCLogic {
+renderVals() {
+const mk = (o) => ({
+...o,
+logoStyle: 'width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-weight: 800; font-size: 13px; background: ' + o.c + ';',
+bannerStyle: 'margin: 0 14px; padding: 16px; border-radius: 16px; display: flex; flex-direction: column; gap: 4px; color: #FFFFFF; background: ' + o.c + ';',
+imgStyle: 'height: 74px; border-radius: 8px; background: ' + o.tint + ';',
+plusStyle: 'width: 26px; height: 26px; border-radius: 13px; display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-weight: 800; background: ' + o.c + ';',
+cartStyle: 'margin: 12px 14px 14px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: #FFFFFF; font-weight: 700; font-size: 14px; background: #16181B;'
+});
+const stores = [
+mk({ name: 'Yashil Savat', mono: 'YS', c: '#1D5FD1', tint: '#E5EEF8', hours: 'Supermarket · 07:00–23:00', banner: 'Kunlik mahsulotlar 40 daqiqada', bannerSub: '3 filial · slot bilan yetkazish', cats: ['Meva', 'Sut', 'Go’sht', 'Ichimlik'], items: [{ n: 'Sut 3,2%', p: '12 500' }, { n: 'Tuxum 10 dona', p: '16 000' }, { n: 'Mol go’shti, kg', p: '98 000' }, { n: 'Olma, kg', p: '18 000' }], cart: '4 · 144 500', domain: 'yashilsavat.[domen].uz', meta: 'Supermarket · Biznes tarifi · vazn, muqobil, slotlar' }),
+mk({ name: 'Non uyi', mono: 'NU', c: '#B4441F', tint: '#F7E6E1', hours: 'Novvoyxona · 06:00–20:00', banner: 'Issiq non — tandirdan uyingizga', bannerSub: 'Qo’lda tasdiq · 1 filial', cats: ['Non', 'Somsa', 'Shirinlik'], items: [{ n: 'Tandir non', p: '4 000' }, { n: 'Patir', p: '7 000' }, { n: 'Go’shtli somsa', p: '8 000' }, { n: 'Chak-chak', p: '35 000' }], cart: '6 · 46 000', domain: 'nonuyi.[domen].uz', meta: 'Kichik do’kon · Start tarifi · qo’lda tasdiq' }),
+mk({ name: 'Elektro Uy', mono: 'EU', c: '#16181B', tint: '#EEF0ED', hours: 'Maishiy texnika · 10:00–21:00', banner: 'Bugun buyurtma — ertaga uyingizda', bannerSub: 'Variantlar, kafolat, seriya raqami', cats: ['Telefon', 'Aksessuar', 'Uy uchun'], items: [{ n: 'Quvvatlagich 20W', p: '149 000' }, { n: 'Quloqchin', p: '289 000' }, { n: 'Choynak 1,7 l', p: '245 000' }, { n: 'Fen', p: '310 000' }], cart: '1 · 289 000', domain: 'elektrouy.uz (o’z domeni)', meta: 'Nooziq-ovqat · Tarmoq tarifi · variant va hajm' })
+];
+return { stores };
+}
+}
+</script>
+</body>
+</html>

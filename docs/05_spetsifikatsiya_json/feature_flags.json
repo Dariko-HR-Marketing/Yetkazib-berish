@@ -1,0 +1,201 @@
+{
+  "_izoh": "Manba: PRD 'Yoqib-o'chiriladigan funksiyalar'. can(tenant,key) = platform_enabled AND plan_includes AND shop_enabled. Kesh 60 s (Redis). Har o'zgarish: feature.toggled hodisasi + audit.",
+  "plan_order": [
+    "start",
+    "biznes",
+    "pro",
+    "tarmoq"
+  ],
+  "flags": [
+    {
+      "key": "storefront.own",
+      "description": "Do'konning o'z vitrinasi (subdomen)",
+      "min_plan": "start",
+      "default_on_for_shop": true,
+      "toggled_by": "owner",
+      "requires": []
+    },
+    {
+      "key": "storefront.custom_domain",
+      "description": "O'z domeni (shop.uz)",
+      "min_plan": "biznes",
+      "default_on_for_shop": false,
+      "toggled_by": "owner",
+      "requires": [
+        "storefront.own"
+      ]
+    },
+    {
+      "key": "catalog.marketplace_listing",
+      "description": "Umumiy katalogda ko'rinish (reyting ≥ 4,0, ishonch indeksi ≥ 70)",
+      "min_plan": "biznes",
+      "default_on_for_shop": false,
+      "toggled_by": "owner",
+      "requires": []
+    },
+    {
+      "key": "catalog.marketplace_promo",
+      "description": "Katalogda yuqori o'rin, \"Reklama\" belgisi bilan",
+      "min_plan": "pro",
+      "default_on_for_shop": false,
+      "toggled_by": "owner",
+      "requires": [
+        "catalog.marketplace_listing"
+      ]
+    },
+    {
+      "key": "channel.telegram_miniapp",
+      "description": "Do'konning Telegram mini-ilovasi va boti",
+      "min_plan": "start",
+      "default_on_for_shop": true,
+      "toggled_by": "owner",
+      "requires": []
+    },
+    {
+      "key": "delivery.own_couriers",
+      "description": "O'z kuryerlari",
+      "min_plan": "start",
+      "default_on_for_shop": true,
+      "toggled_by": "owner",
+      "requires": []
+    },
+    {
+      "key": "delivery.platform_pool",
+      "description": "Platforma kuryerlar puli (xizmat haqi bilan; faqat oldindan to'langan buyurtma)",
+      "min_plan": "start",
+      "default_on_for_shop": false,
+      "toggled_by": "owner",
+      "requires": []
+    },
+    {
+      "key": "delivery.third_party",
+      "description": "Tashqi xizmat (Yandex Delivery va b.), faqat oldindan to'langan",
+      "min_plan": "biznes",
+      "default_on_for_shop": false,
+      "toggled_by": "owner",
+      "requires": []
+    },
+    {
+      "key": "delivery.auto_fallback",
+      "description": "Kuryer topilmasa avtomatik keyingi kanal (3 daqiqa)",
+      "min_plan": "biznes",
+      "default_on_for_shop": true,
+      "toggled_by": "owner",
+      "requires": []
+    },
+    {
+      "key": "payment.cash",
+      "description": "Naqd (faqat o'z kuryerlari bilan)",
+      "min_plan": "start",
+      "default_on_for_shop": true,
+      "toggled_by": "owner",
+      "requires": [
+        "delivery.own_couriers"
+      ]
+    },
+    {
+      "key": "payment.saved_cards",
+      "description": "Saqlangan karta (token)",
+      "min_plan": "start",
+      "default_on_for_shop": true,
+      "toggled_by": "owner",
+      "requires": []
+    },
+    {
+      "key": "stock.visible",
+      "description": "Xaridorga qoldiq va \"Tugadi\" ko'rsatish",
+      "min_plan": "start",
+      "default_on_for_shop": true,
+      "toggled_by": "owner",
+      "requires": []
+    },
+    {
+      "key": "integration.pos_erp",
+      "description": "Billz, 1C va boshqalar (Biznes: 1 ta, Pro: 3 ta, Tarmoq: cheksiz + API)",
+      "min_plan": "biznes",
+      "default_on_for_shop": false,
+      "toggled_by": "owner",
+      "requires": []
+    },
+    {
+      "key": "loyalty.points",
+      "description": "Ball va sodiqlik kartasi",
+      "min_plan": "biznes",
+      "default_on_for_shop": false,
+      "toggled_by": "owner",
+      "requires": []
+    },
+    {
+      "key": "loyalty.stamp_cards",
+      "description": "Aksiya (shtamp) kartalari",
+      "min_plan": "pro",
+      "default_on_for_shop": false,
+      "toggled_by": "owner",
+      "requires": [
+        "loyalty.points"
+      ]
+    },
+    {
+      "key": "loyalty.gift_cards",
+      "description": "Sovg'a kartalari — v2, yurist xulosasidan keyin",
+      "min_plan": "v2",
+      "default_on_for_shop": false,
+      "toggled_by": "platform",
+      "requires": []
+    },
+    {
+      "key": "ai.customer_assistant",
+      "description": "Xaridor uchun AI yordamchi",
+      "min_plan": "biznes",
+      "default_on_for_shop": true,
+      "toggled_by": "owner",
+      "requires": []
+    },
+    {
+      "key": "ai.owner_assistant",
+      "description": "Egasi uchun \"ma'lumotdan so'rang\"",
+      "min_plan": "pro",
+      "default_on_for_shop": true,
+      "toggled_by": "owner",
+      "requires": []
+    },
+    {
+      "key": "ai.external_agents",
+      "description": "Tashqi AI agentlar (MCP), beta",
+      "min_plan": "pro",
+      "default_on_for_shop": false,
+      "toggled_by": "owner+platform",
+      "requires": []
+    },
+    {
+      "key": "analytics.advanced",
+      "description": "ABC/XYZ, hudud ABC, kogorta",
+      "min_plan": "pro",
+      "default_on_for_shop": true,
+      "toggled_by": "owner",
+      "requires": []
+    },
+    {
+      "key": "branches.multi",
+      "description": "Bir nechta filial",
+      "min_plan": "pro",
+      "default_on_for_shop": null,
+      "toggled_by": "owner",
+      "requires": []
+    }
+  ],
+  "rules": [
+    {
+      "id": "F-5",
+      "rule": "payment.cash yoqilgan bo'lsa delivery.own_couriers ham yoqilgan bo'lishi shart"
+    },
+    {
+      "id": "P-1",
+      "rule": "delivery.platform_pool va delivery.third_party faqat oldindan to'langan buyurtmani oladi"
+    },
+    {
+      "id": "PILOT",
+      "rule": "Pilotda delivery.platform_pool platforma darajasida o'chiq (yurist xulosasigacha)"
+    }
+  ]
+}

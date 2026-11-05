@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Xaridor: ball va pul bilan to'lash</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B; overflow: hidden">
+<div style="display: flex; align-items: center; gap: 12px; padding: 18px 16px 12px; background: #FFFFFF; border-bottom: 1px solid #E4E7E3"><span style="width: 40px; height: 40px; border-radius: 12px; border: 1px solid #E4E7E3; display: flex; align-items: center; justify-content: center; font-size: 18px">←</span><div style="display: flex; flex-direction: column"><b style="font-size: 17px">To'lov</b><span style="font-size: 12px; color: #5E656C">5 mahsulot · bugun 14:40–15:00</span></div></div>
+<div style="flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 12px; padding: 14px 16px">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="display: flex; justify-content: space-between; align-items: center"><b style="font-size: 15px">Ballar bilan to'lash</b><span style="font-size: 12.5px; color: #5E656C">Balans: <b style="color: #16181B">14 820</b></span></div>
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px"><sc-for list="{{ opts }}" as="o" hint-placeholder-count="4"><button type="button" aria-pressed="{{ o.pressed }}" onClick="{{ o.pick }}" style="{{ o.style }}">{{ o.t }}</button></sc-for></div>
+<div style="height: 8px; border-radius: 4px; background: #EEF0ED"><div style="height: 100%; border-radius: 4px; background: #0B7A4B; width: {{ capW }}"></div></div>
+<span style="font-size: 12px; color: #5E656C">Chekning 30% gacha ball bilan to'lash mumkin: bu buyurtmada {{ capText }}. Yetkazish ball bilan to'lanmaydi.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">Qolgan summani to'lash</b>
+<sc-for list="{{ methods }}" as="m" hint-placeholder-count="3"><button type="button" aria-pressed="{{ m.pressed }}" onClick="{{ m.pick }}" style="{{ m.style }}"><span>{{ m.t }}</span><span style="{{ m.radio }}"></span></button></sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; font-size: 13.5px">
+<div style="display: flex; justify-content: space-between"><span style="color: #5E656C">Mahsulotlar</span><span>103 000 so'm</span></div>
+<div style="display: flex; justify-content: space-between"><span style="color: #5E656C">Yetkazish</span><span>9 000 so'm</span></div>
+<div style="display: flex; justify-content: space-between"><span style="color: #5E656C">Ballar bilan</span><span style="color: #0B7A4B">−{{ used }}</span></div>
+<div style="height: 1px; background: #EEF0ED"></div>
+<div style="display: flex; justify-content: space-between; font-size: 16px"><b>{{ payLabel }}</b><b>{{ pay }}</b></div>
+<div style="display: flex; justify-content: space-between; padding: 8px 10px; border-radius: 10px; background: #E6F2EC; color: #075C38; font-size: 12.5px"><span>Bu buyurtmadan keladi</span><b>+{{ earn }} ball</b></div>
+<span style="font-size: 11.5px; color: #5E656C">Keshbek faqat pul bilan to'langan qismga hisoblanadi. Chekda ball qismi chegirma sifatida ko'rsatiladi.</span>
+</div>
+</div>
+<div style="padding: 12px 16px 18px; background: #FFFFFF; border-top: 1px solid #E4E7E3"><span style="height: 52px; border-radius: 14px; background: #0B7A4B; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800">To'lash · {{ pay }}</span></div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { o: 2, m: 0 };
+}
+renderVals() {
+const st = this.state;
+const fmt = (n) => n.toLocaleString('ru-RU').replace(/ /g, ' ');
+const goods = 103000, del = 9000, bal = 14820, cap = Math.min(bal, Math.floor(goods * 0.3));
+const O = [['Yo’q', 0], ['5 000', 5000], ['10 000', 10000], ['Hammasi', cap]];
+const opts = O.map((o, i) => ({ t: o[0], pressed: st.o === i ? 'true' : 'false', pick: () => this.setState({ o: i }),
+style: 'height: 38px; border-radius: 10px; font-size: 12.5px; font-weight: 800; cursor: pointer; ' + (st.o === i ? 'border: 1px solid #0B7A4B; background: #0B7A4B; color: #FFFFFF;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;') }));
+const used = O[st.o][1];
+const M = ['Humo •••• 4417', 'Payme', 'Naqd kuryerga'];
+const methods = M.map((t, i) => ({ t, pressed: st.m === i ? 'true' : 'false', pick: () => this.setState({ m: i }),
+style: 'display: flex; justify-content: space-between; align-items: center; height: 46px; padding: 0 14px; border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; background: #FFFFFF; color: #16181B; ' + (st.m === i ? 'border: 2px solid #0B7A4B;' : 'border: 1px solid #E4E7E3;'),
+radio: 'width: 18px; height: 18px; border-radius: 50%; box-sizing: border-box; ' + (st.m === i ? 'border: 6px solid #0B7A4B;' : 'border: 2px solid #C9CED3;') }));
+const pay = goods + del - used;
+return { opts, methods, used: fmt(used) + ' so’m', pay: fmt(pay) + ' so’m', payLabel: st.m === 2 ? 'Kuryerga naqd' : 'Kartadan yechiladi',
+earn: fmt(Math.round((goods - used) * 0.03)), capW: (used / cap * 100).toFixed(0) + '%', capText: 'ko’pi bilan ' + fmt(cap) + ' ball' };
+}
+}
+</script>
+</body>
+</html>

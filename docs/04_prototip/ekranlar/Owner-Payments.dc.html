@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>To'lov usullarini ulash</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 100%; min-width: 1024px; height: 100%; min-height: 900px; box-sizing: border-box; display: flex; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<nav aria-label="Bo'limlar" style="flex: none; width: 220px; display: flex; flex-direction: column; gap: 4px; padding: 24px 14px; background: #FFFFFF; border-right: 1px solid #E4E7E3; font-size: 14px">
+<b style="padding: 0 10px 14px; font-size: 16px">Yashil Savat</b>
+<sc-for list="{{ nav }}" as="n" hint-placeholder-count="7"><span style="{{ n.style }}">{{ n.t }}</span></sc-for>
+</nav>
+<main style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px; padding: 28px 36px">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5E656C">Sozlamalar / To'lovlar</span><h1 style="margin: 0; font-size: 26px; line-height: 34px; font-weight: 800">To'lov usullari</h1></div>
+<div style="display: flex; gap: 8px; align-items: center; font-size: 13px"><span style="color: #5E656C">Davlat va valyuta:</span><span style="padding: 7px 12px; border-radius: 10px; background: #FFFFFF; border: 1px solid #DCE0DC; font-weight: 700">O'zbekiston · UZS</span><span style="padding: 7px 12px; border-radius: 10px; background: #F1F3F0; color: #5E656C; font-weight: 700">+ Davlat qo'shish · v2</span></div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4"><div style="display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="font-size: 12.5px; color: #5E656C">{{ k.t }}</span><b style="font-size: 20px">{{ k.v }}</b><span style="font-size: 12px; color: #5E656C">{{ k.s }}</span></div></sc-for>
+</div>
+
+<div style="display: flex; gap: 16px; flex: 1; min-height: 0">
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{ list }}" as="p" hint-placeholder-count="8">
+<div style="{{ p.rowStyle }}">
+<button type="button" onClick="{{ p.pick }}" aria-pressed="{{ p.pressed }}" style="flex: 1; display: flex; align-items: center; gap: 12px; border: none; background: transparent; padding: 0; text-align: left; cursor: pointer; color: #16181B">
+<span style="{{ p.logoStyle }}">{{ p.logo }}</span>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 14.5px">{{ p.name }}</b><span style="font-size: 12px; color: #5E656C">{{ p.sub }}</span></span>
+<span style="{{ p.statusStyle }}">{{ p.status }}</span>
+<span style="width: 110px; font-size: 12.5px; color: #3C4248; text-align: right">{{ p.share }}</span>
+</button>
+<button type="button" role="switch" aria-checked="{{ p.on }}" aria-label="{{ p.toggleLabel }}" onClick="{{ p.toggle }}" style="{{ p.switchStyle }}"><span style="{{ p.knobStyle }}"></span></button>
+</div>
+</sc-for>
+</div>
+
+<aside style="flex: none; width: 380px; display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="display: flex; align-items: center; gap: 12px"><span style="{{ cur.logoStyle }}">{{ cur.logo }}</span><div style="display: flex; flex-direction: column"><b style="font-size: 17px">{{ cur.name }}</b><span style="font-size: 12.5px; color: #5E656C">{{ cur.status }}</span></div></div>
+<b style="font-size: 13.5px">Ulash bosqichlari</b>
+<sc-for list="{{ cur.steps }}" as="s" hint-placeholder-count="5"><div style="display: flex; gap: 10px; align-items: flex-start; font-size: 13px; line-height: 18px"><span style="{{ s.dot }}">{{ s.mark }}</span><span style="{{ s.text }}">{{ s.t }}</span></div></sc-for>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 12px; border-radius: 12px; background: #F6F7F4; font-size: 12.5px">
+<span style="color: #5E656C">Merchant ID</span><b style="font-family: ui-monospace, Menlo, monospace">{{ cur.mid }}</b>
+<span style="color: #5E656C">Webhook manzili (provayder kabinetiga qo'ying)</span><code style="font: 600 12px ui-monospace, Menlo, monospace; word-break: break-all; color: #075C38">https://api.platforma.uz/pay/{{ cur.id }}/yashil-savat</code>
+<span style="color: #5E656C">Shartnomadagi komissiya · pul tushishi</span><b>{{ cur.fee }} · {{ cur.payout }}</b>
+</div>
+<div style="display: flex; gap: 8px"><button type="button" onClick="{{ test }}" style="flex: 1; height: 42px; border-radius: 12px; border: 1px solid #0B7A4B; background: #FFFFFF; color: #0B7A4B; font-weight: 800; cursor: pointer">{{ testLabel }}</button><button type="button" style="flex: 1; height: 42px; border-radius: 12px; border: none; background: #0B7A4B; color: #FFFFFF; font-weight: 800; cursor: pointer">Saqlash</button></div>
+<div style="height: 1px; background: #EEF0ED"></div>
+<b style="font-size: 13.5px">Fiskal chek</b>
+<div style="display: flex; justify-content: space-between; font-size: 13px"><span>MXIK kodi biriktirilgan mahsulotlar</span><b>1 214 / 1 248</b></div>
+<div style="height: 8px; border-radius: 4px; background: #EEF0ED"><div style="width: 97%; height: 100%; border-radius: 4px; background: #0B7A4B"></div></div>
+<span style="font-size: 12px; color: #9F2D12; font-weight: 700">34 ta mahsulotda kod yo'q — ular onlayn to'lovda sotilmaydi. Ro'yxatni ochish →</span>
+</aside>
+</div>
+<span style="font-size: 12px; color: #5E656C">Komissiya va muddatlar — namuna. Haqiqiy qiymatlar do'kon va provayder o'rtasidagi shartnomadan olinadi.</span>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { sel: 0, on: [true, true, true, true, true, false, false, false], tested: {} };
+}
+renderVals() {
+const P = [
+{ id: 'payme', name: 'Payme', sub: 'Hamyon · Uzcard, Humo', logo: 'Pm', color: '#00A8B5', status: 'Ulangan', share: '38% to’lovlar', mid: '64f1••••••a92c', fee: '1,5%', payout: 'T+1' },
+{ id: 'click', name: 'Click', sub: 'Hamyon · Uzcard, Humo', logo: 'Cl', color: '#1F5F96', status: 'Ulangan', share: '27% to’lovlar', mid: '3381••••2210', fee: '1,5%', payout: 'T+1' },
+{ id: 'uzum', name: 'Uzum Bank', sub: 'Hamyon', logo: 'Uz', color: '#6B3FD9', status: 'Ulangan', share: '11% to’lovlar', mid: 'uz-77••••19', fee: '1,4%', payout: 'T+1' },
+{ id: 'cards', name: 'Uzcard / Humo kartasi', sub: 'Bank orqali · SMS kod · saqlangan karta', logo: 'H', color: '#0B7A4B', status: 'Ulangan', share: '9% to’lovlar', mid: 'KB-0042••••', fee: '1,2%', payout: 'T+1' },
+{ id: 'cash', name: 'Naqd kuryerga', sub: 'Kuryer ilovasi · inkassatsiya', logo: 'So', color: '#7A3E06', status: 'Faol', share: '15% to’lovlar', mid: '—', fee: '0%', payout: 'Smena oxiri' },
+{ id: 'visa', name: 'Visa / Mastercard', sub: 'Bank ekvayringi · 3-D Secure · v2', logo: 'V', color: '#154BA8', status: 'Test rejimi', share: '—', mid: 'test_51Hk••••', fee: '2,5%', payout: 'T+2' },
+{ id: 'gpay', name: 'Apple Pay / Google Pay', sub: 'Visa / Mastercard tokeni · v2', logo: 'G', color: '#16181B', status: 'Ulanmagan', share: '—', mid: 'kiritilmagan', fee: '—', payout: '—' },
+{ id: 'bnpl', name: 'Muddatli to’lov', sub: 'Uzum Nasiya, Alif Nasiya', logo: '%', color: '#9AA1A7', status: 'Ulanmagan', share: '—', mid: 'kiritilmagan', fee: '—', payout: '—' }
+];
+const st = this.state;
+const stCss = { 'Ulangan': 'background: #E6F2EC; color: #075C38;', 'Faol': 'background: #E6F2EC; color: #075C38;', 'Test rejimi': 'background: #FDF1E3; color: #7A3E06;', 'Ulanmagan': 'background: #F1F3F0; color: #5E656C;' };
+const logoStyle = (p, big) => 'flex: none; width: ' + (big ? 48 : 40) + 'px; height: ' + (big ? 48 : 40) + 'px; border-radius: 12px; background: ' + p.color + '; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px;';
+const list = P.map((p, i) => {
+const on = st.on[i]; const selected = i === st.sel;
+return { name: p.name, sub: p.sub, logo: p.logo, logoStyle: logoStyle(p), status: on ? p.status : 'O’chirilgan', share: p.share,
+statusStyle: 'padding: 4px 9px; border-radius: 6px; font-size: 12px; font-weight: 700; ' + (on ? stCss[p.status] : 'background: #FBE9E4; color: #9F2D12;'),
+pressed: selected ? 'true' : 'false', on: on ? 'true' : 'false', toggleLabel: p.name + ' — yoqish yoki o’chirish',
+rowStyle: 'display: flex; align-items: center; gap: 14px; padding: 10px 14px; border-radius: 14px; background: #FFFFFF; ' + (selected ? 'border: 2px solid #0B7A4B;' : 'border: 1px solid #E4E7E3;'),
+switchStyle: 'flex: none; width: 46px; height: 26px; border-radius: 13px; border: none; padding: 3px; cursor: pointer; display: flex; ' + (on ? 'background: #0B7A4B; justify-content: flex-end;' : 'background: #C9CED3; justify-content: flex-start;'),
+knobStyle: 'width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF;',
+pick: () => this.setState({ sel: i }),
+toggle: () => { const arr = st.on.slice(); arr[i] = !arr[i]; this.setState({ on: arr }); } };
+});
+const p = P[st.sel];
+const doneCount = { 'Ulangan': 5, 'Faol': 5, 'Test rejimi': 3, 'Ulanmagan': 0 }[p.status] + (st.tested[st.sel] && p.status === 'Test rejimi' ? 1 : 0);
+const stepNames = ['Provayder bilan shartnoma', 'Merchant ID va maxfiy kalitni kiritish', 'Webhook manzilini provayder kabinetiga qo’yish', 'Test to’lov (1 000 so’m) va qaytarish', 'Jonli rejimni yoqish'];
+const steps = stepNames.map((t, i) => { const done = i < doneCount; const cur = i === doneCount;
+return { t, mark: done ? '✓' : String(i + 1), dot: 'flex: none; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; ' + (done ? 'background: #0B7A4B; color: #FFFFFF;' : cur ? 'background: #FFFFFF; color: #0B7A4B; border: 2px solid #0B7A4B; box-sizing: border-box;' : 'background: #F1F3F0; color: #5E656C;'),
+text: done ? 'color: #3C4248;' : cur ? 'font-weight: 700;' : 'color: #5E656C;' }; });
+const cur = { id: p.id, name: p.name, logo: p.logo, logoStyle: logoStyle(p, true), status: p.status + (p.share !== '—' ? ' · ' + p.share : ''), steps, mid: p.mid, fee: p.fee, payout: p.payout };
+const tested = st.tested[st.sel];
+return {
+list, cur,
+testLabel: tested ? 'Test o’tdi ✓' : 'Test to’lov',
+test: () => { const t = Object.assign({}, st.tested); t[st.sel] = true; this.setState({ tested: t }); },
+kpis: [{ t: 'Bugungi onlayn to’lovlar', v: '3,9 mln so’m', s: '61 ta to’lov' }, { t: 'Muvaffaqiyatli to’lovlar', v: '97,8%', s: 'oxirgi 30 kun' }, { t: 'Hisobga tushadi', v: '3,84 mln so’m', s: 'ertaga, T+1' }, { t: 'Qaytarishlar', v: '2', s: '84 200 so’m · 30 kun' }],
+nav: ['Bosh sahifa', 'Buyurtmalar', 'Katalog', 'Internet-do’kon', 'Analitika', 'To’lovlar', 'Tarif'].map((t) => ({ t, style: 'padding: 9px 10px; border-radius: 10px; ' + (t === 'To’lovlar' ? 'background: #E6F2EC; color: #075C38; font-weight: 800;' : 'color: #3C4248;') }))
+};
+}
+}
+</script>
+</body>
+</html>

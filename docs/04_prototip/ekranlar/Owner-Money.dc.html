@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Pul oqimi onlayn</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif} @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}</style>
+</helmet>
+<div style="width: 100%; min-width: 1024px; height: 100%; min-height: 900px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; padding: 26px 40px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5E656C">Yashil Savat · Moliya · bugun, 5-noyabr</span><h1 style="margin: 0; font-size: 26px; line-height: 34px; font-weight: 800">Pul oqimi onlayn</h1></div>
+<div style="display: flex; gap: 8px; align-items: center">
+<span style="display: flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 999px; background: #E6F2EC; color: #075C38; font-size: 13px; font-weight: 800"><span style="width: 8px; height: 8px; border-radius: 50%; background: #0B7A4B; animation: pulse 1.4s infinite"></span>Jonli · 2 soniya oldin</span>
+<button type="button" onClick="{{ simulate }}" style="height: 36px; padding: 0 14px; border-radius: 10px; border: 1px solid #0B7A4B; background: #FFFFFF; color: #0B7A4B; font-size: 13px; font-weight: 800; cursor: pointer">+ Yangi to'lov (namuna)</button>
+<span style="padding: 8px 12px; border-radius: 10px; background: #FFFFFF; border: 1px solid #DCE0DC; font-size: 13px; font-weight: 700">⇩ Eksport</span>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{ kpis }}" as="k" hint-placeholder-count="5"><div style="display: flex; flex-direction: column; gap: 3px; padding: 14px 16px; border-radius: 14px; background: {{ k.bg }}; color: {{ k.fg }}; border: 1px solid #E4E7E3"><span style="font-size: 12.5px; opacity: .8">{{ k.t }}</span><b style="font-size: 21px">{{ k.v }}</b><span style="font-size: 12px; opacity: .8">{{ k.s }}</span></div></sc-for>
+</div>
+
+<div style="display: flex; gap: 14px; flex: 1; min-height: 0">
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; overflow: hidden">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; gap: 10px">
+<b style="font-size: 15px">To'lovlar lentasi</b>
+<div style="display: flex; gap: 6px"><sc-for list="{{ filters }}" as="f" hint-placeholder-count="5"><button type="button" aria-pressed="{{ f.pressed }}" onClick="{{ f.pick }}" style="{{ f.style }}">{{ f.t }}</button></sc-for></div>
+</div>
+<div style="display: grid; grid-template-columns: 60px 100px 1.2fr 1.1fr 1fr 1.1fr; gap: 10px; padding: 9px 16px; background: #F1F3F0; font-size: 11.5px; font-weight: 800; color: #5E656C"><span>VAQT</span><span>BUYURTMA</span><span>USUL</span><span>KARTA / KIM</span><span>SUMMA</span><span>HOLAT</span></div>
+<sc-for list="{{ feed }}" as="r" hint-placeholder-count="10"><div style="{{ r.row }}"><span style="color: #5E656C">{{ r.time }}</span><b>{{ r.order }}</b><span>{{ r.method }}</span><span style="color: #3C4248">{{ r.card }}</span><b style="color: {{ r.amtColor }}">{{ r.amount }}</b><span><span style="{{ r.stStyle }}">{{ r.status }}</span></span></div></sc-for>
+</div>
+
+<aside style="flex: none; width: 360px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 14.5px">Bugun usullar bo'yicha</b>
+<sc-for list="{{ methods }}" as="m" hint-placeholder-count="5"><div style="display: flex; flex-direction: column; gap: 3px"><span style="display: flex; justify-content: space-between; font-size: 12.5px"><span>{{ m.t }}</span><b>{{ m.v }}</b></span><div style="height: 6px; border-radius: 3px; background: #EEF0ED"><div style="height: 100%; border-radius: 3px; background: {{ m.c }}; width: {{ m.w }}"></div></div></div></sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 14.5px">Naqd kuryerlarda</b>
+<sc-for list="{{ cash }}" as="c" hint-placeholder-count="3"><div style="display: flex; justify-content: space-between; font-size: 13px"><span>{{ c.n }} <span style="color: #5E656C">· {{ c.o }}</span></span><b>{{ c.v }}</b></div></sc-for>
+<span style="font-size: 11.5px; color: #5E656C">Smena oxirida kassaga topshiriladi · limit 1,5 mln so'm</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #16181B; color: #FFFFFF">
+<b style="font-size: 14.5px">Pul qayerga tushadi</b>
+<span style="font-size: 12.5px; color: #C9CED3">Bank hisobi · 2020 8000 •••• •••• 4512</span>
+<sc-for list="{{ payouts }}" as="p" hint-placeholder-count="3"><div style="display: flex; justify-content: space-between; font-size: 13px"><span style="color: #E3E6E8">{{ p.t }}</span><b>{{ p.v }}</b></div></sc-for>
+<div style="height: 1px; background: #3C4248"></div>
+<span style="font-size: 12.5px; color: #8FD3B0; font-weight: 700">Kechagi solishtirish: 58 to'lov mos ✓ · 1 farq (Click, 12 000) — vazifa ochildi</span>
+<span style="font-size: 12px; color: #C9CED3">Obuna kartasi: Humo •••• 0931 · keyingi yechim 1-dekabr</span>
+</div>
+</aside>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { f: 'all', extra: 0 };
+}
+renderVals() {
+const st = this.state;
+const fmt = (n) => Math.round(n).toLocaleString('ru-RU').replace(/ /g, ' ');
+const base = [
+['14:42', 'A-104533', 'payme', 'Payme', '•••• 2207', 64200, 'cap'],
+['14:38', 'A-104512', 'cash', 'Naqd', 'Jasur (kuryer)', 48440, 'cash'],
+['14:31', 'A-104533', 'payme', 'Payme', '•••• 2207', 70620, 'hold'],
+['14:27', 'A-104530', 'click', 'Click', '•••• 9154', 38900, 'cap'],
+['14:22', 'A-104527', 'card', 'Humo karta', '•••• 4417', 125300, 'cap'],
+['14:19', 'A-104529', 'uzum', 'Uzum Bank', '•••• 6610', 27400, 'fail'],
+['14:16', 'A-104512', 'card', 'Humo karta', '•••• 4417', 4844, 'ref'],
+['14:15', 'A-104512', 'card', 'Humo karta', '•••• 4417', 48440, 'cap'],
+['14:09', 'A-104526', 'click', 'Click', '•••• 3381', 91700, 'cap'],
+['14:02', 'A-104524', 'uzum', 'Uzum Bank', '•••• 1029', 56200, 'cap']
+];
+const sims = [['payme', 'Payme', '•••• 8813', 73500], ['click', 'Click', '•••• 5020', 41200], ['card', 'Uzcard karta', '•••• 7702', 89900]];
+const rows = [];
+for (let i = st.extra; i >= 1; i--) { const s = sims[(i - 1) % 3]; const mm = 42 + i; rows.push(['14:' + (mm > 59 ? '59' : mm), 'A-1045' + (33 + i), s[0], s[1], s[2], s[3], 'cap', true]); }
+const all = rows.concat(base);
+const stName = { cap: 'Yechildi', hold: 'Band qilindi', cash: 'Naqd qabul', ref: 'Qaytarildi', fail: 'Rad etildi' };
+const stCss = { cap: 'background: #E6F2EC; color: #075C38;', hold: 'background: #E5EEF8; color: #154BA8;', cash: 'background: #FDF1E3; color: #7A3E06;', ref: 'background: #F1F3F0; color: #3C4248;', fail: 'background: #FBE9E4; color: #9F2D12;' };
+const fdef = [['all', 'Hammasi'], ['payme', 'Payme'], ['click', 'Click'], ['uzum', 'Uzum'], ['card', 'Karta'], ['cash', 'Naqd']];
+const filters = fdef.map((f) => ({ t: f[1], pressed: st.f === f[0] ? 'true' : 'false', pick: () => this.setState({ f: f[0] }),
+style: 'height: 30px; padding: 0 11px; border-radius: 999px; font-size: 12px; font-weight: 700; cursor: pointer; ' + (st.f === f[0] ? 'border: 1px solid #16181B; background: #16181B; color: #FFFFFF;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;') }));
+const feed = all.filter((r) => st.f === 'all' || r[2] === st.f).map((r) => ({ time: r[0], order: r[1], method: r[3], card: r[4],
+amount: (r[6] === 'ref' ? '−' : r[6] === 'fail' ? '' : '+') + fmt(r[5]), amtColor: r[6] === 'ref' ? '#9F2D12' : r[6] === 'fail' || r[6] === 'hold' ? '#9AA1A7' : '#0B7A4B',
+status: stName[r[6]], stStyle: 'padding: 3px 9px; border-radius: 6px; font-size: 12px; font-weight: 700; ' + stCss[r[6]],
+row: 'display: grid; grid-template-columns: 60px 100px 1.2fr 1.1fr 1fr 1.1fr; gap: 10px; padding: 9px 16px; border-top: 1px solid #EEF0ED; font-size: 13px; align-items: center; ' + (r[7] ? 'background: #F3FAF6;' : '') }));
+const add = rows.reduce((a, r) => a + r[5], 0);
+const online = 3901000 + add;
+const k = (t, v, s, dark) => ({ t, v, s, bg: dark ? '#0B7A4B' : '#FFFFFF', fg: dark ? '#FFFFFF' : '#16181B' });
+const kpis = [k('Bugun jami', fmt(online + 690000) + ' so’m', (75 + st.extra) + ' to’lov', true), k('Onlayn tushdi', fmt(online) + ' so’m', (61 + st.extra) + ' ta · Payme, Click, Uzum, karta'), k('Naqd kuryerlarda', '690 000 so’m', '3 kuryer · 14 buyurtma'), k('Band qilingan', '70 620 so’m', '1 buyurtma yig’ilmoqda'), k('Qaytarildi / rad etildi', '4 844 / 27 400', 'xaridor boshqa usulda to’ladi')];
+const M = [['Payme', 1744000 + (st.extra >= 1 ? 73500 : 0), '#00A8B5'], ['Click', 1239000 + (st.extra >= 2 ? 41200 : 0), '#1F5F96'], ['Uzum Bank', 505000, '#6B3FD9'], ['Uzcard / Humo karta', 413000 + (st.extra >= 3 ? 89900 : 0), '#0B7A4B'], ['Naqd', 690000, '#7A3E06']];
+const mx = Math.max.apply(null, M.map((m) => m[1]));
+const methods = M.map((m) => ({ t: m[0], v: fmt(m[1]), c: m[2], w: (m[1] / mx * 100).toFixed(0) + '%' }));
+const cash = [['Jasur', '9 buyurtma', 412440], ['Otabek', '3 buyurtma', 186300], ['Sardor', '2 buyurtma', 91260]].map((c) => ({ n: c[0], o: c[1], v: fmt(c[2]) }));
+const payouts = [['Ertaga · Payme', '1 717 840'], ['Ertaga · Click', '1 220 415'], ['Ertaga · Uzum, karta', '905 974']].map((p) => ({ t: p[0], v: p[1] }));
+return { kpis, filters, feed, methods, cash, payouts, simulate: () => this.setState({ extra: Math.min(st.extra + 1, 3) }) };
+}
+}
+</script>
+</body>
+</html>

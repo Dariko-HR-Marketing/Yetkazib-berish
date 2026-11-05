@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Umumiy katalog: yaqin do'konlar (Telegram)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B; overflow: hidden">
+<div style="display: flex; align-items: center; justify-content: space-between; height: 44px; padding: 0 14px; background: #FFFFFF; border-bottom: 1px solid #E4E7E3; font-size: 13px"><span style="color: #2481CC; font-weight: 700">✕ Yopish</span><b>Yaqin do'konlar</b><span style="color: #5E656C">•••</span></div>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 12px 16px; background: #FFFFFF">
+<div style="display: flex; justify-content: space-between; align-items: center"><span style="font-size: 12.5px; color: #5E656C">📍 Chilonzor 9-kvartal, 14-uy</span><div role="group" aria-label="Til" style="display: flex; gap: 2px; padding: 2px; border-radius: 8px; background: #EEF0ED"><sc-for list="{{ langs }}" as="l" hint-placeholder-count="2"><button type="button" aria-pressed="{{ l.pressed }}" onClick="{{ l.pick }}" style="{{ l.style }}">{{ l.t }}</button></sc-for></div></div>
+<div style="display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 12px; border-radius: 12px; background: #EEF0ED; font-size: 14px; color: #5E656C">🔍 {{ tx.search }}</div>
+<div role="tablist" style="display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: #EEF0ED"><sc-for list="{{ tabs }}" as="t" hint-placeholder-count="2"><button type="button" role="tab" aria-selected="{{ t.sel }}" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.t }}</button></sc-for></div>
+</div>
+
+<sc-if value="{{ isShops }}">
+<div style="flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 10px; padding: 12px 16px 16px">
+<div style="display: flex; gap: 6px; overflow: hidden"><sc-for list="{{ cats }}" as="c" hint-placeholder-count="5"><button type="button" aria-pressed="{{ c.pressed }}" onClick="{{ c.pick }}" style="{{ c.style }}">{{ c.t }}</button></sc-for></div>
+<sc-for list="{{ shops }}" as="s" hint-placeholder-count="4">
+<div style="display: flex; gap: 12px; padding: 12px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; opacity: {{ s.op }}">
+<span style="flex: none; width: 52px; height: 52px; border-radius: 14px; background: {{ s.bg }}; display: flex; align-items: center; justify-content: center; font-size: 24px">{{ s.icon }}</span>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0">
+<div style="display: flex; justify-content: space-between; gap: 6px"><b style="font-size: 14.5px">{{ s.name }}</b><span style="font-size: 12px; font-weight: 800">{{ s.rate }} ★</span></div>
+<span style="font-size: 12px; color: #5E656C">{{ s.meta }}</span>
+<div style="display: flex; gap: 6px; flex-wrap: wrap"><sc-for list="{{ s.tags }}" as="g" hint-placeholder-count="2"><span style="padding: 2px 7px; border-radius: 6px; background: #EEF0ED; font-size: 11px; font-weight: 700; color: #3C4248">{{ g }}</span></sc-for><sc-if value="{{ s.promo }}"><span style="padding: 2px 7px; border-radius: 6px; background: #FFF6E0; font-size: 11px; font-weight: 800; color: #7A4B00">Reklama</span></sc-if></div>
+</div>
+</div>
+</sc-for>
+<span style="font-size: 11.5px; line-height: 16px; color: #5E656C">{{ tx.rank }}</span>
+</div>
+</sc-if>
+
+<sc-if value="{{ isItems }}">
+<div style="flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 10px; padding: 12px 16px 16px">
+<div style="display: flex; gap: 12px; align-items: center; padding: 12px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="width: 56px; height: 56px; border-radius: 14px; background: #E6F2EC; display: flex; align-items: center; justify-content: center; font-size: 28px">🥛</span><div style="display: flex; flex-direction: column; gap: 2px"><b style="font-size: 15px">{{ tx.item }}</b><span style="font-size: 12px; color: #5E656C">{{ tx.itemSub }}</span></div></div>
+<sc-for list="{{ offers }}" as="o" hint-placeholder-count="4">
+<button type="button" onClick="{{ o.pick }}" aria-pressed="{{ o.pressed }}" style="{{ o.style }}">
+<span style="display: flex; flex-direction: column; gap: 2px; text-align: left"><b style="font-size: 14px">{{ o.shop }}</b><span style="font-size: 11.5px; color: #5E656C">{{ o.meta }}</span></span>
+<span style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px"><b style="font-size: 15px; color: {{ o.pc }}">{{ o.price }}</b><span style="font-size: 11px; color: #5E656C">{{ o.stock }}</span></span>
+</button>
+</sc-for>
+<span style="font-size: 11.5px; line-height: 16px; color: #5E656C">{{ tx.cmp }}</span>
+</div>
+<div style="padding: 10px 16px 16px; background: #FFFFFF; border-top: 1px solid #E4E7E3"><span style="height: 50px; border-radius: 12px; background: #2481CC; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800">{{ mainBtn }}</span></div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { lang: 'uz', tab: 0, cat: 0, pick: 0 };
+}
+renderVals() {
+const st = this.state, uz = st.lang === 'uz';
+const T = uz ? { search: 'Mahsulot yoki do’kon qidirish', rank: 'Tartib: masofa, yetkazish vaqti, reyting va qoldiq aniqligi. “Reklama” belgili joy pullik va har doim belgilanadi. Do’kon katalogga chiqishni o’zi yoqadi yoki o’chiradi.', item: 'Sut 3,2%, 1 l', itemSub: '4 do’konda bor · 2 km ichida', cmp: 'Narx va yetkazish birga ko’rsatiladi. Qoldiq do’kon tizimidan; “Tugadi” bo’lsa tanlab bo’lmaydi.', tabs: ['Do’konlar', 'Mahsulotlar'], cats: ['Hammasi', 'Oziq-ovqat', 'Dorixona', 'Gullar', 'Uy-ro’zg’or'], btn: 'Savatga qo’shish · ' }
+: { search: 'Поиск товара или магазина', rank: 'Порядок: расстояние, время доставки, рейтинг и точность остатков. Место с меткой «Реклама» платное и всегда помечено. Магазин сам включает или выключает выход в каталог.', item: 'Молоко 3,2%, 1 л', itemSub: 'Есть в 4 магазинах · до 2 км', cmp: 'Цена и доставка показаны вместе. Остатки из системы магазина; если «Нет в наличии», выбрать нельзя.', tabs: ['Магазины', 'Товары'], cats: ['Все', 'Продукты', 'Аптека', 'Цветы', 'Для дома'], btn: 'В корзину · ' };
+const fmt = (n) => n.toLocaleString('ru-RU').replace(/\s/g, ' ') + (uz ? ' so’m' : ' сум');
+const langs = [['uz', 'UZ'], ['ru', 'RU']].map((l) => ({ t: l[1], pressed: st.lang === l[0] ? 'true' : 'false', pick: () => this.setState({ lang: l[0] }),
+style: 'height: 26px; padding: 0 9px; border-radius: 6px; border: none; font-size: 11.5px; font-weight: 800; cursor: pointer; ' + (st.lang === l[0] ? 'background: #FFFFFF; color: #16181B;' : 'background: transparent; color: #5E656C;') }));
+const tabs = T.tabs.map((t, i) => ({ t, sel: st.tab === i ? 'true' : 'false', pick: () => this.setState({ tab: i }),
+style: 'flex: 1; height: 34px; border-radius: 9px; border: none; font-size: 13px; font-weight: 800; cursor: pointer; ' + (st.tab === i ? 'background: #FFFFFF; color: #16181B;' : 'background: transparent; color: #5E656C;') }));
+const cats = T.cats.map((t, i) => ({ t, pressed: st.cat === i ? 'true' : 'false', pick: () => this.setState({ cat: i }),
+style: 'flex: none; height: 32px; padding: 0 12px; border-radius: 16px; font-size: 12.5px; font-weight: 700; cursor: pointer; ' + (st.cat === i ? 'border: 1px solid #16181B; background: #16181B; color: #FFFFFF;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;') }));
+const min = uz ? ' daq' : ' мин', km = uz ? ' km' : ' км', free = uz ? 'bepul yetkazish' : 'бесплатная доставка';
+const SH = [['Yashil Savat', '🛒', '#E6F2EC', 1, '4,8', 0.8, '25–35', 9000, uz ? ['Naqd', 'Ball 3%'] : ['Наличные', 'Баллы 3%'], 1],
+['Oila Market', '🧺', '#FFF6E0', 1, '4,6', 1.2, '30–40', 0, uz ? ['Karta'] : ['Карта'], 0],
+['Shifo Dorixona', '💊', '#E5EEF8', 2, '4,9', 1.6, '20–30', 7000, uz ? ['Retsept kerak emas'] : ['Без рецепта'], 0],
+['Lola Gullari', '🌷', '#FBE7EE', 3, '4,7', 2.4, '45–60', 15000, uz ? ['Bugun'] : ['Сегодня'], 0],
+['Uy Mollari', '🧽', '#EEF0ED', 4, '4,5', 1.9, '40–55', 12000, uz ? ['Ertaga'] : ['Завтра'], 0]];
+const shops = SH.filter((s) => st.cat === 0 || s[3] === st.cat).map((s) => ({ name: s[0], icon: s[1], bg: s[2], rate: s[4], op: '1', promo: s[9] === 1,
+meta: s[5].toString().replace('.', ',') + km + ' · ' + s[6] + min + ' · ' + (s[7] ? fmt(s[7]) : free), tags: s[8] }));
+const OF = [['Oila Market', 12400, 1.2, '30–40', 0, 1], ['Yashil Savat', 12900, 0.8, '25–35', 9000, 1], ['Mahalla Do’koni', 11800, 0.4, '15–25', 6000, 0], ['Baraka Supermarket', 13200, 2.0, '35–45', 8000, 1]];
+const offers = OF.map((o, i) => { const out = o[5] === 0, sel = st.pick === i && !out;
+return { shop: o[0], price: fmt(o[1]), pc: out ? '#9AA1A7' : '#16181B', pressed: sel ? 'true' : 'false', pick: () => { if (!out) this.setState({ pick: i }); },
+meta: o[2].toString().replace('.', ',') + km + ' · ' + o[3] + min + ' · ' + (o[4] ? '+' + fmt(o[4]) : free),
+stock: out ? (uz ? 'Tugadi' : 'Нет в наличии') : (uz ? 'Bor' : 'В наличии'),
+style: 'display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 14px; background: #FFFFFF; font-family: Manrope, system-ui, sans-serif; color: #16181B; ' + (out ? 'border: 1px dashed #DCE0DC; cursor: not-allowed; opacity: .6;' : 'cursor: pointer; ' + (sel ? 'border: 2px solid #2481CC;' : 'border: 1px solid #E4E7E3;')) }; });
+const cur = OF[st.pick];
+return { langs, tabs, cats, shops, offers, tx: T, isShops: st.tab === 0, isItems: st.tab === 1, mainBtn: T.btn + fmt(cur[1]) };
+}
+}
+</script>
+</body>
+</html>

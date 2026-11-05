@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Kuzatuv mantiqi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid #EEF0ED;font-size:13px;white-space:nowrap}
+th{font-size:11.5px;font-weight:700;color:#5E656C;text-transform:uppercase;letter-spacing:.04em}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1060px; box-sizing: border-box; padding: 44px 64px; display: flex; flex-direction: column; gap: 16px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #154BA8">Kuzatuv mantiqi</span><h1 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 800">Har mahsulot va har kuryer qadami vaqt, joy va mas'ul bilan yoziladi</h1></div>
+
+<section style="display: flex; flex-direction: column; gap: 10px; padding: 16px 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Mahsulot qatori holatlari (buyurtma holatidan alohida)</b>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 13px; font-weight: 700">
+<span style="padding: 7px 10px; border-radius: 8px; background: #EEF0ED">Kutilmoqda</span><span aria-hidden="true" style="color: #8A9199">→</span>
+<span style="padding: 7px 10px; border-radius: 8px; background: #E6F2EC; color: #075C38">Yig'ildi (vazn)</span><span style="color: #5E656C; font-weight: 500">yoki</span>
+<span style="padding: 7px 10px; border-radius: 8px; background: #FDF1E3; color: #7A3E06">Muqobil → tasdiq</span><span style="color: #5E656C; font-weight: 500">yoki</span>
+<span style="padding: 7px 10px; border-radius: 8px; background: #FBE9E4; color: #9F2D12">Olib tashlandi</span><span aria-hidden="true" style="color: #8A9199">→</span>
+<span style="padding: 7px 10px; border-radius: 8px; background: #16181B; color: #FFFFFF">Qadoqlandi · sumka №</span><span aria-hidden="true" style="color: #8A9199">→</span>
+<span style="padding: 7px 10px; border-radius: 8px; background: #E5EEF8; color: #154BA8">Kuryerda</span><span aria-hidden="true" style="color: #8A9199">→</span>
+<span style="padding: 7px 10px; border-radius: 8px; background: #0B7A4B; color: #FFFFFF">Topshirildi</span><span style="color: #5E656C; font-weight: 500">yoki</span>
+<span style="padding: 7px 10px; border-radius: 8px; background: #FBE9E4; color: #9F2D12">Qaytarildi → filial</span>
+</div>
+</section>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px">
+<section style="display: flex; flex-direction: column; gap: 8px; padding: 16px 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Kuryer joylashuvi</b>
+<span style="font-size: 13px; line-height: 19px; color: #3C4248">Kuryer ilovasi GPS nuqtasini harakatda har 15 soniyada, to'xtaganda har 60 soniyada yuboradi. Faqat smena va faol topshiriq paytida. Aniqligi 100 m dan yomon nuqta hisobga olinmaydi.</span>
+<span style="font-size: 12.5px; color: #5E656C">Oxirgi nuqta Redis'da, tarix 30 kun saqlanadi.</span>
+</section>
+<section style="display: flex; flex-direction: column; gap: 8px; padding: 16px 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Yetib kelish vaqti (ETA)</b>
+<span style="font-size: 13px; line-height: 19px; color: #3C4248">ETA = marshrut bo'yicha qolgan masofa ÷ transport tezligi + 3 daqiqa topshirish. Shahar tezligi: piyoda 4, velosiped 12, avtomobil 20 km/soat; kuryerning o'z tarixi bilan aniqlashtiriladi.</span>
+<span style="font-size: 12.5px; color: #5E656C">Yo'lgacha: tayyorlik qoldig'i + kuryerning filialga yetishi.</span>
+</section>
+<section style="display: flex; flex-direction: column; gap: 8px; padding: 16px 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Geozona hodisalari</b>
+<span style="font-size: 13px; line-height: 19px; color: #3C4248">Filialdan 100 m — «kuryer filialda». Manzilga 500 m — xaridorga «kuryer yaqinlashmoqda». 50 m — «eshik oldida». Kechikish 10 daqiqadan oshsa — dispetcherga ogohlantirish, xaridorga yangi vaqt.</span>
+</section>
+</div>
+
+<div style="display: flex; gap: 14px; align-items: flex-start">
+<section style="flex: 3; display: flex; flex-direction: column; gap: 6px; padding: 16px 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Hodisalar jurnali (namuna) — har yozuv: vaqt · nima · kim · qayerda</b>
+<table style="width: 100%; border-collapse: collapse"><thead><tr><th scope="col">Vaqt</th><th scope="col">Hodisa</th><th scope="col">Obyekt</th><th scope="col">Kim</th><th scope="col">Joy</th></tr></thead><tbody>
+<tr><td>14:02:11</td><td>Buyurtma qabul qilindi</td><td>A-104512</td><td>tizim</td><td>Markaziy filial</td></tr>
+<tr><td>14:07:40</td><td>Yig'ildi, 1,08 kg</td><td>Olma, qizil</td><td>Dilnoza</td><td>javon 4-B</td></tr>
+<tr><td>14:09:02</td><td>Muqobil taklif qilindi</td><td>Qatiq → Qatiq (boshqa brend)</td><td>Dilnoza</td><td>javon 7-A</td></tr>
+<tr><td>14:11:30</td><td>Muqobil tasdiqlandi</td><td>Qatiq</td><td>xaridor</td><td>kuzatuv sahifasi</td></tr>
+<tr><td>14:18:05</td><td>Qadoqlandi, sumka №12</td><td>3 qator</td><td>Dilnoza</td><td>qadoq stoli</td></tr>
+<tr><td>14:24:16</td><td>Sumka skanerlandi, kuryerga berildi</td><td>sumka №12</td><td>Jasur</td><td>41.31, 69.27 · filial</td></tr>
+<tr><td>14:37:58</td><td>Geozona: eshik oldida</td><td>A-104512</td><td>tizim</td><td>41.32, 69.28 · 30 m</td></tr>
+<tr><td>14:38:40</td><td>Topshirildi · PIN</td><td>A-104512</td><td>Jasur</td><td>41.32, 69.28</td></tr>
+</tbody></table>
+</section>
+<section style="flex: 2; display: flex; flex-direction: column; gap: 8px; padding: 16px 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Kim nimani ko'radi</b>
+<span style="font-size: 13px; line-height: 19px"><b>Xaridor:</b> har mahsulot holati; kuryer xaritada faqat «Yo'lda» holatidan topshirilguncha; ETA va masofa.</span>
+<span style="font-size: 13px; line-height: 19px"><b>Do'kon va dispetcher:</b> barcha kuryerlar jonli, har buyurtma yo'li, kechikishlar.</span>
+<span style="font-size: 13px; line-height: 19px"><b>Kuryer:</b> faqat o'z marshruti; xaridor manzili topshirilguncha.</span>
+<span style="font-size: 13px; line-height: 19px"><b>Texnik:</b> kuzatuv sahifasi WebSocket/SSE orqali yangilanadi, aloqa uzilsa 30 s da so'rov bilan.</span>
+<span style="font-size: 12.5px; line-height: 18px; color: #5E656C">Kuryer joylashuvi shaxsiy ma'lumot: ishdan tashqari vaqtda yig'ilmaydi, kuryerga bu ilovada ochiq aytiladi.</span>
+</section>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1060}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

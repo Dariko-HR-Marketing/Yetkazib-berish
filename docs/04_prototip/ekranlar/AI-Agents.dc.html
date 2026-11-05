@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>AI integratsiya va agentlar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 1600px; height: 1100px; box-sizing: border-box; padding: 36px 56px; display: flex; flex-direction: column; gap: 14px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0B7A4B">AI integratsiya · MVP</span><h1 style="margin: 0; font-size: 30px; line-height: 38px; font-weight: 800">Ichki AI xizmatlari va tashqi AI agentlarni ulash</h1></div>
+
+<div style="display: grid; grid-template-columns: 1fr 1.25fr 1fr; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">Xaridor uchun (v1)</b>
+<sc-for list="{{ client }}" as="x" hint-placeholder-count="5"><div style="display: flex; flex-direction: column; gap: 1px; padding-bottom: 5px; border-bottom: 1px solid #EEF0ED"><b style="font-size: 13px">{{ x.t }}</b><span style="font-size: 12px; line-height: 16px; color: #3C4248">{{ x.d }}</span></div></sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 16px; background: #16181B; color: #FFFFFF">
+<b style="font-size: 15px">AI shlyuz (AI Gateway) — bitta joydan boshqariladi</b>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px">
+<sc-for list="{{ stack }}" as="s" hint-placeholder-count="6"><div style="display: flex; flex-direction: column; gap: 2px; padding: 9px 10px; border-radius: 10px; background: #2A2D31"><b style="font-size: 12.5px; color: #8FD3B0">{{ s.k }}</b><span style="font-size: 12px; line-height: 16px; color: #E3E6E8">{{ s.v }}</span></div></sc-for>
+</div>
+<span style="font-size: 11.5px; line-height: 16px; color: #9AA1A7">Model provayderi sozlamada almashtiriladi: o'zbek tilidagi sifat, narx va tezlik bo'yicha har oy test qilinadi. Bittasi ishlamasa — zaxira model.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">Do'kon uchun (v1)</b>
+<sc-for list="{{ shop }}" as="x" hint-placeholder-count="5"><div style="display: flex; flex-direction: column; gap: 1px; padding-bottom: 5px; border-bottom: 1px solid #EEF0ED"><b style="font-size: 13px">{{ x.t }}</b><span style="font-size: 12px; line-height: 16px; color: #3C4248">{{ x.d }}</span></div></sc-for>
+</div>
+</div>
+
+<div style="display: flex; gap: 12px; flex: 1; min-height: 0">
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 10px"><b style="font-size: 16px">Tashqi AI agentlar: kim qanday ulanadi</b><div role="tablist" style="display: flex; gap: 6px"><sc-for list="{{ tabs }}" as="t" hint-placeholder-count="2"><button type="button" role="tab" aria-selected="{{ t.sel }}" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.t }}</button></sc-for></div></div>
+<div style="display: flex; align-items: stretch; gap: 6px">
+<sc-for list="{{ flow }}" as="f" hint-placeholder-count="5"><div style="flex: 1; display: flex; flex-direction: column; gap: 3px; padding: 10px; border-radius: 10px; background: {{ f.bg }}; color: {{ f.fg }}"><span style="font-size: 11px; font-weight: 800; opacity: .75">{{ f.n }}</span><b style="font-size: 13px; line-height: 17px">{{ f.t }}</b><span style="font-size: 11.5px; line-height: 15px; opacity: .85">{{ f.d }}</span></div></sc-for>
+</div>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 5px">
+<b style="font-size: 13.5px">Agentga beriladigan vositalar (MCP / API)</b>
+<sc-for list="{{ tools }}" as="t" hint-placeholder-count="8"><div style="display: flex; gap: 8px; align-items: baseline; font-size: 12px"><code style="flex: none; width: 150px; font: 700 11.5px ui-monospace, Menlo, monospace; color: #075C38">{{ t.m }}</code><span style="flex: 1; color: #3C4248">{{ t.d }}</span><span style="{{ t.vs }}">{{ t.v }}</span></div></sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 5px">
+<b style="font-size: 13.5px">Xavfsizlik qoidalari</b>
+<sc-for list="{{ rules }}" as="r" hint-placeholder-count="7"><div style="display: flex; gap: 8px; font-size: 12px; line-height: 16px"><b aria-hidden="true" style="color: #0B7A4B">•</b><span>{{ r }}</span></div></sc-for>
+</div>
+</div>
+</div>
+
+<aside style="flex: none; width: 300px; display: flex; flex-direction: column; align-items: center; gap: 6px">
+<span style="font-size: 12.5px; font-weight: 700; color: #5E656C">Xaridor ruxsat beradi</span>
+<div style="width: 290px; flex: 1; box-sizing: border-box; border: 9px solid #16181B; border-radius: 34px; overflow: hidden; display: flex; flex-direction: column; gap: 8px; padding: 16px 12px; background: #FFFFFF">
+<b style="font-size: 15px">Shaxsiy AI agent ulanmoqda</b>
+<span style="font-size: 12px; line-height: 16px; color: #3C4248">“Mening yordamchim” Yashil Savat va boshqa do'konlarda siz uchun ishlashni so'rayapti.</span>
+<sc-for list="{{ scopes }}" as="s" hint-placeholder-count="6"><button type="button" role="switch" aria-checked="{{ s.on }}" onClick="{{ s.pick }}" style="display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 7px 0; border: none; border-bottom: 1px solid #EEF0ED; background: transparent; text-align: left; cursor: pointer; color: #16181B"><span style="display: flex; flex-direction: column"><b style="font-size: 12.5px">{{ s.t }}</b><span style="font-size: 11px; color: #5E656C">{{ s.d }}</span></span><span style="{{ s.sw }}"><span style="width: 16px; height: 16px; border-radius: 50%; background: #FFFFFF"></span></span></button></sc-for>
+<div style="display: flex; justify-content: space-between; font-size: 12px; padding: 4px 0"><span>Oylik limit</span><b>500 000 so'm</b></div>
+<span style="padding: 8px 10px; border-radius: 10px; background: #FFF6E0; color: #7A3E06; font-size: 11.5px; line-height: 15px">Karta ma'lumoti agentga berilmaydi. Har buyurtmani Telegram'da tasdiqlaysiz.</span>
+<span style="margin-top: auto; height: 42px; border-radius: 12px; background: #0B7A4B; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800">Ruxsat berish</span>
+</div>
+</aside>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1600,"height":1100}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { t: 0, sc: [true, true, true, false, true, false] };
+}
+renderVals() {
+const st = this.state;
+const D = (a) => a.map((x) => ({ t: x[0], d: x[1] }));
+const client = D([['AI yordamchi (uz/ru)', 'Matn, ovoz yoki ro’yxat suratidan savat yig’adi; retsept bo’yicha to’plam'], ['Aqlli qidiruv', '“sut”, “сут”, “sut 3.2” — bir xil natija; xatoli yozuvni tushunadi'], ['Telegram bot', 'Buyurtma holati, murojaat qabul qilish, murakkabi operatorga'], ['Muqobil tushuntirish', 'Nega aynan shu muqobil taklif qilinganini qisqa aytadi'], ['AI profili', 'Xaridor o’zi to’ldiradi: oila soni, parhez, sevimli brendlar, budjet']]);
+const shop = D([['Mahsulot kartochkasi', 'Surat yoki nomdan tavsif, uz↔ru tarjima, kategoriya, MXIK taklifi'], ['Sharh tahlili', 'Mavzu va kayfiyat, javob qoralamasi (uz/ru)'], ['“Ma’lumotdan so’rang”', 'Egasi oddiy tilda so’raydi: savdo, qoldiq, top mahsulotlar'], ['Qoldiq ogohlantirishi', 'v1: oddiy qoida (o’rtacha sotuv × kun); v2: ML prognoz'], ['Marketing matni', 'Kampaniya va Telegram post matni ikki tilda']]);
+const stack = [['LLM', 'Anthropic Claude, OpenAI, Google Gemini — tanlov va zaxira'], ['Nutq (STT)', 'O’zbek va rus ovozini matnga aylantirish'], ['Ko’rish', 'Ro’yxat surati, mahsulot surati, chekni o’qish'], ['Qidiruv', 'Vektorli qidiruv (embedding) katalog ustida'], ['Himoya', 'Shaxsiy ma’lumotni yashirish, limitlar, jurnal'], ['Hisob', 'Har do’kon AI sarfi alohida; tarifga kiritilgan limit']].map((s) => ({ k: s[0], v: s[1] }));
+const F = [
+[['1', 'Xaridor agentni ulaydi', 'Claude, ChatGPT, Gemini yoki boshqa MCP qo’llaydigan agentga bizning ulagich manzilini qo’shadi'], ['2', 'Kirish va rozilik', 'Telefon + SMS kod, so’ng ruxsatlar ekrani (OAuth). Ruxsatlarni xaridorning o’zi tanlaydi'], ['3', 'Agent ishlaydi', 'Katalog, narx, qoldiq, slot, ball — tuzilgan ma’lumot ikki tilda'], ['4', 'Tasdiq', 'Buyurtmani faqat xaridor Telegram’da tasdiqlaydi; to’lov saqlangan token bilan'], ['5', 'Nazorat', 'Har harakat jurnalda; ulanishni bir bosishda o’chirish mumkin']],
+[['1', 'Do’kon kalit oladi', 'Panelda API kaliti, faqat kerakli ruxsatlar bilan (masalan, qoldiq va narx)'], ['2', 'Agent yoki 1C bot ulanadi', 'Do’konning o’z AI agenti yoki tizimi API / MCP orqali'], ['3', 'Ma’lumot almashinuvi', 'Qoldiq va narxni yangilaydi, buyurtmalarni o’qiydi, hisobot oladi'], ['4', 'Cheklovlar', 'So’rov limiti, IP ro’yxati, yozish huquqi alohida tasdiqlanadi'], ['5', 'Nazorat', 'Har o’zgarish jurnalda, egasi bekor qila oladi']]
+];
+const dark = (i) => i === 3;
+const flow = F[st.t].map((f, i) => ({ n: f[0], t: f[1], d: f[2], bg: dark(i) ? '#0B7A4B' : '#F1F3F0', fg: dark(i) ? '#FFFFFF' : '#16181B' }));
+const tabs = ['Xaridorning agenti', 'Do’konning agenti'].map((t, i) => ({ t, sel: st.t === i ? 'true' : 'false', pick: () => this.setState({ t: i }),
+style: 'height: 32px; padding: 0 12px; border-radius: 999px; font-size: 12.5px; font-weight: 800; cursor: pointer; ' + (st.t === i ? 'border: 1px solid #16181B; background: #16181B; color: #FFFFFF;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;') }));
+const vb = (v) => 'flex: none; padding: 1px 6px; border-radius: 5px; font-size: 10.5px; font-weight: 800; ' + (v === 'v1' ? 'background: #0B7A4B; color: #FFFFFF;' : 'background: #E5EEF8; color: #154BA8;');
+const T = [
+[['search_products', 'Mahsulot qidirish (uz/ru), narx, qoldiq', 'v1'], ['list_shops', 'Manzil bo’yicha yetkazadigan do’konlar', 'v1'], ['get_slots', 'Yetkazish vaqtlari va narxi', 'v1'], ['build_cart', 'Savat tuzish, muqobil variantlar', 'v1'], ['place_order', 'Buyurtma — xaridor tasdig’i bilan', 'v1'], ['order_status', 'Holat, kuryer, ETA', 'v1'], ['points_balance', 'Ball va promo-kodlar', 'v1'], ['auto_reorder', 'Limit ichida tasdiqsiz takroriy buyurtma', 'v2']],
+[['stock.update', 'Qoldiqni yangilash', 'v1'], ['price.update', 'Narxni yangilash (tasdiq bilan)', 'v1'], ['orders.list', 'Buyurtmalarni o’qish', 'v1'], ['reports.get', 'Savdo va ABC hisobotlari', 'v1'], ['products.create', 'Yangi mahsulot qo’shish', 'v1'], ['reviews.reply', 'Sharhga javob qoralamasi', 'v2'], ['promo.create', 'Promo-kod yaratish', 'v2'], ['webhooks', 'Hodisalarga obuna', 'v2']]
+];
+const tools = T[st.t].map((t) => ({ m: t[0], d: t[1], v: t[2], vs: vb(t[2]) }));
+const rules = ['Agent faqat xaridor bergan ruxsat doirasida ishlaydi; ruxsat istalgan vaqtda bekor qilinadi', 'Karta raqami agentga hech qachon berilmaydi — to’lov faqat saqlangan token bilan', 'Pul bilan bog’liq har harakat inson tasdig’i bilan; oylik va bitta buyurtma limiti', 'AI profili ma’lumoti faqat “profil” ruxsati bo’lsa ulashiladi', 'Har so’rov jurnalda: qaysi agent, qachon, nima qildi', 'So’rov limiti va g’ayrioddiy faollikda avtomatik to’xtatish', 'Asosiy baza O’zbekistonda (bizning tanlov); tashqi modelga shaxsiy ma’lumot yashirilgan holda'];
+const S = [['Katalog va narxlarni ko’rish', 'mahsulot, qoldiq, slot'], ['Savat tuzish', 'mahsulot qo’shish va olib tashlash'], ['Buyurtma berish', 'har birini Telegram’da tasdiqlaysiz'], ['AI profilim', 'oila soni, parhez, brendlar'], ['Buyurtma holati va tarix', 'kuryer, ETA, cheklar'], ['Ballardan foydalanish', 'to’lovda ball yechish']];
+const scopes = S.map((s, i) => { const on = st.sc[i]; return { t: s[0], d: s[1], on: on ? 'true' : 'false',
+pick: () => { const a = st.sc.slice(); a[i] = !a[i]; this.setState({ sc: a }); },
+sw: 'flex: none; width: 38px; height: 22px; border-radius: 11px; padding: 3px; box-sizing: border-box; display: flex; ' + (on ? 'background: #0B7A4B; justify-content: flex-end;' : 'background: #C9CED3; justify-content: flex-start;') }; });
+return { client, shop, stack, flow, tabs, tools, rules, scopes };
+}
+}
+</script>
+</body>
+</html>

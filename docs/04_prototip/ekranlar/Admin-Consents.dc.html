@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Ichki: oferta va rozilik markazi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 100%; min-width: 1024px; height: 100%; min-height: 900px; box-sizing: border-box; display: flex; flex-direction: column; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 40px; background: #16181B; color: #FFFFFF; font-size: 12.5px"><b>ICHKI · DPO va yuristlar uchun</b><span style="color: #C9CED3">Yozuvlar o'zgarmas · har ko'rish audit jurnaliga yoziladi</span></div>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 14px; padding: 22px 40px">
+<div style="display: flex; justify-content: space-between; align-items: flex-end">
+<b style="font-size: 24px">Oferta va rozilik markazi</b>
+<div role="tablist" style="display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E4E7E3"><sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button type="button" role="tab" aria-selected="{{ t.sel }}" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.t }}</button></sc-for></div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{ kpis }}" as="k" hint-placeholder-count="4"><div style="display: flex; flex-direction: column; gap: 3px; padding: 14px 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="font-size: 12.5px; color: #5E656C">{{ k.t }}</span><b style="font-size: 21px; color: {{ k.c }}">{{ k.v }}</b><span style="font-size: 12px; color: #5E656C">{{ k.s }}</span></div></sc-for>
+</div>
+
+<div style="display: flex; flex-direction: column; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; overflow: hidden">
+<div style="{{ head.style }}"><sc-for list="{{ head.cols }}" as="c" hint-placeholder-count="7"><span>{{ c }}</span></sc-for></div>
+<sc-for list="{{ rows }}" as="r" hint-placeholder-count="7"><div style="{{ r.style }}"><sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="7"><span style="{{ c.s }}">{{ c.v }}</span></sc-for></div></sc-for>
+</div>
+<span style="font-size: 12.5px; line-height: 18px; color: #5E656C">{{ foot }}</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { tab: 0 };
+}
+renderVals() {
+const st = this.state;
+const tabs = ['Hujjat versiyalari', 'Rozilik jurnali', 'Mijoz so’rovlari', 'Muvofiqlik'].map((t, i) => ({ t, sel: st.tab === i ? 'true' : 'false', pick: () => this.setState({ tab: i }),
+style: 'height: 36px; padding: 0 14px; border-radius: 9px; border: none; font-size: 13px; font-weight: 800; cursor: pointer; ' + (st.tab === i ? 'background: #16181B; color: #FFFFFF;' : 'background: transparent; color: #3C4248;') }));
+const kpis = [['Faol xaridorlar', '1 482', '100% oferta v1.0 qabul qilgan', '#16181B'], ['Marketing roziligi', '64%', 'maqsad ≥ 60%', '#075C38'], ['Reklama platformalari roziligi', '38%', 'faqat shu 38% Meta/Google’ga', '#16181B'], ['Ochiq so’rovlar', '3', '1 tasi muddatga 2 kun', '#7A3E06']].map((k) => ({ t: k[0], v: k[1], s: k[2], c: k[3] }));
+const pill = (t, kind) => ({ v: t, s: 'justify-self: start; padding: 3px 9px; border-radius: 6px; font-size: 12px; font-weight: 700; ' + ({ ok: 'background: #E6F2EC; color: #075C38;', warn: 'background: #FDF1E3; color: #7A3E06;', bad: 'background: #FBE9E4; color: #9F2D12;', info: 'background: #E5EEF8; color: #154BA8;', mute: 'background: #F1F3F0; color: #3C4248;' })[kind] });
+const txt = (v, bold) => ({ v, s: bold ? 'font-weight: 700;' : 'color: #3C4248;' });
+const V = {
+cols: ['HUJJAT', 'TARAF', 'VERSIYA', 'KUCHGA KIRGAN', 'TILLAR', 'QABUL QILGANLAR', 'HOLAT'], tpl: '1.8fr 1fr .7fr 1fr .7fr 1fr .9fr',
+rows: [[txt('Xaridor ofertasi', true), txt('Xaridor'), txt('v1.0'), txt('2026-12-01'), txt('uz, ru'), txt('1 482 / 1 482'), pill('Faol', 'ok')], [txt('Maxfiylik siyosati', true), txt('Hammasi'), txt('v1.0'), txt('2026-12-01'), txt('uz, ru'), txt('—'), pill('Faol', 'ok')], [txt('Maxfiylik siyosati', true), txt('Hammasi'), txt('v1.1'), txt('2027-01-10'), txt('uz, ru'), txt('xabar: 10 kun oldin'), pill('Rejalashtirilgan', 'info')], [txt('SaaS ofertasi', true), txt('Do’kon'), txt('v1.0'), txt('2026-12-01'), txt('uz, ru'), txt('14 / 14 (E-IMZO)'), pill('Faol', 'ok')], [txt('DPA', true), txt('Do’kon'), txt('v1.0'), txt('2026-12-01'), txt('uz, ru'), txt('14 / 14 (E-IMZO)'), pill('Faol', 'ok')], [txt('Kuryer shartnomasi namunasi', true), txt('Kuryer'), txt('v1.0'), txt('2026-12-01'), txt('uz, ru'), txt('46 / 48'), pill('2 ta kutilmoqda', 'warn')]],
+foot: 'Matn o’zgarsa yangi versiya yaratiladi, eski versiya va uning xeshi o’chirilmaydi. Yuridik tekshiruvdan o’tmagan versiyani faollashtirib bo’lmaydi.' },
+L = {
+cols: ['VAQT (UTC+5)', 'TARAF', 'HUJJAT / ROZILIK', 'HARAKAT', 'USUL', 'KANAL', 'XESH'], tpl: '1.1fr 1fr 1.6fr .9fr .9fr .9fr 1fr',
+rows: [[txt('05.11 12:58'), txt('C-11602', true), txt('Oferta v1.0, Maxfiylik v1.0, Xizmat'), pill('Qabul', 'ok'), txt('SMS kod'), txt('Ilova · uz'), txt('9f3a…c21')], [txt('05.11 12:58'), txt('C-11602', true), txt('Marketing'), pill('Rad etildi', 'mute'), txt('Belgi'), txt('Ilova · uz'), txt('9f3a…c22')], [txt('05.11 13:04'), txt('S-0015', true), txt('SaaS ofertasi v1.0 + DPA v1.0'), pill('Imzolandi', 'ok'), txt('E-IMZO'), txt('Panel'), txt('7b10…e04')], [txt('05.11 11:40'), txt('C-09917', true), txt('Reklama platformalari'), pill('Qaytarib olindi', 'warn'), txt('Belgi'), txt('Ilova · ru'), txt('c55e…a19')], [txt('05.11 09:12'), txt('K-0047', true), txt('Geolokatsiya (smena)'), pill('Qabul', 'ok'), txt('Ilova ruxsati'), txt('Kuryer ilovasi'), txt('0d2f…77b')], [txt('04.11 18:30'), txt('C-10482', true), txt('Sog’liq va parhez (yozma)'), pill('Qabul', 'ok'), txt('SMS kod'), txt('Ilova · uz'), txt('41aa…903')]],
+foot: 'C-09917 reklama roziligini qaytarib oldi: Meta va Google’ga o’chirish so’rovi 11:41 da avtomatik yuborildi. Yozuvlarni tahrirlash yoki o’chirish imkoni yo’q.' },
+R = {
+cols: ['№', 'TARAF', 'SO’ROV', 'KELGAN', 'MUDDAT', 'MAS’UL', 'HOLAT'], tpl: '.8fr 1fr 1.5fr 1fr 1fr 1fr 1fr',
+rows: [[txt('R-2291', true), txt('C-10482'), txt('Ma’lumotlarimni olish'), txt('05.11'), txt('05.12 (maqsad 12.11)'), txt('Rahimova D.'), pill('Tayyorlanmoqda', 'info')], [txt('R-2287', true), txt('C-08814'), txt('Hisobni o’chirish'), txt('02.11'), txt('02.12'), txt('Rahimova D.'), pill('2-qadam tasdig’i', 'warn')], [txt('R-2280', true), txt('C-07720'), txt('Manzilni tuzatish'), txt('31.10'), txt('05.11 · bugun'), txt('Operator'), pill('Muddat bugun', 'bad')], [txt('R-2271', true), txt('C-06102'), txt('Shikoyat: SMS reklama'), txt('28.10'), txt('31.10'), txt('DPO'), pill('Yopildi', 'ok')]],
+foot: 'O’chirishda cheklar va to’lovlar qonun bo’yicha 5 yil saqlanadi; qolgan ma’lumot 30 kun ichida o’chiriladi yoki anonimlashtiriladi. Har so’rov bo’yicha javob nusxasi saqlanadi.' },
+M = {
+cols: ['TALAB', 'HUJJAT / DALIL', 'MAS’UL', 'MUDDAT', 'OXIRGI TEKSHIRUV', 'HOLAT', ''], tpl: '1.8fr 1.6fr 1fr 1fr 1fr 1fr .1fr',
+rows: [[txt('Bazani davlat reyestrida ro’yxatdan o’tkazish', true), txt('Ariza №…, guvohnoma'), txt('Yurist'), txt('ishga tushirishdan oldin'), txt('—'), pill('Ariza berilgan', 'warn'), txt('')], [txt('DPO tayinlash', true), txt('Buyruq'), txt('Rahbar'), txt('—'), txt('01.11'), pill('Bajarilgan', 'ok'), txt('')], [txt('Rozilik shakllari (uz/ru)', true), txt('Maxfiylik v1.0'), txt('Yurist'), txt('—'), txt('01.11'), pill('Bajarilgan', 'ok'), txt('')], [txt('Sizib chiqish SOP (24 soat / 72 soat)', true), txt('SOP-07'), txt('Xavfsizlik'), txt('—'), txt('03.11'), pill('Bajarilgan', 'ok'), txt('')], [txt('Saqlash muddati tugaganlarni o’chirish', true), txt('Kunlik vazifa jurnali'), txt('Tizim'), txt('har kuni 03:00'), txt('05.11 03:00 · 214 yozuv'), pill('Ishlamoqda', 'ok'), txt('')], [txt('Reklama davlat tilida', true), txt('Kreativlar tekshiruvi'), txt('Marketing'), txt('har kampaniya'), txt('04.11'), pill('Bajarilgan', 'ok'), txt('')], [txt('Kuryer naqdida chek', true), txt('Virtual kassa ulanishi'), txt('Moliya'), txt('ishga tushirishdan oldin'), txt('—'), pill('Jarayonda', 'warn'), txt('')]],
+foot: 'Ro’yxat asosiy hujjatdagi “Qabul qilish va hisobga olish” bo’limiga mos. Barcha bandlar yashil bo’lmaguncha ishga tushirish tavsiya etilmaydi.' };
+const cur = [V, L, R, M][st.tab];
+const grid = 'display: grid; grid-template-columns: ' + cur.tpl + '; gap: 10px; padding: 12px 18px; align-items: center;';
+return { tabs, kpis, head: { cols: cur.cols, style: grid + ' background: #F1F3F0; font-size: 11.5px; font-weight: 800; color: #5E656C;' },
+rows: cur.rows.map((r) => ({ cells: r, style: grid + ' border-top: 1px solid #EEF0ED; font-size: 13px;' })), foot: cur.foot };
+}
+}
+</script>
+</body>
+</html>

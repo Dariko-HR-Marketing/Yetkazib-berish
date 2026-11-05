@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Qoldiq xizmati</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 100%; min-width: 1024px; height: 100%; min-height: 900px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; padding: 26px 40px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5E656C">Yashil Savat · Katalog · Qoldiq</span><h1 style="margin: 0; font-size: 26px; line-height: 34px; font-weight: 800">Qoldiq xizmati: do'kon zali va ombor</h1></div>
+<div style="display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<span style="display: flex; flex-direction: column"><b style="font-size: 13.5px">Qoldiq xizmati</b><span style="font-size: 11.5px; color: #5E656C">{{ svcText }}</span></span>
+<button type="button" role="switch" aria-checked="{{ svcOn }}" aria-label="Qoldiq xizmatini yoqish yoki o'chirish" onClick="{{ toggleSvc }}" style="{{ svcSwitch }}"><span style="width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF"></span></button>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 13.5px">Xaridorga qanday ko'rsatiladi</b>
+<div style="display: flex; gap: 6px"><sc-for list="{{ modes }}" as="x" hint-placeholder-count="3"><button type="button" aria-pressed="{{ x.pressed }}" onClick="{{ x.pick }}" style="{{ x.style }}">{{ x.t }}</button></sc-for></div>
+<span style="font-size: 11.5px; color: #5E656C">"Tugadi" har qanday rejimda ko'rinadi · "Kam qoldi" chegarasi: 5 dona</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 13.5px">Qoldiq manbai</b>
+<div style="display: flex; gap: 6px"><sc-for list="{{ sources }}" as="x" hint-placeholder-count="3"><button type="button" aria-pressed="{{ x.pressed }}" onClick="{{ x.pick }}" style="{{ x.style }}">{{ x.t }}</button></sc-for></div>
+<span style="font-size: 11.5px; color: {{ srcColor }}; font-weight: 700">{{ srcText }}</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 13.5px">Joylashuv</b>
+<div style="display: flex; gap: 6px"><sc-for list="{{ locs }}" as="x" hint-placeholder-count="3"><button type="button" aria-pressed="{{ x.pressed }}" onClick="{{ x.pick }}" style="{{ x.style }}">{{ x.t }}</button></sc-for></div>
+<span style="font-size: 11.5px; color: #5E656C">Vitrinada "jami − band qilingan" ko'rsatiladi</span>
+</div>
+</div>
+
+<div style="display: flex; gap: 14px; flex: 1; min-height: 0">
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; overflow: hidden; opacity: {{ tableOpacity }}">
+<div style="display: grid; grid-template-columns: 1.7fr .8fr .8fr .8fr .9fr 1fr 1.1fr; gap: 10px; padding: 10px 16px; background: #F1F3F0; font-size: 11.5px; font-weight: 800; color: #5E656C"><span>MAHSULOT</span><span>ZAL</span><span>OMBOR</span><span>BAND</span><span>SOTISHGA</span><span>HOLAT</span><span>AMAL</span></div>
+<sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+<div style="{{ r.rowStyle }}">
+<button type="button" onClick="{{ r.pick }}" style="border: none; background: transparent; padding: 0; text-align: left; cursor: pointer; display: flex; flex-direction: column; color: #16181B"><b style="font-size: 13.5px">{{ r.name }}</b><span style="font-size: 11.5px; color: #5E656C">{{ r.code }}</span></button>
+<span>{{ r.zal }}</span><span>{{ r.ombor }}</span><span style="color: #5E656C">{{ r.res }}</span><b>{{ r.avail }}</b>
+<span><span style="{{ r.stStyle }}">{{ r.st }}</span></span>
+<button type="button" onClick="{{ r.toggle }}" style="{{ r.btnStyle }}">{{ r.btn }}</button>
+</div>
+</sc-for>
+</div>
+
+<aside style="flex: none; width: 300px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 12.5px; font-weight: 700; color: #5E656C">Xaridor vitrinada ko'radi</span>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 18px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="height: 130px; border-radius: 12px; background: #F1F3F0; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #9AA1A7; opacity: {{ pv.imgOpacity }}">mahsulot surati</div>
+<b style="font-size: 15px">{{ pv.name }}</b>
+<span style="{{ pv.badgeStyle }}">{{ pv.badge }}</span>
+<b style="font-size: 18px; opacity: {{ pv.imgOpacity }}">{{ pv.price }}</b>
+<span style="{{ pv.btnStyle }}">{{ pv.btn }}</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 16px; background: #16181B; color: #FFFFFF">
+<b style="font-size: 14px">"Tugadi" belgilanganda</b>
+<sc-for list="{{ effects }}" as="e" hint-placeholder-count="5"><div style="display: flex; gap: 8px; font-size: 12.5px; line-height: 17px"><b aria-hidden="true" style="color: #8FD3B0">•</b><span style="color: #E3E6E8">{{ e }}</span></div></sc-for>
+</div>
+</aside>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { svc: true, mode: 1, src: 0, loc: 0, sel: 2, out: { 2: true } };
+}
+renderVals() {
+const st = this.state;
+const P = [
+['Sut 3,2% 1 l', '4780012 · MXIK 02001001', 14, 40, 3, 13000], ['Tuxum C1, 10 dona', '4780031 · MXIK 04070001', 8, 24, 2, 17000], ['Qatiq 2,5% 1 l', '4780019 · MXIK 02003001', 0, 0, 0, 11000],
+['Non “Buxanka”', '2100044 · MXIK 19050001', 22, 0, 4, 4000], ['Guruch Devzira 1 kg', '4780102 · MXIK 10063001', 31, 120, 0, 32000], ['Mol go’shti 1 kg', '2000017 · MXIK 02013001', 6, 0, 1, 115000],
+['Banan 1 kg', '2000051 · MXIK 08039001', 18, 60, 2, 24000], ['Paxta yog’i 1 l', '4780220 · MXIK 15122001', 3, 0, 0, 22000]
+];
+const fmt = (n) => n.toLocaleString('ru-RU').replace(/ /g, ' ');
+const pill = (on) => 'flex: 1; height: 34px; border-radius: 9px; font-size: 12.5px; font-weight: 700; cursor: pointer; ' + (on ? 'border: 1px solid #0B7A4B; background: #0B7A4B; color: #FFFFFF;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;');
+const mk = (arr, key) => arr.map((t, i) => ({ t, pressed: st[key] === i ? 'true' : 'false', pick: () => this.setState({ [key]: i }), style: pill(st[key] === i) }));
+const modes = mk(['Aniq son', 'Bor / kam / tugadi', 'Ko’rsatmaslik'], 'mode');
+const sources = mk(['Billz (POS)', 'Excel fayl', 'Qo’lda'], 'src');
+const locs = mk(['Jami', 'Zal', 'Ombor'], 'loc');
+const srcTexts = [['Ulangan · oxirgi sinxron 14:41 · har o’zgarishda', '#075C38'], ['Oxirgi fayl bugun 09:00 · keyingisi 13:00', '#154BA8'], ['Qoldiqni xodimlar kiritadi va yig’ishda yangilanadi', '#5E656C']];
+const rows = P.map((p, i) => {
+const out = !!st.out[i];
+const zal = p[2], ombor = p[3], total = st.loc === 1 ? zal : st.loc === 2 ? ombor : zal + ombor;
+const avail = out ? 0 : Math.max(0, total - p[4]);
+const status = avail === 0 ? 'Tugadi' : avail <= 5 ? 'Kam qoldi' : 'Bor';
+const sc = { 'Tugadi': 'background: #FBE9E4; color: #9F2D12;', 'Kam qoldi': 'background: #FDF1E3; color: #7A3E06;', 'Bor': 'background: #E6F2EC; color: #075C38;' };
+return { name: p[0], code: p[1], zal: out ? '—' : zal, ombor: out ? '—' : ombor, res: p[4], avail, st: status, stStyle: 'padding: 3px 9px; border-radius: 6px; font-size: 12px; font-weight: 700; ' + sc[status],
+btn: out ? 'Sotuvga qaytarish' : 'Tugadi deb belgilash',
+btnStyle: 'height: 32px; padding: 0 10px; border-radius: 9px; font-size: 12px; font-weight: 800; cursor: pointer; ' + (out ? 'border: 1px solid #0B7A4B; background: #FFFFFF; color: #0B7A4B;' : 'border: 1px solid #F1C995; background: #FDF1E3; color: #7A3E06;'),
+pick: () => this.setState({ sel: i }),
+toggle: () => { const o = Object.assign({}, st.out); o[i] = !out; this.setState({ out: o, sel: i }); },
+rowStyle: 'display: grid; grid-template-columns: 1.7fr .8fr .8fr .8fr .9fr 1fr 1.1fr; gap: 10px; padding: 9px 16px; border-top: 1px solid #EEF0ED; font-size: 13px; align-items: center; ' + (st.sel === i ? 'background: #F3FAF6;' : ''), _avail: avail, _status: status };
+});
+const r = rows[st.sel]; const p = P[st.sel];
+let badge, bs;
+if (!st.svc) { badge = r._status === 'Tugadi' ? 'Tugadi' : 'Sotuvda'; }
+else if (r._status === 'Tugadi') badge = 'Tugadi';
+else if (st.mode === 0) badge = 'Qoldi: ' + r._avail + ' dona';
+else if (st.mode === 1) badge = r._status === 'Kam qoldi' ? 'Kam qoldi — shoshiling' : 'Bor';
+else badge = 'Sotuvda';
+bs = 'align-self: flex-start; padding: 4px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 800; ' + (badge === 'Tugadi' ? 'background: #FBE9E4; color: #9F2D12;' : badge.indexOf('Kam') === 0 ? 'background: #FDF1E3; color: #7A3E06;' : 'background: #E6F2EC; color: #075C38;');
+const isOut = badge === 'Tugadi';
+const pv = { name: p[0], price: fmt(p[5]) + ' so’m', badge, badgeStyle: bs, imgOpacity: isOut ? '.45' : '1', btn: isOut ? '🔔 Kelganda xabar berish' : 'Savatga qo’shish',
+btnStyle: 'height: 42px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; ' + (isOut ? 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;' : 'background: #0B7A4B; color: #FFFFFF;') };
+const effects = ['Vitrinada darhol “Tugadi”, savatga qo’shib bo’lmaydi', 'Savatida turgan xaridorlarga ogohlantirish va muqobil', '“Kelganda xabar berish” tugmasi — kelganda Telegram xabari', 'Integratsiya bo’lsa POS’ga ham yoziladi (Billz)', 'AI yordamchi va tashqi agentlar ham shu holatni ko’radi'];
+return { modes, sources, locs, rows, pv, effects, srcText: srcTexts[st.src][0], srcColor: srcTexts[st.src][1],
+svcOn: st.svc ? 'true' : 'false', svcText: st.svc ? 'Yoqilgan · xaridorga qoldiq ko’rinadi' : 'O’chirilgan · faqat “Sotuvda / Tugadi”',
+svcSwitch: 'width: 46px; height: 26px; border-radius: 13px; border: none; padding: 3px; cursor: pointer; display: flex; ' + (st.svc ? 'background: #0B7A4B; justify-content: flex-end;' : 'background: #C9CED3; justify-content: flex-start;'),
+toggleSvc: () => this.setState({ svc: !st.svc }), tableOpacity: '1' };
+}
+}
+</script>
+</body>
+</html>

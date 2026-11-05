@@ -1,0 +1,37 @@
+%% Buyurtma oqimi: xaridordan topshirishgacha
+sequenceDiagram
+    autonumber
+    actor X as Xaridor
+    participant V as Vitrina
+    participant O as OMS
+    participant P as To'lov provayderi
+    participant F as Filial (yig'uvchi)
+    participant D as Dispetcher / kuryer
+    participant N as Xabarnoma
+
+    X->>V: Manzil (pin + mo'ljal)
+    V->>O: GET /zones/resolve
+    O-->>V: Filial, katalog, tarif, slotlar
+    X->>V: Savat, slot, to'lov, almashtirish qoidasi
+    V->>O: POST /orders (Idempotency-Key)
+    O->>O: Qoldiq + slot atomar rezerv
+    O-->>V: 201 Buyurtma raqami
+    alt Onlayn to'lov
+        V->>P: To'lov sahifasi
+        P-->>O: Webhook: paid (imzoli)
+    end
+    O->>F: Yangi buyurtma (navbat)
+    F->>O: Yig'ish: vazn / muqobil
+    alt Summa rozilik chegarasidan oshdi
+        O->>N: Tasdiq so'rovi
+        N-->>X: SMS / Telegram
+        X->>O: Tasdiqlash yoki rad etish
+    end
+    F->>O: Tayyor / qadoqlandi
+    O->>D: Jo'natma yaratildi
+    D->>O: Biriktirildi → olib ketildi
+    O->>N: Kuzatuv havolasi (token)
+    N-->>X: Havola
+    D->>O: Topshirildi (PIN / surat)
+    O->>N: Chek + baholash
+    N-->>X: Chek va yordam havolasi

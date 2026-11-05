@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Do'kon: KYC va shartnomalar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 100%; min-width: 1024px; height: 100%; min-height: 900px; box-sizing: border-box; display: flex; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<aside style="flex: none; width: 280px; display: flex; flex-direction: column; gap: 6px; padding: 28px 18px; background: #FFFFFF; border-right: 1px solid #E4E7E3">
+<b style="font-size: 17px; padding: 0 8px 12px">Do'konni ulash</b>
+<sc-for list="{{ steps }}" as="s" hint-placeholder-count="4"><button type="button" onClick="{{ s.pick }}" aria-current="{{ s.cur }}" style="{{ s.style }}"><span style="{{ s.dot }}">{{ s.mark }}</span><span style="display: flex; flex-direction: column; text-align: left"><b style="font-size: 13.5px">{{ s.t }}</b><span style="font-size: 11.5px; color: #5E656C">{{ s.d }}</span></span></button></sc-for>
+<div style="flex: 1"></div>
+<span style="padding: 10px 12px; border-radius: 10px; background: #F1F3F0; font-size: 11.5px; line-height: 16px; color: #5E656C">Ma'lumotlar KYC va shartnoma uchun ishlatiladi; tijorat siri sifatida himoyalanadi. Reyestrdagi K1–K14.</span>
+</aside>
+<main style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px; padding: 28px 40px">
+<sc-if value="{{ s0 }}">
+<b style="font-size: 24px">1. Kompaniya ma'lumotlari</b>
+<span style="font-size: 13px; color: #5E656C">E-IMZO kalitini tanlang — yuridik nom va STIR kalit sertifikatidan olinadi.</span>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 820px">
+<sc-for list="{{ company }}" as="f" hint-placeholder-count="8"><label style="display: flex; flex-direction: column; gap: 5px; font-size: 12.5px; font-weight: 700; color: #3C4248">{{ f.l }}<span style="{{ f.style }}">{{ f.v }}</span></label></sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ s1 }}">
+<b style="font-size: 24px">2. Rahbar va mas'ul shaxslar</b>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 820px">
+<sc-for list="{{ people }}" as="f" hint-placeholder-count="6"><label style="display: flex; flex-direction: column; gap: 5px; font-size: 12.5px; font-weight: 700; color: #3C4248">{{ f.l }}<span style="{{ f.style }}">{{ f.v }}</span></label></sc-for>
+</div>
+<span style="max-width: 820px; padding: 10px 12px; border-radius: 10px; background: #E5EEF8; color: #154BA8; font-size: 12.5px; line-height: 17px">Rahbarning JShShIR va pasport ma'lumoti faqat KYC uchun; platformada cheklangan kirish bilan shifrlangan holda saqlanadi. Rahbar SMS kod bilan rozilik beradi.</span>
+</sc-if>
+<sc-if value="{{ s2 }}">
+<b style="font-size: 24px">3. Bank va to'lovlar</b>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 820px">
+<sc-for list="{{ bank }}" as="f" hint-placeholder-count="6"><label style="display: flex; flex-direction: column; gap: 5px; font-size: 12.5px; font-weight: 700; color: #3C4248">{{ f.l }}<span style="{{ f.style }}">{{ f.v }}</span></label></sc-for>
+</div>
+<span style="max-width: 820px; font-size: 12.5px; color: #5E656C">Xaridor puli to'g'ridan-to'g'ri sizning Payme, Click yoki Uzum hisobingizga tushadi. Platforma faqat obunani korporativ kartadan yechadi.</span>
+</sc-if>
+<sc-if value="{{ s3 }}">
+<b style="font-size: 24px">4. Shartnomalar va imzo</b>
+<div style="display: flex; flex-direction: column; gap: 8px; max-width: 820px">
+<sc-for list="{{ docs }}" as="d" hint-placeholder-count="4">
+<div style="display: flex; gap: 12px; align-items: center; padding: 14px 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid {{ d.border }}">
+<button type="button" role="checkbox" aria-checked="{{ d.on }}" aria-label="{{ d.t }}" onClick="{{ d.toggle }}" style="{{ d.box }}">{{ d.mark }}</button>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 14.5px">{{ d.t }}</b><span style="font-size: 12px; color: #5E656C">{{ d.d }}</span></span>
+<span style="font-size: 12px; color: #5E656C">{{ d.v }}</span>
+<span style="padding: 6px 10px; border-radius: 9px; border: 1px solid #DCE0DC; font-size: 12px; font-weight: 800">PDF</span>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; gap: 12px; align-items: center; max-width: 820px">
+<button type="button" onClick="{{ sign }}" aria-disabled="{{ cantSign }}" style="{{ signStyle }}">{{ signLabel }}</button>
+<span style="font-size: 12.5px; color: {{ signColor }}; font-weight: 700">{{ signNote }}</span>
+</div>
+</sc-if>
+<div style="flex: 1"></div>
+<div style="display: flex; justify-content: space-between; max-width: 820px">
+<button type="button" onClick="{{ prev }}" style="height: 44px; padding: 0 18px; border-radius: 12px; border: 1px solid #DCE0DC; background: #FFFFFF; font-size: 14px; font-weight: 800; cursor: pointer">Orqaga</button>
+<button type="button" onClick="{{ next }}" style="height: 44px; padding: 0 22px; border-radius: 12px; border: none; background: #16181B; color: #FFFFFF; font-size: 14px; font-weight: 800; cursor: pointer">{{ nextLabel }}</button>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { step: 3, docs: [true, true, false, false], signed: false };
+}
+renderVals() {
+const st = this.state;
+const S = [['Kompaniya', 'STIR, nom, manzil, litsenziya'], ['Rahbar va mas’ullar', 'KYC va aloqa'], ['Bank va to’lovlar', 'rekvizit, obuna kartasi'], ['Shartnomalar', 'oferta, DPA, imzo']];
+const steps = S.map((s, i) => { const done = i < st.step || (i === 3 && st.signed); const cur = i === st.step;
+return { t: s[0], d: s[1], mark: done ? '✓' : String(i + 1), cur: cur ? 'step' : 'false', pick: () => this.setState({ step: i }),
+dot: 'flex: none; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12.5px; font-weight: 800; ' + (done ? 'background: #0B7A4B; color: #FFFFFF;' : cur ? 'border: 2px solid #0B7A4B; color: #0B7A4B; box-sizing: border-box;' : 'background: #F1F3F0; color: #5E656C;'),
+style: 'display: flex; gap: 10px; align-items: center; padding: 10px; border-radius: 12px; border: none; cursor: pointer; color: #16181B; ' + (cur ? 'background: #E6F2EC;' : 'background: transparent;') }; });
+const fld = (l, v, auto) => ({ l, v, style: 'height: 44px; display: flex; align-items: center; padding: 0 12px; border-radius: 10px; font-size: 14px; font-weight: 600; ' + (auto ? 'background: #F1F3F0; border: 1px solid #E4E7E3; color: #3C4248;' : 'background: #FFFFFF; border: 1px solid #DCE0DC; color: #16181B;') });
+const company = [fld('E-IMZO kaliti', '“Yashil Savat” MChJ · 2027-03 gacha', true), fld('STIR', '305 ••• 118', true), fld('Yuridik nom', '“Yashil Savat” MChJ', true), fld('OKED', '47110 — oziq-ovqat chakana savdosi', false), fld('Yuridik manzil', 'Toshkent, Yunusobod tumani', false), fld('Faoliyat manzili (filial)', 'Mustaqillik 8', false), fld('QQS to’lovchisi', 'Ha', false), fld('Savdo ruxsatnomasi', 'Fayl yuklangan ✓', false)];
+const people = [fld('Rahbar F.I.Sh.', 'Karimov A. B.', false), fld('Lavozim', 'Direktor', false), fld('Rahbar JShShIR', '•••••••••• 412', false), fld('Rahbar telefoni', '+998 90 *** 77 01', false), fld('Ma’lumot himoyasi bo’yicha mas’ul', 'Rahimova D.', false), fld('Bosh buxgalter', 'Usmonova N.', false)];
+const bank = [fld('Bank', 'Tijorat banki', false), fld('Hisob raqami', '2020 8000 •••• •••• 4512', false), fld('MFO', '01•••', false), fld('Obuna uchun korporativ karta', 'Humo •••• 0931 ✓ ulangan', false), fld('To’lov provayderlari', 'Payme, Click, Uzum — keyin ulanadi', true), fld('Hisob-faktura emaili', 'buh@yashil-savat.uz', false)];
+const D = [['SaaS litsenziya ofertasi', 'Tarif, SLA 99,5%, to’lov, ma’lumotlar egaligi', 'v1.0 · 2026-12-01'], ['Ma’lumot qayta ishlash kelishuvi (DPA)', 'Rollar, qo’shimcha qayta ishlovchilar, xavfsizlik, 24 soatda xabar', 'v1.0 · 2026-12-01'], ['Rahbar ma’lumotlari roziligi', 'KYC uchun; rahbar SMS kod bilan tasdiqlaydi', 'v1.0'], ['Kuryer shartnomasi namunasi bilan tanishdim', 'Do’kon o’z kuryerlari bilan tuzadi', 'v1.0']];
+const docs = D.map((d, i) => { const on = st.docs[i];
+return { t: d[0], d: d[1], v: d[2], on: on ? 'true' : 'false', mark: on ? '✓' : '', border: on ? '#0B7A4B' : '#E4E7E3',
+box: 'flex: none; width: 26px; height: 26px; border-radius: 7px; font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; ' + (on ? 'border: none; background: #0B7A4B; color: #FFFFFF;' : 'border: 2px solid #C9CED3; background: #FFFFFF; color: #FFFFFF;'),
+toggle: () => { const a = st.docs.slice(); a[i] = !a[i]; this.setState({ docs: a, signed: false }); } }; });
+const ready = st.docs.every((x) => x);
+return { steps, company, people, bank, docs, s0: st.step === 0, s1: st.step === 1, s2: st.step === 2, s3: st.step === 3,
+cantSign: ready && !st.signed ? 'false' : 'true',
+signLabel: st.signed ? 'Imzolandi ✓' : 'E-IMZO bilan imzolash',
+signStyle: 'height: 48px; padding: 0 22px; border-radius: 12px; border: none; font-size: 15px; font-weight: 800; cursor: pointer; ' + (st.signed ? 'background: #E6F2EC; color: #0B7A4B;' : ready ? 'background: #0B7A4B; color: #FFFFFF;' : 'background: #DCE0DC; color: #7A8188;'),
+signNote: st.signed ? 'Imzo: Karimov A. B. · 2026-11-05 13:04 · nusxa emailga yuborildi · 14 kunlik sinov boshlandi' : ready ? 'Barcha hujjatlar belgilangan' : 'Avval barcha hujjatlarni belgilang',
+signColor: st.signed ? '#075C38' : '#5E656C',
+sign: () => { if (ready) this.setState({ signed: true }); },
+prev: () => this.setState({ step: Math.max(0, st.step - 1) }), next: () => this.setState({ step: Math.min(3, st.step + 1) }), nextLabel: st.step === 3 ? 'Panelga o’tish' : 'Keyingi' };
+}
+}
+</script>
+</body>
+</html>

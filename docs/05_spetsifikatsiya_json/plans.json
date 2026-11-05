@@ -1,0 +1,78 @@
+{
+  "_izoh": "Narxlar — GIPOTEZA, kodda emas, konfiguratsiyada saqlanadi (PRD Q8). Pul butun son: so'm*100 = tiyin.",
+  "currency": "UZS",
+  "trial_days_pro": 14,
+  "annual_discount_pct": 15,
+  "plans": [
+    {
+      "code": "start",
+      "name": "Start",
+      "price_uzs_month": 0,
+      "orders_month": 150,
+      "branches": 1,
+      "staff": 3,
+      "integrations": 0,
+      "support": "Chat"
+    },
+    {
+      "code": "biznes",
+      "name": "Biznes",
+      "price_uzs_month": 590000,
+      "orders_month": 1500,
+      "branches": 1,
+      "staff": 10,
+      "integrations": 1,
+      "support": "Chat, 4 soat"
+    },
+    {
+      "code": "pro",
+      "name": "Pro",
+      "price_uzs_month": 1290000,
+      "orders_month": 6000,
+      "branches": 3,
+      "staff": 30,
+      "integrations": 3,
+      "support": "Shaxsiy menejer"
+    },
+    {
+      "code": "tarmoq",
+      "name": "Tarmoq",
+      "price_uzs_month": "kelishuv (3 000 000 dan)",
+      "orders_month": null,
+      "branches": null,
+      "staff": null,
+      "integrations": "cheksiz + API",
+      "support": "SLA shartnoma"
+    }
+  ],
+  "addons": [
+    {
+      "code": "platform_courier",
+      "name": "Platforma kuryeri",
+      "price": "12 000 so'm (≤3 km) + 2 000 so'm/km",
+      "billing": "haftalik hisob-faktura"
+    },
+    {
+      "code": "third_party_courier",
+      "name": "Tashqi xizmat kuryeri",
+      "price": "xizmat tarifi + 5%",
+      "billing": "oldindan to'langan balansdan"
+    },
+    {
+      "code": "sms_pack",
+      "name": "SMS paket (1 000 ta)",
+      "price": "operator narxi + 10%"
+    },
+    {
+      "code": "catalog_mxik",
+      "name": "Katalog va MXIK to'ldirish (AI)",
+      "price": "500 so'm / mahsulot"
+    },
+    {
+      "code": "integration_setup",
+      "name": "Integratsiyani sozlash",
+      "price": "bir martalik, 1 000 000 so'mdan"
+    }
+  ],
+  "kpi_hypothesis": "90 kunda Start'dan pullik paketga o'tish ≥ 25%; pilotda 1-oydan keyin ≥ 40%"
+}

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Bo'shliqlar va tavsiyalar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1060px; box-sizing: border-box; padding: 48px 64px; display: flex; flex-direction: column; gap: 18px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #9F2D12">Jarayon tahlili</span><h1 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 800">14 ta bo'shliq: 8 tasi MVPdan oldin yopilishi kerak</h1></div>
+<div style="display: flex; gap: 8px; font-size: 12.5px; font-weight: 700"><span style="padding: 4px 10px; border-radius: 8px; background: #FBE9E4; color: #9F2D12">M — MVPgacha</span><span style="padding: 4px 10px; border-radius: 8px; background: #FDF1E3; color: #7A3E06">S — pilotda</span><span style="padding: 4px 10px; border-radius: 8px; background: #EEF0ED; color: #3C4248">W — keyin</span></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{ gaps }}" as="g" hint-placeholder-count="14">
+<article style="display: flex; flex-direction: column; gap: 6px; min-height: 160px; box-sizing: border-box; padding: 14px 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px"><b style="font-size: 15px; line-height: 20px">{{ g.n }}. {{ g.title }}</b><span style="{{ g.chip }}">{{ g.p }}</span></div>
+<span style="font-size: 12.5px; line-height: 17px; color: #9F2D12">{{ g.risk }}</span>
+<span style="font-size: 13px; line-height: 18px; color: #16181B">{{ g.fix }}</span>
+</article>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1060}}'>
+class Component extends DCLogic {
+renderVals() {
+const chip = { M: 'background: #FBE9E4; color: #9F2D12;', S: 'background: #FDF1E3; color: #7A3E06;', W: 'background: #EEF0ED; color: #3C4248;' };
+const raw = [
+['Do’kon to’lov hisobini ulash', 'Xavf: xaridor puli kimga tushishi aniq emas edi', 'Har do’kon o’z Payme/CLICK merchant hisobini ulaydi; ulanmaguncha faqat naqd rejim', 'M'],
+['Obuna billingi va qarzdorlik', 'Xavf: platforma daromadi nazoratsiz', 'Oylik avtoto’lov, +3/+7/+30 kun siyosati, vitrina «vaqtincha yopiq»', 'M'],
+['Fiskal chek', 'Xavf: soliq talabi buziladi', 'Chekni do’kon kassasi beradi; elektron chek havolasi xaridorga. G1 da yuridik qaror', 'M'],
+['Rollar: platforma vs do’kon', 'Xavf: shaxsiy ma’lumot uchun javobgar noaniq', 'Do’kon — operator, platforma — qayta ishlovchi; DPA shartnomasi ofertaga ilova', 'M'],
+['Yig’uvchi → kuryer topshirishi', 'Xavf: sumka almashib ketadi', 'Sumka raqami / buyurtma QR; kuryer skanerlab «Olib ketdim»', 'M'],
+['Kuryer naqdi va smena yopish', 'Xavf: naqd pul yo’qoladi', 'Kuryer balansi, smena oxirida kassaga topshirish, moliya tasdig’i', 'M'],
+['«Yo’q» bosilganda qoldiq', 'Xavf: tugagan tovar yana sotiladi', '«Yo’q» → SKU avtomatik stop-listga, menejerga tekshiruv', 'M'],
+['Qaytgan tovar hisobi', 'Xavf: qoldiq va pul nomutanosib', 'Qaytgan buyurtma filialga qabul qilinadi, qoldiq qaytariladi, qaytarish yoziladi', 'M'],
+['Kuryer sig’imi va slotlar', 'Xavf: slot bor, kuryer yo’q', 'Slot sig’imi faol kuryerlar soniga bog’lanadi', 'S'],
+['O’z kuryeri yo’q do’konlar', 'Xavf: kichik do’kon ulana olmaydi', 'Faqat olib ketish rejimi; keyin tashqi kuryer xizmati (Tarmoq)', 'S'],
+['SMS xarajati', 'Xavf: har buyurtma 5–7 SMS', 'SMS faqat OTP uchun; holatlar Telegram bot va kuzatuv sahifasi orqali', 'S'],
+['Do’kon SLA va reytingi', 'Xavf: sekin do’kon butun platforma obro’sini tushiradi', 'Tasdiq vaqti va bekor qilish ulushi bo’yicha ogohlantirish, admin panelida reyting', 'S'],
+['Taqiqlangan tovarlar', 'Xavf: alkogol, tamaki, dori litsenziyasiz sotiladi', 'Kategoriya darajasida bloklash; ruxsat faqat litsenziya hujjati bilan', 'S'],
+['Promokod va sodiqlik', 'Xavf: takroriy xaridni rag’batlantirish yo’q', 'Do’kon darajasida promokod, keyin ballar', 'W']
+];
+const gaps = raw.map((r, i) => ({ n: i + 1, title: r[0], risk: r[1], fix: r[2], p: r[3], chip: 'flex: none; padding: 2px 8px; border-radius: 6px; font-size: 12px; font-weight: 800; ' + chip[r[3]] }));
+return { gaps };
+}
+}
+</script>
+</body>
+</html>

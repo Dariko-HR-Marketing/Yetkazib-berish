@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Bildirishnomalar matritsasi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1060px; box-sizing: border-box; padding: 40px 56px; display: flex; flex-direction: column; gap: 14px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0B7A4B">Bildirishnomalar</span><h1 style="margin: 0; font-size: 30px; line-height: 38px; font-weight: 800">15 hodisa × 5 qabul qiluvchi — kim, qachon, qaysi kanal</h1></div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px; font-size: 12px; font-weight: 700">
+<span style="padding: 4px 8px; border-radius: 6px; background: #E5EEF8; color: #154BA8">Push</span><span style="padding: 4px 8px; border-radius: 6px; background: #E5F1FB; color: #1F5F96">Telegram</span><span style="padding: 4px 8px; border-radius: 6px; background: #FDF1E3; color: #7A3E06">SMS</span><span style="padding: 4px 8px; border-radius: 6px; background: #F1F3F0; color: #3C4248">Email</span><span style="padding: 4px 8px; border-radius: 6px; background: #E6F2EC; color: #075C38">Panel</span><span style="padding: 4px 8px; border-radius: 6px; background: #16181B; color: #FFFFFF">Ovoz</span>
+</div>
+</div>
+
+<div style="display: flex; gap: 16px; align-items: flex-start">
+<div style="flex: 1; display: grid; grid-template-columns: 230px repeat(5, minmax(0, 1fr)); gap: 4px">
+<div style="padding: 8px; font-size: 12px; font-weight: 700; color: #5E656C">HODISA</div>
+<sc-for list="{{ heads }}" as="h" hint-placeholder-count="5"><button type="button" onClick="{{ h.pick }}" aria-pressed="{{ h.pressed }}" style="{{ h.style }}">{{ h.label }}</button></sc-for>
+<sc-for list="{{ rows }}" as="r" hint-placeholder-count="15">
+<div style="display: flex; align-items: center; padding: 6px 8px; border-radius: 8px; background: #FFFFFF; font-size: 13px; font-weight: 600; line-height: 17px">{{ r.event }}</div>
+<sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="5"><div style="{{ c.style }}"><sc-for list="{{ c.chips }}" as="k" hint-placeholder-count="1"><span style="{{ k.style }}">{{ k.t }}</span></sc-for></div></sc-for>
+</sc-for>
+</div>
+
+<aside style="flex: none; width: 300px; display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">{{ panelTitle }}</b>
+<sc-for list="{{ rules }}" as="x" hint-placeholder-count="4"><div style="display: flex; gap: 8px; font-size: 13px; line-height: 18px"><span aria-hidden="true" style="color: #0B7A4B; font-weight: 800">•</span><span>{{ x }}</span></div></sc-for>
+<div style="height: 1px; background: #EEF0ED"></div>
+<b style="font-size: 14px">Umumiy qoidalar</b>
+<span style="font-size: 12.5px; line-height: 18px; color: #3C4248">Kanal tartibi: push → Telegram → SMS (faqat yetkazilmasa). Bitta hodisa bitta odamga bir marta. Marketing — faqat rozilik bilan va 09:00–21:00 oralig'ida. Xizmat xabarlari tinch soatda ham boradi. Matn xaridor tilida.</span>
+</aside>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1060}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { who: 0 };
+}
+renderVals() {
+const who = this.state.who;
+const names = ['Xaridor', 'Kuryer', 'Do’kon xodimlari', 'Do’kon egasi', 'Platforma'];
+const chipStyle = { P: 'background: #E5EEF8; color: #154BA8;', T: 'background: #E5F1FB; color: #1F5F96;', S: 'background: #FDF1E3; color: #7A3E06;', E: 'background: #F1F3F0; color: #3C4248;', Pn: 'background: #E6F2EC; color: #075C38;', O: 'background: #16181B; color: #FFFFFF;' };
+const label = { P: 'Push', T: 'Telegram', S: 'SMS', E: 'Email', Pn: 'Panel', O: 'Ovoz' };
+const data = [
+['Buyurtma qabul qilindi', ['T S'], [''], ['Pn O'], [''], ['']],
+['Tasdiq 3 daqiqadan kechikdi', [''], [''], ['P'], ['T'], ['']],
+['Muqobil yoki summa tasdig’i', ['P T'], [''], ['Pn'], [''], ['']],
+['Buyurtma tayyor', [''], ['P'], ['Pn'], [''], ['']],
+['Kuryer biriktirildi', ['T'], ['P O'], ['Pn'], [''], ['']],
+['Kuryer 500 m yaqin', ['P T'], [''], [''], [''], ['']],
+['Kechikish 10 daqiqadan ortiq', ['T'], ['P'], ['Pn'], [''], ['']],
+['Topshirildi + chek', ['T'], [''], ['Pn'], [''], ['']],
+['Topshirib bo’lmadi', ['T'], [''], ['Pn P'], [''], ['']],
+['Murojaat va javob', ['T'], [''], ['Pn P'], [''], ['']],
+['Kuryer GPS 2 daqiqa yo’q', [''], ['P'], ['Pn'], [''], ['']],
+['Qoldiq 3 kundan kam', [''], [''], ['Pn'], ['T'], ['']],
+['Kunlik va haftalik hisobot', [''], [''], [''], ['T E'], ['']],
+['Obuna to’lovi va qarzdorlik', [''], [''], [''], ['T E'], ['Pn']],
+['Marketing kampaniyasi', ['T'], [''], [''], [''], ['']]
+];
+const heads = names.map((n, i) => ({ label: n, pressed: i === who ? 'true' : 'false', pick: () => this.setState({ who: i }),
+style: 'min-height: 40px; padding: 6px; border-radius: 8px; font: 800 12.5px Manrope, sans-serif; cursor: pointer; ' + (i === who ? 'border: none; background: #0B7A4B; color: #FFFFFF;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;') }));
+const rows = data.map((d) => ({ event: d[0], cells: d.slice(1).map((cell, i) => {
+const codes = cell[0] ? cell[0].split(' ') : [];
+return { chips: codes.map((c) => ({ t: label[c], style: 'padding: 2px 6px; border-radius: 5px; font-size: 11.5px; font-weight: 700; ' + chipStyle[c] })),
+style: 'display: flex; flex-wrap: wrap; gap: 3px; align-items: center; justify-content: center; min-height: 40px; padding: 4px; border-radius: 8px; ' + (i === who ? 'background: #FFFFFF; outline: 2px solid #0B7A4B; outline-offset: -2px;' : 'background: #FFFFFF;') + (codes.length ? '' : ' opacity: .45;') };
+}) }));
+const rulesBy = [
+['Xizmat xabarlari Telegram bot orqali; bot bo’lmasa — SMS', 'Kuryer yaqinlashganda push (PWA o’rnatilgan bo’lsa)', 'Har xabarda kuzatuv havolasi', 'Marketing xabarlaridan bitta tugma bilan voz kechish'],
+['Yangi topshiriq — push va ovozli signal, ekran o’chiq bo’lsa ham', 'GPS yo’qolsa — darhol push', 'Xaridor ma’lumoti topshirilgach yashiriladi', 'Smenadan tashqari xabar yo’q'],
+['Yangi buyurtma — panelda ovozli signal', 'SLA 3 daqiqadan oshsa — menejerga push', 'Dispetcherga kechikish va muvaffaqiyatsiz topshirish', 'Har xodim faqat o’z roli xabarlarini oladi'],
+['Kritik: tasdiq 5 daqiqadan kechiksa — Telegram', 'Kunlik hisobot 22:30, haftalik — dushanba', 'Qoldiq tugayotganda kunlik ro’yxat', 'Obuna va to’lov xabarlari email bilan nusxa'],
+['Qarzdor do’konlar, KYC, SLA past do’konlar — admin panelida', 'Tizim xatolari — monitoring orqali alohida', 'Do’konlarga e’lon — panel va email']
+];
+return { heads, rows, panelTitle: names[who] + ' uchun qoidalar', rules: rulesBy[who] };
+}
+}
+</script>
+</body>
+</html>

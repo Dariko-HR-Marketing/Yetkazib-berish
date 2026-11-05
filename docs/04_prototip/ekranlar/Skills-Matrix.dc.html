@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Ko'nikmalar matritsasi va akademiya</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 100%; min-width: 1024px; height: 100%; min-height: 900px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; padding: 26px 40px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5E656C">Yashil Savat · Jamoa · ichki</span><h1 style="margin: 0; font-size: 26px; line-height: 34px; font-weight: 800">Ko'nikmalar matritsasi: hard va soft skills</h1></div>
+<div role="tablist" style="display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E4E7E3"><sc-for list="{{ roles }}" as="r" hint-placeholder-count="3"><button type="button" role="tab" aria-selected="{{ r.sel }}" onClick="{{ r.pick }}" style="{{ r.style }}">{{ r.t }}</button></sc-for></div>
+</div>
+
+<div style="display: flex; gap: 14px; align-items: center; font-size: 12px; color: #5E656C">
+<span>Daraja:</span><sc-for list="{{ legend }}" as="l" hint-placeholder-count="4"><span style="display: flex; align-items: center; gap: 5px"><span style="{{ l.style }}">{{ l.n }}</span>{{ l.t }}</span></sc-for>
+<span style="margin-left: auto">Hard — ilova ichidagi test va ish ko'rsatkichi; soft — xaridor baholari va menejer kuzatuvi</span>
+</div>
+
+<div style="display: flex; gap: 14px; flex: 1; min-height: 0">
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; overflow: hidden">
+<div style="{{ headStyle }}"><span>XODIM</span><sc-for list="{{ cols }}" as="c" hint-placeholder-count="7"><span style="{{ c.style }}">{{ c.t }}</span></sc-for><span>SERTIFIKAT</span></div>
+<sc-for list="{{ rows }}" as="r" hint-placeholder-count="5">
+<div style="{{ r.rowStyle }}">
+<span style="display: flex; flex-direction: column"><b style="font-size: 13.5px">{{ r.n }}</b><span style="font-size: 11.5px; color: #5E656C">{{ r.meta }}</span></span>
+<sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="7"><span style="{{ c.style }}">{{ c.v }}</span></sc-for>
+<span style="{{ r.certStyle }}">{{ r.cert }}</span>
+</div>
+</sc-for>
+</div>
+
+<aside style="flex: none; width: 330px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 16px; background: #16181B; color: #FFFFFF">
+<b style="font-size: 14.5px">Do'kon akademiyasi · {{ roleName }}</b>
+<sc-for list="{{ modules }}" as="m" hint-placeholder-count="5"><div style="display: flex; justify-content: space-between; gap: 8px; font-size: 12.5px; padding: 4px 0; border-bottom: 1px solid #3C4248"><span style="color: #E3E6E8">{{ m.t }}</span><span style="color: {{ m.c }}; font-weight: 700; flex: none">{{ m.s }}</span></div></sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 14.5px">Avtomatik tavsiya</b>
+<sc-for list="{{ recs }}" as="r" hint-placeholder-count="3"><div style="display: flex; gap: 8px; font-size: 12.5px; line-height: 17px"><b style="color: #0B7A4B">•</b><span>{{ r }}</span></div></sc-for>
+</div>
+<div style="padding: 12px 14px; border-radius: 14px; background: #E5EEF8; color: #154BA8; font-size: 12px; line-height: 17px">Sertifikatli xodimlar ustuvor topshiriq oladi. Baholar jarima uchun emas, o'qitish uchun ishlatiladi; xodim o'z natijasini ilovada ko'radi.</div>
+</aside>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { role: 0 };
+}
+renderVals() {
+const st = this.state;
+const R = [
+{ t: 'Yig’uvchilar', cols: [['Skaner va POS', 'h'], ['Muddat nazorati', 'h'], ['Muqobil qoidasi', 'h'], ['Sovuq zanjir', 'h'], ['Diqqat', 's'], ['Tezlik', 's'], ['Xaridor o’rnida o’ylash', 's']],
+rows: [['Gulnora', '2 yil · 7 daq o’rtacha yig’ish', [3, 3, 3, 2, 3, 3, 3], '3-daraja'], ['Shoxrux', '8 oy · 9 daq', [3, 2, 2, 2, 2, 3, 2], '2-daraja'], ['Madina', '3 oy · 11 daq', [2, 1, 2, 1, 2, 2, 2], '1-daraja'], ['Sanjar', '2 hafta · 14 daq', [1, 1, 0, 0, 2, 1, 1], 'O’qishda']],
+modules: [['Skaner va POS orqali yig’ish', '12 daq', 1], ['Muddat va sifatni tekshirish', '8 daq', 1], ['Muqobil tanlash qoidasi', '10 daq', 1], ['Sovuq zanjir va qadoq', '9 daq', 0], ['Xaridor bilan muloqot', '7 daq', 0]],
+recs: ['Sanjar: “Muqobil qoidasi” moduli — 3 ta rad etilgan muqobil', 'Madina va Sanjar: “Sovuq zanjir” — yoz mavsumidan oldin', 'Gulnora — murabbiy sifatida yangi xodimlarga'] },
+{ t: 'Kuryerlar', cols: [['Navigatsiya', 'h'], ['PIN va naqd', 'h'], ['Yo’l xavfsizligi', 'h'], ['Termosumka', 'h'], ['Muomala', 's'], ['Punktuallik', 's'], ['Stressga chidam', 's']],
+rows: [['Jasur', '4,86 ★ · 96% vaqtida', [3, 3, 3, 3, 3, 3, 3], '3-daraja'], ['Otabek', '4,79 ★ · 94%', [3, 3, 2, 3, 3, 3, 2], '3-daraja'], ['Sardor', '4,64 ★ · 90%', [2, 3, 2, 2, 2, 2, 2], '2-daraja'], ['Rustam', '4,21 ★ · 79%', [2, 2, 1, 2, 1, 1, 2], 'Kuzatuvda']],
+modules: [['Ilova va navigatsiya', '10 daq', 1], ['PIN, naqd va QR to’lov', '8 daq', 1], ['Yo’l xavfsizligi', '15 daq', 1], ['Muomala madaniyati', '9 daq', 0], ['Qiyin vaziyatlar (topshirib bo’lmadi)', '11 daq', 0]],
+recs: ['Rustam: “Muomala madaniyati” + murabbiy suhbati (reyting 4,21)', 'Sardor: “Qiyin vaziyatlar” — 3 ta topshirib bo’lmagan buyurtma', 'Jasur — ustuvor topshiriq va bonus ×1,1'] },
+{ t: 'Menejerlar', cols: [['Panel va SLA', 'h'], ['Qoldiq va integratsiya', 'h'], ['Kassa yopish', 'h'], ['Analitika', 'h'], ['Muammo hal qilish', 's'], ['Jamoani boshqarish', 's'], ['Yozma muloqot', 's']],
+rows: [['Dilshod', 'smena menejeri', [3, 2, 3, 2, 3, 3, 2], '2-daraja'], ['Feruza', 'smena menejeri', [3, 3, 3, 3, 3, 2, 3], '3-daraja'], ['Aziz', 'yangi, 1 oy', [2, 1, 2, 1, 2, 1, 2], 'O’qishda']],
+modules: [['Panel, SLA va ogohlantirishlar', '15 daq', 1], ['Qoldiq xizmati va Billz', '12 daq', 1], ['Kassa va smenani yopish', '10 daq', 1], ['ABC va hudud tahlilini o’qish', '20 daq', 0], ['Sharhlarga javob yozish', '8 daq', 0]],
+recs: ['Aziz: “Qoldiq xizmati va Billz” — integratsiya xatolari', 'Dilshod: “ABC tahlilini o’qish” vebinari (12-noyabr)', 'Feruza — smenalarni rejalashtirish uchun mas’ul'] }
+];
+const r = R[st.role];
+const lvl = ['Yo’q', 'Boshlang’ich', 'Mustaqil', 'Murabbiy'];
+const lvlCss = ['background: #F1F3F0; color: #9AA1A7;', 'background: #FDF1E3; color: #7A3E06;', 'background: #E5EEF8; color: #154BA8;', 'background: #0B7A4B; color: #FFFFFF;'];
+const cell = (v) => 'justify-self: center; width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; ' + lvlCss[v];
+const grid = 'display: grid; grid-template-columns: 1.6fr repeat(7, 1fr) 1fr; gap: 8px; padding: 12px 18px; align-items: center;';
+const roles = R.map((x, i) => ({ t: x.t, sel: st.role === i ? 'true' : 'false', pick: () => this.setState({ role: i }),
+style: 'height: 36px; padding: 0 16px; border-radius: 9px; border: none; font-size: 13.5px; font-weight: 800; cursor: pointer; ' + (st.role === i ? 'background: #16181B; color: #FFFFFF;' : 'background: transparent; color: #3C4248;') }));
+const cols = r.cols.map((c) => ({ t: c[0], style: 'text-align: center; line-height: 14px; ' + (c[1] === 's' ? 'color: #7A3E06;' : 'color: #154BA8;') }));
+const rows = r.rows.map((x) => ({ n: x[0], meta: x[1], cert: x[3], cells: x[2].map((v) => ({ v, style: cell(v) })),
+certStyle: 'padding: 3px 8px; border-radius: 6px; font-size: 11.5px; font-weight: 700; ' + (x[3] === 'Kuzatuvda' ? 'background: #FBE9E4; color: #9F2D12;' : x[3] === 'O’qishda' ? 'background: #FDF1E3; color: #7A3E06;' : 'background: #E6F2EC; color: #075C38;'),
+rowStyle: grid + ' border-top: 1px solid #EEF0ED; font-size: 13px;' }));
+const legend = lvl.map((t, i) => ({ t, n: i, style: cell(i).replace('justify-self: center; ', '').replace('width: 30px; height: 30px', 'width: 22px; height: 22px') }));
+const modules = r.modules.map((m) => ({ t: m[0], s: m[1] + (m[2] ? ' · majburiy' : ''), c: m[2] ? '#8FD3B0' : '#C9CED3' }));
+return { roles, cols, rows, legend, modules, recs: r.recs, roleName: r.t.toLowerCase(), headStyle: grid + ' background: #F1F3F0; font-size: 11.5px; font-weight: 800; color: #5E656C;' };
+}
+}
+</script>
+</body>
+</html>

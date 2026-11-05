@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>To'liq buyurtma jarayoni</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+</style>
+</helmet>
+<div style="width: 2400px; height: 1060px; box-sizing: border-box; padding: 48px 64px; display: flex; flex-direction: column; gap: 20px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0B7A4B">Biznes jarayoni · boshidan oxirigacha</span><h1 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 800">Buyurtma 13 bosqichda yopiladi — kun yakuni solishtiruvigacha</h1></div>
+<div style="display: flex; gap: 16px; font-size: 13px; color: #3C4248">
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 18px; height: 18px; border-radius: 5px; background: #FFFFFF; border: 1px solid #DCE0DC"></span>avvalgi versiyada bor edi</span>
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 18px; height: 18px; border-radius: 5px; background: #FDF1E3; border: 1px solid #E8A33D"></span>ushbu tahlilda qo'shildi</span>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: 170px repeat(13, minmax(0, 1fr)); gap: 6px">
+<div></div>
+<sc-for list="{{ stages }}" as="s" hint-placeholder-count="13">
+<div style="display: flex; flex-direction: column; gap: 2px; padding: 8px 8px 10px; border-radius: 10px; background: #16181B; color: #FFFFFF"><span style="font-size: 11.5px; color: #C9CED3; font-weight: 700">{{ s.n }}</span><b style="font-size: 13.5px; line-height: 17px">{{ s.name }}</b></div>
+</sc-for>
+<sc-for list="{{ lanes }}" as="l" hint-placeholder-count="6">
+<div style="display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 10px 12px; border-radius: 10px; background: #FFFFFF; border: 1px solid #C9CEC8"><b style="font-size: 14.5px">{{ l.name }}</b><span style="font-size: 12px; color: #5E656C">{{ l.where }}</span></div>
+<sc-for list="{{ l.cells }}" as="c" hint-placeholder-count="13">
+<div style="{{ c.style }}">{{ c.text }}</div>
+</sc-for>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":2400,"height":1060}}'>
+class Component extends DCLogic {
+renderVals() {
+const stages = ['Kirish', 'Manzil va hudud', 'Savat', 'Buyurtma va to’lov', 'Do’kon tasdig’i', 'Yig’ish', 'Almashtirish tasdig’i', 'Qadoq va chek', 'Kuryer biriktirish', 'Yetkazish', 'Topshirish', 'Baho va murojaat', 'Kun yakuni'].map((name, i) => ({ n: i + 1, name }));
+const raw = [
+['Xaridor', 'telefon / kompyuter', [
+'QR, Instagram, Telegram yoki reklama orqali do’kon saytini ochadi', 'Pin va mo’ljal kiritadi', 'Mahsulot tanlaydi, almashtirish qoidasini belgilaydi', 'Onlayn to’laydi yoki naqd / karta kuryerga tanlaydi', '«Qabul qilindi» xabari', '', 'Muqobil yoki vaznni 5 daqiqada tasdiqlaydi', '+Yakuniy summa va elektron chek havolasi', 'Kuzatuv havolasi keladi', 'Kuryer qayerdaligini ko’radi', 'PIN aytadi, naqd beradi', 'Baho 1–5, kerak bo’lsa murojaat', '']],
+['Do’kon menejeri', 'panel', [
+'', '', '', '', '5 daqiqada qabul yoki sabab bilan rad', '+Yig’uvchiga biriktiradi (navbat)', 'Qoida «qo’ng’iroq» bo’lsa — qo’ng’iroq', '+Fiskal chek: do’kon kassasi / OFD', '', '', '', 'Murojaatni ko’radi, qaytarishni so’raydi', '+Kassa, qoldiq va onlayn sotuvni solishtiradi']],
+['Yig’uvchi', 'planshet', [
+'', '', '', '', '', 'Skaner, vazn, muqobil yoki «yo’q»', 'Javobni kutadi, keyingi buyurtmaga o’tadi', 'Qadoqlaydi, «Tayyor»', '+Kuryerga sumka raqami bilan topshiradi', '', '', '', '+«Yo’q» bosilgan SKU qoldig’ini tekshiradi']],
+['Dispetcher · kuryer', 'panel · telefon', [
+'', '', '', '', '', '', '', '', 'Yuk, transport, masofaga qarab biriktiradi', 'Navigatsiya, qo’ng’iroq, ETA', 'PIN yoki surat; bo’lmasa sabab', '+Qaytgan tovar filialga, qayd bilan', '+Naqdni topshiradi, smenani yopadi']],
+['Tizim', 'avtomatik', [
+'+Do’konni subdomen orqali aniqlaydi, UTM yozadi', 'Hudud, filial, tarif, slot', 'Narx va min. summa serverda', 'Qoldiq va slot rezervi; idempotent to’lov', 'Supermarketda avto-tasdiq; SLA taymer', '+Yig’ish ro’yxati javon tartibida', 'Taymer tugasa — tanlangan qoida', 'Yakuniy summa, rozilik chegarasi', 'Jo’natma, ETA, kuzatuv tokeni', '+Kechikish 10 daq oshsa — ogohlantirish', 'Qoldiq ayriladi, telefon yashiriladi', '+Baho do’kon reytingiga; SLA hisobi', 'Outbox xabarlar, audit, zaxira']],
+['Moliya', 'do’kon va platforma', [
+'', '', '', 'Pul do’konning merchant hisobiga', '', '', '', '+Farq: qisman qaytarish yoki qo’shimcha to’lov', '', '', '+Naqd kuryer balansiga yoziladi', 'Qaytarishni tasdiqlaydi', 'Solishtirish, nomuvofiqliklar, eksport']]
+];
+const base = 'min-height: 118px; box-sizing: border-box; padding: 8px; border-radius: 10px; font-size: 12.5px; line-height: 17px;';
+const lanes = raw.map(([name, where, cells]) => ({
+name, where,
+cells: cells.map((t) => {
+if (!t) return { text: '', style: base + ' background: transparent; border: 1px dashed #DCE0DC;' };
+const added = t.startsWith('+');
+return { text: added ? t.slice(1) : t, style: base + (added ? ' background: #FDF1E3; border: 1px solid #E8A33D; color: #3A2A10;' : ' background: #FFFFFF; border: 1px solid #DCE0DC;') };
+})
+}));
+return { stages, lanes };
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Xaridor: mahsulot kartochkasi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B; overflow: hidden">
+<div style="flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 12px">
+<div style="position: relative; height: 230px; background: #E5EEF8; display: flex; align-items: center; justify-content: center; color: #7A8188; font-size: 12.5px">mahsulot surati
+<span style="position: absolute; top: 16px; left: 16px; width: 40px; height: 40px; border-radius: 12px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #16181B">←</span>
+<span style="position: absolute; top: 16px; right: 16px; width: 40px; height: 40px; border-radius: 12px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #16181B">♡</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 0 16px">
+<div style="display: flex; gap: 6px; flex-wrap: wrap"><span style="padding: 3px 9px; border-radius: 999px; background: #E6F2EC; color: #075C38; font-size: 12px; font-weight: 700">Qoldi: 51 dona</span><span style="padding: 3px 9px; border-radius: 999px; background: #F1F3F0; font-size: 12px; font-weight: 700">Halol</span><span style="padding: 3px 9px; border-radius: 999px; background: #F1F3F0; font-size: 12px; font-weight: 700">★ 4,8 · 212 baho</span></div>
+<b style="font-size: 20px; line-height: 26px">Sut 3,2%, 1 l</b>
+<div style="display: flex; align-items: baseline; gap: 8px"><b style="font-size: 22px">13 000 so'm</b><span style="font-size: 12.5px; color: #5E656C">1 l uchun 13 000</span></div>
+<sc-if value="{{ dietOn }}"><div style="display: flex; gap: 8px; padding: 10px 12px; border-radius: 12px; background: #FDF1E3; color: #7A3E06; font-size: 12.5px; line-height: 17px"><b aria-hidden="true">!</b><span><b>Laktoza bor.</b> Profilingizda "laktozasiz" belgilangan. Mos variant: Laktozasiz sut 1,5% (kelganda xabar beramiz).</span></div></sc-if>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 12px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="display: flex; justify-content: space-between; align-items: center"><span style="display: flex; flex-direction: column"><b style="font-size: 13.5px">Har 3 kunda eslatish</b><span style="font-size: 12px; color: #5E656C">Siz odatda har 3 kunda olasiz</span></span><button type="button" role="switch" aria-checked="{{ remindOn }}" onClick="{{ toggleRemind }}" style="{{ remindSw }}"><span style="width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF"></span></button></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; line-height: 18px; color: #3C4248">
+<b style="font-size: 13.5px; color: #16181B">Tarkibi va saqlash</b>
+<span>Sigir suti, pasterizatsiyalangan. +2…+6 °C da saqlang. Yaroqlilik muddati: 7 kun. MXIK: 02001001.</span>
+</div>
+<b style="font-size: 15px; margin-top: 4px">Ko'pincha birga olinadi</b>
+<div style="display: flex; gap: 8px">
+<sc-for list="{{ together }}" as="t" hint-placeholder-count="3"><div style="flex: 1; display: flex; flex-direction: column; gap: 4px; padding: 8px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E4E7E3"><div style="height: 50px; border-radius: 8px; background: {{ t.bg }}"></div><b style="font-size: 12px; line-height: 15px">{{ t.n }}</b><b style="font-size: 12px">{{ t.p }}</b></div></sc-for>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 10px; border-radius: 10px; background: #F1F3F0; font-size: 11.5px; color: #5E656C">
+<span>Namuna: profilda "laktozasiz"</span>
+<button type="button" onClick="{{ toggleDiet }}" style="height: 28px; padding: 0 10px; border-radius: 8px; border: 1px solid #DCE0DC; background: #FFFFFF; font-size: 11.5px; font-weight: 700; cursor: pointer">{{ dietBtn }}</button>
+</div>
+</div>
+</div>
+<div style="display: flex; gap: 10px; align-items: center; padding: 12px 16px 18px; background: #FFFFFF; border-top: 1px solid #E4E7E3">
+<div style="display: flex; align-items: center; gap: 4px; padding: 4px; border-radius: 12px; background: #F1F3F0">
+<button type="button" onClick="{{ minus }}" aria-label="Kamaytirish" style="width: 38px; height: 38px; border-radius: 9px; border: none; background: #FFFFFF; font-size: 18px; font-weight: 800; cursor: pointer">−</button>
+<b style="width: 28px; text-align: center; font-size: 15px">{{ qty }}</b>
+<button type="button" onClick="{{ plus }}" aria-label="Ko'paytirish" style="width: 38px; height: 38px; border-radius: 9px; border: none; background: #FFFFFF; font-size: 18px; font-weight: 800; cursor: pointer">+</button>
+</div>
+<span style="flex: 1; height: 48px; border-radius: 14px; background: #0B7A4B; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800">Savatga · {{ total }}</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { qty: 2, remind: true, diet: false };
+}
+renderVals() {
+const st = this.state;
+const fmt = (n) => n.toLocaleString('ru-RU').replace(/ /g, ' ');
+const together = [['Non “Buxanka”', '4 000', '#FDF1E3'], ['Tuxum C1', '17 000', '#FFF6E0'], ['Qaymoq 20%', '12 500', '#F1F3F0']].map((t) => ({ n: t[0], p: t[1], bg: t[2] }));
+return { together, qty: st.qty, total: fmt(st.qty * 13000) + ' so’m', dietOn: st.diet, dietBtn: st.diet ? 'O’chirish' : 'Yoqish',
+toggleDiet: () => this.setState({ diet: !st.diet }), minus: () => this.setState({ qty: Math.max(1, st.qty - 1) }), plus: () => this.setState({ qty: Math.min(51, st.qty + 1) }),
+remindOn: st.remind ? 'true' : 'false', toggleRemind: () => this.setState({ remind: !st.remind }),
+remindSw: 'flex: none; width: 46px; height: 26px; border-radius: 13px; border: none; padding: 3px; cursor: pointer; display: flex; ' + (st.remind ? 'background: #0B7A4B; justify-content: flex-end;' : 'background: #C9CED3; justify-content: flex-start;') };
+}
+}
+</script>
+</body>
+</html>

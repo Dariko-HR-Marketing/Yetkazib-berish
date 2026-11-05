@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Do'kon: jamoa, rollar va filiallar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 100%; min-width: 1024px; height: 100%; min-height: 900px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; padding: 26px 40px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5E656C">Yashil Savat · Sozlamalar</span><h1 style="margin: 0; font-size: 26px; line-height: 34px; font-weight: 800">Jamoa, rollar va filiallar</h1></div>
+<div style="display: flex; gap: 8px; align-items: center">
+<div role="tablist" style="display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E4E7E3"><sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3"><button type="button" role="tab" aria-selected="{{ t.sel }}" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.t }}</button></sc-for></div>
+<button type="button" onClick="{{ invite }}" style="{{ invStyle }}">{{ invLabel }}</button>
+</div>
+</div>
+
+<sc-if value="{{ isStaff }}">
+<div style="display: flex; flex-direction: column; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; overflow: hidden">
+<div style="display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr .7fr 1fr .9fr; gap: 10px; padding: 11px 18px; background: #F1F3F0; font-size: 11.5px; font-weight: 800; color: #5E656C"><span>XODIM</span><span>ROL</span><span>FILIAL</span><span>TELEFON</span><span>2FA</span><span>OXIRGI KIRISH</span><span>HOLAT</span></div>
+<sc-for list="{{ staff }}" as="s" hint-placeholder-count="8"><div style="display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr .7fr 1fr .9fr; gap: 10px; padding: 11px 18px; border-top: 1px solid #EEF0ED; font-size: 13.5px; align-items: center"><b>{{ s.n }}</b><span>{{ s.r }}</span><span style="color: #3C4248">{{ s.f }}</span><span style="color: #3C4248">{{ s.p }}</span><span>{{ s.tfa }}</span><span style="color: #5E656C">{{ s.l }}</span><span><span style="{{ s.stStyle }}">{{ s.st }}</span></span></div></sc-for>
+</div>
+<span style="font-size: 12.5px; color: #5E656C">Xodim telefon raqami orqali taklif qilinadi → SMS havola → panel qoidalari va rozilik → rolga mos ekranlar. Ishdan ketganda "Bloklash" — kirish darhol yopiladi, harakatlar jurnali saqlanadi.</span>
+</sc-if>
+
+<sc-if value="{{ isRoles }}">
+<div style="display: flex; gap: 6px; flex-wrap: wrap"><sc-for list="{{ roleChips }}" as="r" hint-placeholder-count="7"><button type="button" aria-pressed="{{ r.pressed }}" onClick="{{ r.pick }}" style="{{ r.style }}">{{ r.t }}</button></sc-for></div>
+<div style="display: flex; flex-direction: column; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; overflow: hidden">
+<div style="{{ headStyle }}"><span>RUXSAT</span><sc-for list="{{ roleCols }}" as="c" hint-placeholder-count="7"><span style="{{ c.style }}">{{ c.t }}</span></sc-for></div>
+<sc-for list="{{ perms }}" as="p" hint-placeholder-count="11"><div style="{{ p.style }}"><b>{{ p.t }}</b><sc-for list="{{ p.cells }}" as="c" hint-placeholder-count="7"><span style="{{ c.style }}">{{ c.v }}</span></sc-for></div></sc-for>
+</div>
+<span style="font-size: 12.5px; color: #5E656C">✓ to'liq · 👁 faqat ko'rish · — yo'q. Mijoz telefoni va manzili faqat buyurtma bajarilayotganda ko'rinadi; Mijoz 360 — maskalangan holda. Egasi va buxgalter uchun 2 bosqichli kirish majburiy.</span>
+</sc-if>
+
+<sc-if value="{{ isBranches }}">
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px">
+<sc-for list="{{ branches }}" as="b" hint-placeholder-count="2"><div style="display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3"><div style="display: flex; justify-content: space-between"><b style="font-size: 17px">{{ b.n }}</b><span style="{{ b.stStyle }}">{{ b.st }}</span></div><sc-for list="{{ b.rows }}" as="r" hint-placeholder-count="5"><div style="display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; border-bottom: 1px solid #EEF0ED"><span style="color: #5E656C">{{ r.k }}</span><b>{{ r.v }}</b></div></sc-for></div></sc-for>
+</div>
+<span style="font-size: 12.5px; color: #5E656C">Har filialning o'z zonasi, slotlari, qoldig'i va xodimlari bor; ball hamyoni va sodiqlik kartasi butun do'kon bo'yicha umumiy.</span>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { tab: 0, role: 1, invited: false };
+}
+renderVals() {
+const st = this.state;
+const tabs = ['Xodimlar', 'Rollar va ruxsatlar', 'Filiallar'].map((t, i) => ({ t, sel: st.tab === i ? 'true' : 'false', pick: () => this.setState({ tab: i }),
+style: 'height: 36px; padding: 0 16px; border-radius: 9px; border: none; font-size: 13.5px; font-weight: 800; cursor: pointer; ' + (st.tab === i ? 'background: #16181B; color: #FFFFFF;' : 'background: transparent; color: #3C4248;') }));
+const stc = { 'Faol': 'background: #E6F2EC; color: #075C38;', 'Taklif yuborildi': 'background: #E5EEF8; color: #154BA8;', 'Bloklangan': 'background: #FBE9E4; color: #9F2D12;' };
+const S = [['Karimov A.', 'Egasi', 'Hammasi', '+998 90 *** 77 01', '✓', 'bugun 12:40', 'Faol'], ['Feruza', 'Menejer', 'Mustaqillik 8', '+998 93 *** 21 40', '✓', 'bugun 13:02', 'Faol'], ['Dilshod', 'Menejer', 'Chilonzor', '+998 97 *** 55 18', '✓', 'bugun 11:15', 'Faol'], ['Gulnora', 'Yig’uvchi', 'Mustaqillik 8', '+998 90 *** 63 02', '—', 'bugun 13:05', 'Faol'], ['Sanjar', 'Yig’uvchi', 'Mustaqillik 8', '+998 99 *** 10 77', '—', 'bugun 09:58', 'Faol'], ['Usmonova N.', 'Buxgalter', 'Hammasi', '+998 90 *** 32 66', '✓', 'kecha', 'Faol'], ['Aziz', 'Dispetcher', 'Chilonzor', '+998 94 *** 41 09', '—', '—', 'Taklif yuborildi'], ['Bobur', 'Kassir', 'Chilonzor', '+998 91 *** 88 20', '—', '12-oktabr', 'Bloklangan']];
+const staff = S.map((s) => ({ n: s[0], r: s[1], f: s[2], p: s[3], tfa: s[4], l: s[5], st: s[6], stStyle: 'padding: 3px 9px; border-radius: 6px; font-size: 12px; font-weight: 700; ' + stc[s[6]] }));
+if (st.invited) staff.push({ n: 'Yangi xodim', r: 'Marketolog', f: 'Hammasi', p: '+998 90 *** 00 00', tfa: '—', l: '—', st: 'Taklif yuborildi', stStyle: 'padding: 3px 9px; border-radius: 6px; font-size: 12px; font-weight: 700; ' + stc['Taklif yuborildi'] });
+const R = ['Egasi', 'Menejer', 'Yig’uvchi', 'Kassir', 'Dispetcher', 'Buxgalter', 'Marketolog'];
+// 2 = to'liq, 1 = ko'rish, 0 = yo'q
+const P = [['Buyurtmalar', [2, 2, 1, 1, 2, 1, 1]], ['Yig’ish', [2, 2, 2, 0, 1, 0, 0]], ['Dispetcher va kuryerlar', [2, 2, 0, 0, 2, 0, 0]], ['Katalog va narx', [2, 2, 0, 0, 0, 1, 1]], ['Qoldiq va “Tugadi”', [2, 2, 2, 1, 0, 1, 0]], ['Kassa va kuryer naqdi', [2, 1, 0, 2, 0, 2, 0]], ['Pul oqimi va moliya', [2, 1, 0, 0, 0, 2, 0]], ['Sodiqlik, ball, kampaniyalar', [2, 1, 0, 0, 0, 1, 2]], ['Analitika va hisobotlar', [2, 2, 0, 0, 1, 2, 2]], ['Mijoz 360 (maskalangan)', [1, 1, 0, 0, 0, 0, 1]], ['Jamoa va rollar', [2, 1, 0, 0, 0, 0, 0]], ['To’lov va integratsiya sozlamalari', [2, 0, 0, 0, 0, 1, 0]]];
+const roleChips = R.map((t, i) => ({ t, pressed: st.role === i ? 'true' : 'false', pick: () => this.setState({ role: i }),
+style: 'height: 32px; padding: 0 12px; border-radius: 999px; font-size: 12.5px; font-weight: 700; cursor: pointer; ' + (st.role === i ? 'border: 1px solid #0B7A4B; background: #0B7A4B; color: #FFFFFF;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;') }));
+const grid = 'display: grid; grid-template-columns: 2fr repeat(7, 1fr); gap: 8px; padding: 10px 18px; align-items: center;';
+const roleCols = R.map((t, i) => ({ t, style: 'text-align: center; ' + (st.role === i ? 'color: #0B7A4B;' : '') }));
+const sym = ['—', '👁', '✓'];
+const perms = P.map((p) => ({ t: p[0], style: grid + ' border-top: 1px solid #EEF0ED; font-size: 13px;',
+cells: p[1].map((v, i) => ({ v: sym[v], style: 'justify-self: center; width: 34px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-weight: 800; ' + (v === 2 ? 'background: #E6F2EC; color: #075C38;' : v === 1 ? 'background: #E5EEF8; color: #154BA8;' : 'color: #C9CED3;') + (st.role === i ? ' outline: 2px solid #0B7A4B;' : '') })) }));
+const branches = [['Mustaqillik 8 (asosiy)', 'Faol', [['Zona', 'Yunusobod, Mirobod · 3–5 km'], ['Slotlar', '09:00–22:00 · har 20 daq'], ['Xodimlar', '9 · kuryerlar 6'], ['Qoldiq manbai', 'Billz (POS)'], ['Oktabr tushumi', '89,4 mln so’m']]], ['Chilonzor', 'Faol', [['Zona', 'Chilonzor, Uchtepa · 4 km'], ['Slotlar', '10:00–21:00 · har 30 daq'], ['Xodimlar', '5 · kuryerlar 3'], ['Qoldiq manbai', 'Excel fayl'], ['Oktabr tushumi', '43,2 mln so’m']]]].map((b) => ({ n: b[0], st: b[1], stStyle: 'padding: 3px 9px; border-radius: 6px; font-size: 12px; font-weight: 700; background: #E6F2EC; color: #075C38;', rows: b[2].map((r) => ({ k: r[0], v: r[1] })) }));
+return { tabs, staff, roleChips, roleCols, perms, branches, headStyle: grid + ' background: #F1F3F0; font-size: 11.5px; font-weight: 800; color: #5E656C;',
+isStaff: st.tab === 0, isRoles: st.tab === 1, isBranches: st.tab === 2,
+invLabel: st.invited ? 'Taklif yuborildi ✓' : '+ Xodim taklif qilish', invite: () => this.setState({ invited: true, tab: 0 }),
+invStyle: 'height: 44px; padding: 0 16px; border-radius: 12px; border: none; font-size: 14px; font-weight: 800; cursor: pointer; ' + (st.invited ? 'background: #E6F2EC; color: #0B7A4B;' : 'background: #0B7A4B; color: #FFFFFF;') };
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Operator — buyurtma yo'li</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid #EEF0ED;font-size:13.5px;white-space:nowrap}
+th{font-size:12px;font-weight:700;color:#5E656C;text-transform:uppercase;letter-spacing:.04em}
+</style>
+</helmet>
+<div style="min-height: 900px; display: flex; flex-wrap: wrap; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+
+<nav aria-label="Panel bo'limlari" style="flex: 1 1 220px; max-width: 260px; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px; padding: 20px 14px; background: #16181B; color: #FFFFFF">
+<div style="display: flex; align-items: center; gap: 10px; padding: 4px 8px 20px"><div style="width: 34px; height: 34px; border-radius: 9px; background: #0B7A4B; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px">YS</div><span style="display: flex; flex-direction: column"><b style="font-size: 15px">Yashil Savat</b><span style="font-size: 12px; color: #C9CED3">Dispetcher</span></span></div>
+<a href="Panel-Orders.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Buyurtmalar</a>
+<a href="Panel-Dispatch.dc.html" aria-current="page" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; background: #2E3237; color: #FFFFFF; font-weight: 700; font-size: 14px; text-decoration: none">Dispetcher · jonli xarita</a>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; padding: 24px 28px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column"><a href="Panel-Dispatch.dc.html" style="font-size: 13px; font-weight: 600; text-decoration: none">← Dispetcher</a><div style="display: flex; align-items: center; gap: 10px"><h1 style="margin: 0; font-size: 26px; line-height: 32px; font-weight: 800">A-104512</h1><span style="padding: 4px 10px; border-radius: 8px; background: #E5EEF8; color: #154BA8; font-size: 13px; font-weight: 700">Yo'lda</span></div><span style="font-size: 14px; color: #5E656C">Kuryer Jasur · velosiped · Mustaqillik 12</span></div>
+<div style="display: flex; gap: 10px">
+<div style="display: flex; flex-direction: column; padding: 10px 14px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="font-size: 12px; color: #5E656C">ETA</span><b style="font-size: 20px; color: #154BA8">14:36</b></div>
+<div style="display: flex; flex-direction: column; padding: 10px 14px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="font-size: 12px; color: #5E656C">Va'da</span><b style="font-size: 20px">14:40</b></div>
+<div style="display: flex; flex-direction: column; padding: 10px 14px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="font-size: 12px; color: #5E656C">Qoldi</span><b style="font-size: 20px">0,7 km</b></div>
+<div style="display: flex; flex-direction: column; padding: 10px 14px; border-radius: 12px; background: #E6F2EC; border: 1px solid #BFDCCB"><span style="font-size: 12px; color: #075C38">Zaxira</span><b style="font-size: 20px; color: #075C38">+4 daq</b></div>
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch">
+<div role="img" aria-label="Jonli xarita: kuryer marshruti" style="flex: 3 1 440px; position: relative; min-height: 460px; border-radius: 16px; overflow: hidden; background: #E3E8E2">
+<div style="position: absolute; left: 0; right: 0; top: 38%; height: 16px; background: #F4F5F1"></div>
+<div style="position: absolute; left: 0; right: 0; top: 78%; height: 14px; background: #F4F5F1"></div>
+<div style="position: absolute; top: 0; bottom: 0; left: 28%; width: 16px; background: #F4F5F1"></div>
+<div style="position: absolute; top: 0; bottom: 0; left: 70%; width: 18px; background: #F4F5F1"></div>
+<svg viewBox="0 0 600 460" preserveAspectRatio="none" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%"><path d="M90 368 L175 368 L175 182 L428 182 L428 80 L500 80" fill="none" stroke="#9AB6E6" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path><path d="M90 368 L175 368 L175 182 L380 182" fill="none" stroke="#1D5FD1" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<div style="position: absolute; left: 11%; top: 76%; padding: 5px 9px; border-radius: 8px; background: #16181B; color: #FFFFFF; font-size: 12px; font-weight: 700">Filial · 14:24 jo'nadi</div>
+<div style="position: absolute; left: 61%; top: 34%; padding: 6px 10px; border-radius: 10px; background: #1D5FD1; color: #FFFFFF; font-size: 12px; font-weight: 800; box-shadow: 0 2px 6px rgba(0,0,0,.25)">Jasur · 14 km/s</div>
+<div style="position: absolute; left: 80%; top: 12%; padding: 5px 9px; border-radius: 8px; background: #0B7A4B; color: #FFFFFF; font-size: 12px; font-weight: 700">Xaridor</div>
+<div style="position: absolute; left: 40%; top: 60%; padding: 5px 9px; border-radius: 8px; background: #FFFFFF; border: 1px solid #C9CEC8; font-size: 12px; font-weight: 700">Akmal · bo'sh</div>
+<div style="position: absolute; left: 14px; bottom: 14px; padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,.92); font-size: 12px; color: #3C4248">Oxirgi GPS: 9 s oldin · aniqlik 12 m</div>
+</div>
+
+<section style="flex: 2 1 340px; display: flex; flex-direction: column; gap: 8px; padding: 16px 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Har mahsulot qayerda</b>
+<div style="overflow-x: auto"><table style="width: 100%; border-collapse: collapse"><thead><tr><th scope="col">Mahsulot</th><th scope="col">Holat</th><th scope="col">Joy</th></tr></thead><tbody>
+<tr><td>Olma · 1,08 kg</td><td><span style="padding: 2px 8px; border-radius: 6px; background: #E5EEF8; color: #154BA8; font-size: 12px; font-weight: 700">Kuryerda</span></td><td>sumka №12</td></tr>
+<tr><td>Non × 2</td><td><span style="padding: 2px 8px; border-radius: 6px; background: #E5EEF8; color: #154BA8; font-size: 12px; font-weight: 700">Kuryerda</span></td><td>sumka №12</td></tr>
+<tr><td>Qatiq (muqobil)</td><td><span style="padding: 2px 8px; border-radius: 6px; background: #E5EEF8; color: #154BA8; font-size: 12px; font-weight: 700">Kuryerda</span></td><td>sumka №12 · sovuq</td></tr>
+</tbody></table></div>
+<b style="font-size: 15px; padding-top: 6px">Yo'l</b>
+<div style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; line-height: 18px">
+<span>14:02 qabul qilindi · <span style="color: #5E656C">tizim</span></span>
+<span>14:06–14:18 yig'ildi va qadoqlandi · <span style="color: #5E656C">Dilnoza, 12 daq</span></span>
+<span>14:11 muqobil tasdiqlandi · <span style="color: #5E656C">xaridor, 2 daq</span></span>
+<span>14:24 sumka skanerlandi · <span style="color: #5E656C">Jasur</span></span>
+<span><b>14:31 yo'lda, 0,7 km qoldi</b></span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: auto"><a href="tel:+998900000000" style="display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 10px; border: 1px solid #C9CEC8; color: #16181B; font-weight: 700; font-size: 14px; text-decoration: none">Kuryerga qo'ng'iroq</a><a href="tel:+998901234567" style="display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 10px; border: 1px solid #C9CEC8; color: #16181B; font-weight: 700; font-size: 14px; text-decoration: none">Xaridorga qo'ng'iroq</a></div>
+</section>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

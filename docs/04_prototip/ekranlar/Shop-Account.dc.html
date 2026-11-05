@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Xaridor: hisobim va sodiqlik kartasi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B; overflow: hidden">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 18px 16px 10px; background: #FFFFFF; border-bottom: 1px solid #E4E7E3">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<div style="display: flex; gap: 10px; align-items: center"><span style="width: 44px; height: 44px; border-radius: 50%; background: #0B7A4B; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800">BR</span><div style="display: flex; flex-direction: column"><b style="font-size: 16px">Bekzod R.</b><span style="font-size: 12px; color: #5E656C">+998 90 *** 45 12</span></div></div>
+<div role="group" aria-label="Til / Язык" style="display: flex; padding: 3px; border-radius: 10px; background: #F1F3F0"><sc-for list="{{ langs }}" as="l" hint-placeholder-count="2"><button type="button" aria-pressed="{{ l.pressed }}" onClick="{{ l.pick }}" style="{{ l.style }}">{{ l.t }}</button></sc-for></div>
+</div>
+<div role="tablist" style="display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: #F1F3F0"><sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3"><button type="button" role="tab" aria-selected="{{ t.sel }}" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.t }}</button></sc-for></div>
+</div>
+
+<sc-if value="{{ isCard }}">
+<div style="flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 12px; padding: 14px 16px">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 20px; background: linear-gradient(135deg, #5E656C, #16181B); color: #FFFFFF">
+<div style="display: flex; justify-content: space-between"><b style="font-size: 15px">Yashil Savat</b><span style="padding: 3px 10px; border-radius: 999px; background: #DCE0DC; color: #16181B; font-size: 12px; font-weight: 800">{{ L.tier }}</span></div>
+<div style="display: flex; gap: 14px; align-items: center">
+<div style="flex: none; width: 112px; height: 112px; padding: 8px; border-radius: 12px; background: #FFFFFF; box-sizing: border-box; display: grid; grid-template-columns: repeat(12, 1fr); gap: 1px"><sc-for list="{{ qr }}" as="q" hint-placeholder-count="144"><span style="background: {{ q }}"></span></sc-for></div>
+<div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 12px; opacity: .8">{{ L.balance }}</span><b style="font-size: 28px">14 820</b><span style="font-size: 12px; opacity: .8">= 14 820 {{ L.som }}</span><span style="font-size: 11.5px; opacity: .8; margin-top: 4px">№ 8600 0412 7781</span></div>
+</div>
+<span style="font-size: 11.5px; opacity: .85">{{ L.qrHint }}</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="display: flex; justify-content: space-between; font-size: 13px"><b>{{ L.toGold }}</b><span style="color: #5E656C">930 000 / 1 500 000</span></div>
+<div style="height: 8px; border-radius: 4px; background: #EEF0ED"><div style="width: 62%; height: 100%; border-radius: 4px; background: #F1B53C"></div></div>
+<span style="font-size: 12px; color: #5E656C">{{ L.goldNote }}</span>
+</div>
+<div style="display: flex; gap: 8px; padding: 10px 12px; border-radius: 12px; background: #FDF1E3; color: #7A3E06; font-size: 12.5px"><b>!</b><span>{{ L.expiring }}</span></div>
+<b style="font-size: 14.5px">{{ L.history }}</b>
+<sc-for list="{{ hist }}" as="h" hint-placeholder-count="5"><div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 12px; background: #FFFFFF; font-size: 13px"><span style="display: flex; flex-direction: column"><b>{{ h.t }}</b><span style="font-size: 11.5px; color: #5E656C">{{ h.d }}</span></span><b style="color: {{ h.c }}">{{ h.v }}</b></div></sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isPromo }}">
+<div style="flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 12px; padding: 14px 16px">
+<b style="font-size: 14.5px">{{ L.stamps }}</b>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 16px; background: #FFF6E0; color: #7A3E06">
+<b style="font-size: 15px">{{ L.stampTitle }}</b>
+<div style="display: flex; gap: 6px"><sc-for list="{{ stamps }}" as="s" hint-placeholder-count="7"><span style="{{ s.style }}">{{ s.t }}</span></sc-for></div>
+<span style="font-size: 12px">{{ L.stampNote }}</span>
+</div>
+<b style="font-size: 14.5px">{{ L.coupons }}</b>
+<sc-for list="{{ coupons }}" as="c" hint-placeholder-count="3"><div style="display: flex; gap: 12px; align-items: center; padding: 12px; border-radius: 14px; background: #FFFFFF; border: 1px dashed #0B7A4B"><span style="flex: none; width: 64px; height: 48px; border-radius: 10px; background: #E6F2EC; color: #075C38; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 800">{{ c.v }}</span><span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 13.5px">{{ c.t }}</b><span style="font-size: 11.5px; color: #5E656C">{{ c.d }}</span></span><code style="font: 800 12px ui-monospace, Menlo, monospace">{{ c.code }}</code></div></sc-for>
+<b style="font-size: 14.5px">{{ L.gift }}</b>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 12px 14px; border-radius: 14px; background: #16181B; color: #FFFFFF">
+<div style="display: flex; justify-content: space-between"><b style="font-size: 14px">{{ L.giftCard }}</b><b style="font-size: 16px">{{ giftBal }}</b></div>
+<div style="display: flex; gap: 8px"><span style="flex: 1; height: 40px; display: flex; align-items: center; padding: 0 12px; border-radius: 10px; background: #2A2D31; font: 700 13px ui-monospace, Menlo, monospace; letter-spacing: .08em">GIFT-7K2M-Q9XA</span><button type="button" onClick="{{ activate }}" style="{{ actStyle }}">{{ actLabel }}</button></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isMenu }}">
+<div style="flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 8px; padding: 14px 16px">
+<sc-for list="{{ menu }}" as="m" hint-placeholder-count="9"><div style="display: flex; justify-content: space-between; align-items: center; padding: 13px 14px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E4E7E3; font-size: 14px"><span style="display: flex; gap: 10px; align-items: center"><span style="width: 26px; text-align: center">{{ m.i }}</span><b style="color: {{ m.c }}">{{ m.t }}</b></span><span style="font-size: 12.5px; color: #5E656C">{{ m.v }} ›</span></div></sc-for>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { lang: 'uz', tab: 0, gift: false };
+}
+renderVals() {
+const st = this.state;
+const T = {
+uz: { tabs: ['Sodiqlik kartasi', 'Aksiya va kuponlar', 'Hisobim'], tier: 'KUMUSH · 3%', balance: 'Ball balansi', som: 'so’m', qrHint: 'Do’kon kassasida va kuryerda shu QR’ni ko’rsating', toGold: 'Oltin darajagacha', goldNote: '570 000 so’mlik xarid qolgan (90 kun ichida) · Oltin: 5% keshbek', expiring: '3 200 ball 12-dekabrda tugaydi — ball do’konida ishlating', history: 'Ball tarixi', stamps: 'Aksiya kartalari', stampTitle: 'Sut aksiyasi: 6 ta sut — 7-chisi ballga', stampNote: 'Yana 2 ta sut · 31-dekabrgacha', coupons: 'Kuponlarim', gift: 'Sovg’a kartasi', giftCard: 'Sovg’a kartasi balansi', act: 'Faollashtirish', acted: 'Qo’shildi ✓',
+hist: [['A-104512 keshbek', 'bugun · kutilmoqda 24 soat', '+1 453'], ['Sharh uchun', 'bugun', '+500'], ['A-104377 to’lovda', '1-noyabr', '−8 000'], ['A-104290 keshbek', '28-oktabr', '+2 895'], ['Xush kelibsiz', '20-oktabr', '+10 000']],
+coupons: [['−10%', 'Birinchi buyurtma', '150 000 so’mdan · ishlatilgan', 'XUSH10'], ['−5%', 'Sut mahsulotlari', '30-noyabrgacha', 'SUT5'], ['x2', 'Ikki baravar ball', 'Shanba kuni, mevalarga', 'AVTO']],
+menu: [['📦', 'Buyurtmalarim', '38'], ['📍', 'Manzillarim', '2'], ['💳', 'Kartalarim', 'Humo •••• 4417'], ['🎁', 'Sovg’a kartalari', '0'], ['🔒', 'Rozilik va maxfiylik', ''], ['🤖', 'AI agentlar', '1 ulangan'], ['❓', 'Yordam va yo’riqnoma', ''], ['🌐', 'Til', 'O’zbekcha'], ['⏻', 'Chiqish', '']] },
+ru: { tabs: ['Карта лояльности', 'Акции и купоны', 'Мой аккаунт'], tier: 'СЕРЕБРО · 3%', balance: 'Баланс баллов', som: 'сум', qrHint: 'Покажите этот QR на кассе магазина и курьеру', toGold: 'До уровня Золото', goldNote: 'Осталось покупок на 570 000 сум (за 90 дней) · Золото: 5% кешбэк', expiring: '3 200 баллов сгорят 12 декабря — потратьте в магазине баллов', history: 'История баллов', stamps: 'Акционные карты', stampTitle: 'Молочная акция: 6 молока — 7-е за баллы', stampNote: 'Ещё 2 молока · до 31 декабря', coupons: 'Мои купоны', gift: 'Подарочная карта', giftCard: 'Баланс подарочной карты', act: 'Активировать', acted: 'Добавлено ✓',
+hist: [['Кешбэк A-104512', 'сегодня · ожидание 24 часа', '+1 453'], ['За отзыв', 'сегодня', '+500'], ['Оплата A-104377', '1 ноября', '−8 000'], ['Кешбэк A-104290', '28 октября', '+2 895'], ['Приветственные', '20 октября', '+10 000']],
+coupons: [['−10%', 'Первый заказ', 'от 150 000 сум · использован', 'XUSH10'], ['−5%', 'Молочные продукты', 'до 30 ноября', 'SUT5'], ['x2', 'Двойные баллы', 'в субботу, на фрукты', 'АВТО']],
+menu: [['📦', 'Мои заказы', '38'], ['📍', 'Мои адреса', '2'], ['💳', 'Мои карты', 'Humo •••• 4417'], ['🎁', 'Подарочные карты', '0'], ['🔒', 'Согласия и приватность', ''], ['🤖', 'AI-агенты', '1 подключён'], ['❓', 'Помощь и инструкции', ''], ['🌐', 'Язык', 'Русский'], ['⏻', 'Выйти', '']] }
+};
+const L = T[st.lang];
+const langs = [['uz', 'UZ'], ['ru', 'RU']].map((l) => ({ t: l[1], pressed: st.lang === l[0] ? 'true' : 'false', pick: () => this.setState({ lang: l[0] }),
+style: 'height: 30px; padding: 0 10px; border-radius: 8px; border: none; font-size: 12.5px; font-weight: 800; cursor: pointer; ' + (st.lang === l[0] ? 'background: #16181B; color: #FFFFFF;' : 'background: transparent; color: #5E656C;') }));
+const tabs = L.tabs.map((t, i) => ({ t, sel: st.tab === i ? 'true' : 'false', pick: () => this.setState({ tab: i }),
+style: 'flex: 1; height: 34px; border-radius: 9px; border: none; font-size: 12px; font-weight: 800; cursor: pointer; ' + (st.tab === i ? 'background: #FFFFFF; color: #16181B;' : 'background: transparent; color: #5E656C;') }));
+const qr = [];
+for (let r = 0; r < 12; r++) for (let c = 0; c < 12; c++) {
+const finder = (r < 3 && c < 3) || (r < 3 && c > 8) || (r > 8 && c < 3);
+const on = finder ? !(r % 10 === 1 && c % 10 === 1) && !((r === 1 || r === 10) && (c === 1 || c === 10)) : ((r * 7 + c * 13 + r * c) % 5 < 2);
+qr.push(on ? '#16181B' : '#FFFFFF');
+}
+const hist = L.hist.map((h) => ({ t: h[0], d: h[1], v: h[2], c: h[2][0] === '+' ? '#0B7A4B' : '#9F2D12' }));
+const stamps = [1, 2, 3, 4, 5, 6, 7].map((n) => ({ t: n <= 4 ? '✓' : n === 7 ? '🎁' : String(n),
+style: 'flex: 1; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; ' + (n <= 4 ? 'background: #7A3E06; color: #FFFFFF;' : n === 7 ? 'background: #FFFFFF; border: 2px dashed #F1B53C;' : 'background: #FFFFFF; color: #C9A06A;') }));
+const coupons = L.coupons.map((c) => ({ v: c[0], t: c[1], d: c[2], code: c[3] }));
+const menu = L.menu.map((m, i) => ({ i: m[0], t: m[1], v: m[2], c: i === 8 ? '#9F2D12' : '#16181B' }));
+return { L, langs, tabs, qr, hist, stamps, coupons, menu, isCard: st.tab === 0, isPromo: st.tab === 1, isMenu: st.tab === 2,
+giftBal: st.gift ? '100 000' : '0', actLabel: st.gift ? L.acted : L.act, activate: () => this.setState({ gift: true }),
+actStyle: 'flex: none; height: 40px; padding: 0 12px; border-radius: 10px; border: none; font-size: 12.5px; font-weight: 800; cursor: pointer; ' + (st.gift ? 'background: #E6F2EC; color: #0B7A4B;' : 'background: #0B7A4B; color: #FFFFFF;') };
+}
+}
+</script>
+</body>
+</html>

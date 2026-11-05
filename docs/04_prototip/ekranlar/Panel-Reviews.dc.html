@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Panel: reyting va sharhlar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 100%; min-width: 1024px; height: 100%; min-height: 900px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; padding: 28px 40px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5E656C">Yashil Savat · Panel</span><h1 style="margin: 0; font-size: 26px; line-height: 34px; font-weight: 800">Reyting va sharhlar</h1></div>
+<div role="tablist" style="display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<sc-for list="{{ views }}" as="v" hint-placeholder-count="2"><button type="button" role="tab" aria-selected="{{ v.sel }}" onClick="{{ v.pick }}" style="{{ v.style }}">{{ v.t }}</button></sc-for>
+</div>
+</div>
+
+<sc-if value="{{ isShop }}">
+<div style="display: flex; gap: 16px; flex: 1; min-height: 0">
+<aside style="flex: none; width: 320px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="display: flex; align-items: baseline; gap: 10px"><b style="font-size: 40px; line-height: 44px">4,72</b><span style="color: #E59A00; font-size: 20px">★★★★★</span></div>
+<span style="font-size: 12.5px; color: #5E656C">1 248 baho · oxirgi 180 kun · platforma o'rtachasi 4,60</span>
+<sc-for list="{{ dist }}" as="d" hint-placeholder-count="5"><div style="display: flex; align-items: center; gap: 8px; font-size: 12.5px"><span style="width: 18px">{{ d.s }}★</span><div style="flex: 1; height: 8px; border-radius: 4px; background: #EEF0ED"><div style="height: 100%; border-radius: 4px; background: #F1B53C; width: {{ d.w }}"></div></div><span style="width: 36px; text-align: right; color: #5E656C">{{ d.n }}</span></div></sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: 16px; background: #16181B; color: #FFFFFF">
+<div style="display: flex; justify-content: space-between; align-items: center"><b style="font-size: 15px">Ishonch indeksi</b><span style="padding: 3px 9px; border-radius: 6px; background: #0B7A4B; font-size: 12px; font-weight: 800">88 · Ishonchli</span></div>
+<sc-for list="{{ trust }}" as="t" hint-placeholder-count="5"><div style="display: flex; justify-content: space-between; font-size: 12.5px"><span style="color: #C9CED3">{{ t.k }}</span><b style="color: {{ t.c }}">{{ t.v }}</b></div></sc-for>
+<span style="font-size: 12px; line-height: 17px; color: #F1C995">Eng katta yo'qotish: muqobil ulushi. Qoldiqni vaqtida yangilang — indeks +4 ga oshadi.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 14px">Ko'p tilga olingan mavzular</b>
+<div style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{ topics }}" as="t" hint-placeholder-count="6"><span style="{{ t.style }}">{{ t.t }} · {{ t.n }}</span></sc-for></div>
+<span style="font-size: 11.5px; color: #5E656C">AI izohlarni mavzu va kayfiyat bo'yicha guruhlaydi</span>
+</div>
+</aside>
+
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px">
+<div style="display: flex; gap: 8px"><sc-for list="{{ filters }}" as="f" hint-placeholder-count="4"><button type="button" aria-pressed="{{ f.pressed }}" onClick="{{ f.pick }}" style="{{ f.style }}">{{ f.t }} <span style="opacity: .7">{{ f.n }}</span></button></sc-for></div>
+<sc-for list="{{ reviews }}" as="r" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid {{ r.border }}">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 10px"><span style="display: flex; align-items: center; gap: 10px"><span style="color: #E59A00; font-size: 15px">{{ r.stars }}</span><b style="font-size: 14px">{{ r.who }}</b><span style="font-size: 12px; color: #5E656C">{{ r.order }} · {{ r.date }}</span></span><span style="{{ r.badgeStyle }}">{{ r.badge }}</span></div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{ r.tags }}" as="t" hint-placeholder-count="2"><span style="padding: 3px 8px; border-radius: 6px; background: #F1F3F0; font-size: 12px; font-weight: 700">{{ t }}</span></sc-for></div>
+<span style="font-size: 13.5px; line-height: 19px">{{ r.text }}</span>
+<sc-if value="{{ r.hasReply }}"><div style="padding: 10px 12px; border-radius: 10px; background: #E6F2EC; font-size: 13px; line-height: 18px; color: #075C38"><b>Do'kon javobi:</b> {{ r.reply }}</div></sc-if>
+<sc-if value="{{ r.editing }}"><div style="display: flex; flex-direction: column; gap: 8px"><div style="padding: 10px 12px; border-radius: 10px; border: 1.5px solid #0B7A4B; font-size: 13px; line-height: 18px">{{ r.draft }}</div><span style="font-size: 11.5px; color: #5E656C">AI qoralama · tahrirlang va yuboring</span></div></sc-if>
+<div style="display: flex; gap: 8px">
+<button type="button" onClick="{{ r.act }}" style="height: 34px; padding: 0 14px; border-radius: 10px; border: none; background: #0B7A4B; color: #FFFFFF; font-size: 13px; font-weight: 800; cursor: pointer">{{ r.actLabel }}</button>
+<button type="button" style="height: 34px; padding: 0 14px; border-radius: 10px; border: 1px solid #DCE0DC; background: #FFFFFF; font-size: 13px; font-weight: 700; cursor: pointer">E'tiroz bildirish</button>
+<button type="button" style="height: 34px; padding: 0 14px; border-radius: 10px; border: 1px solid #DCE0DC; background: #FFFFFF; font-size: 13px; font-weight: 700; cursor: pointer">Buyurtmani ochish</button>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isCouriers }}">
+<div style="display: flex; flex-direction: column; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; overflow: hidden">
+<div style="display: grid; grid-template-columns: 1.4fr repeat(6, 1fr) 1.4fr; gap: 10px; padding: 12px 18px; background: #F1F3F0; font-size: 12px; font-weight: 800; color: #5E656C"><span>KURYER</span><span>REYTING</span><span>INDEKS</span><span>O'Z VAQTIDA</span><span>QABUL</span><span>BAHOLAR</span><span>DO'KON BAHOSI</span><span>HOLAT</span></div>
+<sc-for list="{{ couriers }}" as="c" hint-placeholder-count="6"><div style="display: grid; grid-template-columns: 1.4fr repeat(6, 1fr) 1.4fr; gap: 10px; padding: 12px 18px; border-top: 1px solid #EEF0ED; font-size: 13.5px; align-items: center"><b>{{ c.n }}</b><span>{{ c.r }} ★</span><b>{{ c.i }}</b><span>{{ c.o }}</span><span>{{ c.a }}</span><span>{{ c.c }}</span><span>{{ c.s }}</span><span><span style="{{ c.style }}">{{ c.st }}</span></span></div></sc-for>
+</div>
+<span style="font-size: 12.5px; color: #5E656C">Do'kon kuryerni har topshiriqdan keyin baholaydi (kelish vaqti, ehtiyotkorlik). Platforma kuryerlari uchun yakuniy qarorni platforma qabul qiladi.</span>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { view: 0, f: 0, editing: -1, replied: {} };
+}
+renderVals() {
+const st = this.state;
+const views = ['Do’kon sharhlari', 'Kuryerlar reytingi'].map((t, i) => ({ t, sel: st.view === i ? 'true' : 'false', pick: () => this.setState({ view: i }),
+style: 'height: 36px; padding: 0 16px; border-radius: 9px; border: none; font-size: 13.5px; font-weight: 800; cursor: pointer; ' + (st.view === i ? 'background: #16181B; color: #FFFFFF;' : 'background: transparent; color: #3C4248;') }));
+const dn = [[5, 1018], [4, 162], [3, 36], [2, 13], [1, 19]];
+const dist = dn.map((d) => ({ s: d[0], n: d[1], w: (d[1] / 1018 * 100).toFixed(0) + '%' }));
+const trust = [['Xaridor reytingi (40)', '37,6', '#8FD3B0'], ['Bekor qilishlar (20)', '18,4', '#8FD3B0'], ['Muqobil ulushi (15)', '9,8', '#F1C995'], ['SLA (15)', '13,7', '#8FD3B0'], ['Murojaatlar (10)', '8,5', '#8FD3B0']].map((t) => ({ k: t[0], v: t[1], c: t[2] }));
+const tp = (t, n, neg) => ({ t, n, style: 'padding: 4px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; ' + (neg ? 'background: #FBE9E4; color: #9F2D12;' : 'background: #E6F2EC; color: #075C38;') });
+const topics = [tp('Yangi mahsulot', 214), tp('Tez yetkazish', 188), tp('Yaxshi qadoq', 96), tp('Muqobil mos emas', 31, true), tp('Muddati yaqin', 18, true), tp('Yetishmadi', 14, true)];
+const R = [
+{ s: 2, who: 'Dilnoza A.', order: 'A-104488', date: 'bugun 12:10', tags: ['Muddati yaqin', 'Muqobil mos emas'], text: 'Qatiq o’rniga boshqa brend kelgan, muddati 2 kun qolgan. Oldin bunaqa bo’lmagandi.', reply: '', draft: 'Dilnoza opa, uzr so’raymiz. Qatiq uchun 11 000 so’m hisobingizga qaytarildi. Muddatlarni yig’ishda tekshirishni kuchaytirdik.' },
+{ s: 5, who: 'Bekzod R.', order: 'A-104512', date: 'bugun 14:41', tags: ['Hammasi to’liq', 'Yangi mahsulot'], text: 'Hammasi joyida, kuryer ham tez keldi. Rahmat!', reply: '', draft: 'Bekzod aka, rahmat! Yana kutib qolamiz.' },
+{ s: 3, who: 'Nodira X.', order: 'A-104390', date: 'kecha', tags: ['Qadoq yomon'], text: 'Non ezilib qolgan, boshqasi yaxshi.', reply: 'Uzr so’raymiz, nonni alohida qadoqlashni boshladik. Keyingi buyurtmaga 10% chegirma kodi yubordik.', draft: '' },
+{ s: 1, who: 'Anvar T.', order: 'A-104355', date: '3-noyabr', tags: ['Mahsulot yetishmadi'], text: 'Uchta mahsulot kelmadi, pul qaytmadi.', reply: '', draft: 'Anvar aka, uzr. Yetishmagan 3 mahsulot uchun 36 500 so’m kartangizga qaytarildi (to’lov tizimi 1–3 kunda ko’rsatadi).' }
+];
+const fdef = [['Hammasi', () => true], ['Salbiy', (r) => r.s <= 3], ['Javobsiz', (r, i) => !r.reply && !st.replied[i]], ['5 yulduz', (r) => r.s === 5]];
+const filters = fdef.map((f, i) => ({ t: f[0], n: R.filter(f[1]).length, pressed: st.f === i ? 'true' : 'false', pick: () => this.setState({ f: i }),
+style: 'height: 34px; padding: 0 14px; border-radius: 999px; font-size: 13px; font-weight: 700; cursor: pointer; ' + (st.f === i ? 'border: 1px solid #0B7A4B; background: #0B7A4B; color: #FFFFFF;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;') }));
+const reviews = [];
+R.forEach((r, i) => {
+if (!fdef[st.f][1](r, i)) return;
+const replied = r.reply || st.replied[i];
+const editing = st.editing === i && !replied;
+reviews.push({ stars: '★'.repeat(r.s) + '☆'.repeat(5 - r.s), who: r.who, order: r.order, date: r.date, tags: r.tags, text: r.text,
+hasReply: !!replied, reply: r.reply || r.draft, editing, draft: r.draft,
+border: r.s <= 2 && !replied ? '#F1C995' : '#E4E7E3',
+badge: replied ? 'Javob berilgan' : r.s <= 2 ? 'Javob kutilmoqda · 2 soat' : 'Javobsiz',
+badgeStyle: 'padding: 3px 9px; border-radius: 6px; font-size: 12px; font-weight: 700; ' + (replied ? 'background: #E6F2EC; color: #075C38;' : r.s <= 2 ? 'background: #FDF1E3; color: #7A3E06;' : 'background: #F1F3F0; color: #3C4248;'),
+actLabel: replied ? 'Javobni tahrirlash' : editing ? 'Javobni yuborish' : 'Javob yozish',
+act: () => { if (replied) return; if (editing) { const x = Object.assign({}, st.replied); x[i] = true; this.setState({ replied: x, editing: -1 }); } else this.setState({ editing: i }); } });
+});
+const cs = (st2) => ({ 'Ishonchli': 'background: #E6F2EC; color: #075C38;', 'Normal': 'background: #F1F3F0; color: #3C4248;', 'Kuzatuvda': 'background: #FDF1E3; color: #7A3E06;' })[st2];
+const couriers = [['Jasur', '4,86', 92, '96%', '91%', 412, '4,9', 'Ishonchli'], ['Otabek', '4,79', 89, '94%', '95%', 356, '4,8', 'Ishonchli'], ['Sardor', '4,64', 81, '90%', '88%', 298, '4,6', 'Normal'], ['Akmal', '4,58', 78, '88%', '84%', 241, '4,5', 'Normal'], ['Rustam', '4,21', 63, '79%', '76%', 187, '4,1', 'Kuzatuvda'], ['Ilhom', '4,92', 94, '97%', '93%', 129, '5,0', 'Ishonchli']].map((c) => ({ n: c[0], r: c[1], i: c[2], o: c[3], a: c[4], c: c[5], s: c[6], st: c[7], style: 'padding: 3px 9px; border-radius: 6px; font-size: 12px; font-weight: 700; ' + cs(c[7]) }));
+return { views, dist, trust, topics, filters, reviews, couriers, isShop: st.view === 0, isCouriers: st.view === 1 };
+}
+}
+</script>
+</body>
+</html>

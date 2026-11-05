@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>GPS oqimi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1060px; box-sizing: border-box; padding: 48px 64px; display: flex; flex-direction: column; gap: 20px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #154BA8">GPS va marshrut arxitekturasi</span><h1 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 800">Kuryer telefoni GPS'i 2–3 soniyada xaridor xaritasiga yetadi</h1></div>
+
+<div style="display: flex; align-items: stretch; gap: 8px">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 14px; background: #16181B; color: #FFFFFF"><b style="font-size: 14.5px">1. Kuryer ilovasi</b><span style="font-size: 12.5px; line-height: 18px; color: #C9CED3">Telefon GPS'i · fon rejimida ham · 15 s / 60 s · aloqa yo'qsa bufer</span></div>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A9199" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="align-self: center; flex: none"><path d="M9 5l7 7-7 7"/></svg>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><b style="font-size: 14.5px">2. Joylashuv API</b><span style="font-size: 12.5px; line-height: 18px; color: #3C4248">To'plam bilan qabul · kuryer tokeni · faqat faol smena</span></div>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A9199" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="align-self: center; flex: none"><path d="M9 5l7 7-7 7"/></svg>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><b style="font-size: 14.5px">3. Filtr</b><span style="font-size: 12.5px; line-height: 18px; color: #3C4248">Aniqlik &gt; 100 m, imkonsiz sakrash va soxta GPS rad etiladi</span></div>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A9199" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="align-self: center; flex: none"><path d="M9 5l7 7-7 7"/></svg>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><b style="font-size: 14.5px">4. Saqlash</b><span style="font-size: 12.5px; line-height: 18px; color: #3C4248">Redis — oxirgi nuqta · PostgreSQL — trek, 30 kun</span></div>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A9199" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="align-self: center; flex: none"><path d="M9 5l7 7-7 7"/></svg>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><b style="font-size: 14.5px">5. ETA va geozona</b><span style="font-size: 12.5px; line-height: 18px; color: #3C4248">Qolgan marshrut, kechikish, «yaqinlashmoqda», «eshik oldida»</span></div>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A9199" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="align-self: center; flex: none"><path d="M9 5l7 7-7 7"/></svg>
+<div style="flex: 1.2; display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 14px; background: #E5EEF8; border: 1px solid #B9CCEB"><b style="font-size: 14.5px; color: #154BA8">6. Jonli kanal</b><span style="font-size: 12.5px; line-height: 18px; color: #154BA8">WebSocket/SSE → xaridor sahifasi, dispetcher xaritasi, do'kon paneli</span></div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px">
+<section style="display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: 16px; background: #FDF1E3; border: 1px solid #F1C995">
+<b style="font-size: 17px; color: #7A3E06">Muhim tavsiya: kuryer ilovasi native bo'lsin</b>
+<span style="font-size: 13.5px; line-height: 20px; color: #3C4248">Brauzer (PWA) ekran o'chganda yoki ilova fonda bo'lganda GPS'ni ishonchli yubora olmaydi, ayniqsa iPhone'da. Kuryer ilovasini React Native yoki Flutter'da qilish tavsiya etiladi, avval Android uchun. Xaridor va do'kon uchun veb yetarli.</span>
+</section>
+<section style="display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 17px">Marshrut qurish</b>
+<span style="font-size: 13.5px; line-height: 20px; color: #3C4248">Xarita xizmatining marshrut API'si (masalan, Yandex Routing yoki o'z serverdagi OSRM). Bir nechta manzil bo'lsa, tartib va'da qilingan vaqt va masofa bo'yicha optimallashtiriladi. Kuryer marshrutdan 100 m chetga chiqsa — qayta hisoblanadi.</span>
+</section>
+<section style="display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 17px">Navigatsiya</b>
+<span style="font-size: 13.5px; line-height: 20px; color: #3C4248">Ilova ichida: marshrut chizig'i, keyingi burilish, manzillar ketma-ketligi. To'liq ovozli navigatsiya uchun bir tugma bilan Yandex Navigator yoki Google Maps'da ochiladi — kuryer odatlangan ilovasini tanlaydi.</span>
+</section>
+<section style="display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 17px">Xaridor nimani ko'radi</b>
+<span style="font-size: 13.5px; line-height: 20px; color: #3C4248">«Yo'lda» holatidan: kuryer belgisi marshrut chizig'i bo'ylab silliq harakatlanadi (nuqtalar orasida interpolyatsiya), yetib kelish vaqti va qolgan masofa har yangilanishda o'zgaradi. Topshirilgach xarita yopiladi.</span>
+</section>
+<section style="display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 17px">Dispetcher nimani ko'radi</b>
+<span style="font-size: 13.5px; line-height: 20px; color: #3C4248">Barcha faol kuryerlar, ularning marshrutlari, bo'sh kuryerlar va GPS'i yo'qolganlar. Kechikayotgan jo'natma qizil bilan ajratiladi; trekni keyin qayta ko'rish mumkin.</span>
+</section>
+<section style="display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 17px">Xavfsizlik va batareya</b>
+<span style="font-size: 13.5px; line-height: 20px; color: #3C4248">Soxta joylashuv (mock location) aniqlanadi va dispetcherga belgi chiqadi. To'xtaganda chastota kamayadi, batareya 15% dan pasaysa kuryer ogohlantiriladi. Smenadan tashqari joylashuv yig'ilmaydi.</span>
+</section>
+</div>
+
+<section style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 16px 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px; margin-right: 6px">Maqsadli ko'rsatkichlar:</b>
+<span style="padding: 8px 12px; border-radius: 10px; background: #F6F7F4; font-size: 13.5px">Joylashuv kechikishi ≤ 5 s</span>
+<span style="padding: 8px 12px; border-radius: 10px; background: #F6F7F4; font-size: 13.5px">ETA xatosi ≤ 5 daqiqa (90% hollarda)</span>
+<span style="padding: 8px 12px; border-radius: 10px; background: #F6F7F4; font-size: 13.5px">Smenada GPS bo'shlig'i ≤ 2%</span>
+<span style="padding: 8px 12px; border-radius: 10px; background: #F6F7F4; font-size: 13.5px">8 soatlik smena batareyaning ≤ 25%</span>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1060}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

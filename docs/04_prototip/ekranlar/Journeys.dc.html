@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Rollar va ketma-ketlik</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1900px; box-sizing: border-box; padding: 56px 64px; display: flex; flex-direction: column; gap: 20px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0B7A4B">Foydalanuvchi yo'llari</span><h1 style="margin: 0; font-size: 36px; line-height: 44px; font-weight: 800">9 ta rol — har birining qadamlari va tugmalari</h1></div>
+<div style="display: flex; gap: 16px; font-size: 13px; color: #3C4248">
+<span style="display: flex; align-items: center; gap: 6px"><span style="padding: 2px 8px; border-radius: 6px; background: {{accent}}; color: #FFFFFF; font-weight: 700">Tugma</span>asosiy amal</span>
+<span style="display: flex; align-items: center; gap: 6px"><span style="padding: 2px 8px; border-radius: 6px; border: 1px solid #C9CEC8; background: #FFFFFF; font-weight: 700">Tugma</span>ikkilamchi</span>
+</div>
+</div>
+
+<sc-for list="{{ roles }}" as="r" hint-placeholder-count="9">
+<section style="display: flex; gap: 16px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="flex: none; width: 210px; display: flex; flex-direction: column; gap: 4px">
+<b style="font-size: 17px; line-height: 22px">{{ r.name }}</b>
+<span style="font-size: 12.5px; font-weight: 700; color: #0B7A4B">{{ r.device }}</span>
+<span style="font-size: 12.5px; line-height: 17px; color: #5E656C">{{ r.goal }}</span>
+</div>
+<div style="flex: 1; display: flex; flex-wrap: wrap; align-items: stretch; gap: 8px">
+<sc-for list="{{ r.steps }}" as="s" hint-placeholder-count="6">
+<div style="display: flex; align-items: center; gap: 8px">
+<div style="width: 140px; box-sizing: border-box; display: flex; flex-direction: column; gap: 6px; padding: 10px; border-radius: 12px; background: #F6F7F4">
+<span style="font-size: 11.5px; font-weight: 700; color: #5E656C">{{ s.n }} · {{ s.screen }}</span>
+<span style="font-size: 12.5px; line-height: 17px">{{ s.text }}</span>
+<span style="{{ s.btnStyle }}">{{ s.btn }}</span>
+</div>
+<sc-if value="{{ s.arrow }}" hint-placeholder-val="{{ true }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8A9199" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></sc-if>
+</div>
+</sc-for>
+</div>
+</section>
+</sc-for>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#0B7A4B","options":["#0B7A4B","#1D5FD1","#B4441F","#16181B"]},"$preview":{"width":1440,"height":1900}}'>
+class Component extends DCLogic {
+renderVals() {
+const accent = this.props.accent ?? '#0B7A4B';
+const P = 'align-self: flex-start; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 700; background: ' + accent + '; color: #FFFFFF;';
+const S = 'align-self: flex-start; padding: 3px 8px; border-radius: 6px; font-size: 12px; font-weight: 700; background: #FFFFFF; border: 1px solid #C9CEC8; color: #16181B;';
+const D = 'align-self: flex-start; padding: 3px 8px; border-radius: 6px; font-size: 12px; font-weight: 700; background: #FFFFFF; border: 1px solid #C9CEC8; color: #9F2D12;';
+const mk = (steps) => steps.map((s, i) => ({ n: i + 1, screen: s[0], text: s[1], btn: s[2], btnStyle: s[3] === 's' ? S : s[3] === 'd' ? D : P, arrow: i < steps.length - 1 }));
+const roles = [
+{ name: 'Xaridor', device: 'Telefon · PWA', goal: 'Tez buyurtma, aniq vaqt va summa', steps: mk([
+['QR / havola', 'Instagram, Telegram yoki peshtaxta QR orqali kiradi', 'Ochish', 'p'],
+['Manzil', 'Pin, mo’ljal, podyezd; hudud tekshiriladi', 'Katalogga o’tish', 'p'],
+['Katalog', 'Qidiradi, kategoriya, + bilan qo’shadi', 'Savatni ko’rish', 'p'],
+['Rasmiylashtirish', 'Vaqt, almashtirish qoidasi, to’lov', 'To’lash va buyurtma berish', 'p'],
+['Kuzatuv', 'O’zgarish bo’lsa — eski va yangi summa', 'Tasdiqlash', 'p'],
+['Topshirish', 'Kuryerga PIN aytadi, chek oladi', 'Baholash 1–5', 's']]) },
+{ name: 'Hamkor egasi', device: 'Desktop', goal: 'Do’konni sozlash va natijani ko’rish', steps: mk([
+['Taklif', 'Admin yuborgan havola orqali kiradi', 'Parol o’rnatish', 'p'],
+['Katalog', 'CSV yuklaydi, xatolar ro’yxatini ko’radi', 'CSV import', 'p'],
+['Hududlar', 'Xaritada hudud chizadi, tarif va slot sig’imi', 'Saqlash', 'p'],
+['Xodimlar', 'Menejer, yig’uvchi, kuryer qo’shadi', 'Xodim qo’shish', 's'],
+['Hisobot', 'Sotuv, o’rtacha chek, bekor sabablari', 'Eksport', 's']]) },
+{ name: 'Filial menejeri', device: 'Desktop / planshet', goal: 'Buyurtmani 5 daqiqada qabul qilish', steps: mk([
+['Signal', 'Yangi buyurtma — ovoz va SLA taymeri', '—', 's'],
+['Buyurtmalar', 'Tarkib, to’lov, vaqtni tekshiradi', 'Qabul qilish', 'p'],
+['Rad etish', 'Sabab majburiy; rezerv avtomatik bo’shaydi', 'Rad etish', 'd'],
+['Qoldiq', 'Tugagan mahsulotni darhol yopadi', 'Stop-listga', 's']]) },
+{ name: 'Yig’uvchi / oshxona', device: 'Planshet', goal: 'Xatosiz va tez yig’ish', steps: mk([
+['Navbat', 'Qabul qilingan buyurtmani oladi', 'Yig’ishni boshlash', 'p'],
+['Yig’ish', 'Shtrix-kod skaneri, vazn kiritish', 'Yig’ildi', 'p'],
+['Tugagan', 'Muqobil tanlaydi yoki olib tashlaydi', 'Muqobil', 's'],
+['Tasdiq', 'Xaridor javobini kutadi (5 daqiqa)', '—', 's'],
+['Qadoq', 'Hammasi yig’ilgach', 'Tayyor', 'p']]) },
+{ name: 'Dispetcher', device: 'Desktop', goal: 'Har jo’natmaga mos kuryer', steps: mk([
+['Navbat', 'Tayyor jo’natmalar, kutish vaqti', '—', 's'],
+['Kuryerlar', 'Yuk, transport, masofa bo’yicha tanlaydi', 'Biriktirish', 'p'],
+['Kechikish', 'ETA oshsa ogohlantirish', 'Qayta biriktirish', 's'],
+['Muvaffaqiyatsiz', 'Kuryer sababini ko’radi', 'Qayta yetkazish', 's'],
+['Qaytarish', 'Mahsulot filialga qaytadi', 'Qaytarish', 'd']]) },
+{ name: 'Kuryer', device: 'Telefon · mobil veb', goal: 'Bir qo’l bilan, tez topshirish', steps: mk([
+['Smena', 'Ishga chiqadi', 'Ishdaman', 'p'],
+['Topshiriq', 'Filialdan oladi', 'Olib ketdim', 'p'],
+['Yo’l', 'Navigatsiya, qo’ng’iroq', 'Yo’nalish', 's'],
+['Topshirish', 'PIN kiritadi, naqdni oladi', 'Topshirildi', 'p'],
+['Muammo', 'Sabab tanlaydi, 2 urinish qayd', 'Topshirib bo’lmadi', 'd']]) },
+{ name: 'Yordam xizmati', device: 'Desktop', goal: 'Birinchi javob ≤ 10 daqiqa', steps: mk([
+['Navbat', 'Murojaat buyurtma qatoriga bog’langan', 'Olish', 'p'],
+['Tarix', 'Buyurtma, to’lov, kuryer, suratlar', '—', 's'],
+['Javob', 'Xaridorga yozadi yoki qo’ng’iroq', 'Javob berish', 'p'],
+['Qaytarish', 'Qisman yoki to’liq summa', 'Qaytarish so’rovi', 's'],
+['Yopish', 'Natija qayd etiladi', 'Hal qilindi', 'p']]) },
+{ name: 'Moliya', device: 'Desktop', goal: 'Har kuni pul va buyurtma mos', steps: mk([
+['Kun yakuni', 'To’lovlar ↔ buyurtmalar ↔ qaytarishlar', 'Solishtirish', 'p'],
+['Nomuvofiqlik', 'Ro’yxat: sabab va buyurtma', '—', 's'],
+['Qaytarish', 'So’rovni ko’rib chiqadi', 'Tasdiqlash', 'p'],
+['Naqd', 'Kuryer inkassatsiyasi', 'Qabul qilindi', 's'],
+['Eksport', 'Buxgalteriya uchun', 'Eksport CSV', 's']]) },
+{ name: 'Administrator', device: 'Desktop · MFA', goal: 'Hamkorni 3 kunda ulash', steps: mk([
+['Hamkorlar', 'Ro’yxat, holat, paket', 'Hamkor qo’shish', 'p'],
+['1. Ma’lumot', 'Nom, STIR, profil turi', 'Keyingi', 'p'],
+['2. Brend', 'Logotip, rang, subdomen', 'Keyingi', 'p'],
+['3. Filial', 'Manzil, ish vaqti', 'Keyingi', 'p'],
+['4. Egasi', 'Telefon — taklif yuboriladi', 'Ulash', 'p'],
+['Audit', 'Barcha o’zgarishlar jurnali', '—', 's']]) }
+];
+return { accent, roles };
+}
+}
+</script>
+</body>
+</html>

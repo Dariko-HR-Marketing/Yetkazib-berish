@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Xalqaro kengayish</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1440px; height: 1060px; box-sizing: border-box; padding: 40px 56px; display: flex; flex-direction: column; gap: 18px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #154BA8">Xalqaro kengayish · 2–3-versiya · MVP'ga kirmaydi</span><h1 style="margin: 0; font-size: 30px; line-height: 38px; font-weight: 800">Yangi davlat — kod emas, sozlama: nima tayyor bo'lishi kerak</h1></div>
+
+<div style="display: grid; grid-template-columns: 170px repeat(6, minmax(0, 1fr)); gap: 4px; font-size: 12.5px; line-height: 17px">
+<div></div>
+<sc-for list="{{ countries }}" as="c" hint-placeholder-count="6"><div style="display: flex; flex-direction: column; gap: 4px; padding: 10px; border-radius: 10px; background: #16181B; color: #FFFFFF"><b style="font-size: 15px">{{ c.name }}</b><span style="{{ c.phaseStyle }}">{{ c.phase }}</span></div></sc-for>
+<sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+<div style="display: flex; align-items: center; padding: 8px 10px; border-radius: 8px; background: #E6F2EC; color: #075C38; font-weight: 800">{{ r.k }}</div>
+<sc-for list="{{ r.cells }}" as="v" hint-placeholder-count="6"><div style="padding: 8px 10px; border-radius: 8px; background: #FFFFFF; color: #3C4248">{{ v }}</div></sc-for>
+</sc-for>
+</div>
+
+<div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Hozirdan platformaga qo'yiladigan asoslar</b>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px 18px">
+<sc-for list="{{ base }}" as="b" hint-placeholder-count="10"><div style="display: flex; flex-direction: column; gap: 2px"><b style="font-size: 13.5px">{{ b.t }}</b><span style="font-size: 12.5px; line-height: 17px; color: #3C4248">{{ b.d }}</span></div></sc-for>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 16px; background: #16181B; color: #FFFFFF">
+<b style="font-size: 16px">Yangi davlatni ochish tartibi</b>
+<sc-for list="{{ launch }}" as="l" hint-placeholder-count="7"><div style="display: flex; gap: 10px; font-size: 13px; line-height: 18px"><span style="flex: none; width: 22px; height: 22px; border-radius: 50%; background: #0B7A4B; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800">{{ l.n }}</span><span style="color: #E3E6E8">{{ l.t }}</span></div></sc-for>
+<span style="font-size: 12px; color: #9AA1A7">Jadvaldagi huquqiy talablar umumiy yo'nalish. Har davlatga chiqishdan oldin mahalliy yurist tasdiqlaydi.</span>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1060}}'>
+class Component extends DCLogic {
+renderVals() {
+const ph = { 1: 'background: #0B7A4B; color: #FFFFFF;', 2: 'background: #154BA8; color: #FFFFFF;', 3: 'background: #5E656C; color: #FFFFFF;', 4: 'background: #3C4248; color: #C9CED3;' };
+const C = [['O’zbekiston', 1, 'Faza 1 · hozir'], ['Qozog’iston', 2, 'Faza 2'], ['Qirg’iziston', 2, 'Faza 2'], ['Tojikiston', 3, 'Faza 3'], ['Rossiya', 3, 'Faza 3 · shartli'], ['Turkmaniston', 4, 'Faza 4 · tahlil']];
+const countries = C.map((c) => ({ name: c[0], phase: c[2], phaseStyle: 'align-self: flex-start; padding: 2px 7px; border-radius: 5px; font-size: 11.5px; font-weight: 700; ' + ph[c[1]] }));
+const rows = [
+{ k: 'Valyuta', cells: ['UZS', 'KZT', 'KGS', 'TJS', 'RUB', 'TMT'] },
+{ k: 'Til', cells: ['O’zbek (lotin, kirill), rus', 'Qozoq, rus', 'Qirg’iz, rus', 'Tojik, rus', 'Rus', 'Turkman, rus'] },
+{ k: 'Asosiy to’lov', cells: ['Payme, Click, Uzum, Uzcard, Humo', 'Kaspi, Halyk', 'Elcart, MBank, O!Dengi', 'Korti Milli, Alif, DC', 'Mir, SBP', 'Altyn Asyr'] },
+{ k: 'Chek va soliq', cells: ['Fiskal chek, MXIK kodi, QQS', 'Onlayn kassa, OFD', 'Elektron chek — aniqlanadi', 'Aniqlanadi', '54-FZ onlayn kassa', 'Aniqlanadi'] },
+{ k: 'Ma’lumot joyi', cells: ['Faqat biometrik — ichkarida (2026)', 'Qozog’iston ichida', 'Aniqlanadi', 'Aniqlanadi', '152-FZ: Rossiya ichida', 'Mahalliy talab'] },
+{ k: 'Telefon va SMS', cells: ['+998, mahalliy SMS shlyuz', '+7 (7xx)', '+996', '+992', '+7', '+993'] },
+{ k: 'Yuridik shaxs', cells: ['Bor', 'Filial yoki hamkor', 'Hamkor', 'Hamkor', 'Alohida MChJ, sanksiya tekshiruvi', 'Mahalliy hamkor'] },
+{ k: 'Asosiy xavf', cells: ['—', 'Kaspi raqobati', 'Kichik bozor', 'Naqd ulushi yuqori', 'Sanksiya va to’lov cheklovlari', 'Yopiq bozor, internet cheklovlari'] }
+];
+const base = [
+{ t: 'Ko’p valyutali ledger', d: 'Summa minor birlikda (tiyin), valyuta kodi har yozuvda; kurs faqat hisobotda' },
+{ t: 'Davlat konfiguratsiyasi', d: 'Valyuta, soliq stavkasi, til, telefon formati, to’lov usullari — sozlama faylida' },
+{ t: 'Ko’p tillilik (i18n)', d: 'Barcha matnlar kalit orqali; uz-Latn, uz-Cyrl, ru, kk, ky, tg, en' },
+{ t: 'Soliq moduli', d: 'Chek chiqarish interfeysi umumiy, har davlatga o’z adapteri (OFD, MXIK)' },
+{ t: 'Hududiy klaster', d: 'Har davlat ma’lumoti o’z hududidagi serverda; umumiy kod, alohida baza' },
+{ t: 'Manzil modeli', d: 'Davlat → viloyat → shahar → tuman → ko’cha; koordinata asosiy' },
+{ t: 'Xarita adapteri', d: 'Yandex, 2GIS, Google yoki OSM — davlatga qarab almashtiriladi' },
+{ t: 'Vaqt mintaqalari', d: 'Barcha vaqt UTC’da saqlanadi; slotlar mahalliy vaqtda ko’rsatiladi' },
+{ t: 'Telefon E.164', d: 'Raqamlar +kod bilan; SMS shlyuz davlatga qarab tanlanadi' },
+{ t: 'Narx va tarif', d: 'SaaS tariflari har davlatda o’z valyutasida va o’z narxida' }
+];
+const launch = ['Bozor va huquqiy tahlil (yurist, soliq, litsenziya)', 'Yuridik shaxs yoki hamkor, bank hisobi', 'Kamida 2 ta to’lov provayderi bilan shartnoma', 'Hududiy klaster va ma’lumot joylashuvi', 'Tarjima, valyuta va soliq sozlamalari', '3–5 ta pilot do’kon, 1 shahar, 60 kun', 'Natijaga qarab ommaviy ochish'].map((t, i) => ({ n: i + 1, t }));
+return { countries, rows, base, launch };
+}
+}
+</script>
+</body>
+</html>

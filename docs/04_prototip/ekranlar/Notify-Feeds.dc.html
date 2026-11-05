@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Bildirishnomalar lentasi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+</style>
+</helmet>
+<div style="width: 1440px; height: 900px; box-sizing: border-box; padding: 40px 64px; display: flex; flex-direction: column; gap: 20px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0B7A4B">Bitta buyurtma — uch xil xabar</span><h1 style="margin: 0; font-size: 30px; line-height: 38px; font-weight: 800">Har kim faqat o'z ishiga kerakli xabarni oladi</h1></div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px">
+<sc-for list="{{ phones }}" as="p" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 12px">
+<div style="width: 330px; height: 660px; box-sizing: border-box; border: 10px solid #16181B; border-radius: 40px; overflow: hidden; display: flex; flex-direction: column; gap: 8px; padding: 18px 12px; background: {{ p.bg }}">
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 0 4px 6px"><b style="font-size: 16px; color: {{ p.titleColor }}">{{ p.title }}</b><span style="font-size: 12px; color: {{ p.subColor }}">{{ p.sub }}</span></div>
+<sc-for list="{{ p.items }}" as="i" hint-placeholder-count="5">
+<div style="{{ i.style }}"><span style="display: flex; justify-content: space-between; gap: 8px"><b style="font-size: 13px">{{ i.h }}</b><span style="font-size: 11.5px; opacity: .7">{{ i.time }}</span></span><span style="font-size: 12.5px; line-height: 17px">{{ i.b }}</span></div>
+</sc-for>
+</div>
+<b style="font-size: 15px">{{ p.role }}</b>
+<span style="font-size: 13px; color: #3C4248; text-align: center">{{ p.note }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() {
+const card = (bg, fg, border) => 'display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; border-radius: 14px; background: ' + bg + '; color: ' + fg + ';' + (border ? ' border: 1px solid ' + border + ';' : '');
+const mk = (list, bg, fg, border, accentIdx) => list.map((x, i) => ({ h: x[0], b: x[1], time: x[2], style: i === accentIdx ? card('#0B7A4B', '#FFFFFF') : card(bg, fg, border) }));
+const phones = [
+{ role: 'Xaridor · Telegram bot', note: 'Har xabarda kuzatuv havolasi; marketing — faqat rozilik bilan', title: 'Yashil Savat bot', sub: 'Telegram', bg: '#DCE9F5', titleColor: '#16181B', subColor: '#3C4248',
+items: mk([['Buyurtma A-104512 qabul qilindi', 'Taxminan 14:40 da. Kuzatish havolasi ichida.', '14:02'], ['Tasdiqlang', 'Qatiq tugadi → muqobil 11 000 so’m. 5 daqiqa ichida javob bering.', '14:09'], ['Kuryer yo’lda', 'Jasur, velosiped · ~12 daqiqa · xaritada kuzating', '14:24'], ['Kuryer yaqin', '500 m qoldi. PIN kodingiz: 4821', '14:34'], ['Topshirildi', 'Elektron chek va baholash havolasi', '14:38']], '#FFFFFF', '#16181B', null, 3) },
+{ role: 'Kuryer · ilova push', note: 'Yangi topshiriq ovoz bilan; smenadan tashqari xabar yo’q', title: 'Kuryer', sub: 'Smena faol', bg: '#16181B', titleColor: '#FFFFFF', subColor: '#C9CED3',
+items: mk([['Yangi topshiriq', 'A-104512 · Mustaqillik 12 · naqd 48 440', '14:20'], ['Buyurtma tayyor', 'Sumka №12 · qadoq stolida', '14:22'], ['Marshrut yangilandi', '2-manzil qo’shildi: Navoiy 40', '14:27'], ['GPS signali zaif', 'Ochiq joyga chiqing yoki GPS’ni tekshiring', '14:29'], ['Smena: naqd balans', '412 440 so’m · 19:00 da kassaga topshiring', '18:30']], '#2A2D31', '#FFFFFF', null, 0) },
+{ role: 'Do’kon menejeri · panel', note: 'Ovozli signal va SLA taymer; kritik holat egasiga Telegram', title: 'Bildirishnomalar', sub: '3 yangi', bg: '#F6F7F4', titleColor: '#16181B', subColor: '#5E656C',
+items: mk([['Yangi buyurtma A-104533', '2 mahsulot · onlayn to’langan · SLA 5:00', '14:31'], ['SLA ogohlantirish', 'A-104531 3 daqiqadan beri tasdiqlanmagan', '14:30'], ['Xaridor tasdiqladi', 'A-104512 muqobilni qabul qildi — qadoqlash mumkin', '14:11'], ['Qoldiq tugayapti', 'Sut 3,2% — 4,8 kunga yetadi', '09:00'], ['Yangi murojaat', 'A-104512 · Non shikastlangan · surat bor', '14:42']], '#FFFFFF', '#16181B', '#E4E7E3', 1) }
+];
+phones[2].items[1].style = card('#FDF1E3', '#7A3E06', '#F1C995');
+return { phones };
+}
+}
+</script>
+</body>
+</html>

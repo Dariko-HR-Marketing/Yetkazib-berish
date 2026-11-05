@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Reyting modeli</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1440px; height: 1060px; box-sizing: border-box; padding: 40px 56px; display: flex; flex-direction: column; gap: 16px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0B7A4B">Reyting va ishonch modeli</span><h1 style="margin: 0; font-size: 30px; line-height: 38px; font-weight: 800">Kim kimni baholaydi va baho nimaga ta'sir qiladi</h1></div>
+
+<div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{ links }}" as="l" hint-placeholder-count="6">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800"><span style="padding: 3px 8px; border-radius: 6px; background: #16181B; color: #FFFFFF">{{ l.from }}</span>→<span style="padding: 3px 8px; border-radius: 6px; background: #0B7A4B; color: #FFFFFF">{{ l.to }}</span></span>
+<span style="font-size: 12.5px; line-height: 17px; color: #3C4248">{{ l.what }}</span>
+<span style="font-size: 11.5px; font-weight: 700; color: {{ l.visColor }}">{{ l.vis }}</span>
+</div>
+</sc-for>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 16px; background: #16181B; color: #FFFFFF">
+<b style="font-size: 16px">Reyting formulasi</b>
+<code style="font: 700 15px ui-monospace, Menlo, monospace; color: #8FD3B0">R = (C·m + Σ baho) / (C + n)</code>
+<span style="font-size: 12.5px; line-height: 18px; color: #E3E6E8">m = 4,6 — platforma o'rtachasi, C = 20 — ishonch og'irligi, n — baholar soni. Yangi do'kon 3 ta 5 yulduz bilan birdan 5,0 bo'lib qolmaydi.</span>
+<span style="font-size: 12.5px; line-height: 18px; color: #E3E6E8">Yangi baho kuchliroq: 60 kunda og'irlik ikki baravar kamayadi. Ekranda oxirgi 180 kun ko'rsatiladi.</span>
+<span style="font-size: 12.5px; line-height: 18px; color: #E3E6E8">Teg baholarni to'g'ri egaga yo'naltiradi: "kech keldi" — kuryerga, "mahsulot buzuq" — do'konga.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Do'kon ishonch indeksi (0–100)</b>
+<sc-for list="{{ shopIdx }}" as="x" hint-placeholder-count="5"><div style="display: flex; flex-direction: column; gap: 3px"><span style="display: flex; justify-content: space-between; font-size: 12.5px"><span>{{ x.t }}</span><b>{{ x.w }}%</b></span><div style="height: 6px; border-radius: 3px; background: #EEF0ED"><div style="height: 100%; border-radius: 3px; background: #0B7A4B; width: {{ x.bar }}"></div></div></div></sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Kuryer indeksi (0–100)</b>
+<sc-for list="{{ courierIdx }}" as="x" hint-placeholder-count="5"><div style="display: flex; flex-direction: column; gap: 3px"><span style="display: flex; justify-content: space-between; font-size: 12.5px"><span>{{ x.t }}</span><b>{{ x.w }}%</b></span><div style="height: 6px; border-radius: 3px; background: #EEF0ED"><div style="height: 100%; border-radius: 3px; background: #154BA8; width: {{ x.bar }}"></div></div></div></sc-for>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Oqibatlar: chegara qiymatlari</b>
+<div style="display: grid; grid-template-columns: 130px 1fr 1fr; gap: 6px; font-size: 12.5px; line-height: 17px">
+<b style="color: #5E656C">Daraja</b><b style="color: #5E656C">Do'kon</b><b style="color: #5E656C">Kuryer</b>
+<sc-for list="{{ levels }}" as="v" hint-placeholder-count="4"><span style="{{ v.style }}">{{ v.l }}</span><span>{{ v.s }}</span><span>{{ v.c }}</span></sc-for>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 18px; border-radius: 16px; background: #FDF1E3; color: #7A3E06">
+<b style="font-size: 16px">Halollik qoidalari</b>
+<sc-for list="{{ fair }}" as="f" hint-placeholder-count="7"><div style="display: flex; gap: 8px; font-size: 12.5px; line-height: 17px"><b aria-hidden="true">•</b><span>{{ f }}</span></div></sc-for>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1060}}'>
+class Component extends DCLogic {
+renderVals() {
+const pub = { vis: 'Hammaga ko’rinadi', visColor: '#075C38' }, priv = { vis: 'Faqat ichki — baholanuvchiga ko’rinmaydi', visColor: '#9F2D12' };
+const links = [
+Object.assign({ from: 'Xaridor', to: 'Do’kon', what: 'Sifat, to’liqlik, muddat, qadoq, muqobil mosligi' }, pub),
+Object.assign({ from: 'Xaridor', to: 'Kuryer', what: 'Vaqtida kelish, muomala, mahsulot holati' }, pub),
+Object.assign({ from: 'Kuryer', to: 'Do’kon', what: 'Buyurtma vaqtida tayyormi, qadoq, kutish' }, { vis: 'Do’kon va platformaga', visColor: '#154BA8' }),
+Object.assign({ from: 'Kuryer', to: 'Xaridor', what: 'Manzil aniqligi, kutish, muomala' }, priv),
+Object.assign({ from: 'Do’kon', to: 'Kuryer', what: 'Kelish vaqti, ehtiyotkorlik, naqd intizomi' }, { vis: 'Kuryer va platformaga', visColor: '#154BA8' }),
+Object.assign({ from: 'Tizim', to: 'Hammasi', what: 'Avtomatik: SLA, bekor qilish, murojaat, GPS ma’lumoti' }, { vis: 'Indeksga qo’shiladi', visColor: '#075C38' })
+];
+const bar = (a) => a.map((x) => ({ t: x[0], w: x[1], bar: (x[1] / 40 * 100) + '%' }));
+const shopIdx = bar([['Xaridor reytingi', 40], ['Bekor qilishlar (do’kon sababli)', 20], ['Muqobil va yetishmovchilik ulushi', 15], ['Tasdiqlash va yig’ish SLA', 15], ['Murojaat va qaytarishlar', 10]]);
+const courierIdx = bar([['Xaridor reytingi', 40], ['O’z vaqtida topshirish', 25], ['Topshiriqni qabul qilish', 15], ['Topshirib bo’lmaganlar', 10], ['Naqd va GPS intizomi', 10]]);
+const lv = (l, color, s, c) => ({ l, s, c, style: 'align-self: start; padding: 3px 8px; border-radius: 6px; font-weight: 800; ' + color });
+const levels = [
+lv('≥ 4,7 · Ishonchli', 'background: #0B7A4B; color: #FFFFFF;', 'Belgi vitrinada, qidiruvda yuqorida, tarifda chegirma', 'Ustuvor topshiriqlar, bonus koeffitsienti'),
+lv('4,3 – 4,7 · Normal', 'background: #E6F2EC; color: #075C38;', 'Odatdagi ishlash', 'Odatdagi ishlash'),
+lv('4,0 – 4,3 · Kuzatuvda', 'background: #FDF1E3; color: #7A3E06;', 'Ogohlantirish, 30 kunlik tuzatish rejasi', 'Murabbiy bilan suhbat, qayta o’qitish'),
+lv('< 4,0 · Cheklangan', 'background: #FBE9E4; color: #9F2D12;', 'Yangi buyurtma vaqtincha cheklanadi, menejer qo’ng’irog’i', 'Smenalar cheklanadi, ko’rib chiqish')
+];
+const fair = ['Faqat topshirilgan buyurtmaga baho; bitta buyurtma — bitta baho', '14 kun ichida baholash mumkin, 48 soat ichida bir marta tahrir', 'Haqorat, telefon raqami, shaxsiy ma’lumot — avtomatik moderatsiya', 'Do’kon har sharhga javob beradi va bir marta e’tiroz bildiradi', 'Kuryer aybi bo’lmagan holat (do’kon kechiktirdi, ob-havo) baholanmaydi', 'Firibgarlik: bir qurilmadan ko’p baho, xodimlar o’z do’koniga baho — bloklanadi', 'Kamida 10 ta baho bo’lmaguncha reyting "Yangi" deb ko’rsatiladi'];
+return { links, shopIdx, courierIdx, levels, fair };
+}
+}
+</script>
+</body>
+</html>

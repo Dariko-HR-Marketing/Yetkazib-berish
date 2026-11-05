@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Admin: paket konstruktori</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 100%; min-width: 1024px; height: 100%; min-height: 900px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; padding: 26px 40px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5E656C">Platforma admini · Tariflar</span><h1 style="margin: 0; font-size: 26px; line-height: 34px; font-weight: 800">Paket konstruktori</h1></div>
+<div style="display: flex; gap: 10px; align-items: center"><span style="font-size: 12.5px; color: #5E656C">{{ draftNote }}</span><button type="button" onClick="{{ publish }}" style="{{ pubStyle }}">{{ pubLabel }}</button></div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 300px; gap: 14px; flex: 1; min-height: 0">
+<div style="display: flex; flex-direction: column; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; overflow: auto">
+<div style="display: grid; grid-template-columns: 2.2fr repeat(4, 1fr); position: sticky; top: 0; background: #FFFFFF; border-bottom: 1px solid #E4E7E3">
+<span style="padding: 12px 16px; font-size: 12px; font-weight: 800; color: #5E656C">Funksiya kaliti</span>
+<sc-for list="{{ heads }}" as="h" hint-placeholder-count="4"><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 8px; text-align: center"><b style="font-size: 14px">{{ h.n }}</b><span style="font-size: 11.5px; color: #5E656C">{{ h.p }}</span><span style="font-size: 11px; color: #0B7A4B; font-weight: 800">{{ h.t }}</span></div></sc-for>
+</div>
+<sc-for list="{{ rows }}" as="r" hint-placeholder-count="12">
+<div style="display: grid; grid-template-columns: 2.2fr repeat(4, 1fr); align-items: center; border-bottom: 1px solid #EEF0ED">
+<span style="display: flex; flex-direction: column; gap: 1px; padding: 8px 16px"><b style="font-size: 13px">{{ r.t }}</b><code style="font-size: 11px; color: #5E656C">{{ r.k }}</code></span>
+<sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="4"><button type="button" role="checkbox" aria-checked="{{ c.on }}" aria-label="{{ c.label }}" onClick="{{ c.toggle }}" style="height: 40px; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center"><span style="{{ c.box }}">{{ c.mark }}</span></button></sc-for>
+</div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">Uch qatlamli tekshiruv</b>
+<sc-for list="{{ layers }}" as="l" hint-placeholder-count="3"><div style="display: flex; gap: 10px; font-size: 12.5px; line-height: 17px"><b style="flex: none; color: #0B7A4B">{{ l.n }}</b><span>{{ l.t }}</span></div></sc-for>
+<code style="margin-top: 4px; padding: 8px 10px; border-radius: 8px; background: #F6F7F4; font-size: 11.5px">can(tenant, key) = platform ∧ plan ∧ shop</code>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">O'zgarish ta'siri</b>
+<sc-for list="{{ impact }}" as="i" hint-placeholder-count="4"><div style="display: flex; justify-content: space-between; font-size: 12.5px; padding: 3px 0"><span>{{ i.t }}</span><b>{{ i.v }}</b></div></sc-for>
+<span style="font-size: 11.5px; line-height: 16px; color: #5E656C">Mavjud do'konlardan funksiya olib tashlansa, 30 kun oldin xabar beriladi va eski shartlar muddat oxirigacha saqlanadi.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-radius: 16px; background: #FFF6E0; color: #5A3A00; font-size: 12px; line-height: 17px"><b style="font-size: 13px">Narxlar — gipoteza</b>Pilotda 20 do'kon bilan tekshiriladi: konversiya Start → Biznes, ketish va to'lashga tayyorlik.</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { m: null, changed: 0, published: false };
+}
+renderVals() {
+const st = this.state;
+const F = [['O’z vitrinasi', 'storefront.own', 0], ['Umumiy katalogga chiqish', 'catalog.marketplace_listing', 1], ['Katalogda reklama', 'catalog.marketplace_promo', 2], ['Shaxsiy domen', 'storefront.custom_domain', 1], ['Telegram mini-ilova', 'channel.telegram_miniapp', 0], ['O’z kuryerlari', 'delivery.own_couriers', 0], ['Platforma kuryerlari', 'delivery.platform_pool', 0], ['Tashqi xizmat (API)', 'delivery.third_party', 1], ['Saqlangan kartalar', 'payment.saved_cards', 0], ['POS / ERP integratsiya', 'integration.pos_erp', 1], ['Ballar', 'loyalty.points', 1], ['Sovg’a kartalari', 'loyalty.gift_cards', 4], ['Xaridor AI', 'ai.customer_assistant', 1], ['Egasi AI', 'ai.owner_assistant', 2], ['Tashqi AI agentlar', 'ai.external_agents', 2], ['Kengaytirilgan tahlil', 'analytics.advanced', 2], ['Ko’p filial', 'branches.multi', 2]];
+const m = st.m || F.map((f) => [0, 1, 2, 3].map((p) => p >= f[2]));
+const P = [['Start', '0 so’m'], ['Biznes', '590 000'], ['Pro', '1 290 000'], ['Tarmoq', '3 mln+']];
+const tenants = [212, 64, 18, 3];
+const heads = P.map((p, i) => ({ n: p[0], p: p[1], t: tenants[i] + ' do’kon · ' + m.filter((r) => r[i]).length + ' f.' }));
+const rows = F.map((f, fi) => ({ t: f[0], k: f[1], cells: [0, 1, 2, 3].map((p) => { const on = m[fi][p];
+return { on: on ? 'true' : 'false', label: f[0] + ' — ' + P[p][0], mark: on ? '✓' : '',
+box: 'width: 22px; height: 22px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; box-sizing: border-box; ' + (on ? 'background: #0B7A4B; color: #FFFFFF;' : 'border: 2px solid #C9CED3;'),
+toggle: () => { const n = m.map((r) => r.slice()); n[fi][p] = !on; this.setState({ m: n, changed: st.changed + 1, published: false }); } }; }) }));
+const layers = [['1', 'Platforma: kalit butun tizimda yoqilganmi (avariya o’chirgichi)'], ['2', 'Paket: do’kon paketida bu funksiya bormi'], ['3', 'Do’kon: egasi o’zi yoqqanmi']].map((l) => ({ n: l[0], t: l[1] }));
+const impact = [['Faol do’konlar', '297'], ['Ta’sirlanadigan', st.changed ? Math.min(297, 18 + st.changed * 11) + ' ta' : '0'], ['O’zgarishlar', st.changed + ' ta'], ['Versiya', st.published ? 'v1.4 (faol)' : (st.changed ? 'v1.4 qoralama' : 'v1.3 (faol)')]].map((i) => ({ t: i[0], v: i[1] }));
+return { heads, rows, layers, impact, draftNote: st.changed ? (st.published ? 'Chop etildi' : st.changed + ' ta o’zgarish saqlanmagan') : 'v1.3 · 1-noyabrdan',
+pubLabel: st.published ? 'Chop etildi ✓' : 'Yangi versiyani chop etish', publish: () => { if (st.changed) this.setState({ published: true }); },
+pubStyle: 'height: 40px; padding: 0 16px; border-radius: 10px; border: none; font-size: 13.5px; font-weight: 800; cursor: pointer; ' + (st.changed && !st.published ? 'background: #0B7A4B; color: #FFFFFF;' : 'background: #E4E7E3; color: #5E656C;') };
+}
+}
+</script>
+</body>
+</html>

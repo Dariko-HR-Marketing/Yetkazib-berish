@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Xaridor: shaxsiy bosh sahifa</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B; overflow: hidden">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px 16px 12px; background: #FFFFFF; border-bottom: 1px solid #E4E7E3">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<div style="display: flex; flex-direction: column"><b style="font-size: 15px">{{ L.addr }}</b><span style="font-size: 12px; color: #0B7A4B; font-weight: 700">{{ L.slot }}</span></div>
+<div role="group" aria-label="Til / Язык" style="display: flex; padding: 3px; border-radius: 10px; background: #F1F3F0"><sc-for list="{{ langs }}" as="l" hint-placeholder-count="2"><button type="button" aria-pressed="{{ l.pressed }}" onClick="{{ l.pick }}" style="{{ l.style }}">{{ l.t }}</button></sc-for></div>
+</div>
+<div style="height: 42px; display: flex; align-items: center; gap: 8px; padding: 0 12px; border-radius: 12px; background: #F1F3F0; font-size: 13.5px; color: #7A8188"><span aria-hidden="true">⌕</span>{{ L.search }}</div>
+</div>
+
+<div style="flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 14px; padding: 14px 16px 16px">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 16px">{{ L.running }}</b><span style="font-size: 12px; color: #5E656C">{{ L.runningSub }}</span></div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{ running }}" as="p" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 10px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="height: 56px; border-radius: 10px; background: {{ p.bg }}"></div>
+<b style="font-size: 12.5px; line-height: 16px">{{ p.n }}</b>
+<span style="font-size: 11px; color: #9F2D12; font-weight: 700">{{ p.hint }}</span>
+<div style="display: flex; justify-content: space-between; align-items: center"><b style="font-size: 12.5px">{{ p.price }}</b><button type="button" onClick="{{ p.add }}" aria-label="{{ p.addLabel }}" style="{{ p.btnStyle }}">{{ p.btn }}</button></div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<button type="button" onClick="{{ addUsual }}" style="{{ usualStyle }}">
+<span style="display: flex; flex-direction: column; gap: 2px; text-align: left"><b style="font-size: 15px">{{ L.usual }}</b><span style="font-size: 12.5px; opacity: .85">{{ L.usualSub }}</span></span>
+<span style="padding: 8px 12px; border-radius: 10px; background: #FFFFFF; color: #0B7A4B; font-size: 13px; font-weight: 800">{{ usualBtn }}</span>
+</button>
+
+<div style="display: flex; gap: 10px; align-items: center; padding: 12px; border-radius: 14px; background: #E5EEF8; color: #154BA8">
+<span style="width: 44px; height: 44px; flex: none; border-radius: 12px; background: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 20px">🔔</span>
+<span style="display: flex; flex-direction: column; gap: 2px; font-size: 12.5px; line-height: 17px"><b style="font-size: 13.5px">{{ L.back }}</b>{{ L.backSub }}</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 16px; background: #16181B; color: #FFFFFF">
+<span style="font-size: 11.5px; font-weight: 800; letter-spacing: .05em; color: #F1B53C">{{ L.seasonTag }}</span>
+<b style="font-size: 17px; line-height: 22px">{{ L.season }}</b>
+<span style="font-size: 12.5px; color: #C9CED3">{{ L.seasonSub }}</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 16px">{{ L.promo }}</b><span style="font-size: 12px; color: #5E656C">SUT5</span></div>
+<div style="display: flex; gap: 8px; overflow: hidden">
+<sc-for list="{{ promo }}" as="p" hint-placeholder-count="3"><div style="flex: none; width: 150px; display: flex; flex-direction: column; gap: 4px; padding: 10px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><div style="height: 48px; border-radius: 10px; background: {{ p.bg }}"></div><b style="font-size: 12.5px">{{ p.n }}</b><span style="font-size: 12px"><b>{{ p.price }}</b> <s style="color: #9AA1A7">{{ p.old }}</s></span></div></sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<b style="font-size: 16px">{{ L.feed }}</b>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px">
+<sc-for list="{{ feed }}" as="p" hint-placeholder-count="4"><div style="display: flex; flex-direction: column; gap: 4px; padding: 10px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><div style="height: 70px; border-radius: 10px; background: {{ p.bg }}"></div><b style="font-size: 12.5px">{{ p.n }}</b><b style="font-size: 12.5px">{{ p.price }}</b></div></sc-for>
+</div>
+</div>
+</div>
+
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 16px 16px; background: #FFFFFF; border-top: 1px solid #E4E7E3">
+<span style="font-size: 12.5px; color: #5E656C">{{ freeText }}</span>
+<span style="padding: 10px 14px; border-radius: 12px; background: #0B7A4B; color: #FFFFFF; font-size: 13.5px; font-weight: 800">{{ cartText }}</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { lang: 'uz', added: {}, usual: false };
+}
+renderVals() {
+const st = this.state;
+const fmt = (n) => n.toLocaleString('ru-RU').replace(/ /g, ' ');
+const T = {
+uz: { addr: 'Mustaqillik 12, 3-podyezd', slot: 'Bugun 14:40 dan · Yashil Savat', search: 'Nima kerak? sut, non, tuxum…', running: 'Tugayotgan bo’lishi mumkin', runningSub: 'xaridlaringiz asosida', usual: 'Odatdagi savat', usualSub: '12 mahsulot · 186 400 so’m · bir bosishda', add1: 'Savatga', added1: 'Qo’shildi ✓', back: 'Siz kutgan mahsulot keldi', backSub: 'Tvorog 9% — omborda 18 dona', seasonTag: 'NOYABR', season: 'Sovuq kunlar: sho’rva to’plami', seasonSub: 'Go’sht, kartoshka, sabzi, ko’katlar — 4 kishiga', promo: 'Siz uchun aksiya', feed: 'Siz kabi xaridorlar olmoqda', cart: 'Savat', free: (n) => n > 0 ? 'Bepul yetkazishgacha ' + fmt(n) + ' so’m' : 'Yetkazish bepul ✓', days: (d) => d + ' kun oldin olingan',
+names: ['Sut 3,2% 1 l', 'Non “Buxanka”', 'Tuxum C1, 10 dona'], promoN: ['Qaymoq 20%', 'Kefir 2,5%', 'Pishloq 45%'], feedN: ['Asal 500 g', 'Yong’oq 200 g', 'Smetana 15%', 'Olma Golden 1 kg'] },
+ru: { addr: 'Мустакиллик 12, 3-й подъезд', slot: 'Сегодня с 14:40 · Yashil Savat', search: 'Что нужно? молоко, хлеб, яйца…', running: 'Возможно, заканчивается', runningSub: 'по вашим покупкам', usual: 'Обычная корзина', usualSub: '12 товаров · 186 400 сум · в одно касание', add1: 'В корзину', added1: 'Добавлено ✓', back: 'Товар, который вы ждали, поступил', backSub: 'Творог 9% — на складе 18 шт', seasonTag: 'НОЯБРЬ', season: 'Холодные дни: набор для супа', seasonSub: 'Мясо, картофель, морковь, зелень — на 4 человек', promo: 'Акции для вас', feed: 'Покупатели как вы берут', cart: 'Корзина', free: (n) => n > 0 ? 'До бесплатной доставки ' + fmt(n) + ' сум' : 'Доставка бесплатно ✓', days: (d) => 'куплено ' + d + ' дн. назад',
+names: ['Молоко 3,2% 1 л', 'Хлеб «Буханка»', 'Яйца C1, 10 шт'], promoN: ['Сметана 20%', 'Кефир 2,5%', 'Сыр 45%'], feedN: ['Мёд 500 г', 'Грецкий орех 200 г', 'Сметана 15%', 'Яблоки Golden 1 кг'] }
+};
+const L = T[st.lang];
+const langs = [['uz', 'UZ'], ['ru', 'RU']].map((l) => ({ t: l[1], pressed: st.lang === l[0] ? 'true' : 'false', pick: () => this.setState({ lang: l[0] }),
+style: 'height: 30px; padding: 0 10px; border-radius: 8px; border: none; font-size: 12.5px; font-weight: 800; cursor: pointer; ' + (st.lang === l[0] ? 'background: #16181B; color: #FFFFFF;' : 'background: transparent; color: #5E656C;') }));
+const R = [[13000, 3, '#E5EEF8'], [4000, 1, '#FDF1E3'], [17000, 6, '#FFF6E0']];
+const running = R.map((r, i) => { const on = !!st.added[i];
+return { n: L.names[i], price: fmt(r[0]), hint: L.days(r[1]), bg: r[2], btn: on ? '✓' : '+', addLabel: L.names[i] + ' — ' + L.add1,
+btnStyle: 'width: 30px; height: 30px; border-radius: 9px; border: none; font-size: 16px; font-weight: 800; cursor: pointer; ' + (on ? 'background: #E6F2EC; color: #0B7A4B;' : 'background: #0B7A4B; color: #FFFFFF;'),
+add: () => { const a = Object.assign({}, st.added); a[i] = !on; this.setState({ added: a }); } }; });
+const promo = [['12 500', '13 200', '#F1F3F0'], ['9 900', '10 400', '#E6F2EC'], ['38 000', '40 000', '#FFF6E0']].map((p, i) => ({ n: L.promoN[i], price: p[0], old: p[1], bg: p[2] }));
+const feed = [['42 000', '#FFF6E0'], ['28 000', '#F1F3F0'], ['9 500', '#E5EEF8'], ['16 000', '#E6F2EC']].map((p, i) => ({ n: L.feedN[i], price: p[0], bg: p[1] }));
+let sum = 0, cnt = 0;
+R.forEach((r, i) => { if (st.added[i]) { sum += r[0]; cnt += 1; } });
+if (st.usual) { sum += 186400; cnt += 12; }
+const freeFrom = 150000;
+return { L, langs, running, promo, feed,
+usualBtn: st.usual ? L.added1 : L.add1,
+usualStyle: 'display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 14px; border-radius: 16px; border: none; cursor: pointer; background: #0B7A4B; color: #FFFFFF;',
+addUsual: () => this.setState({ usual: !st.usual }),
+freeText: L.free(Math.max(0, freeFrom - sum)),
+cartText: L.cart + ' · ' + cnt + ' · ' + fmt(sum) };
+}
+}
+</script>
+</body>
+</html>

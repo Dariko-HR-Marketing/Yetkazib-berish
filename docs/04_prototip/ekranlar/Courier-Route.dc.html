@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Kuryer — marshrut</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 844px; overflow: hidden; background: #E3E8E2; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+
+<div role="img" aria-label="Marshrut xaritasi: filial, ikki manzil va kuryer" style="position: absolute; left: 0; top: 0; width: 390px; height: 470px">
+<div style="position: absolute; left: 0; right: 0; top: 172px; height: 16px; background: #F4F5F1"></div>
+<div style="position: absolute; left: 0; right: 0; top: 292px; height: 16px; background: #F4F5F1"></div>
+<div style="position: absolute; left: 0; right: 0; top: 72px; height: 16px; background: #F4F5F1"></div>
+<div style="position: absolute; top: 0; bottom: 0; left: 42px; width: 16px; background: #F4F5F1"></div>
+<div style="position: absolute; top: 0; bottom: 0; left: 172px; width: 16px; background: #F4F5F1"></div>
+<div style="position: absolute; top: 0; bottom: 0; left: 292px; width: 16px; background: #F4F5F1"></div>
+<div style="position: absolute; left: 70px; top: 200px; width: 90px; height: 80px; border-radius: 6px; background: #D5DCD3"></div>
+<div style="position: absolute; left: 200px; top: 100px; width: 80px; height: 60px; border-radius: 6px; background: #D5DCD3"></div>
+<svg width="390" height="470" viewBox="0 0 390 470" aria-hidden="true" style="position: absolute; left: 0; top: 0"><path d="M50 400 L50 300 L180 300 L180 180 L300 180 L300 80" fill="none" stroke="#9AB6E6" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path><path d="{{ donePath }}" fill="none" stroke="#1D5FD1" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<div style="position: absolute; left: 30px; top: 408px; padding: 4px 8px; border-radius: 8px; background: #16181B; color: #FFFFFF; font-size: 11.5px; font-weight: 700">Filial</div>
+<div style="{{ stop1Style }}">1</div>
+<div style="{{ stop2Style }}">2</div>
+<div style="{{ meStyle }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="#FFFFFF" aria-hidden="true"><path d="M12 3l7 18-7-4-7 4z"/></svg></div>
+</div>
+
+<div style="position: absolute; left: 12px; right: 12px; top: 12px; display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 16px; background: #16181B; color: #FFFFFF; box-shadow: 0 4px 12px rgba(0,0,0,.25)">
+<div style="flex: none; width: 44px; height: 44px; border-radius: 12px; background: #1D5FD1; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ arrowPath }}"/></svg></div>
+<div style="display: flex; flex-direction: column"><b style="font-size: 20px; line-height: 24px">{{ manDist }}</b><span style="font-size: 13.5px; color: #C9CED3">{{ manText }}</span></div>
+</div>
+
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 400px; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px; padding: 12px 16px 16px; border-radius: 22px 22px 0 0; background: #FFFFFF; box-shadow: 0 -4px 16px rgba(0,0,0,.08)">
+<div style="align-self: center; width: 44px; height: 5px; border-radius: 3px; background: #DCE0DC"></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 17px">Marshrut · 2 manzil</b><span style="font-size: 13px; color: #5E656C">{{ summary }}</span></div>
+<span style="font-size: 12.5px; color: #5E656C">Tizim manzillar tartibini masofa va va'da qilingan vaqt bo'yicha tuzdi</span>
+<sc-for list="{{ stops }}" as="s" hint-placeholder-count="2">
+<div style="{{ s.card }}">
+<span style="{{ s.numStyle }}">{{ s.n }}</span>
+<span style="flex: 1; display: flex; flex-direction: column"><b style="font-size: 14.5px">{{ s.title }}</b><span style="font-size: 12.5px; color: #5E656C">{{ s.addr }}</span></span>
+<span style="display: flex; flex-direction: column; align-items: flex-end"><b style="font-size: 14.5px; color: #154BA8">{{ s.eta }}</b><span style="font-size: 12px; color: #5E656C">{{ s.km }}</span></span>
+</div>
+</sc-for>
+<div style="padding: 10px 12px; border-radius: 12px; background: #E5EEF8; color: #154BA8; font-size: 12.5px; line-height: 17px">Xaridor sizni shu chiziq bo'ylab xaritada ko'radi; 500 m qolganda unga «kuryer yaqinlashmoqda» xabari boradi.</div>
+<div style="flex: 1"></div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<a href="https://yandex.uz/maps" style="display: flex; align-items: center; justify-content: center; height: 50px; border-radius: 14px; border: 1px solid #C9CEC8; color: #16181B; font-weight: 700; font-size: 14px; text-decoration: none">Navigatorda ochish</a>
+<button type="button" onClick="{{ next }}" style="height: 50px; border-radius: 14px; border: none; background: #1D5FD1; color: #FFFFFF; font: 700 14px Manrope, sans-serif">{{ nextText }}</button>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { step: 0 };
+}
+renderVals() {
+const s = this.state.step;
+const pts = [[50, 400], [50, 300], [180, 300], [180, 180], [300, 180], [300, 80]];
+const pos = [[50, 400], [50, 300], [180, 240], [180, 180], [300, 150], [300, 80]][s];
+const idx = [0, 1, 2, 3, 4, 5][s];
+const done = ['M50 400'];
+for (let i = 1; i < pts.length; i++) {
+if (i <= idx) done.push('L' + pts[i][0] + ' ' + pts[i][1]);
+}
+done.push('L' + pos[0] + ' ' + pos[1]);
+const mans = [
+['100 m', 'To’g’riga, keyin o’ngga', 'M12 20V8M7 13l5-5 5 5'],
+['O’ngga', 'Mustaqillik ko’chasiga', 'M6 20V12a4 4 0 0 1 4-4h8M14 4l4 4-4 4'],
+['60 m', 'Chapga, 1-manzil o’ng tomonda', 'M18 20V12a4 4 0 0 0-4-4H6M10 4L6 8l4 4'],
+['Yetib keldingiz', '1-manzil · 2-podyezd · PIN so’rang', 'M5 12l4 4 10-10'],
+['250 m', 'O’ngga, Navoiy ko’chasi', 'M6 20V12a4 4 0 0 1 4-4h8M14 4l4 4-4 4'],
+['Yetib keldingiz', '2-manzil · domofon 40', 'M5 12l4 4 10-10']
+][s];
+const stopState = (n) => (n === 1 ? (s >= 4 ? 'done' : s === 3 ? 'here' : 'next') : (s >= 5 ? 'here' : s >= 4 ? 'next' : 'later'));
+const etas1 = ['14:36', '14:35', '14:33', 'hozir', '✓', '✓'], etas2 = ['14:51', '14:50', '14:48', '14:47', '14:42', 'hozir'];
+const km1 = ['1,4 km', '1,1 km', '0,4 km', '0 m', 'topshirildi', 'topshirildi'], km2 = ['3,0 km', '2,7 km', '2,0 km', '1,6 km', '0,6 km', '0 m'];
+const mkStop = (n, title, addr, eta, km) => {
+const st = stopState(n);
+return { n, title, addr, eta, km,
+card: 'display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 14px; ' + (st === 'here' ? 'background: #E6F2EC; border: 2px solid #0B7A4B;' : st === 'next' ? 'background: #FFFFFF; border: 2px solid #1D5FD1;' : st === 'done' ? 'background: #F6F7F4; border: 1px solid #E4E7E3; opacity: .7;' : 'background: #FFFFFF; border: 1px solid #E4E7E3;'),
+numStyle: 'flex: none; width: 32px; height: 32px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #FFFFFF; background: ' + (st === 'done' ? '#0B7A4B' : '#1D5FD1') + ';' };
+};
+const stops = [
+mkStop(1, 'A-104512 · naqd 48 440', 'Mustaqillik 12 · maktab qarshisi', etas1[s], km1[s]),
+mkStop(2, 'A-104527 · to’langan', 'Navoiy 40 · domofon 40', etas2[s], km2[s])
+];
+const pin = (x, y, done) => 'position: absolute; left: ' + (x - 15) + 'px; top: ' + (y - 15) + 'px; width: 30px; height: 30px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: #FFFFFF; border: 3px solid #FFFFFF; box-sizing: border-box; background: ' + (done ? '#0B7A4B' : '#16181B') + ';';
+return {
+donePath: done.join(' '),
+meStyle: 'position: absolute; left: ' + (pos[0] - 20) + 'px; top: ' + (pos[1] - 20) + 'px; width: 40px; height: 40px; border-radius: 20px; background: #1D5FD1; border: 3px solid #FFFFFF; box-sizing: border-box; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 0 8px rgba(29,95,209,.18);',
+stop1Style: pin(180, 180, s >= 4), stop2Style: pin(300, 80, false),
+manDist: mans[0], manText: mans[1], arrowPath: mans[2],
+summary: s < 4 ? '3,0 km · ~19 daq' : '0,6 km · ~5 daq',
+stops,
+nextText: s === 3 ? 'Topshirdim → 2-manzil' : s === 5 ? 'Boshidan' : 'Simulyatsiya: keyingi',
+next: () => this.setState({ step: s === 5 ? 0 : s + 1 })
+};
+}
+}
+</script>
+</body>
+</html>

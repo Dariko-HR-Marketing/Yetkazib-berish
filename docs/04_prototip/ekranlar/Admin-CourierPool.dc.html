@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Admin: platforma kuryerlar puli</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 100%; min-width: 1024px; height: 100%; min-height: 900px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; padding: 26px 40px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; justify-content: space-between; align-items: flex-end"><div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5E656C">Platforma admini · Toshkent · bugun 18:40</span><h1 style="margin: 0; font-size: 26px; line-height: 34px; font-weight: 800">Platforma kuryerlar puli</h1></div>
+<div role="tablist" style="display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: #E4E7E3"><sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3"><button type="button" role="tab" aria-selected="{{ t.sel }}" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.t }}</button></sc-for></div></div>
+
+<div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px"><sc-for list="{{ kpis }}" as="k" hint-placeholder-count="5"><div style="display: flex; flex-direction: column; gap: 3px; padding: 14px 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="font-size: 12px; color: #5E656C">{{ k.t }}</span><b style="font-size: 22px; color: {{ k.c }}">{{ k.v }}</b><span style="font-size: 11.5px; color: #5E656C">{{ k.d }}</span></div></sc-for></div>
+
+<sc-if value="{{ isZones }}">
+<div style="display: grid; grid-template-columns: 1fr 340px; gap: 12px; flex: 1; min-height: 0">
+<div style="display: flex; flex-direction: column; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; overflow: auto">
+<div style="display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1.4fr 1fr; padding: 10px 16px; font-size: 11.5px; font-weight: 800; color: #5E656C; border-bottom: 1px solid #E4E7E3"><span>Tuman</span><span>Kuryer (bo'sh)</span><span>Buyurtma/soat</span><span>Qabul, daq</span><span>Talab / taklif</span><span>Bonus</span></div>
+<sc-for list="{{ zones }}" as="z" hint-placeholder-count="8"><div style="display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1.4fr 1fr; align-items: center; padding: 9px 16px; border-bottom: 1px solid #EEF0ED; font-size: 13px"><b>{{ z.n }}</b><span>{{ z.c }}</span><span>{{ z.o }}</span><span style="color: {{ z.tc }}; font-weight: 800">{{ z.t }}</span><span style="display: flex; align-items: center; gap: 8px"><span style="flex: 1; height: 6px; border-radius: 3px; background: #EEF0ED"><span style="display: block; height: 100%; border-radius: 3px; background: {{ z.bc }}; width: {{ z.w }}"></span></span><b style="font-size: 12px; width: 34px">{{ z.r }}</b></span><span style="font-weight: 800; color: {{ z.boC }}">{{ z.bo }}</span></div></sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 16px; background: #16181B; color: #FFFFFF">
+<b style="font-size: 15px">Avtomatik muvozanat</b>
+<sc-for list="{{ actions }}" as="a" hint-placeholder-count="4"><div style="display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 12px; background: #2A2D31; font-size: 12.5px; line-height: 17px"><b>{{ a.t }}</b><span style="color: #C9CED3">{{ a.d }}</span></div></sc-for>
+<span style="font-size: 11.5px; line-height: 16px; color: #9AA1A7">Talab/taklif 1,5 dan oshsa — bonus ×1,2 va yaqin tumandan kuryerlarga taklif. 2,0 dan oshsa — do'konlarga tashqi xizmatga o'tish tavsiya qilinadi.</span>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isCouriers }}">
+<div style="display: flex; flex-direction: column; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; overflow: auto; flex: 1">
+<div style="display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr 1.2fr; padding: 10px 16px; font-size: 11.5px; font-weight: 800; color: #5E656C; border-bottom: 1px solid #E4E7E3"><span>Kuryer</span><span>Holat</span><span>Reyting</span><span>Bugun</span><span>Qabul %</span><span>Hujjatlar</span></div>
+<sc-for list="{{ couriers }}" as="c" hint-placeholder-count="7"><div style="display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr 1.2fr; align-items: center; padding: 10px 16px; border-bottom: 1px solid #EEF0ED; font-size: 13px"><span style="display: flex; flex-direction: column"><b>{{ c.n }}</b><span style="font-size: 11.5px; color: #5E656C">{{ c.z }}</span></span><span style="{{ c.st }}">{{ c.s }}</span><span>{{ c.r }}</span><span>{{ c.d }}</span><span>{{ c.a }}</span><span style="color: {{ c.dc }}; font-weight: 700">{{ c.doc }}</span></div></sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isQueue }}">
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; flex: 1; min-height: 0">
+<sc-for list="{{ queue }}" as="q" hint-placeholder-count="4"><div style="display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3"><div style="display: flex; justify-content: space-between"><b style="font-size: 14px">{{ q.t }}</b><b style="color: #0B7A4B">{{ q.n }}</b></div><sc-for list="{{ q.items }}" as="i" hint-placeholder-count="3"><div style="padding: 10px; border-radius: 10px; background: #F6F7F4; font-size: 12.5px; display: flex; flex-direction: column; gap: 2px"><b>{{ i.n }}</b><span style="color: #5E656C; font-size: 11.5px">{{ i.d }}</span></div></sc-for></div></sc-for>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { tab: 0 };
+}
+renderVals() {
+const st = this.state;
+const tabs = ['Tumanlar', 'Kuryerlar', 'Qabul navbati'].map((t, i) => ({ t, sel: st.tab === i ? 'true' : 'false', pick: () => this.setState({ tab: i }),
+style: 'height: 34px; padding: 0 14px; border-radius: 9px; border: none; font-size: 13px; font-weight: 800; cursor: pointer; ' + (st.tab === i ? 'background: #FFFFFF; color: #16181B;' : 'background: transparent; color: #5E656C;') }));
+const Z = [['Chilonzor', 22, 6, 31, 2.4], ['Yunusobod', 18, 4, 24, 2.8], ['Mirzo Ulug’bek', 15, 3, 23, 3.1], ['Yakkasaroy', 9, 2, 12, 2.2], ['Shayxontohur', 11, 1, 24, 4.2], ['Sergeli', 8, 1, 13, 3.6], ['Olmazor', 10, 3, 14, 2.0], ['Uchtepa', 6, 2, 5, 1.9]];
+let cs = 0, fr = 0, os = 0;
+const zones = Z.map((z) => { cs += z[1]; fr += z[2]; os += z[3]; const r = z[3] / z[1], hot = r >= 1.5, crit = r >= 2.0;
+return { n: z[0], c: z[1] + ' (' + z[2] + ')', o: z[3], t: z[4].toString().replace('.', ','), tc: z[4] > 3 ? '#C2410C' : '#0B7A4B', r: r.toFixed(1).replace('.', ','), w: Math.min(100, r / 3 * 100).toFixed(0) + '%',
+bc: crit ? '#C2410C' : (hot ? '#F1B53C' : '#0B7A4B'), bo: crit ? '×1,4' : (hot ? '×1,2' : '—'), boC: crit ? '#C2410C' : '#7A4B00' }; });
+const kpis = [['Smenada', String(cs), fr + ' bo’sh', '#16181B'], ['Buyurtma/soat', String(os), 'pul orqali', '#16181B'], ['O’rtacha qabul', '2,7 daq', 'SLA ≤ 3 daq', '#0B7A4B'], ['Kechikish', '4,1%', 'maqsad ≤ 5%', '#0B7A4B'], ['Tashqi xizmatga', '6%', 'zaxira sifatida', '#7A4B00']].map((k) => ({ t: k[0], v: k[1], d: k[2], c: k[3] }));
+const actions = [['Shayxontohur: bonus ×1,4', '3 ta Olmazor kuryeriga taklif yuborildi'], ['Sergeli: bonus ×1,2', 'Talab ortishi 19:00 da kutilmoqda'], ['Mirzo Ulug’bek', 'Qabul 3,1 daq — SLA chegarasida'], ['Uchtepa: ortiqcha 2 kuryer', 'Chilonzorga ko’chirish tavsiya qilindi']].map((a) => ({ t: a[0], d: a[1] }));
+const sty = (k) => 'justify-self: start; padding: 3px 8px; border-radius: 7px; font-size: 11.5px; font-weight: 800; ' + (k === 0 ? 'background: #E6F2EC; color: #075C38;' : (k === 1 ? 'background: #E5EEF8; color: #1E4E8C;' : 'background: #EEF0ED; color: #5E656C;'));
+const couriers = [['Bekzod T.', 'Chilonzor · velosiped', 0, '4,91', '11 · 132 000', '97%', 'To’liq', 1], ['Sardor M.', 'Yunusobod · skuter', 1, '4,84', '9 · 118 000', '93%', 'To’liq', 1], ['Dilshod R.', 'Chilonzor · avto', 1, '4,78', '7 · 104 000', '90%', 'Sanitariya 6 kun', 0], ['Aziz K.', 'Sergeli · skuter', 0, '4,88', '10 · 126 000', '95%', 'To’liq', 1], ['Ulug’bek S.', 'Mirzo Ulug’bek · piyoda', 2, '4,69', '5 · 61 000', '86%', 'To’liq', 1], ['Javohir N.', 'Shayxontohur · skuter', 1, '4,95', '12 · 151 000', '98%', 'To’liq', 1], ['Farrux A.', 'Olmazor · velosiped', 2, '4,52', '3 · 38 000', '78%', 'O’quv 4/5', 0]].map((c) => ({ n: c[0], z: c[1], s: ['Bo’sh', 'Yetkazmoqda', 'Smenadan tashqari'][c[2]], st: sty(c[2]), r: c[3] + ' ★', d: c[4], a: c[5], doc: c[6], dc: c[7] ? '#0B7A4B' : '#7A4B00' }));
+const queue = [['Ariza', '14', [['Otabek Y.', 'Yunusobod · skuter · bugun'], ['Nodir Q.', 'Chilonzor · velosiped · kecha']]], ['Hujjat tekshiruvi', '6', [['Shahzod B.', 'ID-karta ✓ · soliq: kutilmoqda'], ['Rustam E.', 'ID-karta ✓ · guvohnoma ✓']]], ['O’quv (5 modul)', '9', [['Kamol I.', '3 / 5 · naqd va PIN'], ['Sanjar O.', '4 / 5 · xavfsizlik']]], ['Sinov smenasi', '3', [['Akmal D.', 'Ertaga 10:00 · Chilonzor'], ['Islom H.', 'Ertaga 12:00 · Sergeli']]]].map((q) => ({ t: q[0], n: q[1], items: q[2].map((i) => ({ n: i[0], d: i[1] })) }));
+return { tabs, kpis, zones, actions, couriers, queue, isZones: st.tab === 0, isCouriers: st.tab === 1, isQueue: st.tab === 2 };
+}
+}
+</script>
+</body>
+</html>

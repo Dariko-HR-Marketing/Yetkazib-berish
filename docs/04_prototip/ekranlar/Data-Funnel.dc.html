@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Ichki: voronka, talab va kanallar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 100%; min-width: 1024px; height: 100%; min-height: 900px; box-sizing: border-box; display: flex; flex-direction: column; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 40px; background: #16181B; color: #FFFFFF; font-size: 12.5px"><b>ICHKI TAHLIL · jamlangan ma'lumot, shaxsiy ma'lumotsiz</b><span style="color: #C9CED3">Yashil Savat · oktabr 2026 · 2 070 buyurtma · 132,6 mln so'm</span></div>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 14px; padding: 22px 40px">
+<div style="display: flex; justify-content: space-between; align-items: flex-end">
+<b style="font-size: 24px">Voronka, talab va kanallar</b>
+<div role="tablist" style="display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E4E7E3"><sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3"><button type="button" role="tab" aria-selected="{{ t.sel }}" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.t }}</button></sc-for></div>
+</div>
+
+<sc-if value="{{ isFunnel }}">
+<div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 14px">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">Eng katta yo'qotish — savatdan rasmiylashtirishga: 68%</b>
+<sc-for list="{{ funnel }}" as="f" hint-placeholder-count="5">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between; font-size: 13px"><b>{{ f.t }}</b><span><b>{{ f.n }}</b> <span style="color: #5E656C">· {{ f.share }}</span></span></div>
+<div style="height: 26px; border-radius: 6px; background: #F1F3F0"><div style="height: 100%; border-radius: 6px; background: {{ f.color }}; width: {{ f.w }}"></div></div>
+<span style="font-size: 12px; color: {{ f.dropColor }}; font-weight: 700">{{ f.drop }}</span>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">"Nima to'xtatdi?" javoblari (612 ta)</b>
+<sc-for list="{{ reasons }}" as="r" hint-placeholder-count="4"><div style="display: flex; align-items: center; gap: 8px; font-size: 12.5px"><span style="width: 170px">{{ r.t }}</span><div style="flex: 1; height: 10px; border-radius: 5px; background: #EEF0ED"><div style="height: 100%; border-radius: 5px; background: #7A3E06; width: {{ r.w }}"></div></div><b style="width: 36px; text-align: right">{{ r.v }}</b></div></sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #0B7A4B; color: #FFFFFF">
+<b style="font-size: 14.5px">Tavsiya etilgan tajribalar</b>
+<sc-for list="{{ tests }}" as="x" hint-placeholder-count="3"><div style="display: flex; gap: 8px; font-size: 12.5px; line-height: 17px"><b>{{ x.n }}.</b><span>{{ x.t }}</span></div></sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isDemand }}">
+<div style="display: flex; flex-direction: column; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; overflow: hidden">
+<div style="display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.6fr 1.2fr; gap: 10px; padding: 12px 18px; background: #F1F3F0; font-size: 12px; font-weight: 800; color: #5E656C"><span>NATIJASIZ QIDIRUV</span><span>QIDIRUVLAR</span><span>"KELGANDA XABAR"</span><span>ENG KO'P TUMANLAR</span><span>AMAL</span></div>
+<sc-for list="{{ demand }}" as="d" hint-placeholder-count="6"><div style="display: grid; grid-template-columns: 1.6fr 1fr 1fr 1.6fr 1.2fr; gap: 10px; padding: 12px 18px; border-top: 1px solid #EEF0ED; font-size: 13.5px; align-items: center"><b>{{ d.q }}</b><span>{{ d.n }}</span><span>{{ d.w }}</span><span style="color: #3C4248">{{ d.z }}</span><button type="button" onClick="{{ d.pick }}" style="{{ d.style }}">{{ d.btn }}</button></div></sc-for>
+</div>
+<span style="font-size: 12.5px; color: #5E656C">Natijasiz qidiruvlar barcha qidiruvlarning 4,1% i (maqsad ≤ 5%). Ro'yxat do'kon egasiga haftalik yuboriladi; ishlab chiqaruvchilarga faqat jamlangan va anonim holda.</span>
+</sc-if>
+
+<sc-if value="{{ isChannels }}">
+<div style="display: flex; flex-direction: column; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; overflow: hidden">
+<div style="display: grid; grid-template-columns: 1.6fr repeat(6, 1fr); gap: 10px; padding: 12px 18px; background: #F1F3F0; font-size: 12px; font-weight: 800; color: #5E656C"><span>KANAL</span><span>XARAJAT</span><span>YANGI XARIDOR</span><span>CAC</span><span>TUSHUM</span><span>ROAS</span><span>SOF TA'SIR</span></div>
+<sc-for list="{{ channels }}" as="c" hint-placeholder-count="5"><div style="display: grid; grid-template-columns: 1.6fr repeat(6, 1fr); gap: 10px; padding: 12px 18px; border-top: 1px solid #EEF0ED; font-size: 13.5px; align-items: center"><b>{{ c.n }}</b><span>{{ c.s }}</span><span>{{ c.u }}</span><b style="color: {{ c.cacColor }}">{{ c.cac }}</b><span>{{ c.r }}</span><span>{{ c.roas }}</span><b style="color: #0B7A4B">{{ c.lift }}</b></div></sc-for>
+<div style="display: grid; grid-template-columns: 1.6fr repeat(6, 1fr); gap: 10px; padding: 12px 18px; border-top: 2px solid #16181B; font-size: 13.5px; font-weight: 800"><span>Jami</span><span>8,8 mln</span><span>480</span><span>18 333</span><span>132,6 mln</span><span></span><span></span></div>
+</div>
+<span style="font-size: 12.5px; line-height: 18px; color: #5E656C">ROAS takroriy xaridlarni ham o'z ichiga oladi, shuning uchun Telegram baland ko'rinadi. Reklamaning haqiqiy foydasi — "sof ta'sir": reklama ko'rmagan 10% nazorat guruhiga nisbatan buyurtmalar farqi. CAC chegarasi: 6 oylik foydaning 1/3 qismi (~30 000 so'm).</span>
+</sc-if>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { tab: 0, sent: {} };
+}
+renderVals() {
+const st = this.state;
+const fmt = (n) => n.toLocaleString('ru-RU').replace(/ /g, ' ');
+const tabs = ['Voronka', 'Talab', 'Kanallar'].map((t, i) => ({ t, sel: st.tab === i ? 'true' : 'false', pick: () => this.setState({ tab: i }),
+style: 'height: 36px; padding: 0 16px; border-radius: 9px; border: none; font-size: 13.5px; font-weight: 800; cursor: pointer; ' + (st.tab === i ? 'background: #16181B; color: #FFFFFF;' : 'background: transparent; color: #3C4248;') }));
+const F = [['Sessiyalar', 41200], ['Mahsulot ko’rdi', 28900], ['Savatga qo’shdi', 9860], ['Rasmiylashtirishni boshladi', 3120], ['Buyurtma berdi', 2070]];
+const funnel = F.map((f, i) => { const prev = i ? F[i - 1][1] : f[1]; const drop = i ? Math.round((1 - f[1] / prev) * 100) : 0; const worst = i === 3;
+return { t: f[0], n: fmt(f[1]), share: (f[1] / F[0][1] * 100).toFixed(1).replace('.', ',') + '%', w: (f[1] / F[0][1] * 100).toFixed(1) + '%', color: i === 4 ? '#0B7A4B' : '#7FC0A1',
+drop: i ? '↓ ' + drop + '% oldingi qadamdan' + (worst ? ' — eng katta yo’qotish' : '') : '', dropColor: worst ? '#9F2D12' : '#5E656C' }; });
+const reasons = [['Yetkazish narxi qimmat', 34], ['Kerakli mahsulot yo’q', 26], ['Vaqt mos kelmadi', 22], ['Keyinroq buyurtma qilaman', 18]].map((r) => ({ t: r[0], v: r[1] + '%', w: (r[1] / 34 * 100) + '%' }));
+const tests = ['Bepul yetkazish chegarasini 150 000 dan 120 000 ga tushirish (A/B, 4 hafta)', 'Savatda bepul yetkazishgacha qolgan summa va 3 ta to’ldiruvchi (allaqachon v1)', 'Kechki slotlarni Yunusobod va Chilonzorda +2 ga ko’paytirish'].map((t, i) => ({ n: i + 1, t }));
+const D = [['kokos suti', 214, 61, 'Yunusobod, Mirobod'], ['laktozasiz qatiq', 168, 74, 'Mirzo Ulug’bek'], ['yasmiq (чечевица)', 131, 22, 'Chilonzor'], ['glutensiz non', 96, 40, 'Yakkasaroy'], ['avokado', 88, 19, 'Yunusobod']];
+const demand = D.map((d, i) => { const on = !!st.sent[i];
+return { q: d[0], n: d[1], w: d[2], z: d[3], btn: on ? 'Yuborildi ✓' : 'Do’konga yuborish', pick: () => { const s = Object.assign({}, st.sent); s[i] = true; this.setState({ sent: s }); },
+style: 'height: 32px; padding: 0 12px; border-radius: 9px; font-size: 12.5px; font-weight: 800; cursor: pointer; ' + (on ? 'border: 1px solid #0B7A4B; background: #E6F2EC; color: #0B7A4B;' : 'border: none; background: #0B7A4B; color: #FFFFFF;') }; });
+const CH = [['Instagram (Meta)', 4200000, 168, 21.4, 9], ['Telegram (kanal, bot, Ads)', 1100000, 96, 28.9, 14], ['Google qidiruv va Xaritalar', 2600000, 112, 14.2, 6], ['Yandex Direct va Xaritalar', 900000, 34, 4.1, 3], ['To’g’ridan-to’g’ri va organik', 0, 70, 64.0, 0]];
+const channels = CH.map((c) => { const cac = c[2] && c[1] ? Math.round(c[1] / c[2]) : 0;
+return { n: c[0], s: c[1] ? (c[1] / 1e6).toFixed(1).replace('.', ',') + ' mln' : '—', u: c[2], cac: cac ? fmt(cac) : '—', cacColor: cac > 30000 ? '#9F2D12' : '#16181B',
+r: c[3].toFixed(1).replace('.', ',') + ' mln', roas: c[1] ? (c[3] * 1e6 / c[1]).toFixed(1).replace('.', ',') : '—', lift: c[4] ? '+' + c[4] + '%' : '—' }; });
+return { tabs, funnel, reasons, tests, demand, channels, isFunnel: st.tab === 0, isDemand: st.tab === 1, isChannels: st.tab === 2 };
+}
+}
+</script>
+</body>
+</html>

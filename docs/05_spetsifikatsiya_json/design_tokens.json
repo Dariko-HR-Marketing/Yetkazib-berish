@@ -1,0 +1,75 @@
+{
+  "_izoh": "Prototiplardan olingan qiymatlar. Ishlab chiqishda Tailwind tema va CSS o'zgaruvchilariga aylantiriladi. Prototiplar zich (11–12px matn bor) — production'da mobil asosiy matn ≥ 14px, ikkinchi darajali ≥ 12px.",
+  "font": {
+    "family": "Manrope, system-ui, sans-serif",
+    "weights": [
+      400,
+      500,
+      600,
+      700,
+      800
+    ]
+  },
+  "color": {
+    "brand": "#0B7A4B",
+    "brand_dark": "#075C38",
+    "brand_soft": "#E6F2EC",
+    "ink": "#16181B",
+    "ink_2": "#3C4248",
+    "muted": "#5E656C",
+    "muted_2": "#9AA1A7",
+    "bg": "#F6F7F4",
+    "surface": "#FFFFFF",
+    "border": "#E4E7E3",
+    "border_strong": "#DCE0DC",
+    "divider": "#EEF0ED",
+    "dark_surface": "#16181B",
+    "dark_surface_2": "#2A2D31",
+    "info": "#154BA8",
+    "info_soft": "#E5EEF8",
+    "warning": "#7A3E06",
+    "warning_soft": "#FFF6E0",
+    "warning_accent": "#F1B53C",
+    "danger": "#9F2D12",
+    "danger_soft": "#FBE9E4",
+    "telegram": "#2481CC"
+  },
+  "radius_px": {
+    "sm": 6,
+    "md": 10,
+    "lg": 12,
+    "xl": 16,
+    "pill": 999
+  },
+  "space_px": [
+    4,
+    6,
+    8,
+    10,
+    12,
+    14,
+    16,
+    20,
+    24,
+    32,
+    40
+  ],
+  "type_scale_px": {
+    "caption": 12,
+    "body_sm": 13,
+    "body": 14,
+    "body_lg": 16,
+    "title_sm": 17,
+    "title": 20,
+    "h2": 26,
+    "h1": 30
+  },
+  "breakpoints_px": [
+    360,
+    768,
+    1024,
+    1440
+  ],
+  "touch_target_min_px": 44,
+  "contrast": "WCAG 2.2 AA"
+}

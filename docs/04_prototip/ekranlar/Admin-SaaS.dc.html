@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Platforma admini — do'konlar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid #EEF0ED;font-size:14px;white-space:nowrap;vertical-align:middle}
+th{font-size:12px;font-weight:700;color:#5E656C;text-transform:uppercase;letter-spacing:.04em;background:#FAFBF9}
+input::placeholder{color:#7A8087}
+</style>
+</helmet>
+<div style="min-height: 900px; display: flex; flex-wrap: wrap; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+
+<nav aria-label="Admin bo'limlari" style="flex: 1 1 220px; max-width: 260px; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px; padding: 20px 14px; background: #0F1A14; color: #FFFFFF">
+<div style="display: flex; align-items: center; gap: 10px; padding: 4px 8px 20px"><div style="width: 34px; height: 34px; border-radius: 9px; background: #FFFFFF; color: #0F1A14; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px">DD</div><span style="display: flex; flex-direction: column"><b style="font-size: 15px">Platforma</b><span style="font-size: 12px; color: #C9D4CD">Administrator · MFA</span></span></div>
+<a href="Admin-SaaS.dc.html" aria-current="page" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; background: #24332A; color: #FFFFFF; font-weight: 700; font-size: 14px; text-decoration: none">Do'konlar va obunalar</a>
+<a href="Admin-Tenants.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; color: #E3E9E5; font-weight: 600; font-size: 14px; text-decoration: none">Hamkor qo'shish</a>
+<a href="#tariflar" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; color: #E3E9E5; font-weight: 600; font-size: 14px; text-decoration: none">Tariflar</a>
+<a href="#billing" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; color: #E3E9E5; font-weight: 600; font-size: 14px; text-decoration: none">Billing va hisoblar</a>
+<a href="#moderatsiya" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; color: #E3E9E5; font-weight: 600; font-size: 14px; text-decoration: none">Moderatsiya (KYC)</a>
+<a href="#audit" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; color: #E3E9E5; font-weight: 600; font-size: 14px; text-decoration: none">Audit va monitoring</a>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px; padding: 24px 28px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 26px; line-height: 32px; font-weight: 800">Do'konlar va obunalar</h1><span style="font-size: 14px; color: #5E656C">Barcha tenantlar · namuna ma'lumotlar</span></div>
+<a href="Admin-Tenants.dc.html" style="display: flex; align-items: center; height: 44px; padding: 0 16px; border-radius: 10px; background: #0B7A4B; color: #FFFFFF; font-weight: 700; font-size: 14px; text-decoration: none">Hamkor qo'shish</a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="font-size: 12.5px; font-weight: 600; color: #5E656C">Faol do'konlar</span><b style="font-size: 26px">38</b></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="font-size: 12.5px; font-weight: 600; color: #5E656C">Sinovda</span><b style="font-size: 26px">12</b></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="font-size: 12.5px; font-weight: 600; color: #5E656C">MRR</span><b style="font-size: 26px">[MRR]</b></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 14px; background: #FDF1E3; border: 1px solid #F1C995"><span style="font-size: 12.5px; font-weight: 600; color: #7A3E06">Qarzdor</span><b style="font-size: 26px; color: #7A3E06">3</b></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="font-size: 12.5px; font-weight: 600; color: #5E656C">Ishga tushish (o'rtacha)</span><b style="font-size: 26px">2,4 kun</b></div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
+<label style="flex: 1 1 260px; display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid #DCE0DC; background: #FFFFFF"><input type="search" aria-label="Do'kon qidirish" placeholder="Nomi, subdomen yoki STIR" style="flex: 1; min-width: 0; border: none; outline: none; background: transparent; font: 500 14px Manrope, sans-serif"></label>
+<button type="button" style="height: 40px; padding: 0 14px; border-radius: 20px; border: none; background: #16181B; color: #FFFFFF; font: 600 13px Manrope, sans-serif">Hammasi</button>
+<button type="button" style="height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid #DCE0DC; background: #FFFFFF; font: 600 13px Manrope, sans-serif">Sinov tugayapti</button>
+<button type="button" style="height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid #F1C995; background: #FDF1E3; color: #7A3E06; font: 600 13px Manrope, sans-serif">Qarzdor</button>
+<button type="button" style="height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid #DCE0DC; background: #FFFFFF; font: 600 13px Manrope, sans-serif">SLA past</button>
+</div>
+
+<div style="overflow-x: auto; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<table style="width: 100%; min-width: 900px; border-collapse: collapse">
+<thead><tr><th scope="col">Do'kon</th><th scope="col">Turi</th><th scope="col">Tarif</th><th scope="col">Holat</th><th scope="col">Buyurtma/oy</th><th scope="col">Tasdiq SLA</th><th scope="col">Amal</th></tr></thead>
+<tbody>
+<tr><td><b>Yashil Savat</b><br><span style="font-size: 12.5px; color: #5E656C">yashilsavat.[domen].uz</span></td><td>Supermarket</td><td>Biznes</td><td><span style="padding: 3px 10px; border-radius: 8px; background: #E5EEF8; color: #154BA8; font-size: 12px; font-weight: 700">Sinov · 11 kun</span></td><td>640</td><td>3:10</td><td><a href="#kirish" style="font-weight: 700; font-size: 13px">Ochish</a></td></tr>
+<tr><td><b>Non uyi</b><br><span style="font-size: 12.5px; color: #5E656C">nonuyi.[domen].uz</span></td><td>Kichik do'kon</td><td>Start</td><td><span style="padding: 3px 10px; border-radius: 8px; background: #E6F2EC; color: #075C38; font-size: 12px; font-weight: 700">Faol</span></td><td>212</td><td>4:40</td><td><a href="#kirish" style="font-weight: 700; font-size: 13px">Ochish</a></td></tr>
+<tr style="background: #FFFAF3"><td><b>Elektro Uy</b><br><span style="font-size: 12.5px; color: #5E656C">elektrouy.uz</span></td><td>Nooziq-ovqat</td><td>Tarmoq</td><td><span style="padding: 3px 10px; border-radius: 8px; background: #FDF1E3; color: #7A3E06; font-size: 12px; font-weight: 700">Qarzdor · 5 kun</span></td><td>1 180</td><td>2:05</td><td><a href="#eslatma" style="font-weight: 700; font-size: 13px">Eslatma yuborish</a></td></tr>
+<tr><td><b>Shirin Kafe</b><br><span style="font-size: 12.5px; color: #5E656C">shirinkafe.[domen].uz</span></td><td>Restoran</td><td>Start</td><td><span style="padding: 3px 10px; border-radius: 8px; background: #FBE9E4; color: #9F2D12; font-size: 12px; font-weight: 700">Vitrina yopiq</span></td><td>0</td><td>—</td><td><a href="#muloqot" style="font-weight: 700; font-size: 13px">Bog'lanish</a></td></tr>
+<tr><td><b>Mahalla Do'koni</b><br><span style="font-size: 12.5px; color: #5E656C">mahalla.[domen].uz</span></td><td>Kichik do'kon</td><td>Start</td><td><span style="padding: 3px 10px; border-radius: 8px; background: #FDF1E3; color: #7A3E06; font-size: 12px; font-weight: 700">KYC kutilmoqda</span></td><td>—</td><td>—</td><td><a href="#kyc" style="font-weight: 700; font-size: 13px">Tekshirish</a></td></tr>
+</tbody>
+</table>
+</div>
+<span style="font-size: 12.5px; line-height: 18px; color: #5E656C">Admin do'kon ichiga faqat «yordam rejimi»da, egasining ruxsati bilan kiradi; har kirish auditga yoziladi.</span>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+renderVals() {
+return {};
+}
+}
+</script>
+</body>
+</html>

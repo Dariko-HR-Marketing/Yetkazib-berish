@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Baholash</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B; overflow: hidden">
+<div style="display: flex; flex-direction: column; gap: 2px; padding: 20px 16px 12px; background: #FFFFFF; border-bottom: 1px solid #E4E7E3">
+<b style="font-size: 18px">Buyurtma topshirildi</b><span style="font-size: 12.5px; color: #5E656C">A-104512 · 14:38 · 32 daqiqada yetkazildi</span>
+</div>
+<sc-if value="{{ notSent }}">
+<div style="flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 12px; padding: 14px 16px">
+<sc-for list="{{ blocks }}" as="b" hint-placeholder-count="2">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="display: flex; align-items: center; gap: 10px"><span style="width: 40px; height: 40px; border-radius: 12px; background: {{ b.avatarBg }}; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800">{{ b.avatar }}</span><div style="display: flex; flex-direction: column"><b style="font-size: 15px">{{ b.name }}</b><span style="font-size: 12px; color: #5E656C">{{ b.sub }}</span></div></div>
+<div role="radiogroup" aria-label="{{ b.aria }}" style="display: flex; gap: 6px">
+<sc-for list="{{ b.stars }}" as="s" hint-placeholder-count="5"><button type="button" role="radio" aria-checked="{{ s.checked }}" aria-label="{{ s.label }}" onClick="{{ s.pick }}" style="{{ s.style }}">★</button></sc-for>
+</div>
+<span style="font-size: 13px; font-weight: 700; color: {{ b.hintColor }}">{{ b.hint }}</span>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<sc-for list="{{ b.tags }}" as="t" hint-placeholder-count="5"><button type="button" aria-pressed="{{ t.pressed }}" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.t }}</button></sc-for>
+</div>
+</div>
+</sc-for>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 14px">Izoh (ixtiyoriy)</b>
+<div style="min-height: 64px; padding: 10px 12px; border-radius: 12px; border: 1px solid #DCE0DC; font-size: 13.5px; color: #9AA1A7">Nima yoqdi yoki nimani yaxshilash kerak?</div>
+<span style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: #0B7A4B">＋ Surat qo'shish <span style="font-weight: 500; color: #5E656C">— muammo bo'lsa, tezroq hal qilinadi</span></span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 14px">Kuryerga minnatdorchilik</b>
+<div style="display: flex; gap: 6px"><sc-for list="{{ tips }}" as="t" hint-placeholder-count="4"><button type="button" aria-pressed="{{ t.pressed }}" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.t }}</button></sc-for></div>
+<span style="font-size: 11.5px; color: #5E656C">To'liq kuryerga o'tadi · buyurtma kartasidan yechiladi</span>
+</div>
+</div>
+<div style="padding: 12px 16px 20px; background: #FFFFFF; border-top: 1px solid #E4E7E3">
+<button type="button" onClick="{{ send }}" aria-disabled="{{ cantSend }}" style="{{ sendStyle }}">Yuborish</button>
+</div>
+</sc-if>
+<sc-if value="{{ sent }}">
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 24px; text-align: center">
+<span style="width: 72px; height: 72px; border-radius: 50%; background: #E6F2EC; color: #0B7A4B; display: flex; align-items: center; justify-content: center; font-size: 34px; font-weight: 800">✓</span>
+<b style="font-size: 20px">Rahmat!</b>
+<span style="font-size: 14px; line-height: 20px; color: #3C4248">{{ sentText }}</span>
+<button type="button" onClick="{{ reset }}" style="margin-top: 8px; height: 46px; padding: 0 22px; border-radius: 14px; border: 1px solid #DCE0DC; background: #FFFFFF; font-size: 14px; font-weight: 800; cursor: pointer">Qayta baholash (namuna)</button>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { shop: 0, courier: 0, tags: {}, tip: 0, sent: false };
+}
+renderVals() {
+const st = this.state;
+const hints = ['Baholang', 'Juda yomon', 'Yomon', 'O’rtacha', 'Yaxshi', 'A’lo'];
+const good = { shop: ['Hammasi to’liq', 'Yangi mahsulot', 'Yaxshi qadoq', 'Muqobil mos keldi'], courier: ['Vaqtida keldi', 'Xushmuomala', 'Ehtiyotkor', 'Qo’ng’iroq qildi'] };
+const bad = { shop: ['Mahsulot yetishmadi', 'Muddati yaqin', 'Sifat past', 'Qadoq yomon', 'Muqobil mos emas'], courier: ['Kech keldi', 'Muomala yomon', 'Mahsulot ezilgan', 'Topa olmadi', 'Qo’ng’iroq qilmadi'] };
+const mk = (key, name, sub, avatar, avatarBg, aria) => {
+const v = st[key];
+const tagList = v === 0 ? [] : (v >= 4 ? good[key] : bad[key]);
+return { name, sub, avatar, avatarBg, aria, hint: v >= 4 || v === 0 ? hints[v] : hints[v] + ' — nima bo’ldi?', hintColor: v && v < 4 ? '#9F2D12' : '#5E656C',
+stars: [1, 2, 3, 4, 5].map((n) => ({ checked: n === v ? 'true' : 'false', label: n + ' yulduz', pick: () => this.setState({ [key]: n }),
+style: 'width: 48px; height: 48px; border-radius: 12px; border: 1px solid ' + (n <= v ? '#F1B53C' : '#E4E7E3') + '; background: ' + (n <= v ? '#FFF6E0' : '#FFFFFF') + '; color: ' + (n <= v ? '#E59A00' : '#C9CED3') + '; font-size: 24px; cursor: pointer;' })),
+tags: tagList.map((t) => { const id = key + ':' + t; const on = !!st.tags[id];
+return { t, pressed: on ? 'true' : 'false', pick: () => { const x = Object.assign({}, st.tags); x[id] = !on; this.setState({ tags: x }); },
+style: 'padding: 7px 11px; border-radius: 999px; font-size: 12.5px; font-weight: 700; cursor: pointer; ' + (on ? 'border: 1px solid #0B7A4B; background: #E6F2EC; color: #075C38;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;') }; }) };
+};
+const blocks = [mk('shop', 'Yashil Savat', 'Do’kon · mahsulot va yig’ish', 'YS', '#0B7A4B', 'Do’konni baholash'), mk('courier', 'Jasur', 'Kuryer · yetkazish', 'J', '#154BA8', 'Kuryerni baholash')];
+const tips = [0, 3000, 5000, 10000].map((v) => ({ t: v ? v.toLocaleString('ru-RU').replace(/,/g, ' ') + ' so’m' : 'Yo’q', pressed: st.tip === v ? 'true' : 'false', pick: () => this.setState({ tip: v }),
+style: 'flex: 1; height: 40px; border-radius: 10px; font-size: 12.5px; font-weight: 800; cursor: pointer; ' + (st.tip === v ? 'border: 1px solid #0B7A4B; background: #0B7A4B; color: #FFFFFF;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;') }));
+const can = st.shop > 0 && st.courier > 0;
+const low = (st.shop && st.shop < 4) || (st.courier && st.courier < 4);
+return { blocks, tips, notSent: !st.sent, sent: st.sent, cantSend: can ? 'false' : 'true',
+sendStyle: 'width: 100%; height: 52px; border-radius: 14px; border: none; font-size: 16px; font-weight: 800; cursor: pointer; ' + (can ? 'background: #0B7A4B; color: #FFFFFF;' : 'background: #DCE0DC; color: #7A8188;'),
+sentText: low ? 'Baholaringiz do’kon va kuryerga yetkazildi. Muammo bo’yicha murojaat ochildi — 15 daqiqa ichida javob beramiz.' : 'Baholaringiz do’kon va kuryer reytingiga qo’shildi. Keyingi buyurtmada ko’rishguncha!',
+send: () => { if (can) this.setState({ sent: true }); },
+reset: () => this.setState({ shop: 0, courier: 0, tags: {}, tip: 0, sent: false }) };
+}
+}
+</script>
+</body>
+</html>

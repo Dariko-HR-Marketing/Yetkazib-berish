@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Telefon orqali kirish</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px; padding: 16px 20px 20px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+
+<div style="display: flex; align-items: center; justify-content: space-between; margin-left: -12px">
+<a href="Shop-Address.dc.html" aria-label="Orqaga" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#16181B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></a>
+<a href="Shop-Address.dc.html" style="height: 44px; display: flex; align-items: center; font-weight: 700; font-size: 14px; text-decoration: none">Mehmon sifatida davom etish</a>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<h1 style="margin: 0; font-size: 26px; line-height: 32px; font-weight: 800">{{ title }}</h1>
+<span style="font-size: 15px; line-height: 22px; color: #3C4248">{{ subtitle }}</span>
+</div>
+
+<sc-if value="{{ isPhone }}" hint-placeholder-val="{{ true }}">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #3C4248">Telefon raqami
+<span style="display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 14px; border: 2px solid {{accent}}; border-radius: 14px; background: #FFFFFF"><b style="font-size: 17px">+998</b><input type="tel" inputmode="numeric" value="90 123 45 67" aria-label="Telefon raqami" style="flex: 1; border: none; outline: none; background: transparent; font: 600 17px Manrope, sans-serif; color: #16181B"></span></label>
+<span style="font-size: 12.5px; line-height: 18px; color: #5E656C">Raqam faqat buyurtma holati va topshirish uchun ishlatiladi. Marketing xabarlari — alohida rozilik bilan.</span>
+</sc-if>
+
+<sc-if value="{{ isCode }}" hint-placeholder-val="{{ false }}">
+<div style="display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 8px">
+<input type="text" inputmode="numeric" maxlength="1" aria-label="1-raqam" value="4" style="height: 58px; box-sizing: border-box; text-align: center; border: 2px solid #C9CEC8; border-radius: 12px; font: 800 22px Manrope, sans-serif; background: #FFFFFF">
+<input type="text" inputmode="numeric" maxlength="1" aria-label="2-raqam" value="1" style="height: 58px; box-sizing: border-box; text-align: center; border: 2px solid #C9CEC8; border-radius: 12px; font: 800 22px Manrope, sans-serif; background: #FFFFFF">
+<input type="text" inputmode="numeric" maxlength="1" aria-label="3-raqam" value="7" style="height: 58px; box-sizing: border-box; text-align: center; border: 2px solid #C9CEC8; border-radius: 12px; font: 800 22px Manrope, sans-serif; background: #FFFFFF">
+<input type="text" inputmode="numeric" maxlength="1" aria-label="4-raqam" style="height: 58px; box-sizing: border-box; text-align: center; border: 2px solid {{accent}}; border-radius: 12px; font: 800 22px Manrope, sans-serif; background: #FFFFFF">
+<input type="text" inputmode="numeric" maxlength="1" aria-label="5-raqam" style="height: 58px; box-sizing: border-box; text-align: center; border: 2px solid #C9CEC8; border-radius: 12px; font: 800 22px Manrope, sans-serif; background: #FFFFFF">
+<input type="text" inputmode="numeric" maxlength="1" aria-label="6-raqam" style="height: 58px; box-sizing: border-box; text-align: center; border: 2px solid #C9CEC8; border-radius: 12px; font: 800 22px Manrope, sans-serif; background: #FFFFFF">
+</div>
+<div style="display: flex; justify-content: space-between; font-size: 14px"><span style="color: #5E656C">Qayta yuborish 0:42 dan keyin</span><button type="button" onClick="{{ back }}" style="border: none; background: transparent; font: 700 14px Manrope, sans-serif; color: #0B7A4B; min-height: 44px">Raqamni o'zgartirish</button></div>
+<span style="font-size: 12.5px; line-height: 18px; color: #5E656C">5 marta noto'g'ri kiritilsa, kod 15 daqiqaga bloklanadi.</span>
+</sc-if>
+
+<div style="flex: 1"></div>
+<button type="button" onClick="{{ next }}" style="height: 56px; border-radius: 14px; border: none; background: {{accent}}; color: #FFFFFF; font: 700 16px Manrope, sans-serif">{{ cta }}</button>
+<span style="font-size: 12px; line-height: 17px; color: #5E656C; text-align: center">Davom etib, <a href="#oferta">oferta</a> va <a href="#maxfiylik">maxfiylik siyosati</a>ga rozilik bildirasiz</span>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#0B7A4B","options":["#0B7A4B","#1D5FD1","#B4441F","#16181B"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { step: 'phone' };
+}
+renderVals() {
+const code = this.state.step === 'code';
+return {
+accent: this.props.accent ?? '#0B7A4B',
+isPhone: !code,
+isCode: code,
+title: code ? 'SMS kodni kiriting' : 'Telefon raqamingiz',
+subtitle: code ? '+998 90 123 45 67 raqamiga 6 xonali kod yubordik.' : 'Buyurtmalar tarixi va saqlangan manzillar uchun. Kirmasdan ham buyurtma berish mumkin.',
+cta: code ? 'Tasdiqlash' : 'Kod olish',
+next: () => this.setState({ step: 'code' }),
+back: () => this.setState({ step: 'phone' })
+};
+}
+}
+</script>
+</body>
+</html>

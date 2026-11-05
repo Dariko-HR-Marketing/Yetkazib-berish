@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Xaridor: AI yordamchi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B; overflow: hidden">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 18px 16px 12px; background: #FFFFFF; border-bottom: 1px solid #E4E7E3">
+<div style="display: flex; align-items: center; gap: 10px"><span style="width: 40px; height: 40px; border-radius: 12px; background: #0B7A4B; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800">AI</span><div style="display: flex; flex-direction: column"><b style="font-size: 16px">{{ L.title }}</b><span style="font-size: 12px; color: #5E656C">Yashil Savat · {{ L.sub }}</span></div></div>
+<div role="group" aria-label="Til / Язык" style="display: flex; padding: 3px; border-radius: 10px; background: #F1F3F0"><sc-for list="{{ langs }}" as="l" hint-placeholder-count="2"><button type="button" aria-pressed="{{ l.pressed }}" onClick="{{ l.pick }}" style="{{ l.style }}">{{ l.t }}</button></sc-for></div>
+</div>
+
+<div style="flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 10px; padding: 14px 16px">
+<div style="align-self: flex-start; max-width: 86%; padding: 10px 12px; border-radius: 14px 14px 14px 4px; background: #FFFFFF; border: 1px solid #E4E7E3; font-size: 13.5px; line-height: 19px">{{ L.hello }}</div>
+<sc-if value="{{ hasQ }}">
+<div style="align-self: flex-end; max-width: 80%; display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: 14px 14px 4px 14px; background: #16181B; color: #FFFFFF; font-size: 13.5px; line-height: 19px"><sc-if value="{{ isPhoto }}"><span style="padding: 18px 12px; border-radius: 10px; background: #3C4248; font-size: 12px; color: #C9CED3; text-align: center">📄 {{ L.photoLabel }}</span></sc-if>{{ q }}</div>
+<div style="align-self: flex-start; max-width: 92%; display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border-radius: 14px 14px 14px 4px; background: #E6F2EC; font-size: 13.5px; line-height: 19px">
+<span>{{ a }}</span>
+<sc-if value="{{ hasCart }}">
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 8px 10px; border-radius: 10px; background: #FFFFFF">
+<sc-for list="{{ items }}" as="i" hint-placeholder-count="6"><div style="display: flex; justify-content: space-between; gap: 8px; font-size: 12.5px; padding: 3px 0; border-bottom: 1px solid #EEF0ED"><span>{{ i.n }} <span style="color: #5E656C">· {{ i.q }}</span></span><b>{{ i.p }}</b></div></sc-for>
+<div style="display: flex; justify-content: space-between; font-size: 13.5px; padding-top: 4px"><b>{{ L.total }}</b><b>{{ total }}</b></div>
+</div>
+<button type="button" onClick="{{ addCart }}" style="{{ addStyle }}">{{ addLabel }}</button>
+</sc-if>
+<sc-if value="{{ hasTrack }}"><div style="display: flex; flex-direction: column; gap: 4px; padding: 8px 10px; border-radius: 10px; background: #FFFFFF; font-size: 12.5px"><b>A-104512 · {{ L.onWay }}</b><span style="color: #5E656C">Jasur · 1,2 km · ~6 {{ L.min }}</span><div style="height: 6px; border-radius: 3px; background: #EEF0ED"><div style="width: 78%; height: 100%; border-radius: 3px; background: #0B7A4B"></div></div></div></sc-if>
+<span style="font-size: 11px; color: #5E656C">{{ L.aiMark }}</span>
+</div>
+</sc-if>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 10px 16px 18px; background: #FFFFFF; border-top: 1px solid #E4E7E3">
+<div style="display: flex; gap: 6px; overflow: hidden; flex-wrap: wrap"><sc-for list="{{ chips }}" as="c" hint-placeholder-count="3"><button type="button" onClick="{{ c.pick }}" aria-pressed="{{ c.pressed }}" style="{{ c.style }}">{{ c.t }}</button></sc-for></div>
+<div style="display: flex; gap: 8px; align-items: center"><span style="flex: 1; height: 44px; display: flex; align-items: center; padding: 0 14px; border-radius: 12px; border: 1px solid #DCE0DC; font-size: 13.5px; color: #9AA1A7">{{ L.placeholder }}</span><span aria-label="{{ L.photo }}" style="width: 44px; height: 44px; border-radius: 12px; background: #F1F3F0; display: flex; align-items: center; justify-content: center">📷</span><span aria-label="{{ L.voice }}" style="width: 44px; height: 44px; border-radius: 12px; background: #0B7A4B; color: #FFFFFF; display: flex; align-items: center; justify-content: center">🎤</span></div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { lang: 'uz', sc: 0, added: false };
+}
+renderVals() {
+const st = this.state;
+const fmt = (n) => n.toLocaleString('ru-RU').replace(/ /g, ' ');
+const T = {
+uz: { title: 'AI yordamchi', sub: 'o’zbek va rus tilida', hello: 'Assalomu alaykum! Nima kerakligini yozing, ovoz yuboring yoki ro’yxat suratini oling — savatni o’zim yig’ib beraman.', total: 'Jami', onWay: 'kuryer yo’lda', min: 'daq', aiMark: 'AI tavsiyasi · savat siz tasdiqlaganingizdan keyin rasmiylashtiriladi', placeholder: 'Nima kerak? Yozing…', photo: 'Surat', voice: 'Ovoz', photoLabel: 'ro’yxat surati', add: 'Savatga qo’shish', added: 'Savatga qo’shildi ✓',
+sc: [{ chip: 'Palov 6 kishiga', q: 'Palov qilmoqchiman, 6 kishiga', a: 'Mana 6 kishilik palov to’plami. Go’shtni mol yoki qo’y go’shtiga almashtirish mumkin.' }, { chip: 'Ro’yxat surati', q: 'Shu ro’yxatdagilarni oling', a: 'Suratdan 5 ta mahsulotni topdim. “Qaymoq” 2 xil — arzonrog’ini tanladim.' }, { chip: 'Buyurtmam qayerda?', q: 'Buyurtmam qayerda?', a: 'Buyurtmangiz yo’lda, kuryer Jasur taxminan 6 daqiqada yetib keladi. PIN kodingiz: 4821.' }],
+items: [[['Guruch Devzira', '2 kg', 64000], ['Mol go’shti', '1 kg', 115000], ['Sabzi (sariq)', '1,5 kg', 9000], ['Piyoz', '0,5 kg', 2500], ['Paxta yog’i', '0,5 l', 11000], ['Zira', '50 g', 6000]], [['Sut 3,2%', '2 l', 26000], ['Non “Buxanka”', '1 dona', 4000], ['Tuxum C1', '10 dona', 17000], ['Qaymoq 20%', '200 g', 12500], ['Choy (ko’k)', '100 g', 14000]]] },
+ru: { title: 'AI-помощник', sub: 'на узбекском и русском', hello: 'Здравствуйте! Напишите, что нужно, отправьте голосовое или фото списка — соберу корзину сам.', total: 'Итого', onWay: 'курьер в пути', min: 'мин', aiMark: 'Рекомендация AI · заказ оформится только после вашего подтверждения', placeholder: 'Что нужно? Напишите…', photo: 'Фото', voice: 'Голос', photoLabel: 'фото списка', add: 'Добавить в корзину', added: 'Добавлено в корзину ✓',
+sc: [{ chip: 'Плов на 6 человек', q: 'Хочу приготовить плов на 6 человек', a: 'Вот набор для плова на 6 человек. Говядину можно заменить на баранину.' }, { chip: 'Фото списка', q: 'Возьмите всё по этому списку', a: 'Нашёл по фото 5 товаров. Сметаны 2 вида — выбрал ту, что дешевле.' }, { chip: 'Где мой заказ?', q: 'Где мой заказ?', a: 'Ваш заказ в пути, курьер Жасур приедет примерно через 6 минут. Ваш PIN: 4821.' }],
+items: [[['Рис Девзира', '2 кг', 64000], ['Говядина', '1 кг', 115000], ['Морковь (жёлтая)', '1,5 кг', 9000], ['Лук', '0,5 кг', 2500], ['Хлопковое масло', '0,5 л', 11000], ['Зира', '50 г', 6000]], [['Молоко 3,2%', '2 л', 26000], ['Хлеб «Буханка»', '1 шт', 4000], ['Яйца C1', '10 шт', 17000], ['Сметана 20%', '200 г', 12500], ['Чай (зелёный)', '100 г', 14000]]] }
+};
+const L = T[st.lang];
+const langs = [['uz', 'UZ'], ['ru', 'RU']].map((l) => ({ t: l[1], pressed: st.lang === l[0] ? 'true' : 'false', pick: () => this.setState({ lang: l[0] }),
+style: 'height: 30px; padding: 0 10px; border-radius: 8px; border: none; font-size: 12.5px; font-weight: 800; cursor: pointer; ' + (st.lang === l[0] ? 'background: #16181B; color: #FFFFFF;' : 'background: transparent; color: #5E656C;') }));
+const chips = L.sc.map((s, i) => ({ t: s.chip, pressed: st.sc === i ? 'true' : 'false', pick: () => this.setState({ sc: i, added: false }),
+style: 'height: 32px; padding: 0 11px; border-radius: 999px; font-size: 12.5px; font-weight: 700; cursor: pointer; ' + (st.sc === i ? 'border: 1px solid #0B7A4B; background: #E6F2EC; color: #075C38;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;') }));
+const s = L.sc[st.sc];
+const list = st.sc < 2 ? L.items[st.sc] : [];
+const items = list.map((i) => ({ n: i[0], q: i[1], p: fmt(i[2]) }));
+const total = fmt(list.reduce((a, i) => a + i[2], 0)) + (st.lang === 'uz' ? ' so’m' : ' сум');
+return { L, langs, chips, items, total, hasQ: true, q: s.q, a: s.a, isPhoto: st.sc === 1, hasCart: st.sc < 2, hasTrack: st.sc === 2,
+addLabel: st.added ? L.added : L.add, addStyle: 'height: 40px; border-radius: 10px; border: none; font-size: 14px; font-weight: 800; cursor: pointer; ' + (st.added ? 'background: #FFFFFF; color: #0B7A4B;' : 'background: #0B7A4B; color: #FFFFFF;'),
+addCart: () => this.setState({ added: true }) };
+}
+}
+</script>
+</body>
+</html>

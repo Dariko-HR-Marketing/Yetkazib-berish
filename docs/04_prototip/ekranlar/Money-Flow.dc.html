@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Pul va mahsulot oqimi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 1600px; height: 1060px; box-sizing: border-box; padding: 36px 56px; display: flex; flex-direction: column; gap: 14px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0B7A4B">MVP · pul, mahsulot va ma'lumot oqimi</span><h1 style="margin: 0; font-size: 30px; line-height: 38px; font-weight: 800">Xaridor to'lagan pul do'kon hisobiga qanday yetadi — har bosqichda</h1></div>
+
+<div style="display: grid; grid-template-columns: 120px repeat(8, minmax(0, 1fr)); gap: 4px">
+<div></div>
+<sc-for list="{{ steps }}" as="s" hint-placeholder-count="8"><button type="button" onClick="{{ s.pick }}" aria-pressed="{{ s.pressed }}" style="{{ s.style }}"><span style="font-size: 11px; font-weight: 800; opacity: .75">{{ s.n }} · {{ s.time }}</span><b style="font-size: 13.5px; line-height: 17px">{{ s.t }}</b></button></sc-for>
+<sc-for list="{{ lanes }}" as="l" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; padding: 8px 10px; border-radius: 8px; background: {{ l.bg }}; color: {{ l.fg }}; font-size: 13px; font-weight: 800">{{ l.t }}</div>
+<sc-for list="{{ l.cells }}" as="c" hint-placeholder-count="8"><div style="{{ c.style }}">{{ c.t }}</div></sc-for>
+</sc-for>
+</div>
+
+<div style="display: grid; grid-template-columns: 1.15fr 1fr 1fr; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 16px; background: #16181B; color: #FFFFFF">
+<span style="font-size: 11.5px; font-weight: 800; color: #9AA1A7; letter-spacing: .05em">TANLANGAN BOSQICH · {{ cur.n }}</span>
+<b style="font-size: 17px">{{ cur.t }}</b>
+<sc-for list="{{ cur.detail }}" as="d" hint-placeholder-count="4"><div style="display: flex; gap: 8px; font-size: 13px; line-height: 18px"><b aria-hidden="true" style="color: #8FD3B0">•</b><span style="color: #E3E6E8">{{ d }}</span></div></sc-for>
+<div style="padding: 10px 12px; border-radius: 10px; background: #2A2D31; font-size: 12.5px; line-height: 17px"><b style="color: #F1C995">Agar xato bo'lsa:</b> <span style="color: #E3E6E8">{{ cur.fail }}</span></div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">Kim kimga to'laydi (MVP)</b>
+<sc-for list="{{ who }}" as="w" hint-placeholder-count="6"><div style="display: flex; flex-direction: column; gap: 2px; padding-bottom: 6px; border-bottom: 1px solid #EEF0ED"><span style="display: flex; justify-content: space-between; gap: 8px; font-size: 13px"><b>{{ w.a }}</b><span style="color: #0B7A4B; font-weight: 700">{{ w.how }}</span></span><span style="font-size: 12px; line-height: 16px; color: #5E656C">{{ w.d }}</span></div></sc-for>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">Tavsiya: MVP'da pul platformadan o'tmaydi</b>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; border-radius: 10px; background: #E6F2EC; font-size: 12.5px; line-height: 17px; color: #075C38"><b>v1 · to'g'ridan-to'g'ri do'konga</b><span>Har do'kon Payme / Click / Uzum bilan o'z shartnomasini tuzadi, pul uning hisobiga tushadi. Platforma faqat holatni ko'radi (webhook) va obuna oladi. To'lov agenti litsenziyasi kerak emas, tez ishga tushadi.</span></div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; border-radius: 10px; background: #F1F3F0; font-size: 12.5px; line-height: 17px; color: #3C4248"><b>v2 · platforma orqali bo'lish (split)</b><span>Pul platforma tranzit hisobiga tushadi, qo'shimcha xizmat haqi (masalan, platforma kuryeri) ushlab qolinadi, qolgani do'konga o'tkaziladi. Savdodan komissiya olinmaydi. Buning uchun provayder bilan agent shartnomasi yoki to'lov tashkiloti maqomi kerak — yurist va Markaziy bank talablari bilan aniqlanadi.</span></div>
+<span style="font-size: 11.5px; color: #5E656C">Qaror (PRD Q3): daromad — paket va qo'shimcha xizmatlar, savdodan komissiya yo'q.</span>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<b style="font-size: 15px">Qaysi karta qanday ulanadi</b>
+<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{ cards }}" as="c" hint-placeholder-count="5"><div style="display: flex; flex-direction: column; gap: 4px; padding: 12px; border-radius: 12px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="display: flex; justify-content: space-between; align-items: center"><b style="font-size: 13.5px">{{ c.t }}</b><span style="{{ c.vStyle }}">{{ c.v }}</span></span><span style="font-size: 12px; line-height: 16px; color: #3C4248">{{ c.d }}</span><span style="font-size: 11.5px; font-weight: 700; color: #075C38">{{ c.how }}</span></div></sc-for>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1600,"height":1060}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { s: 1 };
+}
+renderVals() {
+const sel = this.state.s;
+const S = [
+['Buyurtma', '0 daq', ['Savat 48 440 so’m', '—', '—'], ['Xaridor savat, slot va to’lov usulini tanlaydi', 'Narx va qoldiq shu daqiqadagi holat bilan qayd etiladi', 'Buyurtma raqami va idempotency kaliti yaratiladi'], 'Qoldiq tugagan bo’lsa — savatda darhol ogohlantirish'],
+['To’lov', '1 daq', ['Kartadan 53 284 band (hold) yoki hamyonda to’lov', '—', 'Webhook: “band qilindi”'], ['Karta (token): summa +10% band qilinadi, hali yechilmaydi', 'Payme / Click / Uzum hamyoni: to’liq summa to’lanadi', 'Naqd: to’lov topshirishda, buyurtma darhol tasdiqlanadi', 'Pul do’konning merchant hisobiga tegishli, platformaga emas'], 'To’lov rad etilsa: 15 daqiqa ichida boshqa usul taklif qilinadi, keyin buyurtma bekor'],
+['Tasdiq va yig’ish', '3–15 daq', ['—', 'Do’kon yig’adi, muqobil taklif qiladi', 'Xaridorga “yig’ilmoqda”'], ['Do’kon 3 daqiqada tasdiqlaydi (SLA)', 'Yig’uvchi har mahsulotni skaner qiladi', 'Muqobil — xaridor 5 daqiqada tasdiqlaydi'], 'Do’kon 5 daqiqada tasdiqlamasa — egasiga Telegram, 10 daqiqada avtomatik bekor va pul qaytadi'],
+['Yakuniy summa', '15 daq', ['Faqat haqiqiy 48 440 yechiladi (capture), qolgani bo’shaydi', '—', 'Fiskal chek MXIK bilan'], ['Haqiqiy summa: 48 440 so’m (qatiq muqobili bilan)', 'Band qilingan 4 844 so’m darhol kartaga qaytadi', 'Hamyonda farq bo’lsa: qisman qaytarish (refund)', 'Elektron chek xaridor Telegramiga'], 'Yechish xato bersa: 3 marta qayta urinish, keyin operatorga vazifa'],
+['Jo’natish', '18 daq', ['—', 'Sumka №12 kuryerga, plomba', 'Xaridorga kuryer va xarita'], ['Kuryer sumkani skaner qilib oladi — javobgarlik kuryerga o’tadi', 'Naqd buyurtmada kuryer ilovasida “olinadigan summa: 48 440”', 'GPS har 15 soniyada'], 'Kuryer 10 daqiqada olmasa — dispetcher boshqasiga beradi'],
+['Topshirish', '32 daq', ['Naqd: kuryer 48 440 oladi, ilovada qayd', 'Xaridor PIN aytadi, mahsulot topshiriladi', 'Webhook / ilova: “topshirildi”'], ['PIN 4821 — xaridorning o’zi olganini tasdiqlaydi', 'Naqd: kuryer balansi +48 440; QR orqali to’lov ham mumkin', 'Baho va ball (keshbek) hisoblanadi'], 'Topshirib bo’lmasa: 10 daqiqa kutish, 2 qo’ng’iroq, do’konga qaytarish, pul qaytariladi'],
+['Smena yopilishi', 'kun oxiri', ['Kuryer naqdni kassaga topshiradi', 'Qaytgan mahsulot omborga', 'Kassa akti panelda'], ['Kuryer balansi 412 440 = ilovadagi naqd buyurtmalar yig’indisi', 'Kassir summani panelda tasdiqlaydi, farq bo’lsa — dalolatnoma', 'Naqd limiti: kuryerda 1,5 mln so’mdan oshmaydi'], 'Farq bo’lsa: smena yopilmaydi, menejer va egasiga xabar'],
+['Pul hisobga', 'T+1', ['Provayder do’kon bank hisobiga o’tkazadi', '—', 'Solishtirish hisoboti'], ['Payme / Click / Uzum shartnomadagi muddatda (odatda keyingi ish kuni)', 'Platforma provayder reyestri va buyurtmalarni solishtiradi', 'Egasi panelda: “kutilmoqda → tushdi”'], 'Summa mos kelmasa: farq vazifasi va provayderga so’rov']
+];
+const steps = S.map((s, i) => ({ n: i + 1, t: s[0], time: s[1], pressed: sel === i ? 'true' : 'false', pick: () => this.setState({ s: i }),
+style: 'display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding: 9px 10px; border-radius: 10px; cursor: pointer; text-align: left; ' + (sel === i ? 'border: 2px solid #0B7A4B; background: #0B7A4B; color: #FFFFFF;' : 'border: 2px solid transparent; background: #16181B; color: #FFFFFF;') }));
+const laneDef = [['Pul', '#0B7A4B', '#FFFFFF', 0], ['Mahsulot', '#154BA8', '#FFFFFF', 1], ['Ma’lumot', '#7A3E06', '#FFFFFF', 2]];
+const lanes = laneDef.map((l) => ({ t: l[0], bg: l[1], fg: l[2], cells: S.map((s, i) => ({ t: s[2][l[3]], style: 'padding: 8px 10px; border-radius: 8px; font-size: 12px; line-height: 16px; min-height: 48px; box-sizing: border-box; ' + (s[2][l[3]] === '—' ? 'background: #FFFFFF; color: #C9CED3;' : sel === i ? 'background: #FFFFFF; outline: 2px solid ' + l[1] + '; outline-offset: -2px;' : 'background: #FFFFFF; color: #3C4248;') })) }));
+const c = S[sel];
+const who = [
+['Xaridor → Do’kon', 'Payme · Click · Uzum · karta · naqd', 'Mahsulot + yetkazish narxi. Pul do’konning merchant hisobiga'],
+['Do’kon → Provayder', 'har to’lovdan ushlanadi', 'Provayder komissiyasi do’kon shartnomasi bo’yicha'],
+['Do’kon → Platforma', 'har oy, saqlangan karta', 'Obuna: korporativ Uzcard/Humo kartadan avtomatik yoki hisob-faktura'],
+['Do’kon → Kuryer', 'haftalik', 'Do’kon belgilagan stavka × yetkazishlar; platforma hisoblab beradi'],
+['Kuryer → Do’kon', 'har smena', 'Olingan naqd kassaga, akt bilan'],
+['Xaridor → Kuryer', 'ixtiyoriy', 'Choy puli 100% kuryerga, do’kon orqali o’tkaziladi']
+].map((w) => ({ a: w[0], how: w[1], d: w[2] }));
+const v1 = 'padding: 2px 7px; border-radius: 5px; font-size: 11px; font-weight: 800; background: #0B7A4B; color: #FFFFFF;';
+const v2 = 'padding: 2px 7px; border-radius: 5px; font-size: 11px; font-weight: 800; background: #E5EEF8; color: #154BA8;';
+const cards = [
+['Uzcard / Humo (xaridor)', 'v1', 'Karta raqami va muddat → SMS kod → token saqlanadi. Keyingi to’lovlar bir bosishda', 'Payme Subscribe API yoki Click karta tokeni'],
+['Payme / Click / Uzum hamyoni', 'v1', 'Karta ulanmaydi: xaridor ilovaga o’tib tasdiqlaydi va qaytadi', 'Checkout havolasi yoki deeplink'],
+['Korporativ karta (do’kon)', 'v1', 'Obuna to’lovi uchun do’kon egasi kartasini bir marta ulaydi, har oy avtomatik', 'Takroriy to’lov (recurrent) tokeni'],
+['Do’kon bank hisobi', 'v1', 'Payout shu hisobga: hisob raqami, MFO, STIR provayder shartnomasida', 'Provayder kabinetida, platforma faqat ko’radi'],
+['Visa / Mastercard, Apple / Google Pay', 'v2', 'Bank ekvayringi va 3-D Secure bilan', 'Ekvayring banki shartnomasi']
+].map((x) => ({ t: x[0], v: x[1], vStyle: x[1] === 'v1' ? v1 : v2, d: x[2], how: x[3] }));
+return { steps, lanes, who, cards, cur: { n: sel + 1, t: c[0] + ' · ' + c[1], detail: c[3], fail: c[4] } };
+}
+}
+</script>
+</body>
+</html>

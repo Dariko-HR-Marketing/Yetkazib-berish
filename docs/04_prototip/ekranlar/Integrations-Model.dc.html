@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>POS, CRM, ERP integratsiyasi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 1600px; height: 1060px; box-sizing: border-box; padding: 36px 56px; display: flex; flex-direction: column; gap: 14px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0B7A4B">POS · CRM · ERP integratsiyasi · MVP</span><h1 style="margin: 0; font-size: 30px; line-height: 38px; font-weight: 800">Do'kon o'z tizimi bilan ham, tizimsiz ham ishlay oladi</h1></div>
+<div role="tablist" style="display: flex; gap: 6px"><sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3"><button type="button" role="tab" aria-selected="{{ t.sel }}" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.t }}</button></sc-for></div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{ facts }}" as="f" hint-placeholder-count="4"><div style="display: flex; flex-direction: column; gap: 3px; padding: 12px 14px; border-radius: 14px; background: #16181B; color: #FFFFFF"><span style="font-size: 11.5px; font-weight: 700; color: #9AA1A7; letter-spacing: .04em">{{ f.k }}</span><b style="font-size: 14px; line-height: 19px">{{ f.v }}</b></div></sc-for>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 6px">
+<b style="font-size: 15px">Buyurtma yo'li: yig'uvchi va kassa</b>
+<div style="display: flex; gap: 6px; align-items: stretch">
+<sc-for list="{{ flow }}" as="f" hint-placeholder-count="7"><div style="flex: 1; display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; border-radius: 12px; background: {{ f.bg }}; color: {{ f.fg }}"><span style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 800; opacity: .8"><span>{{ f.n }}</span><span>{{ f.who }}</span></span><b style="font-size: 13.5px; line-height: 17px">{{ f.t }}</b><span style="font-size: 12px; line-height: 16px; opacity: .9">{{ f.d }}</span></div></sc-for>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1.15fr 1fr; gap: 12px; flex: 1; min-height: 0">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">Qaysi ma'lumot qayerda "asosiy"</b>
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; font-size: 12px; line-height: 16px">
+<b style="color: #5E656C; font-size: 11px">MA'LUMOT</b><b style="color: #5E656C; font-size: 11px">INTEGRATSIYALI</b><b style="color: #5E656C; font-size: 11px">INTEGRATSIYASIZ</b>
+<sc-for list="{{ master }}" as="m" hint-placeholder-count="7"><b>{{ m.k }}</b><span style="color: #075C38">{{ m.a }}</span><span style="color: #3C4248">{{ m.b }}</span></sc-for>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">Ulagichlar (Integration Hub — to'lovlar kabi adapter)</b>
+<sc-for list="{{ conns }}" as="c" hint-placeholder-count="8"><div style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; padding: 4px 0; border-bottom: 1px solid #EEF0ED"><b style="flex: none; width: 140px">{{ c.n }}</b><span style="flex: none; width: 70px; color: #5E656C">{{ c.t }}</span><span style="flex: 1; color: #3C4248">{{ c.d }}</span><span style="{{ c.vs }}">{{ c.v }}</span></div></sc-for>
+<span style="font-size: 11.5px; color: #5E656C">Nomlar — O'zbekistonda keng tarqalgan tizimlarga misol. Qaysi biri v1 ga kirishini pilot do'konlar tanlaydi.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 16px; background: #FDF1E3; color: #7A3E06">
+<b style="font-size: 15px">Qoidalar va nosozlik</b>
+<sc-for list="{{ rules }}" as="r" hint-placeholder-count="8"><div style="display: flex; gap: 8px; font-size: 12.5px; line-height: 17px"><b aria-hidden="true">•</b><span>{{ r }}</span></div></sc-for>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1600,"height":1060}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { m: 0 };
+}
+renderVals() {
+const m = this.state.m;
+const tabs = ['To’liq integratsiya (API)', 'Fayl orqali (Excel / CSV)', 'Integratsiyasiz'].map((t, i) => ({ t, sel: m === i ? 'true' : 'false', pick: () => this.setState({ m: i }),
+style: 'height: 36px; padding: 0 14px; border-radius: 999px; font-size: 13px; font-weight: 800; cursor: pointer; ' + (m === i ? 'border: 1px solid #0B7A4B; background: #0B7A4B; color: #FFFFFF;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;') }));
+const FA = [
+[['KIM UCHUN', 'POS, 1C yoki ERP ishlatadigan do’konlar'], ['QOLDIQ VA NARX', 'Har o’zgarishda (webhook) yoki har 5 daqiqada'], ['CHEK', 'POS kassasi chiqaradi — bitta chek, bitta hisob'], ['ULASH VAQTI', '1–3 kun, hamkor menejeri bilan']],
+[['KIM UCHUN', 'Tizimi bor, lekin API yo’q do’konlar'], ['QOLDIQ VA NARX', 'Kuniga 1–4 marta fayl yuklanadi (avtomatik yoki qo’lda)'], ['CHEK', 'POS kassasida yoki platformada (MXIK bilan)'], ['ULASH VAQTI', '1 kun, shablon bo’yicha']],
+[['KIM UCHUN', 'Kichik do’konlar, tizimi yo’q'], ['QOLDIQ VA NARX', 'Platformaning o’zida, qo’lda va “Tugadi” tugmasi bilan'], ['CHEK', 'Provayder (Payme/Click) fiskal cheki yoki do’kon kassasi'], ['ULASH VAQTI', 'Shu kuni']]
+];
+const W = (who, t, d) => ({ who, t, d });
+const FL = [
+[W('Xaridor', 'Buyurtma', 'Vitrina qoldiqni POS’dan oladi'), W('Platforma', 'Rezerv', 'POS’da mahsulot band qilinadi'), W('Yig’uvchi', 'POS’da ochish', 'Buyurtma QR / raqami skaner qilinadi'), W('Yig’uvchi', 'Skaner', 'Har mahsulot shtrix-kodi; yo’q bo’lsa muqobil'), W('POS', 'Chek va hisobdan chiqarish', 'Fiskal chek, qoldiq kamayadi'), W('Platforma', 'Holat qaytadi', '“Tayyor”, yakuniy summa, chek havolasi'), W('CRM', 'Mijoz kartasi', 'Xarid tarixi, ball CRM’ga yoziladi')],
+[W('Xaridor', 'Buyurtma', 'Oxirgi yuklangan qoldiq bo’yicha'), W('Platforma', 'Rezerv', 'Platformada band qilinadi'), W('Yig’uvchi', 'Planshetda yig’ish', 'Platforma ilovasida skaner'), W('Yig’uvchi', 'Kassadan o’tkazish', 'Buyurtmani POS’ga qo’lda yoki chek QR’i bilan'), W('POS', 'Chek', 'Kassa cheki, qoldiq POS’da kamayadi'), W('Platforma', 'Kechqurun fayl', 'Sotuvlar eksporti POS / 1C ga'), W('Do’kon', 'Solishtirish', 'Fayl yuklanganda farqlar ko’rsatiladi')],
+[W('Xaridor', 'Buyurtma', 'Platformadagi qoldiq bo’yicha'), W('Platforma', 'Rezerv', 'Qoldiq avtomatik kamayadi'), W('Yig’uvchi', 'Planshetda yig’ish', 'Ro’yxat, surat, muqobil'), W('Yig’uvchi', '“Tugadi” belgisi', 'Bir bosishda — vitrinada darhol ko’rinadi'), W('Platforma', 'Chek', 'Onlayn to’lovda provayder cheki MXIK bilan'), W('Kuryer', 'Topshirish', 'Naqd bo’lsa — do’kon kassasida chek'), W('Do’kon', 'Kun oxiri', 'Qoldiq hisobotini Excel’da olish')]
+];
+const flow = FL[m].map((f, i) => ({ n: i + 1, who: f.who, t: f.t, d: f.d, bg: f.who === 'Yig’uvchi' ? '#0B7A4B' : f.who === 'POS' ? '#16181B' : '#FFFFFF', fg: f.who === 'Yig’uvchi' || f.who === 'POS' ? '#FFFFFF' : '#16181B' }));
+const master = [['Qoldiq', 'POS / ERP', 'Platforma'], ['Narx', 'POS / ERP', 'Platforma'], ['Mahsulot nomi, surat', 'Platforma (ikki tilda)', 'Platforma'], ['Shtrix-kod, MXIK', 'POS / ERP', 'Platforma'], ['Fiskal chek', 'POS kassasi', 'To’lov provayderi'], ['Mijoz va xarid tarixi', 'CRM + platforma', 'Platforma'], ['Buyurtma holati', 'Platforma', 'Platforma']].map((x) => ({ k: x[0], a: x[1], b: x[2] }));
+const vb = (v) => 'flex: none; padding: 1px 7px; border-radius: 5px; font-size: 11px; font-weight: 800; ' + (v === 'v1' ? 'background: #0B7A4B; color: #FFFFFF;' : 'background: #E5EEF8; color: #154BA8;');
+const conns = [['Billz', 'POS', 'Qoldiq, narx, savdo, chek', 'v1'], ['1C (Savdo, Roznitsa)', 'ERP', 'Nomenklatura, qoldiq, savdo eksporti', 'v1'], ['Excel / CSV shablon', 'Fayl', 'Har qanday tizimdan', 'v1'], ['Smartup', 'ERP', 'Distribyutsiya va ombor', 'v2'], ['MoySklad', 'ERP', 'Ombor va savdo', 'v2'], ['iiko, Poster', 'POS', 'Kafe va restoranlar', 'v2'], ['Bitrix24, amoCRM', 'CRM', 'Mijoz kartasi, savdo bitimi', 'v2'], ['Ochiq API / webhook', 'API', 'Do’konning o’z tizimi', 'v2']].map((c) => ({ n: c[0], t: c[1], d: c[2], v: c[3], vs: vb(c[3]) }));
+const rules = ['Buyurtma kelganda mahsulot darhol band qilinadi — ikki xaridorga bitta oxirgi dona sotilmaydi', 'POS’da qoldiq 0 bo’lsa, vitrinada “Tugadi” bir daqiqa ichida', 'Integratsiya uzilsa: 15 daqiqadan keyin “qo’lda rejim”, egasiga xabar, o’zgarishlar navbatda kutadi', 'Ulanish qayta tiklanganda farqlar ro’yxati — kim to’g’ri, do’kon tanlaydi', 'Narx POS’da o’zgarsa, savatdagi xaridorga yangi narx ko’rsatiladi', 'Shtrix-kod mos kelmasa — yig’uvchi mahsulotni qo’lda tanlaydi va jurnalga yoziladi', 'Har sinxronlash jurnalda: vaqt, nechta mahsulot, xatolar', 'Integratsiya do’kon tarifida alohida xizmat sifatida yoqiladi'];
+return { tabs, facts: FA[m].map((f) => ({ k: f[0], v: f[1] })), flow, master, conns, rules };
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Ball, sodiqlik va aksiya kartalari modeli</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1440px; height: 1100px; box-sizing: border-box; padding: 36px 56px; display: flex; flex-direction: column; gap: 14px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0B7A4B">Ichki ball tizimi</span><h1 style="margin: 0; font-size: 30px; line-height: 38px; font-weight: 800">1 ball = 1 so'm chegirma: yig'iladi, saqlanadi, mahsulotga sarflanadi</h1></div>
+
+<div style="display: flex; gap: 6px; align-items: stretch">
+<sc-for list="{{ life }}" as="l" hint-placeholder-count="6"><div style="flex: 1; display: flex; flex-direction: column; gap: 3px; padding: 12px; border-radius: 12px; background: {{ l.bg }}; color: {{ l.fg }}"><span style="font-size: 11px; font-weight: 800; opacity: .8">{{ l.n }}</span><b style="font-size: 14px">{{ l.t }}</b><span style="font-size: 12px; line-height: 16px; opacity: .9">{{ l.d }}</span></div></sc-for>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Qanday yig'iladi</b>
+<sc-for list="{{ earn }}" as="e" hint-placeholder-count="7"><div style="display: grid; grid-template-columns: 1.3fr 1fr .5fr; gap: 8px; font-size: 12.5px; padding: 5px 0; border-top: 1px solid #EEF0ED"><b>{{ e.t }}</b><span style="color: #3C4248">{{ e.d }}</span><span style="{{ e.vs }}">{{ e.v }}</span></div></sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Qanday sarflanadi</b>
+<sc-for list="{{ burn }}" as="e" hint-placeholder-count="6"><div style="display: grid; grid-template-columns: 1.3fr 1.4fr .5fr; gap: 8px; font-size: 12.5px; padding: 5px 0; border-top: 1px solid #EEF0ED"><b>{{ e.t }}</b><span style="color: #3C4248">{{ e.d }}</span><span style="{{ e.vs }}">{{ e.v }}</span></div></sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<b style="font-size: 16px">To'rt xil karta</b>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{ cards }}" as="c" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 16px; background: {{ c.bg }}; color: {{ c.fg }}">
+<span style="font-size: 11px; font-weight: 800; letter-spacing: .05em; opacity: .8">{{ c.kind }}</span>
+<b style="font-size: 16px">{{ c.t }}</b>
+<sc-for list="{{ c.lines }}" as="x" hint-placeholder-count="4"><span style="font-size: 12px; line-height: 16px">• {{ x }}</span></sc-for>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; flex: 1; min-height: 0">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #FDF1E3; color: #7A3E06">
+<b style="font-size: 15px">Qonuniy chegaralar</b>
+<sc-for list="{{ legal }}" as="r" hint-placeholder-count="5"><div style="display: flex; gap: 8px; font-size: 12.5px; line-height: 17px"><b aria-hidden="true">•</b><span>{{ r }}</span></div></sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">Buxgalteriya</b>
+<sc-for list="{{ acc }}" as="r" hint-placeholder-count="5"><div style="display: flex; gap: 8px; font-size: 12.5px; line-height: 17px"><b aria-hidden="true" style="color: #0B7A4B">•</b><span>{{ r }}</span></div></sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #16181B; color: #FFFFFF">
+<b style="font-size: 15px">Firibgarlikka qarshi</b>
+<sc-for list="{{ fraud }}" as="r" hint-placeholder-count="5"><div style="display: flex; gap: 8px; font-size: 12.5px; line-height: 17px"><b aria-hidden="true" style="color: #8FD3B0">•</b><span style="color: #E3E6E8">{{ r }}</span></div></sc-for>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+renderVals() {
+const L = [['1', 'Hisoblandi', 'Buyurtma topshirilgach keshbek yoziladi', '#F1F3F0', '#16181B'], ['2', 'Kutilmoqda', '24 soat: qaytarish bo’lsa bekor', '#FDF1E3', '#7A3E06'], ['3', 'Faol', 'To’lovda va ball do’konida ishlatiladi', '#0B7A4B', '#FFFFFF'], ['4', 'Ishlatildi', 'Eng eski ball birinchi yechiladi', '#E6F2EC', '#075C38'], ['5', 'Eslatma', 'Muddati tugashidan 7 kun oldin xabar', '#E5EEF8', '#154BA8'], ['6', 'Muddati o’tdi', '90 kun; majburiyatdan chiqariladi', '#FBE9E4', '#9F2D12']];
+const life = L.map((l) => ({ n: l[0], t: l[1], d: l[2], bg: l[3], fg: l[4] }));
+const vb = (v) => 'justify-self: start; padding: 2px 7px; border-radius: 5px; font-size: 11px; font-weight: 800; ' + (v === 'v1' ? 'background: #0B7A4B; color: #FFFFFF;' : 'background: #E5EEF8; color: #154BA8;');
+const earn = [['Keshbek har xariddan', 'Bronza 2%, Kumush 3%, Oltin 5%', 'v1'], ['Xush kelibsiz', 'Birinchi to’liq ro’yxatdan o’tishda 10 000', 'v1'], ['Aksiya kunlari', 'Tanlangan mahsulotga ×2 ball', 'v1'], ['Aksiya kartasi to’ldi', 'Masalan, 6 ta sut — 7-chisi ballga', 'v1'], ['Sharh va surat', '500 ball, oyiga 5 tagacha', 'v1'], ['Do’kondagi xarid (POS)', 'Kassada QR ko’rsatilganda', 'v2'], ['Do’st taklif qilish', 'Ikkala tomonga 15 000', 'v2']].map((e) => ({ t: e[0], d: e[1], v: e[2], vs: vb(e[2]) }));
+const burn = [['To’lovda qisman', 'Chekning 30% gacha (do’kon sozlaydi: 20/30/50%)', 'v1'], ['Ball do’koni', 'Tanlangan mahsulotlar 100% ball bilan', 'v1'], ['Aralash to’lov', 'Ball + karta yoki naqd; chek to’liq summaga', 'v1'], ['Yetkazish narxi', 'Ball bilan to’lanmaydi', 'v1'], ['Qaytarishda', 'Ishlatilgan ball hamyonga qaytadi, keshbek bekor', 'v1'], ['Do’konda (POS)', 'Kassada QR orqali yechish', 'v2']].map((e) => ({ t: e[0], d: e[1], v: e[2], vs: vb(e[2]) }));
+const cards = [['SODIQLIK', 'Jamg’arma karta', ['Virtual, QR bilan', 'Darajalar: Bronza → Kumush → Oltin', '90 kunlik xarid summasi bo’yicha', 'Bir telefon — bitta karta'], '#0B7A4B', '#FFFFFF'], ['AKSIYA', 'Aksiya (shtamp) kartasi', ['“6 ta sut — 7-chisi ballga”', 'Har xarid — bitta belgi', 'Muddati: 60 kun', 'Do’kon o’zi yaratadi'], '#FFF6E0', '#7A3E06'], ['SOVG’A', 'Sovg’a kartasi', ['50 / 100 / 200 ming so’m', 'Kod yoki QR bilan faollashadi', '12 oy amal qiladi', 'Mahsulotga sarflanadi, naqd berilmaydi'], '#16181B', '#FFFFFF'], ['PROMO', 'Promo-kod va kupon', ['XUSH10, SUT5, QAYT20', 'Bir martalik yoki ko’p martalik', 'Shaxsiy (segmentga) yoki ommaviy', 'Ball bilan birga ishlatish — sozlanadi'], '#E5EEF8', '#154BA8']];
+const cardsOut = cards.map((c) => ({ kind: c[0], t: c[1], lines: c[2], bg: c[3], fg: c[4] }));
+const legal = ['Ball pulga almashtirilmaydi va naqd berilmaydi', 'Boshqa shaxsga o’tkazilmaydi (elektron pul belgisi bo’lmasligi uchun)', 'Faqat shu do’kon mahsulotiga; tarmoq bo’yicha umumiy ball — v2, do’konlar o’rtasida hisob-kitob shartnomasi bilan', 'Shartlar xaridor ofertasi 8-bo’limida; o’zgarishi 10 kun oldin e’lon qilinadi', 'Yakuniy tasnifni yurist va buxgalter tasdiqlaydi'];
+const acc = ['Ishlatilmagan ballar — do’kon majburiyati (so’mda ko’rsatiladi)', 'Ball bilan to’langan qism — chegirma sifatida chekda ko’rsatiladi', 'Sovg’a kartasi sotilishi — avans; xaridda hisobdan chiqariladi', 'Muddati o’tgan ballar — majburiyatdan chiqariladi', 'Oylik hisobot: chiqarilgan, ishlatilgan, muddati o’tgan, qoldiq'];
+const fraud = ['Bir telefon — bitta hamyon; yangi qurilmada SMS tasdiq', 'Xodim o’z kartasiga yoki tanishiga ball yoza olmaydi', 'Kuniga yig’ish limiti va g’ayrioddiy faollik ogohlantirishi', 'Qaytarishda keshbek avtomatik bekor', 'Sovg’a kartasi kodi — bir martalik, 5 noto’g’ri urinishda blok'];
+return { life, earn, burn, cards: cardsOut, legal, acc, fraud };
+}
+}
+</script>
+</body>
+</html>

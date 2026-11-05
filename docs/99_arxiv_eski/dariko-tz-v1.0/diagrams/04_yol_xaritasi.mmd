@@ -1,0 +1,22 @@
+%% Joriy etish yo'l xaritasi (taxminiy; boshlanish sanasi G1 da belgilanadi)
+gantt
+    title Universal dostavka platformasi — joriy etish
+    dateFormat  YYYY-MM-DD
+    axisFormat  %d.%m
+
+    section Tayyorgarlik
+    1. Diagnostika va qamrov        :a1, 2026-11-16, 14d
+    G1 Qamrov tasdig'i              :milestone, g1, after a1, 0d
+    2. UX va ma'lumot modeli        :a2, after a1, 21d
+    G2 Prototip, API, smeta         :milestone, g2, after a2, 0d
+
+    section Ishlab chiqish
+    3. MVP (6 sprint)               :a3, after a2, 84d
+    4. Integratsiya va QA           :a4, after a3, 21d
+    G3 Staging qabuli               :milestone, g3, after a4, 0d
+
+    section Pilot
+    5. Pilot (yopiq + ochiq)        :crit, a5, after a4, 49d
+    G4 Go-live qarori               :milestone, g4, after a5, 0d
+    6. Kengaytirish qarori          :a6, after a5, 7d
+    G5 KPI qarori                   :milestone, g5, after a6, 0d

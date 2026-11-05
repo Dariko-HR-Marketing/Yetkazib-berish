@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Onboarding va yo'riqnomalar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 100%; min-width: 1024px; height: 100%; min-height: 900px; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; padding: 26px 40px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5E656C">Har rol uchun birinchi kun</span><h1 style="margin: 0; font-size: 26px; line-height: 34px; font-weight: 800">Onboarding va yo'riqnomalar</h1></div>
+<div style="display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 14px; flex: 1; min-height: 0">
+
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 16px">Do'kon egasi: ishga tushirish ro'yxati</b><b style="font-size: 14px; color: #0B7A4B">{{ progress }}</b></div>
+<div style="height: 8px; border-radius: 4px; background: #EEF0ED"><div style="height: 100%; border-radius: 4px; background: #0B7A4B; width: {{ progressW }}"></div></div>
+<sc-for list="{{ checklist }}" as="c" hint-placeholder-count="10">
+<button type="button" role="checkbox" aria-checked="{{ c.on }}" onClick="{{ c.toggle }}" style="display: flex; gap: 10px; align-items: flex-start; padding: 8px 4px; border: none; border-bottom: 1px solid #EEF0ED; background: transparent; text-align: left; cursor: pointer; color: #16181B">
+<span style="{{ c.box }}">{{ c.mark }}</span>
+<span style="flex: 1; display: flex; flex-direction: column; gap: 1px"><b style="font-size: 13.5px; text-decoration: {{ c.deco }}">{{ c.t }}</b><span style="font-size: 11.5px; color: #5E656C">{{ c.d }}</span></span>
+<span style="font-size: 11.5px; color: #5E656C; flex: none">{{ c.time }}</span>
+</button>
+</sc-for>
+<span style="font-size: 11.5px; color: #5E656C">Har bandda "Qanday?" tugmasi: 1–2 daqiqalik video va panelda yo'naltiruvchi belgilar. Tayyor bo'lmaguncha vitrina "Tez orada" holatida.</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; align-items: center">
+<b style="align-self: flex-start; font-size: 15px">Xaridor: birinchi kirish (3 ekran)</b>
+<div style="width: 220px; height: 300px; box-sizing: border-box; border: 8px solid #16181B; border-radius: 30px; display: flex; flex-direction: column; justify-content: space-between; padding: 18px 14px; background: {{ slide.bg }}; text-align: center">
+<span style="font-size: 44px">{{ slide.icon }}</span>
+<b style="font-size: 15px; line-height: 20px">{{ slide.t }}</b>
+<span style="font-size: 12px; line-height: 17px; color: #3C4248">{{ slide.d }}</span>
+<div style="display: flex; justify-content: center; gap: 6px"><sc-for list="{{ dots }}" as="d" hint-placeholder-count="3"><span style="{{ d }}"></span></sc-for></div>
+</div>
+<div style="display: flex; gap: 8px"><button type="button" onClick="{{ prevSlide }}" style="height: 36px; padding: 0 14px; border-radius: 10px; border: 1px solid #DCE0DC; background: #FFFFFF; font-size: 13px; font-weight: 800; cursor: pointer">‹</button><button type="button" onClick="{{ nextSlide }}" style="height: 36px; padding: 0 16px; border-radius: 10px; border: none; background: #0B7A4B; color: #FFFFFF; font-size: 13px; font-weight: 800; cursor: pointer">{{ nextLabel }}</button></div>
+<span style="font-size: 11.5px; color: #5E656C; text-align: center">O'tkazib yuborish mumkin · uz/ru · keyin "Yordam va yo'riqnoma"dan qayta ochiladi</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">Yig'uvchi: 3 ta maslahat (birinchi smena)</b>
+<sc-for list="{{ picker }}" as="p" hint-placeholder-count="3"><div style="display: flex; gap: 8px; font-size: 12.5px; line-height: 17px"><b style="color: #0B7A4B">{{ p.n }}.</b><span>{{ p.t }}</span></div></sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 16px; background: #16181B; color: #FFFFFF">
+<b style="font-size: 15px">Kuryer: birinchi smena yo'riqnomasi</b>
+<sc-for list="{{ courier }}" as="c" hint-placeholder-count="6"><div style="display: flex; gap: 10px; font-size: 12.5px; line-height: 17px"><span style="flex: none; width: 22px; height: 22px; border-radius: 50%; background: #0B7A4B; display: flex; align-items: center; justify-content: center; font-size: 11.5px; font-weight: 800">{{ c.n }}</span><span style="color: #E3E6E8">{{ c.t }}</span></div></sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">Yordam markazi</b>
+<sc-for list="{{ help }}" as="h" hint-placeholder-count="5"><div style="display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; border-bottom: 1px solid #EEF0ED"><span>{{ h.t }}</span><span style="color: #5E656C">{{ h.n }}</span></div></sc-for>
+<span style="font-size: 12px; color: #5E656C">Telegram @yordam · 1234 · 08:00–23:00 · AI javob, murakkabi — operator</span>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { done: [true, true, true, false, true, false, false, false, false, false], slide: 0 };
+}
+renderVals() {
+const st = this.state;
+const C = [['KYC va E-IMZO imzo', 'Kompaniya, rahbar, bank, oferta + DPA', '10 daq'], ['Filial, zona va slotlar', 'Xaritada zona, ish vaqti, yetkazish narxi', '10 daq'], ['Katalogni yuklash', 'Excel shablon yoki Billz / 1C ulash', '20 daq'], ['MXIK kodlarini to’ldirish', 'AI taklif qiladi · 34 ta qoldi', '15 daq'], ['To’lov provayderini ulash', 'Payme / Click / Uzum · test to’lov 1 000 so’m', '15 daq'], ['Kuryerlarni qo’shish', 'Taklif → hujjat → shartnoma → o’quv', '5 daq'], ['Xodimlarni taklif qilish', 'Rol va filial bo’yicha', '5 daq'], ['Sodiqlik dasturini yoqish', 'Keshbek, darajalar, xush kelibsiz ball', '5 daq'], ['Test buyurtma', 'O’zingiz buyurtma bering: yig’ish → yetkazish → chek', '20 daq'], ['Vitrinani ochish', 'Domen, Telegram kanal, QR plakat kassaga', '5 daq']];
+const checklist = C.map((c, i) => { const on = st.done[i];
+return { t: c[0], d: c[1], time: c[2], on: on ? 'true' : 'false', mark: on ? '✓' : String(i + 1), deco: on ? 'line-through' : 'none',
+box: 'flex: none; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; ' + (on ? 'background: #0B7A4B; color: #FFFFFF;' : 'border: 2px solid #C9CED3; color: #5E656C; box-sizing: border-box;'),
+toggle: () => { const a = st.done.slice(); a[i] = !a[i]; this.setState({ done: a }); } }; });
+const n = st.done.filter((x) => x).length;
+const S = [['🛒', 'Ro’yxatdan yoki suratdan savat', 'Yozing, ovoz yuboring yoki ro’yxatni suratga oling — AI savatni yig’ib beradi', '#E6F2EC'], ['⭐', 'Har xariddan ball', 'Ballar bilan chekning 30% gacha to’laysiz yoki ball do’konidan olasiz', '#FFF6E0'], ['📍', 'Kuryerni xaritada kuzating', 'Kuryer yaqinlashganda xabar keladi; mahsulotni PIN kod bilan olasiz', '#E5EEF8']];
+const s = S[st.slide];
+const dots = S.map((x, i) => 'width: ' + (i === st.slide ? 18 : 7) + 'px; height: 7px; border-radius: 4px; background: ' + (i === st.slide ? '#0B7A4B' : '#C9CED3') + ';');
+const picker = ['Buyurtmani ochganda avval sovuq mahsulotlarni oxirida yig’ing', 'Mahsulot yo’q bo’lsa — “Tugadi” bosing: vitrina darhol yangilanadi va muqobil taklif qilinadi', 'Har mahsulotni skanerlang: noto’g’ri mahsulot qizil bilan ko’rsatiladi'].map((t, i) => ({ n: i + 1, t }));
+const courier = ['Smena boshida GPS va termosumka tekshiruvi', 'Topshiriqni qabul qiling — marshrut avtomatik', 'Do’konda sumka QR’ini skanerlang', 'Eshik oldida qo’ng’iroq, PIN kodni so’rang', 'Naqd bo’lsa — ilovada qayd eting, chek avtomatik ketadi', 'Smena oxirida naqdni kassaga topshiring'].map((t, i) => ({ n: i + 1, t }));
+const help = [['Buyurtma va yetkazish', '24 maqola'], ['To’lov, ball va qaytarish', '18 maqola'], ['Do’kon paneli', '31 maqola · 12 video'], ['Kuryer ilovasi', '14 maqola · 6 video'], ['Maxfiylik va roziliklar', '9 maqola']].map((h) => ({ t: h[0], n: h[1] }));
+return { checklist, progress: n + ' / 10', progressW: (n * 10) + '%', slide: { icon: s[0], t: s[1], d: s[2], bg: s[3] }, dots, picker, courier, help,
+nextLabel: st.slide === 2 ? 'Boshlash' : 'Keyingi', nextSlide: () => this.setState({ slide: (st.slide + 1) % 3 }), prevSlide: () => this.setState({ slide: (st.slide + 2) % 3 }) };
+}
+}
+</script>
+</body>
+</html>

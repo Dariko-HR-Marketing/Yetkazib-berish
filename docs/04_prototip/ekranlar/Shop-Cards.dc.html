@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Mening kartalarim</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B; overflow: hidden">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 18px 16px 12px; background: #FFFFFF; border-bottom: 1px solid #E4E7E3">
+<div style="display: flex; align-items: center; gap: 10px"><button type="button" onClick="{{ back }}" aria-label="{{ L.back }}" style="width: 40px; height: 40px; border-radius: 12px; border: 1px solid #E4E7E3; background: #FFFFFF; font-size: 18px; cursor: pointer">←</button><b style="font-size: 17px">{{ title }}</b></div>
+<div role="group" aria-label="Til / Язык" style="display: flex; padding: 3px; border-radius: 10px; background: #F1F3F0"><sc-for list="{{ langs }}" as="l" hint-placeholder-count="2"><button type="button" aria-pressed="{{ l.pressed }}" onClick="{{ l.pick }}" style="{{ l.style }}">{{ l.t }}</button></sc-for></div>
+</div>
+
+<sc-if value="{{ isList }}">
+<div style="flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 10px; padding: 14px 16px">
+<sc-for list="{{ cards }}" as="c" hint-placeholder-count="2">
+<div style="{{ c.cardStyle }}">
+<div style="display: flex; justify-content: space-between; align-items: center"><b style="font-size: 15px">{{ c.brand }}</b><span style="{{ c.badgeStyle }}">{{ c.badge }}</span></div>
+<b style="font-size: 20px; letter-spacing: .12em">•••• {{ c.last }}</b>
+<div style="display: flex; justify-content: space-between; font-size: 12.5px; opacity: .85"><span>{{ c.exp }}</span><span>{{ c.via }}</span></div>
+</div>
+</sc-for>
+<button type="button" onClick="{{ toAdd }}" style="height: 52px; border-radius: 14px; border: 1.5px dashed #0B7A4B; background: #FFFFFF; color: #0B7A4B; font-size: 15px; font-weight: 800; cursor: pointer">+ {{ L.add }}</button>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 12px 14px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 13.5px">{{ L.historyTitle }}</b>
+<sc-for list="{{ history }}" as="h" hint-placeholder-count="3"><div style="display: flex; justify-content: space-between; font-size: 12.5px; padding: 4px 0; border-bottom: 1px solid #EEF0ED"><span>{{ h.t }}<br><span style="color: #5E656C">{{ h.d }}</span></span><b style="color: {{ h.color }}">{{ h.v }}</b></div></sc-for>
+</div>
+<div style="display: flex; gap: 8px; padding: 10px 12px; border-radius: 12px; background: #E6F2EC; color: #075C38; font-size: 12px; line-height: 17px"><b aria-hidden="true">🔒</b><span>{{ L.safe }}</span></div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isAdd }}">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 12px; padding: 16px">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 18px; background: linear-gradient(135deg, #0B7A4B, #075C38); color: #FFFFFF; min-height: 150px; box-sizing: border-box; justify-content: space-between">
+<span style="font-size: 12.5px; opacity: .85">Uzcard · Humo</span>
+<b style="font-size: 21px; letter-spacing: .1em">8600 31•• •••• 7702</b>
+<span style="font-size: 13px">12 / 28</span>
+</div>
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; font-weight: 700; color: #3C4248">{{ L.number }}<span style="height: 48px; display: flex; align-items: center; padding: 0 14px; border-radius: 12px; border: 1.5px solid #0B7A4B; background: #FFFFFF; font-size: 16px; color: #16181B; font-weight: 600; letter-spacing: .06em">8600 3104 •••• 7702</span></label>
+<label style="display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; font-weight: 700; color: #3C4248">{{ L.exp }}<span style="width: 130px; height: 48px; display: flex; align-items: center; padding: 0 14px; border-radius: 12px; border: 1px solid #DCE0DC; background: #FFFFFF; font-size: 16px; color: #16181B; font-weight: 600">12 / 28</span></label>
+<span style="font-size: 12px; line-height: 17px; color: #5E656C">{{ L.addNote }}</span>
+<div style="flex: 1"></div>
+<button type="button" onClick="{{ toOtp }}" style="height: 52px; border-radius: 14px; border: none; background: #0B7A4B; color: #FFFFFF; font-size: 16px; font-weight: 800; cursor: pointer">{{ L.getCode }}</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isOtp }}">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 14px; padding: 22px 16px; align-items: center; text-align: center">
+<b style="font-size: 19px">{{ L.otpTitle }}</b>
+<span style="font-size: 13.5px; line-height: 19px; color: #3C4248">{{ L.otpText }}</span>
+<div style="display: flex; gap: 8px"><sc-for list="{{ otp }}" as="o" hint-placeholder-count="6"><span style="width: 44px; height: 52px; border-radius: 12px; border: 1.5px solid {{ o.b }}; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; background: #FFFFFF">{{ o.v }}</span></sc-for></div>
+<span style="font-size: 12.5px; color: #5E656C">{{ L.resend }}</span>
+<div style="flex: 1"></div>
+<button type="button" onClick="{{ toDone }}" style="align-self: stretch; height: 52px; border-radius: 14px; border: none; background: #0B7A4B; color: #FFFFFF; font-size: 16px; font-weight: 800; cursor: pointer">{{ L.confirm }}</button>
+</div>
+</sc-if>
+
+<sc-if value="{{ isDone }}">
+<div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 24px; text-align: center">
+<span style="width: 72px; height: 72px; border-radius: 50%; background: #E6F2EC; color: #0B7A4B; display: flex; align-items: center; justify-content: center; font-size: 34px; font-weight: 800">✓</span>
+<b style="font-size: 20px">{{ L.doneTitle }}</b>
+<span style="font-size: 14px; line-height: 20px; color: #3C4248">{{ L.doneText }}</span>
+<button type="button" onClick="{{ toList }}" style="margin-top: 8px; height: 48px; padding: 0 22px; border-radius: 14px; border: none; background: #16181B; color: #FFFFFF; font-size: 15px; font-weight: 800; cursor: pointer">{{ L.toCards }}</button>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { lang: 'uz', stage: 'list', added: false };
+}
+renderVals() {
+const st = this.state;
+const T = {
+uz: { title: { list: 'Mening kartalarim', add: 'Karta qo’shish', otp: 'Tasdiqlash', done: 'Tayyor' }, back: 'Orqaga', add: 'Karta qo’shish', historyTitle: 'Oxirgi to’lovlar', safe: 'Karta raqami Payme’da saqlanadi, bizda faqat himoyalangan token. Kartani istalgan vaqtda o’chirish mumkin.', number: 'Karta raqami', exp: 'Amal qilish muddati', addNote: 'Uzcard va Humo kartalari. Kartani tekshirish uchun pul yechilmaydi. Visa va Mastercard — keyingi versiyada.', getCode: 'SMS kod olish', otpTitle: 'SMS kodni kiriting', otpText: 'Kod kartaga ulangan +998 90 *** 45 12 raqamiga yuborildi', resend: 'Qayta yuborish: 0:52', confirm: 'Tasdiqlash', doneTitle: 'Karta qo’shildi', doneText: 'Endi bir bosishda to’laysiz. Har to’lov haqida Telegram’ga xabar keladi.', toCards: 'Kartalarimga', main: 'Asosiy', makeMain: 'Asosiy qilish', via: 'Payme orqali', h: [['A-104512 · Yashil Savat', 'bugun 14:15', '−48 440'], ['Qaytarildi: qatiq farqi', 'bugun 14:16', '+4 844'], ['A-104377 · Yashil Savat', '1-noyabr', '−112 300']] },
+ru: { title: { list: 'Мои карты', add: 'Добавить карту', otp: 'Подтверждение', done: 'Готово' }, back: 'Назад', add: 'Добавить карту', historyTitle: 'Последние оплаты', safe: 'Номер карты хранится в Payme, у нас — только защищённый токен. Карту можно удалить в любой момент.', number: 'Номер карты', exp: 'Срок действия', addNote: 'Карты Uzcard и Humo. Деньги для проверки карты не списываются. Visa и Mastercard — в следующей версии.', getCode: 'Получить SMS-код', otpTitle: 'Введите SMS-код', otpText: 'Код отправлен на номер +998 90 *** 45 12, привязанный к карте', resend: 'Отправить снова: 0:52', confirm: 'Подтвердить', doneTitle: 'Карта добавлена', doneText: 'Теперь оплата в одно касание. О каждой оплате придёт сообщение в Telegram.', toCards: 'К моим картам', main: 'Основная', makeMain: 'Сделать основной', via: 'через Payme', h: [['A-104512 · Yashil Savat', 'сегодня 14:15', '−48 440'], ['Возврат: разница за кефир', 'сегодня 14:16', '+4 844'], ['A-104377 · Yashil Savat', '1 ноября', '−112 300']] }
+};
+const L = T[st.lang];
+const langs = [['uz', 'UZ'], ['ru', 'RU']].map((l) => ({ t: l[1], pressed: st.lang === l[0] ? 'true' : 'false', pick: () => this.setState({ lang: l[0] }),
+style: 'height: 30px; padding: 0 10px; border-radius: 8px; border: none; font-size: 12.5px; font-weight: 800; cursor: pointer; ' + (st.lang === l[0] ? 'background: #16181B; color: #FFFFFF;' : 'background: transparent; color: #5E656C;') }));
+const base = [{ brand: 'Humo', last: '4417', exp: '09 / 27', main: true, bg: '#16181B' }];
+if (st.added) base.push({ brand: 'Uzcard', last: '7702', exp: '12 / 28', main: false, bg: '#0B7A4B' });
+const cards = base.map((c) => ({ brand: c.brand, last: c.last, exp: c.exp, via: L.via, badge: c.main ? L.main : L.makeMain,
+cardStyle: 'display: flex; flex-direction: column; gap: 14px; padding: 16px; border-radius: 18px; color: #FFFFFF; background: ' + c.bg + ';',
+badgeStyle: 'padding: 3px 9px; border-radius: 999px; font-size: 11.5px; font-weight: 800; ' + (c.main ? 'background: #FFFFFF; color: #16181B;' : 'background: rgba(255,255,255,.18); color: #FFFFFF;') }));
+const history = L.h.map((h) => ({ t: h[0], d: h[1], v: h[2], color: h[2][0] === '+' ? '#0B7A4B' : '#16181B' }));
+const otp = ['4', '8', '2', '1', '', ''].map((v, i) => ({ v, b: i === 4 ? '#0B7A4B' : '#DCE0DC' }));
+const s = st.stage;
+return { L, langs, cards, history, otp, title: L.title[s],
+isList: s === 'list', isAdd: s === 'add', isOtp: s === 'otp', isDone: s === 'done',
+back: () => this.setState({ stage: 'list' }), toAdd: () => this.setState({ stage: 'add' }), toOtp: () => this.setState({ stage: 'otp' }),
+toDone: () => this.setState({ stage: 'done', added: true }), toList: () => this.setState({ stage: 'list' }) };
+}
+}
+</script>
+</body>
+</html>

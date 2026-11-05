@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Marketing — kampaniya</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+</style>
+</helmet>
+<div style="min-height: 900px; display: flex; flex-wrap: wrap; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+
+<nav aria-label="Do'kon paneli" style="flex: 1 1 220px; max-width: 260px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px; padding: 20px 14px; background: #16181B; color: #FFFFFF">
+<div style="display: flex; align-items: center; gap: 10px; padding: 4px 8px 16px"><div style="width: 34px; height: 34px; border-radius: 9px; background: #0B7A4B; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px">YS</div><span style="display: flex; flex-direction: column"><b style="font-size: 15px">Yashil Savat</b><span style="font-size: 12px; color: #C9CED3">Egasi</span></span></div>
+<span style="padding: 14px 12px 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: #8E959C">ANALITIKA</span>
+<a href="Analytics-Overview.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Savdo ko'rsatkichlari</a>
+<a href="Analytics-ABC.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">ABC / XYZ</a>
+<span style="padding: 14px 12px 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: #8E959C">MARKETING</span>
+<a href="Marketing-Channels.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Ijtimoiy tarmoqlar</a>
+<a href="Marketing-Campaigns.dc.html" aria-current="page" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; background: #2E3237; color: #FFFFFF; font-weight: 700; font-size: 14px; text-decoration: none">Kampaniyalar</a>
+<a href="Reports-Scheduler.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Hisobotlar</a>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; display: flex; flex-wrap: wrap; gap: 24px; padding: 24px 28px; align-items: flex-start">
+<section style="flex: 1 1 440px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 26px; line-height: 32px; font-weight: 800">Yangi kampaniya</h1><span style="font-size: 14px; color: #5E656C">Tahlil → auditoriya → taklif → kanal → natija</span></div>
+
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">1. Maqsad</b>
+<div style="display: flex; flex-wrap: wrap; gap: 8px"><span style="padding: 8px 12px; border-radius: 10px; background: #16181B; color: #FFFFFF; font-size: 13px; font-weight: 700">Uxlab qolganlarni qaytarish</span><span style="padding: 8px 12px; border-radius: 10px; border: 1px solid #DCE0DC; font-size: 13px; font-weight: 600">Qoldiqni sotish (CZ)</span><span style="padding: 8px 12px; border-radius: 10px; border: 1px solid #DCE0DC; font-size: 13px; font-weight: 600">Yangi xaridor</span></div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">2. Auditoriya (RFM)</b>
+<div style="display: flex; justify-content: space-between; font-size: 14px"><span>Uxlab qolgan · 30–90 kun xarid qilmagan</span><b>318 xaridor</b></div>
+<span style="font-size: 12.5px; color: #5E656C">Shundan 204 tasida marketing roziligi bor va Telegram bot obunachisi.</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">3. Taklif</b>
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px"><span style="font-size: 14px">Chegirma:</span>
+<sc-for list="{{ discounts }}" as="d" hint-placeholder-count="4"><button type="button" onClick="{{ d.pick }}" aria-pressed="{{ d.pressed }}" style="{{ d.style }}">{{ d.label }}</button></sc-for>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600">Promokod<input type="text" value="QAYTING10" style="height: 42px; box-sizing: border-box; padding: 0 12px; border: 1px solid #C9CEC8; border-radius: 10px; font: 700 14px Manrope, sans-serif"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600">Muddat<input type="text" value="7 kun · 1 marta" style="height: 42px; box-sizing: border-box; padding: 0 12px; border: 1px solid #C9CEC8; border-radius: 10px; font: 500 14px Manrope, sans-serif"></label>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">4. Kanallar</b>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{ channels }}" as="c" hint-placeholder-count="4"><button type="button" onClick="{{ c.pick }}" aria-pressed="{{ c.pressed }}" style="{{ c.style }}">{{ c.label }}</button></sc-for>
+</div>
+<span style="font-size: 12.5px; color: #5E656C">Instagram va Facebook postlari ulangan sahifaga rejalashtiriladi; Telegram — bot orqali shaxsiy xabar.</span>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; padding: 14px 16px; border-radius: 14px; background: #16181B; color: #FFFFFF">
+<span style="font-size: 14px">{{ forecast }}</span>
+<div style="display: flex; gap: 8px"><button type="button" style="height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid #5E656C; background: transparent; color: #FFFFFF; font: 700 14px Manrope, sans-serif">Qoralama</button><button type="button" style="height: 44px; padding: 0 16px; border-radius: 10px; border: none; background: #3FB37F; color: #0F1A14; font: 800 14px Manrope, sans-serif">Ertaga 10:00 da yuborish</button></div>
+</div>
+</section>
+
+<div style="flex: 0 1 340px; display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 12.5px; font-weight: 700; color: #5E656C">{{ previewLabel }}</span>
+<sc-if value="{{ isTelegram }}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 18px; background: #E5F1FB">
+<div style="align-self: flex-start; max-width: 290px; padding: 12px 14px; border-radius: 16px 16px 16px 4px; background: #FFFFFF; font-size: 14px; line-height: 20px"><b>Yashil Savat</b><br>Sizni sog'indik! 7 kun ichida {{ pct }} chegirma: <b>QAYTING10</b>. Sut, non va mevalar 40 daqiqada uyingizda.</div>
+<span style="align-self: flex-start; padding: 10px 14px; border-radius: 12px; background: #FFFFFF; color: #1F7AC1; font-size: 14px; font-weight: 700">Do'konni ochish</span>
+</div>
+</sc-if>
+<sc-if value="{{ isInstagram }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; border-radius: 18px; overflow: hidden; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="display: flex; align-items: center; gap: 8px; padding: 10px 12px; font-size: 13px"><span style="width: 28px; height: 28px; border-radius: 14px; background: #0B7A4B"></span><b>yashilsavat</b></div>
+<div style="height: 300px; background: #0B7A4B; color: #FFFFFF; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 6px"><b style="font-size: 48px">{{ pct }}</b><span style="font-size: 18px; font-weight: 700">QAYTING10</span><span style="font-size: 13px; opacity: .9">7 kun · yetkazish bilan</span></div>
+<span style="padding: 10px 12px; font-size: 13px; line-height: 18px">Havola bio'da · utm_source=instagram&amp;utm_campaign=qayting10</span>
+</div>
+</sc-if>
+<span style="font-size: 12.5px; line-height: 18px; color: #5E656C">Natija: kampaniya sahifasida promokod bo'yicha buyurtmalar, tushum va chegirma xarajati kunlik ko'rinadi.</span>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { pct: 10, ch: { tg: true, ig: true, fb: false, tgc: false }, preview: 'tg' };
+}
+renderVals() {
+const s = this.state;
+const pill = (on) => 'height: 40px; padding: 0 14px; border-radius: 20px; font: 700 13px Manrope, sans-serif; cursor: pointer; ' + (on ? 'border: none; background: #0B7A4B; color: #FFFFFF;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;');
+const discounts = [5, 10, 15, 20].map((p) => ({ label: p + '%', pressed: p === s.pct ? 'true' : 'false', style: pill(p === s.pct), pick: () => this.setState({ pct: p }) }));
+const defs = [['tg', 'Telegram bot'], ['ig', 'Instagram post'], ['tgc', 'Telegram kanal'], ['fb', 'Facebook reklama']];
+const channels = defs.map(([k, label]) => ({ label, pressed: s.ch[k] ? 'true' : 'false', style: pill(s.ch[k]),
+pick: () => { const ch = Object.assign({}, s.ch); ch[k] = !ch[k]; const preview = (k === 'ig' && ch.ig) ? 'ig' : (k === 'tg' && ch.tg) ? 'tg' : s.preview; this.setState({ ch, preview }); } }));
+const reach = (s.ch.tg ? 204 : 0) + (s.ch.ig ? 900 : 0) + (s.ch.tgc ? 600 : 0) + (s.ch.fb ? 1500 : 0);
+const conv = Math.round(reach * (0.03 + s.pct / 1000));
+return {
+discounts, channels, pct: s.pct + '%',
+isTelegram: s.preview === 'tg', isInstagram: s.preview === 'ig',
+previewLabel: s.preview === 'tg' ? 'Ko’rinish: Telegram bot xabari' : 'Ko’rinish: Instagram post',
+forecast: 'Taxminiy qamrov ' + reach + ' · kutilgan buyurtma ~' + conv + ' (tarixiy konversiya asosida)'
+};
+}
+}
+</script>
+</body>
+</html>

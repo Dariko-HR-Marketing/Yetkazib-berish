@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Panel — dispetcher</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+</style>
+</helmet>
+<div style="min-height: 900px; display: flex; flex-wrap: wrap; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+
+<nav aria-label="Panel bo'limlari" style="flex: 1 1 220px; max-width: 260px; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px; padding: 20px 14px; background: #16181B; color: #FFFFFF">
+<div style="display: flex; align-items: center; gap: 10px; padding: 4px 8px 20px"><div style="width: 34px; height: 34px; border-radius: 9px; background: #0B7A4B; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px">DD</div><span style="display: flex; flex-direction: column"><b style="font-size: 15px">Demo Do'kon</b><span style="font-size: 12px; color: #C9CED3">Dispetcher</span></span></div>
+<a href="Panel-Orders.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Buyurtmalar</a>
+<a href="Panel-Picking.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Yig'ish</a>
+<a href="Panel-Dispatch.dc.html" aria-current="page" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; background: #2E3237; color: #FFFFFF; font-weight: 700; font-size: 14px; text-decoration: none">Dispetcher</a>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px; padding: 24px 28px">
+<div style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 26px; line-height: 32px; font-weight: 800">Dispetcher</h1><span style="font-size: 14px; color: #5E656C">Markaziy filial · 1 jo'natma kuryer kutmoqda · 2 kuryer ishda</span></div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch">
+
+<section aria-label="Jo'natmalar" style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 10px">
+<b style="font-size: 14px">Kuryer kutmoqda</b>
+<article style="display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 14px; background: #FFFFFF; border: 2px solid #1D5FD1">
+<div style="display: flex; justify-content: space-between"><b style="font-size: 16px">A-104527</b><span style="font-size: 12px; font-weight: 700; color: #7A3E06">tayyor · 3 daq</span></div>
+<span style="font-size: 13.5px; color: #3C4248">Navoiy ko'chasi, 40 · 2,1 km</span>
+<span style="font-size: 13.5px; color: #3C4248">4 mahsulot · ~6 kg · onlayn to'langan</span>
+<span style="{{ statusStyle }}">{{ statusText }}</span>
+</article>
+<b style="font-size: 14px; padding-top: 8px">Yo'lda</b>
+<article style="display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="display: flex; justify-content: space-between"><b style="font-size: 15px">A-104512</b><span style="padding: 2px 8px; border-radius: 8px; background: #E5EEF8; font-size: 12px; font-weight: 700; color: #154BA8">ETA 14:40</span></div>
+<span style="font-size: 13px; color: #3C4248">Jasur · Mustaqillik ko'chasi, 12</span>
+</article>
+<article style="display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 14px; background: #FFFAF3; border: 1px solid #F1C995">
+<div style="display: flex; justify-content: space-between"><b style="font-size: 15px">A-104506</b><span style="padding: 2px 8px; border-radius: 8px; background: #FDF1E3; font-size: 12px; font-weight: 700; color: #7A3E06">Topshirib bo'lmadi</span></div>
+<span style="font-size: 13px; color: #3C4248">Sabab: javob bermadi · 2 urinish</span>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px"><button type="button" style="height: 38px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 13px Manrope, sans-serif; color: #16181B">Qayta yetkazish</button><button type="button" style="height: 38px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 13px Manrope, sans-serif; color: #9F2D12">Qaytarish</button></div>
+</article>
+</section>
+
+<div role="img" aria-label="Xizmat hududi xaritasi: filial, jo'natmalar va kuryerlar" style="flex: 2 1 420px; position: relative; min-height: 520px; border-radius: 16px; overflow: hidden; background: #E3E8E2">
+<div style="position: absolute; left: 0; right: 0; top: 30%; height: 14px; background: #F4F5F1"></div>
+<div style="position: absolute; left: 0; right: 0; top: 68%; height: 10px; background: #F4F5F1"></div>
+<div style="position: absolute; top: 0; bottom: 0; left: 28%; width: 12px; background: #F4F5F1"></div>
+<div style="position: absolute; top: 0; bottom: 0; left: 64%; width: 16px; background: #F4F5F1"></div>
+<div style="position: absolute; left: 14%; top: 12%; width: 72%; height: 76%; border-radius: 40%; border: 2px dashed #0B7A4B; background: rgba(11,122,75,.06)"></div>
+<div style="position: absolute; left: 44%; top: 44%; padding: 6px 10px; border-radius: 10px; background: #16181B; color: #FFFFFF; font-size: 12px; font-weight: 700">Markaziy filial</div>
+<div style="position: absolute; left: 70%; top: 22%; padding: 6px 10px; border-radius: 10px; background: #1D5FD1; color: #FFFFFF; font-size: 12px; font-weight: 700">A-104527</div>
+<div style="position: absolute; left: 22%; top: 62%; padding: 6px 10px; border-radius: 10px; background: #FFFFFF; border: 1px solid #C9CEC8; font-size: 12px; font-weight: 700">Jasur · A-104512</div>
+<div style="position: absolute; left: 56%; top: 74%; padding: 6px 10px; border-radius: 10px; background: #FFFFFF; border: 1px solid #C9CEC8; font-size: 12px; font-weight: 700">Akmal · bo'sh</div>
+<div style="position: absolute; left: 16px; bottom: 16px; padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,.92); font-size: 12px; color: #3C4248">Kesik chiziq — xizmat hududi</div>
+</div>
+
+<section aria-label="Kuryerlar" style="flex: 1 1 260px; display: flex; flex-direction: column; gap: 10px">
+<b style="font-size: 14px">Kuryerlar · A-104527 uchun</b>
+<sc-for list="{{ couriers }}" as="c" hint-placeholder-count="3">
+<article style="{{ c.cardStyle }}">
+<div style="display: flex; justify-content: space-between; align-items: center"><b style="font-size: 15px">{{ c.name }}</b><span style="font-size: 12px; font-weight: 700; color: #3C4248">{{ c.vehicle }}</span></div>
+<span style="font-size: 13px; color: #3C4248">{{ c.load }}</span>
+<button type="button" onClick="{{ c.pick }}" style="{{ c.buttonStyle }}">{{ c.buttonText }}</button>
+</article>
+</sc-for>
+<span style="font-size: 12.5px; line-height: 18px; color: #5E656C">Tizim yuk hajmi va transport turini tekshiradi: ~6 kg uchun piyoda kuryer taklif qilinmaydi.</span>
+</section>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { assigned: null };
+}
+renderVals() {
+const list = [
+{ id: 'akmal', name: 'Akmal', vehicle: 'Avtomobil', load: 'Bo’sh · filialdan 0,6 km', ok: true },
+{ id: 'jasur', name: 'Jasur', vehicle: 'Velosiped', load: '1 faol topshiriq · ETA 14:40', ok: true },
+{ id: 'bekzod', name: 'Bekzod', vehicle: 'Piyoda', load: 'Bo’sh · yuk sig’imi 4 kg', ok: false }
+];
+const a = this.state.assigned;
+const couriers = list.map((c) => {
+const chosen = a === c.id;
+return {
+name: c.name, vehicle: c.vehicle, load: c.load,
+cardStyle: 'display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 14px; background: #FFFFFF; border: ' + (chosen ? '2px solid #0B7A4B' : '1px solid #E4E7E3') + ';' + (c.ok ? '' : ' opacity: .7;'),
+buttonText: chosen ? 'Biriktirildi ✓' : c.ok ? 'Biriktirish' : 'Yuk sig’maydi',
+buttonStyle: 'height: 40px; border-radius: 10px; font: 700 13px Manrope, sans-serif; ' + (chosen ? 'border: none; background: #E6F2EC; color: #075C38;' : c.ok ? 'border: none; background: #16181B; color: #FFFFFF;' : 'border: 1px solid #DCE0DC; background: #F1F3F0; color: #5E656C;'),
+pick: () => { if (c.ok) this.setState({ assigned: c.id }); }
+};
+});
+const name = a ? list.find((c) => c.id === a).name : null;
+return {
+couriers,
+statusText: name ? 'Kuryer: ' + name + ' · xaridorga kuzatuv havolasi yuborildi' : 'Kuryer tanlang →',
+statusStyle: 'font-size: 13px; font-weight: 700; color: ' + (name ? '#075C38' : '#154BA8') + ';'
+};
+}
+}
+</script>
+</body>
+</html>

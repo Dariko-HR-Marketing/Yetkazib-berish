@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Egasi: paket va funksiyalar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 100%; min-width: 1024px; height: 100%; min-height: 900px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; padding: 26px 40px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 13px; color: #5E656C">Sozlamalar · Yashil Savat</span><h1 style="margin: 0; font-size: 26px; line-height: 34px; font-weight: 800">Paket va funksiyalar</h1></div>
+<div style="display: flex; gap: 10px; align-items: center; padding: 10px 14px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="font-size: 12.5px; color: #5E656C">Joriy paket</span><b style="font-size: 16px">{{ plan.name }}</b><span style="font-size: 12.5px; color: #5E656C">{{ plan.price }}</span><span style="font-size: 12.5px; color: #5E656C">· keyingi to'lov 1-dekabr</span></div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px">
+<sc-for list="{{ plans }}" as="p" hint-placeholder-count="4">
+<button type="button" aria-pressed="{{ p.pressed }}" onClick="{{ p.pick }}" style="{{ p.style }}">
+<span style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 16px">{{ p.name }}</b><span style="font-size: 11px; font-weight: 800; color: {{ p.badgeC }}">{{ p.badge }}</span></span>
+<b style="font-size: 20px">{{ p.price }}</b>
+<span style="font-size: 12px; line-height: 17px; color: #5E656C">{{ p.d }}</span>
+</button>
+</sc-for>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 340px; gap: 14px; flex: 1; min-height: 0">
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 16px 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; overflow: auto">
+<div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 6px"><b style="font-size: 15px">Funksiyalar: yoqish va o'chirish</b><span style="font-size: 12px; color: #5E656C">{{ onCount }}</span></div>
+<sc-for list="{{ groups }}" as="g" hint-placeholder-count="5">
+<span style="padding: 10px 0 2px; font-size: 11.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #5E656C">{{ g.t }}</span>
+<sc-for list="{{ g.items }}" as="f" hint-placeholder-count="4">
+<div style="display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid #EEF0ED">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 1px"><b style="font-size: 13.5px; color: {{ f.tc }}">{{ f.t }}</b><span style="font-size: 11.5px; color: #5E656C">{{ f.d }}</span></div>
+<span style="font-size: 11.5px; font-weight: 800; color: {{ f.noteC }}">{{ f.note }}</span>
+<button type="button" role="switch" aria-checked="{{ f.on }}" aria-disabled="{{ f.locked }}" aria-label="{{ f.t }}" onClick="{{ f.toggle }}" style="{{ f.sw }}"><span style="{{ f.knob }}"></span></button>
+</div>
+</sc-for>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">Limitlar (shu oy)</b>
+<sc-for list="{{ limits }}" as="l" hint-placeholder-count="4"><div style="display: flex; flex-direction: column; gap: 4px"><div style="display: flex; justify-content: space-between; font-size: 12.5px"><span>{{ l.t }}</span><b>{{ l.v }}</b></div><div style="height: 6px; border-radius: 3px; background: #EEF0ED"><div style="height: 100%; border-radius: 3px; background: {{ l.c }}; width: {{ l.w }}"></div></div></div></sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">Qo'shimcha xizmatlar (foydalanishga qarab)</b>
+<sc-for list="{{ addons }}" as="a" hint-placeholder-count="5"><div style="display: flex; justify-content: space-between; gap: 8px; font-size: 12.5px; padding: 4px 0"><span>{{ a.t }}</span><b style="flex: none">{{ a.v }}</b></div></sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border-radius: 16px; background: #16181B; color: #FFFFFF">
+<b style="font-size: 14px">Komissiya yo'q</b>
+<span style="font-size: 12px; line-height: 17px; color: #C9CED3">Xaridor puli to'g'ridan-to'g'ri sizning Payme / Click / Uzum hisobingizga tushadi. Platforma faqat paket va qo'shimcha xizmatlar uchun hisob chiqaradi. Narxlar — gipoteza, pilotda tekshiriladi.</span>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { plan: 1, off: {} };
+}
+renderVals() {
+const st = this.state;
+const P = [['Start', '0 so’m', 'Vitrina + Telegram, o’z va platforma kuryerlari, naqd, 150 buyurtma/oy', 0], ['Biznes', '590 000 so’m/oy', 'O’z domeni, umumiy katalog, tashqi kuryer, ball, 1 integratsiya, 1 500 buyurtma', 1], ['Pro', '1 290 000 so’m/oy', 'Egasi AI, tashqi AI agentlar, kengaytirilgan tahlil, 3 filial, 6 000 buyurtma', 2], ['Tarmoq', '3 mln so’mdan', 'Cheklovsiz, ochiq API, SLA, shaxsiy menejer', 3], ['v2', '', '', 4]];
+const plans = P.slice(0, 4).map((p, i) => ({ name: p[0], price: p[1], d: p[2], pressed: st.plan === i ? 'true' : 'false', pick: () => this.setState({ plan: i }),
+badge: i === 1 ? 'JORIY' : (i > 1 ? 'YUQORIROQ' : ''), badgeC: i === 1 ? '#0B7A4B' : '#5E656C',
+style: 'display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border-radius: 16px; background: #FFFFFF; text-align: left; cursor: pointer; color: #16181B; ' + (st.plan === i ? 'border: 2px solid #0B7A4B;' : 'border: 1px solid #E4E7E3;') }));
+// [kalit, nom, tavsif, minimal paket, standart yoqilgan]
+const G = [['Sotuv kanallari', [['storefront.own', 'O’z vitrinangiz', 'Veb va Telegram mini-ilova', 0, 1], ['catalog.marketplace_listing', 'Umumiy katalogga chiqish', 'Yaqin xaridorlar sizni “Yaqin do’konlar”da ko’radi', 1, 1], ['catalog.marketplace_promo', 'Katalogda reklama joyi', '“Reklama” belgisi bilan yuqorida', 2, 0], ['storefront.custom_domain', 'Shaxsiy domen', 'savat.uz kabi', 1, 0]]],
+['Yetkazish', [['delivery.own_couriers', 'O’z kuryerlari', 'Naqd ham mumkin', 0, 1], ['delivery.platform_pool', 'Platforma kuryerlari', 'Faqat oldindan to’langan buyurtma', 0, 1], ['delivery.third_party', 'Tashqi xizmat (API)', 'Yandex Dostavka va boshqalar', 1, 0], ['delivery.auto_fallback', 'Avtomatik zaxira kanal', 'O’z kuryeri band bo’lsa keyingisi', 1, 1]]],
+['To’lov va qoldiq', [['payment.cash', 'Naqd pul', 'Faqat o’z kuryerlari bilan', 0, 1], ['payment.saved_cards', 'Saqlangan kartalar', 'Bir bosishda to’lash', 0, 1], ['stock.visible', 'Qoldiqni ko’rsatish', '“Tugadi” xaridorga ko’rinadi', 0, 1], ['integration.pos_erp', 'POS / ERP integratsiya', 'Billz, 1C, iiko', 1, 0]]],
+['Sodiqlik', [['loyalty.points', 'Ballar', 'Keshbek va darajalar', 1, 1], ['loyalty.stamp_cards', 'Jamg’arma kartalar', '“6-qahva bepul”', 2, 0], ['loyalty.gift_cards', 'Sovg’a kartalari', 'Elektron sertifikat', 4, 0]]],
+['AI va tahlil', [['ai.customer_assistant', 'Xaridor AI yordamchisi', 'Ro’yxat, ovoz, suratdan savat', 1, 1], ['ai.owner_assistant', 'Egasi AI yordamchisi', 'Narx, buyurtma, qoldiq tavsiyalari', 2, 0], ['ai.external_agents', 'Tashqi AI agentlar', 'MCP orqali', 2, 0], ['analytics.advanced', 'Kengaytirilgan tahlil', 'ABC, kohorta, hudud', 2, 0], ['branches.multi', 'Ko’p filial', 'Filial bo’yicha zona va qoldiq', 2, 0]]]];
+let on = 0, tot = 0;
+const groups = G.map((g) => ({ t: g[0], items: g[1].map((f) => { const locked = f[3] > st.plan, key = f[0];
+const val = !locked && (st.off[key] === undefined ? f[4] === 1 : st.off[key]); tot++; if (val) on++;
+return { t: f[1], d: f[2] + ' · ' + key, on: val ? 'true' : 'false', locked: locked ? 'true' : 'false', tc: locked ? '#9AA1A7' : '#16181B',
+note: locked ? (f[3] === 4 ? 'v2 da' : P[f[3]][0] + ' paketda') : '', noteC: '#7A4B00',
+toggle: () => { if (locked) return; const o = Object.assign({}, st.off); o[key] = !val; this.setState({ off: o }); },
+sw: 'flex: none; width: 44px; height: 26px; border-radius: 13px; border: none; padding: 3px; display: flex; cursor: ' + (locked ? 'not-allowed' : 'pointer') + '; justify-content: ' + (val ? 'flex-end' : 'flex-start') + '; background: ' + (locked ? '#E4E7E3' : (val ? '#0B7A4B' : '#C9CED3')) + ';',
+knob: 'width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF; display: block;' }; }) }));
+const L = [['Buyurtmalar', 1240, [150, 1500, 6000, 0][st.plan]], ['Xodimlar', 6, [3, 10, 30, 0][st.plan]], ['AI so’rovlar', 2310, [200, 5000, 20000, 0][st.plan]], ['SMS', 640, [100, 1000, 3000, 0][st.plan]]];
+const fmt = (n) => n.toLocaleString('ru-RU').replace(/\s/g, ' ');
+const limits = L.map((l) => { const unl = l[2] === 0 && st.plan === 3, pct = unl ? 20 : (l[2] === 0 ? 100 : Math.min(100, Math.round(l[1] / l[2] * 100)));
+return { t: l[0], v: fmt(l[1]) + ' / ' + (unl ? 'cheksiz' : fmt(l[2])), w: pct + '%', c: pct >= 90 ? '#C2410C' : '#0B7A4B' }; });
+const addons = [['Platforma kuryeri', '12 000 so’m ≤3 km, +2 000/km'], ['Tashqi xizmat', 'tarif +5%'], ['SMS (limitdan oshgani)', '90 so’m / dona'], ['MXIK to’ldirish (AI)', '500 so’m / mahsulot'], ['Integratsiya sozlash', '1 mln so’mdan']].map((a) => ({ t: a[0], v: a[1] }));
+return { plans, groups, limits, addons, plan: { name: P[1][0], price: P[1][1] }, onCount: on + ' / ' + tot + ' yoqilgan' };
+}
+}
+</script>
+</body>
+</html>

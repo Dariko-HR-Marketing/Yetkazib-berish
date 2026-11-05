@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>AI xizmatlari</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 1440px; height: 1060px; box-sizing: border-box; padding: 36px 56px; display: flex; flex-direction: column; gap: 14px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0B7A4B">AI xizmatlari</span><h1 style="margin: 0; font-size: 30px; line-height: 38px; font-weight: 800">AI qayerda pul topadi yoki vaqt tejaydi</h1></div>
+<div role="group" aria-label="Kim uchun" style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{ chips }}" as="c" hint-placeholder-count="6"><button type="button" aria-pressed="{{ c.pressed }}" onClick="{{ c.pick }}" style="{{ c.style }}">{{ c.t }} <span style="opacity: .7">{{ c.n }}</span></button></sc-for></div>
+</div>
+
+<div style="display: flex; gap: 16px; flex: 1; min-height: 0">
+<div style="flex: 1; min-width: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: min-content; gap: 10px; align-content: start">
+<sc-for list="{{ cards }}" as="a" hint-placeholder-count="9">
+<button type="button" onClick="{{ a.pick }}" aria-pressed="{{ a.pressed }}" style="{{ a.style }}">
+<span style="display: flex; justify-content: space-between; align-items: center; width: 100%"><span style="display: flex; align-items: center; gap: 8px"><span style="width: 24px; height: 24px; border-radius: 7px; background: #16181B; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800">{{ a.n }}</span><span style="font-size: 11.5px; font-weight: 700; color: #5E656C">{{ a.who }}</span></span><span style="{{ a.phaseStyle }}">{{ a.phase }}</span></span>
+<b style="font-size: 14.5px; line-height: 19px">{{ a.t }}</b>
+<span style="font-size: 12.5px; line-height: 17px; color: #3C4248">{{ a.d }}</span>
+<span style="font-size: 12px; font-weight: 700; color: #075C38">{{ a.effect }}</span>
+</button>
+</sc-for>
+</div>
+
+<aside style="flex: none; width: 400px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">Ta'sir va murakkablik</b>
+<div style="position: relative; height: 230px; border-radius: 10px; background: linear-gradient(to right, #E6F2EC 50%, #F6F7F4 50%); border: 1px solid #EEF0ED">
+<span style="position: absolute; left: 8px; top: 6px; font-size: 11px; font-weight: 800; color: #075C38">TEZ YUTUQ</span>
+<span style="position: absolute; right: 8px; top: 6px; font-size: 11px; font-weight: 800; color: #154BA8">STRATEGIK</span>
+<span style="position: absolute; left: 8px; bottom: 6px; font-size: 11px; font-weight: 700; color: #5E656C">oson ←</span>
+<span style="position: absolute; right: 8px; bottom: 6px; font-size: 11px; font-weight: 700; color: #5E656C">→ murakkab</span>
+<div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: #DCE0DC"></div>
+<div style="position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: #DCE0DC"></div>
+<sc-for list="{{ dots }}" as="d" hint-placeholder-count="15"><span style="{{ d.style }}">{{ d.n }}</span></sc-for>
+</div>
+<span style="font-size: 11.5px; color: #5E656C">Yuqorida — ta'siri katta. Tanlangan xizmat qora rangda.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #16181B; color: #FFFFFF">
+<b style="font-size: 15px">{{ cur.t }}</b>
+<span style="font-size: 12px; color: #9AA1A7">KERAKLI MA'LUMOT</span><span style="font-size: 13px; line-height: 18px">{{ cur.data }}</span>
+<span style="font-size: 12px; color: #9AA1A7">QAYERDA KO'RINADI</span><span style="font-size: 13px; line-height: 18px">{{ cur.where }}</span>
+<span style="font-size: 12px; color: #9AA1A7">INSON NAZORATI</span><span style="font-size: 13px; line-height: 18px; color: #F1C995">{{ cur.human }}</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-radius: 16px; background: #FDF1E3; color: #7A3E06; font-size: 12.5px; line-height: 17px">
+<b style="font-size: 13.5px">AI qoidalari</b>
+<span>Narx, pul qaytarish va bloklash — faqat inson tasdig'i bilan. Shaxsiy ma'lumot modelga anonim holda boradi; asosiy baza O'zbekistonda. Har AI javobi "AI tavsiyasi" deb belgilanadi. Natija A/B test bilan o'lchanadi.</span>
+</div>
+</aside>
+</div>
+
+<div style="display: flex; gap: 14px; align-items: stretch; padding: 14px 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="flex: none; width: 260px; display: flex; flex-direction: column; gap: 4px"><b style="font-size: 15px">Do'kon egasi uchun AI yordamchi</b><span style="font-size: 12.5px; line-height: 17px; color: #3C4248">Panel ichida o'zbek va rus tilida. Ma'lumotdan javob beradi va tayyor harakat taklif qiladi.</span></div>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 8px">
+<span style="align-self: flex-end; max-width: 70%; padding: 8px 12px; border-radius: 12px 12px 2px 12px; background: #16181B; color: #FFFFFF; font-size: 13px">Qaysi mahsulotlar 3 kunda tugaydi?</span>
+<div style="align-self: flex-start; max-width: 88%; display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: 12px 12px 12px 2px; background: #E6F2EC; font-size: 13px; line-height: 18px"><span>4 ta mahsulot: <b>Sut 3,2%</b> (2,1 kun), <b>Tuxum C1</b> (2,6 kun), <b>Qatiq 1 l</b> (2,8 kun), <b>Non "Buxanka"</b> (1 kun, har kuni keladi). Talab prognozi juma kuni +18% (bayram oldi).</span><span style="display: flex; gap: 6px"><span style="padding: 4px 10px; border-radius: 8px; background: #0B7A4B; color: #FFFFFF; font-size: 12px; font-weight: 800">Yetkazib beruvchiga buyurtma tayyorlash</span><span style="padding: 4px 10px; border-radius: 8px; background: #FFFFFF; color: #075C38; font-size: 12px; font-weight: 800">Ro'yxatni ochish</span></span></div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1060}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { who: 'all', sel: 0 };
+}
+renderVals() {
+const st = this.state;
+// nom, kim, tavsif, ta'sir, faza, impact 1-10, effort 1-10, ma'lumot, qayerda, inson nazorati
+const A = [
+['Talab prognozi va qoldiq ogohlantirishi', 'D', 'Har mahsulot qachon tugashini va qancha buyurtma qilishni aytadi', 'Maqsad: tugab qolish −30%', 1, 9, 5, 'Sotuv tarixi, qoldiq, bayram va ob-havo', 'Panel: katalog, AI yordamchi', 'Buyurtmani menejer tasdiqlaydi'],
+['Mahsulot kartochkasi generatsiyasi', 'D', 'Surat yoki nomdan tavsif (uz/ru), kategoriya va MXIK kodi taklifi', 'Kartochka 10 daqiqadan 1 daqiqaga', 1, 7, 2, 'Surat, nom, MXIK katalogi', 'Egasi: mahsulot kartochkasi', 'Saqlashdan oldin tekshiriladi'],
+['Aqlli qidiruv', 'X', 'Xato va aralash yozuvni tushunadi: "sut", "сут", "sut 3.2"', 'Maqsad: "topilmadi" −40%', 1, 8, 3, 'Katalog, qidiruv jurnali', 'Vitrina qidiruvi', 'Kerak emas'],
+['Muqobil mahsulot tavsiyasi', 'D', 'Yig’uvchiga eng mos muqobilni narx va brend bo’yicha taklif qiladi', 'Maqsad: muqobil rad etilishi −25%', 1, 7, 4, 'Katalog, xaridor tarixi, rad etishlar', 'Panel: yig’ish', 'Xaridor tasdiqlaydi'],
+['Telegram yordamchi bot', 'X', 'Buyurtma holati, murojaat qabul qilish va triaj; murakkabi operatorga', 'Murojaatlarning 50% gacha avtomatik', 1, 8, 4, 'Buyurtmalar, FAQ, murojaatlar', 'Telegram bot, vitrina chati', 'Pul qaytarish — operator'],
+['Sharh tahlili', 'D', 'Izohlarni mavzu va kayfiyat bo’yicha guruhlaydi, javob qoralamasi yozadi', 'Javob vaqti 2 soatdan 15 daqiqaga', 1, 6, 2, 'Sharhlar, teglar', 'Panel: reyting va sharhlar', 'Javobni do’kon yuboradi'],
+['Marshrut va ETA bashorati', 'K', 'Tirbandlik va tarix asosida aniq ETA, bir nechta manzil tartibi', 'Maqsad: ETA xatosi ±3 daqiqa', 2, 9, 8, 'GPS treklar, yo’l tarixi', 'Kuryer ilovasi, xaridor xaritasi', 'Dispetcher o’zgartira oladi'],
+['Firibgarlik va anomaliya', 'P', 'Soxta buyurtma, sharh manipulyatsiyasi, naqd farqi, GPS soxtalashtirish', 'Yo’qotishlarni erta aniqlash', 2, 8, 7, 'To’lovlar, qurilma, GPS, sharhlar', 'Admin paneli', 'Bloklash — faqat inson'],
+['Shaxsiy tavsiyalar', 'X', '"Odatdagi savat", "buni ham olasizmi", qayta buyurtma eslatmasi', 'Maqsad: o’rtacha chek +8%', 2, 8, 5, 'Xaridor tarixi (rozilik bilan)', 'Vitrina, savat, Telegram', 'Kerak emas'],
+['Marketing matni va segment', 'M', 'Segment tanlaydi, matn va rasm variantlari, eng yaxshi yuborish vaqti', 'Kampaniya tayyorlash 1 soatdan 10 daqiqaga', 2, 7, 3, 'RFM, kampaniya natijalari', 'Marketing: kampaniya', 'Yuborishni egasi tasdiqlaydi'],
+['"Ma’lumotdan so’rang" yordamchi', 'D', 'Egasi oddiy tilda so’raydi, yordamchi jadval va harakat bilan javob beradi', 'Hisobot so’rovlari 70% kamayadi', 2, 7, 6, 'Barcha analitika (faqat o’z do’koni)', 'Panel: AI yordamchi', 'Harakatlar tasdiq bilan'],
+['Hudud imkoniyatlari', 'M', 'Qamrov past va talab yuqori tumanlarni topadi, yangi hamkor taklif qiladi', 'Yangi tuman ochish qarori', 2, 6, 5, 'Buyurtma geografiyasi, qidiruvlar', 'Analitika: hududlar', 'Qaror — inson'],
+['Ketib qolish bashorati', 'P', 'Ketishi mumkin bo’lgan xaridor va do’konni oldindan belgilaydi', 'Maqsad: do’kon churn −20%', 3, 7, 7, 'Faollik, to’lov, murojaatlar', 'Admin, egasi bosh sahifasi', 'Taklif — menejer'],
+['Narx tavsiyasi', 'D', 'Elastiklik va raqobat asosida narx oralig’ini taklif qiladi', 'Marja +1–2 p.p.', 3, 8, 9, 'Sotuv, narx tarixi, raqobat', 'Panel: katalog', 'Faqat tavsiya, narxni inson qo’yadi'],
+['Rasm sifati va fon', 'D', 'Mahsulot suratini tozalaydi, fonni bir xil qiladi', 'Vitrina bir xil ko’rinadi', 1, 4, 2, 'Mahsulot suratlari', 'Egasi: mahsulot kartochkasi', 'Kerak emas']
+];
+const whoName = { all: 'Hammasi', X: 'Xaridor', D: 'Do’kon', K: 'Kuryer', M: 'Marketing', P: 'Platforma' };
+const chips = Object.keys(whoName).map((k) => ({ t: whoName[k], n: k === 'all' ? A.length : A.filter((a) => a[1] === k).length, pressed: st.who === k ? 'true' : 'false', pick: () => this.setState({ who: k }),
+style: 'height: 34px; padding: 0 12px; border-radius: 999px; font-size: 12.5px; font-weight: 700; cursor: pointer; ' + (st.who === k ? 'border: 1px solid #0B7A4B; background: #0B7A4B; color: #FFFFFF;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;') }));
+const ph = { 1: 'background: #0B7A4B; color: #FFFFFF;', 2: 'background: #E5EEF8; color: #154BA8;', 3: 'background: #F1F3F0; color: #3C4248;' };
+const cards = [];
+A.forEach((a, i) => { if (st.who !== 'all' && a[1] !== st.who) return; const on = st.sel === i;
+cards.push({ n: i + 1, t: a[0], who: whoName[a[1]], d: a[2], effect: a[3], phase: 'Faza ' + a[4], phaseStyle: 'padding: 2px 7px; border-radius: 5px; font-size: 11px; font-weight: 700; ' + ph[a[4]],
+pressed: on ? 'true' : 'false', pick: () => this.setState({ sel: i }),
+style: 'display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 12px 14px; border-radius: 14px; background: #FFFFFF; text-align: left; cursor: pointer; color: #16181B; ' + (on ? 'border: 2px solid #16181B;' : 'border: 1px solid #E4E7E3;') }); });
+const dots = A.map((a, i) => { const on = st.sel === i; const vis = st.who === 'all' || a[1] === st.who;
+return { n: i + 1, style: 'position: absolute; left: calc(' + ((a[6] - 0.5) * 10) + '% - 11px); top: calc(' + ((10.5 - a[5]) * 10) + '% - 11px); width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; ' + (on ? 'background: #16181B; color: #FFFFFF;' : 'background: #FFFFFF; color: #075C38; border: 1.5px solid #0B7A4B; box-sizing: border-box;') + ' opacity: ' + (vis ? '1' : '.25') + ';' }; });
+const a = A[st.sel];
+return { chips, cards, dots, cur: { t: (st.sel + 1) + '. ' + a[0], data: a[7], where: a[8], human: a[9] } };
+}
+}
+</script>
+</body>
+</html>

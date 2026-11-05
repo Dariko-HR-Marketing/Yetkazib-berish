@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Hisoblar va rollar arxitekturasi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 1600px; height: 1100px; box-sizing: border-box; padding: 36px 56px; display: flex; flex-direction: column; gap: 14px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0B7A4B">Hisoblar, rollar va hamyonlar arxitekturasi</span><h1 style="margin: 0; font-size: 30px; line-height: 38px; font-weight: 800">Bitta odam — bitta Platforma ID; rollar va hamyonlar unga ulanadi</h1></div>
+
+<div style="display: flex; gap: 12px; align-items: stretch; padding: 14px 16px; border-radius: 16px; background: #16181B; color: #FFFFFF">
+<div style="flex: none; width: 260px; display: flex; flex-direction: column; gap: 4px"><b style="font-size: 16px">Platforma ID (identifikatsiya)</b><span style="font-size: 12.5px; line-height: 17px; color: #C9CED3">Telefon raqami asosiy kalit. Bir odam bir vaqtda xaridor, kuryer va xodim bo'lishi mumkin — rollar alohida.</span></div>
+<sc-for list="{{ login }}" as="l" hint-placeholder-count="5"><div style="flex: 1; display: flex; flex-direction: column; gap: 3px; padding: 10px 12px; border-radius: 10px; background: #2A2D31"><b style="font-size: 13px; color: #8FD3B0">{{ l.t }}</b><span style="font-size: 12px; line-height: 16px; color: #E3E6E8">{{ l.d }}</span></div></sc-for>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{ roles }}" as="r" hint-placeholder-count="5">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; border-top: 4px solid {{ r.color }}">
+<b style="font-size: 16px">{{ r.t }}</b>
+<span style="font-size: 12px; color: #5E656C">{{ r.who }}</span>
+<sc-for list="{{ r.rows }}" as="x" hint-placeholder-count="5"><div style="display: flex; flex-direction: column; gap: 1px; padding-top: 6px; border-top: 1px solid #EEF0ED"><span style="font-size: 11px; font-weight: 800; color: #5E656C; letter-spacing: .04em">{{ x.k }}</span><span style="font-size: 12.5px; line-height: 17px">{{ x.v }}</span></div></sc-for>
+</div>
+</sc-for>
+</div>
+
+<div style="display: grid; grid-template-columns: 1.35fr 1fr; gap: 12px; flex: 1; min-height: 0">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Hisoblar (ledger): har pul va ball harakati ikki tomonlama yoziladi</b>
+<div style="display: grid; grid-template-columns: 1.3fr 1fr 1.5fr 1fr; gap: 6px; font-size: 11.5px; font-weight: 800; color: #5E656C"><span>HISOB</span><span>EGASI</span><span>NIMA KIRADI / CHIQADI</span><span>QAYERDA</span></div>
+<sc-for list="{{ ledger }}" as="l" hint-placeholder-count="8"><div style="display: grid; grid-template-columns: 1.3fr 1fr 1.5fr 1fr; gap: 6px; font-size: 12.5px; line-height: 17px; padding: 6px 0; border-top: 1px solid #EEF0ED"><b>{{ l.a }}</b><span>{{ l.o }}</span><span style="color: #3C4248">{{ l.f }}</span><span style="{{ l.ws }}">{{ l.w }}</span></div></sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #FDF1E3; color: #7A3E06">
+<b style="font-size: 16px">Talablar</b>
+<sc-for list="{{ rules }}" as="r" hint-placeholder-count="8"><div style="display: flex; gap: 8px; font-size: 12.5px; line-height: 17px"><b aria-hidden="true">•</b><span>{{ r }}</span></div></sc-for>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1600,"height":1100}}'>
+class Component extends DCLogic {
+renderVals() {
+const login = [['Telefon + SMS kod', 'Xaridor, kuryer, xodim — asosiy kirish'], ['Telegram', 'Xaridor uchun bir bosishda kirish'], ['E-IMZO', 'Do’kon egasi: shartnoma imzosi va KYC'], ['2 bosqichli kirish', 'Egasi, admin, moliya rollari uchun majburiy'], ['Qurilmalar ro’yxati', 'Sessiyalarni ko’rish va masofadan chiqarish']].map((l) => ({ t: l[0], d: l[1] }));
+const R = [
+['Xaridor hisobi', 'har bir do’kon vitrinasi bitta ID bilan', '#0B7A4B', [['KIRISH', 'Telefon yoki Telegram, oferta + roziliklar'], ['HISOB TARKIBI', 'Manzillar, kartalar (token), buyurtmalar, roziliklar, AI agentlar'], ['HAMYON', 'Ball hamyoni har do’kon uchun alohida; sovg’a kartasi balansi'], ['DASHBOARD', 'Hisobim: sodiqlik kartasi QR, ballar, kuponlar, aksiya kartalari']]],
+['Do’kon (tenant)', 'kompaniya → filiallar → xodimlar', '#154BA8', [['RO’YXATDAN O’TISH', 'KYC: STIR, rahbar, bank; E-IMZO bilan oferta va DPA'], ['TARKIBI', 'Filiallar, zonalar, katalog, to’lov provayderlari, integratsiyalar'], ['HAMYON', 'Obuna hisobi (platformaga), ball majburiyati, sovg’a kartalari'], ['DASHBOARD', 'Egasi: savdo, pul oqimi, sodiqlik, analitika, jamoa']]],
+['Do’kon xodimi', 'rol: menejer, yig’uvchi, kassir, dispetcher, buxgalter', '#7A3E06', [['QO’SHILISH', 'Egasi telefon orqali taklif qiladi → SMS → qoidalar'], ['RUXSAT', 'Rolga qarab (RBAC), filial bo’yicha cheklanadi'], ['HAMYON', 'Yo’q (ish haqi do’kon tizimida)'], ['DASHBOARD', 'O’z roli ekranlari, ko’nikmalar va modullar']]],
+['Kuryer hisobi', 'do’kon kuryeri (v2: platforma puli)', '#16181B', [['RO’YXATDAN O’TISH', 'Maqom, hujjatlar, shartnoma, GPS roziligi, o’quv'], ['TARKIBI', 'Smenalar, topshiriqlar, reyting, hujjatlar muddati'], ['HAMYON', 'Daromad balansi va naqd balansi (qarz) alohida'], ['DASHBOARD', 'Hisobim: daromad, to’lovlar, naqd, hujjatlar']]],
+['Platforma admini', 'ichki xodimlar', '#9F2D12', [['KIRISH', 'Korporativ SSO + 2 bosqichli kirish'], ['RUXSAT', 'Moderator, qo’llab-quvvatlash, moliya, DPO — alohida'], ['HAMYON', 'Platforma daromad hisobi (obunalar)'], ['DASHBOARD', 'Do’konlar, obunalar, moderatsiya, rozilik markazi']]]
+];
+const roles = R.map((r) => ({ t: r[0], who: r[1], color: r[2], rows: r[3].map((x) => ({ k: x[0], v: x[1] })) }));
+const W = { pr: ['Provayderda', 'background: #E5EEF8; color: #154BA8;'], pl: ['Platforma ledgeri', 'background: #E6F2EC; color: #075C38;'], sh: ['Do’kon kassasi', 'background: #FDF1E3; color: #7A3E06;'] };
+const ledger = [['Xaridor to’lovlari', 'Do’kon', 'Payme/Click/Uzum/karta → do’kon hisobi (T+1)', 'pr'], ['Ball hamyoni', 'Xaridor (do’kon ichida)', '+ keshbek, aksiya; − to’lovda, muddati o’tganda', 'pl'], ['Ball majburiyati', 'Do’kon', 'Chiqarilgan, ishlatilmagan ballarning so’mdagi qiymati', 'pl'], ['Sovg’a kartasi balansi', 'Xaridor', '+ karta faollashtirilganda; − xaridda', 'pl'], ['Kuryer daromadi', 'Kuryer', '+ har yetkazish, choy puli; − haftalik to’lov', 'pl'], ['Kuryer naqdi', 'Kuryer → do’kon', '+ naqd buyurtma; − kassaga topshirish', 'sh'], ['Obuna hisobi', 'Do’kon → platforma', '+ tarif; − korporativ kartadan avto-to’lov', 'pl'], ['Qaytarishlar', 'Do’kon → xaridor', 'Pul — provayder orqali; ball — hamyonga qaytadi', 'pr']].map((l) => ({ a: l[0], o: l[1], f: l[2], w: W[l[3]][0], ws: 'align-self: start; padding: 2px 7px; border-radius: 5px; font-size: 11.5px; font-weight: 700; ' + W[l[3]][1] }));
+const rules = ['Har yozuvda tenant_id: do’kon faqat o’z ma’lumotini ko’radi', 'Ball va pul harakati faqat ledger orqali, o’zgarmas yozuv; tuzatish — teskari yozuv bilan', 'Bir telefon bir nechta rolda — lekin rollar va ruxsatlar alohida, xaridor sifatida xodim chegirmasi yo’q', 'Egasi va moliya rollari uchun 2 bosqichli kirish majburiy', 'Xodim ishdan ketsa — bir bosishda kirish yopiladi, harakatlar jurnali qoladi', 'Kuryer hujjati muddati tugasa — smena avtomatik bloklanadi', 'Hisobni o’chirish: shaxsiy ma’lumot o’chiriladi, moliyaviy yozuvlar 5 yil anonim saqlanadi', 'Ball pulga almashtirilmaydi — elektron pul hisoblanmasligi uchun (yurist tasdiqlaydi)'];
+return { login, roles, ledger, rules };
+}
+}
+</script>
+</body>
+</html>

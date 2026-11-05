@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Xaridor: ball do'koni</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B; overflow: hidden">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 18px 16px 14px; background: #0B7A4B; color: #FFFFFF">
+<div style="display: flex; justify-content: space-between; align-items: center"><b style="font-size: 18px">Ball do'koni</b><span style="padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,.18); font-size: 12px; font-weight: 800">Kumush</span></div>
+<div style="display: flex; justify-content: space-between; align-items: flex-end"><div style="display: flex; flex-direction: column"><span style="font-size: 12px; opacity: .85">Balansingiz</span><b style="font-size: 30px">{{ balance }}</b></div><span style="font-size: 12px; opacity: .85; text-align: right">Bu mahsulotlar<br>100% ball bilan</span></div>
+</div>
+<div style="display: flex; gap: 6px; padding: 12px 16px 4px"><sc-for list="{{ cats }}" as="c" hint-placeholder-count="4"><button type="button" aria-pressed="{{ c.pressed }}" onClick="{{ c.pick }}" style="{{ c.style }}">{{ c.t }}</button></sc-for></div>
+<div style="flex: 1; overflow: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px 16px 16px; align-content: start">
+<sc-for list="{{ items }}" as="i" hint-placeholder-count="6">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 10px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3; opacity: {{ i.op }}">
+<div style="height: 76px; border-radius: 10px; background: {{ i.bg }}"></div>
+<b style="font-size: 13px; line-height: 17px">{{ i.n }}</b>
+<span style="font-size: 11.5px; color: #5E656C">{{ i.price }}</span>
+<button type="button" onClick="{{ i.pick }}" aria-disabled="{{ i.dis }}" style="{{ i.btn }}">{{ i.pts }}</button>
+</div>
+</sc-for>
+</div>
+<div style="padding: 10px 16px 16px; background: #FFFFFF; border-top: 1px solid #E4E7E3; font-size: 11.5px; line-height: 16px; color: #5E656C">Ball pulga almashtirilmaydi va boshqaga o'tkazilmaydi. Eng eski ballar birinchi yechiladi. Mahsulot keyingi buyurtma bilan yetkaziladi.</div>
+
+<sc-if value="{{ confirm }}">
+<div style="position: absolute; inset: 0; background: rgba(22,24,27,.45); display: flex; align-items: flex-end">
+<div style="width: 100%; display: flex; flex-direction: column; gap: 10px; padding: 18px 16px 24px; border-radius: 20px 20px 0 0; background: #FFFFFF">
+<b style="font-size: 17px">{{ sel.n }}</b>
+<div style="display: flex; justify-content: space-between; font-size: 14px"><span style="color: #5E656C">Narxi</span><b>{{ sel.pts }}</b></div>
+<div style="display: flex; justify-content: space-between; font-size: 14px"><span style="color: #5E656C">Qoladi</span><b>{{ sel.after }}</b></div>
+<button type="button" onClick="{{ buy }}" style="height: 50px; border-radius: 14px; border: none; background: #0B7A4B; color: #FFFFFF; font-size: 15px; font-weight: 800; cursor: pointer">Ballar bilan olish</button>
+<button type="button" onClick="{{ cancel }}" style="height: 44px; border-radius: 12px; border: 1px solid #DCE0DC; background: #FFFFFF; font-size: 14px; font-weight: 800; cursor: pointer">Bekor qilish</button>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ toast }}"><div style="position: absolute; left: 16px; right: 16px; bottom: 76px; padding: 12px 14px; border-radius: 12px; background: #16181B; color: #FFFFFF; font-size: 13px">{{ toastText }}</div></sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { bal: 14820, cat: 0, sel: -1, last: '' };
+}
+renderVals() {
+const st = this.state;
+const fmt = (n) => n.toLocaleString('ru-RU').replace(/ /g, ' ');
+const P = [['Non “Buxanka”', 4000, 0, '#FDF1E3'], ['Sut 3,2% 1 l', 13000, 0, '#E5EEF8'], ['Kefir 2,5%', 9900, 0, '#E6F2EC'], ['Shokolad 90 g', 12000, 1, '#FFF6E0'], ['Ko’k choy 100 g', 14000, 1, '#F1F3F0'], ['Asal 500 g', 42000, 1, '#FFF6E0'], ['Termosumka (brendli)', 25000, 2, '#16181B'], ['Eko-sumka', 6000, 2, '#E6F2EC']];
+const C = ['Hammasi', 'Kundalik', 'Shirinlik va choy', 'Sovg’alar'];
+const cats = C.map((t, i) => ({ t, pressed: st.cat === i ? 'true' : 'false', pick: () => this.setState({ cat: i }),
+style: 'flex: none; height: 32px; padding: 0 11px; border-radius: 999px; font-size: 12px; font-weight: 700; cursor: pointer; ' + (st.cat === i ? 'border: 1px solid #0B7A4B; background: #E6F2EC; color: #075C38;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;') }));
+const items = [];
+P.forEach((p, i) => { if (st.cat && p[2] !== st.cat - 1) return; const ok = st.bal >= p[1];
+items.push({ n: p[0], pts: fmt(p[1]) + ' ball', price: 'do’konda ' + fmt(p[1]) + ' so’m', bg: p[3], op: ok ? '1' : '.55', dis: ok ? 'false' : 'true',
+pick: () => { if (ok) this.setState({ sel: i }); },
+btn: 'height: 34px; border-radius: 10px; border: none; font-size: 12.5px; font-weight: 800; cursor: ' + (ok ? 'pointer' : 'not-allowed') + '; ' + (ok ? 'background: #0B7A4B; color: #FFFFFF;' : 'background: #F1F3F0; color: #9AA1A7;') }); });
+const s = st.sel >= 0 ? P[st.sel] : null;
+return { cats, items, balance: fmt(st.bal), confirm: !!s,
+sel: s ? { n: s[0], pts: fmt(s[1]) + ' ball', after: fmt(st.bal - s[1]) + ' ball' } : { n: '', pts: '', after: '' },
+buy: () => this.setState({ bal: st.bal - s[1], sel: -1, last: s[0] }), cancel: () => this.setState({ sel: -1 }),
+toast: !!st.last, toastText: st.last + ' savatga qo’shildi · ballar bilan to’langan ✓' };
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Do'kon hayot sikli</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+</style>
+</helmet>
+<div style="width: 2000px; height: 1060px; box-sizing: border-box; padding: 48px 64px; display: flex; flex-direction: column; gap: 20px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0B7A4B">SaaS mijozi · do'kon hayot sikli</span><h1 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 800">Do'kon 3 kunda ishga tushadi, obuna esa avtomatik yuritiladi</h1></div>
+
+<div style="display: grid; grid-template-columns: 170px repeat(11, minmax(0, 1fr)); gap: 6px">
+<div></div>
+<sc-for list="{{ stages }}" as="s" hint-placeholder-count="11">
+<div style="{{ s.style }}"><span style="font-size: 11.5px; font-weight: 700; opacity: .75">{{ s.n }}</span><b style="font-size: 13.5px; line-height: 17px">{{ s.name }}</b></div>
+</sc-for>
+<sc-for list="{{ lanes }}" as="l" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 10px 12px; border-radius: 10px; background: #FFFFFF; border: 1px solid #C9CEC8"><b style="font-size: 14.5px">{{ l.name }}</b><span style="font-size: 12px; color: #5E656C">{{ l.where }}</span></div>
+<sc-for list="{{ l.cells }}" as="c" hint-placeholder-count="11">
+<div style="min-height: 150px; box-sizing: border-box; padding: 8px; border-radius: 10px; background: #FFFFFF; border: 1px solid #DCE0DC; font-size: 12.5px; line-height: 17px">{{ c }}</div>
+</sc-for>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center">
+<b style="font-size: 15px; margin-right: 6px">Kuzatiladigan ko'rsatkichlar:</b>
+<span style="padding: 8px 12px; border-radius: 10px; background: #FFFFFF; border: 1px solid #DCE0DC; font-size: 13.5px">Ro'yxatdan → ishga tushish ≤ 3 kun</span>
+<span style="padding: 8px 12px; border-radius: 10px; background: #FFFFFF; border: 1px solid #DCE0DC; font-size: 13.5px">Sinovdan pullik tarifga o'tish ulushi</span>
+<span style="padding: 8px 12px; border-radius: 10px; background: #FFFFFF; border: 1px solid #DCE0DC; font-size: 13.5px">MRR va o'rtacha tarif</span>
+<span style="padding: 8px 12px; border-radius: 10px; background: #FFFFFF; border: 1px solid #DCE0DC; font-size: 13.5px">Oylik ketish (churn)</span>
+<span style="padding: 8px 12px; border-radius: 10px; background: #FFFFFF; border: 1px solid #DCE0DC; font-size: 13.5px">Do'kon boshiga buyurtmalar soni</span>
+<span style="padding: 8px 12px; border-radius: 10px; background: #FFFFFF; border: 1px solid #DCE0DC; font-size: 13.5px">Tasdiq SLA ≤ 5 daqiqa ulushi</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":2000,"height":1060}}'>
+class Component extends DCLogic {
+renderVals() {
+const names = ['Jalb qilish', 'Ro’yxatdan o’tish', 'Sinov · 14 kun', 'Sozlash', 'Tekshiruv (KYC)', 'Ishga tushirish', 'Faol ishlash', 'Oylik billing', 'Qarzdorlik', 'Tarif o’zgarishi', 'Chiqish'];
+const tone = ['#16181B', '#16181B', '#16181B', '#16181B', '#16181B', '#0B7A4B', '#0B7A4B', '#154BA8', '#9F2D12', '#154BA8', '#5E656C'];
+const stages = names.map((name, i) => ({ n: i + 1, name, style: 'display: flex; flex-direction: column; gap: 2px; padding: 8px 8px 10px; border-radius: 10px; color: #FFFFFF; background: ' + tone[i] + ';' }));
+const lanes = [
+{ name: 'Do’kon egasi', where: 'platforma sayti · panel', cells: [
+'Saytda tariflarni ko’radi yoki sotuv menejeri bilan uchrashadi', 'Telefon + SMS kod, do’kon nomi, profil turi, STIR', 'Demo katalog bilan buyurtma oqimini sinab ko’radi', 'Katalog (CSV yoki qo’lda), hudud, ish vaqti, xodimlar', 'Oferta, Payme/CLICK merchant hisobini ulaydi', 'Domen, QR stikerlar, sinov buyurtmasi', 'Buyurtmalar, hisobotlar, maslahatlar', 'Avtoto’lov yoki hisob-faktura bo’yicha to’laydi', 'Eslatmalarni oladi, qarzni yopadi', 'Limit tugasa — yuqori tarifga o’tadi', 'Ma’lumotni eksport qiladi, obunani yopadi'] },
+{ name: 'Platforma', where: 'avtomatik', cells: [
+'UTM va referal kodi yoziladi', 'Tenant, subdomen, egasi roli yaratiladi', 'Sinov limitlari; 3-, 7-, 12-kun eslatmalari', 'Sozlash cheklisti; CSV xatolar hisoboti', 'Go-live tekshiruvi: ≥ 10 SKU, hudud, to’lov usuli', 'Vitrina ochiladi, monitoring yoqiladi', 'Limitlar hisobi: SKU, buyurtma, filial', 'Har oy 1-sanada hisob va elektron chek', '+3 kun eslatma · +7 kun vitrina «vaqtincha yopiq» · +30 kun to’xtatish', 'Kunlar bo’yicha proporsional qayta hisob', '30 kun saqlanadi, keyin o’chiriladi; audit qoladi'] },
+{ name: 'Platforma jamoasi', where: 'sotuv · yordam · moliya', cells: [
+'Sotuv: demo va tijoriy taklif', 'Shubhali ro’yxatdan o’tishni ko’rib chiqadi', 'Onboarding menejeri qo’ng’iroq qiladi', 'Katalog importiga yordam (Biznes va yuqori)', 'KYC va oferta tekshiruvi', 'Xodimlarni 1 soat o’qitish', 'Yordam xizmati, SLA monitoringi', 'Tushum va debitorlik nazorati', 'Muloqot, muddatni uzaytirish qarori', 'Taklif va chegirma', 'Ketish sababi so’rovi, qaytarish taklifi'] }
+];
+return { stages, lanes };
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Xaridor: rozilik va maxfiylik</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B; overflow: hidden">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 18px 16px 12px; background: #FFFFFF; border-bottom: 1px solid #E4E7E3">
+<div style="display: flex; align-items: center; gap: 10px"><span style="width: 40px; height: 40px; border-radius: 12px; border: 1px solid #E4E7E3; display: flex; align-items: center; justify-content: center; font-size: 18px">←</span><b style="font-size: 17px">{{ L.title }}</b></div>
+<div role="group" aria-label="Til / Язык" style="display: flex; padding: 3px; border-radius: 10px; background: #F1F3F0"><sc-for list="{{ langs }}" as="l" hint-placeholder-count="2"><button type="button" aria-pressed="{{ l.pressed }}" onClick="{{ l.pick }}" style="{{ l.style }}">{{ l.t }}</button></sc-for></div>
+</div>
+<div style="flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 12px; padding: 14px 16px">
+<span style="font-size: 12.5px; line-height: 18px; color: #3C4248">{{ L.intro }}</span>
+<div style="display: flex; flex-direction: column; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; overflow: hidden">
+<sc-for list="{{ consents }}" as="c" hint-placeholder-count="4">
+<div style="display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-bottom: 1px solid #EEF0ED">
+<span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><b style="font-size: 13.5px">{{ c.t }}</b><span style="font-size: 12px; line-height: 16px; color: #5E656C">{{ c.d }}</span></span>
+<button type="button" role="switch" aria-checked="{{ c.on }}" aria-disabled="{{ c.locked }}" aria-label="{{ c.t }}" onClick="{{ c.toggle }}" style="{{ c.sw }}"><span style="width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF"></span></button>
+</div>
+</sc-for>
+</div>
+<b style="font-size: 14px">{{ L.agentsTitle }}</b>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<span style="display: flex; flex-direction: column; gap: 2px"><b style="font-size: 13.5px">{{ L.agent }}</b><span style="font-size: 12px; color: #5E656C">{{ L.agentSub }}</span></span>
+<span style="padding: 6px 10px; border-radius: 9px; border: 1px solid #F1C995; color: #7A3E06; font-size: 12px; font-weight: 800">{{ L.disconnect }}</span>
+</div>
+<b style="font-size: 14px">{{ L.rightsTitle }}</b>
+<sc-for list="{{ rights }}" as="r" hint-placeholder-count="3"><button type="button" onClick="{{ r.pick }}" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3; cursor: pointer; text-align: left; color: #16181B"><span style="display: flex; flex-direction: column; gap: 2px"><b style="font-size: 13.5px; color: {{ r.color }}">{{ r.t }}</b><span style="font-size: 12px; color: #5E656C">{{ r.d }}</span></span><span style="color: #9AA1A7">›</span></button></sc-for>
+<span style="font-size: 12.5px; font-weight: 700; color: #0B7A4B">{{ done }}</span>
+<span style="font-size: 11.5px; line-height: 16px; color: #5E656C">{{ L.foot }}</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { lang: 'uz', on: [true, true, false, false], req: -1 };
+}
+renderVals() {
+const st = this.state;
+const T = {
+uz: { title: 'Rozilik va maxfiylik', intro: 'Ma’lumotlaringiz buyurtmani bajarish va xizmatni yaxshilash uchun ishlatiladi. Har birini o’zingiz boshqarasiz.', agentsTitle: 'Ulangan AI agentlar', agent: 'Mening yordamchim (MCP)', agentSub: 'Katalog, savat, tasdiq bilan buyurtma · limit 500 000', disconnect: 'Uzish', rightsTitle: 'Mening huquqlarim', foot: 'Operator: “Yashil Savat” MChJ va platforma. Maxfiylik siyosati va oferta — uz/ru. Savollar: Telegram @yordam yoki 1234.',
+c: [['Xizmat ko’rsatish', 'Buyurtma, yetkazish, to’lov, chek. Bu rozilsiz xizmat ishlamaydi.'], ['Xabarlar va aksiyalar', 'Telegram va SMS orqali takliflar, 09:00–21:00'], ['Reklama platformalari', 'Meta va Google’ga xeshlangan hodisalar (xorijga uzatiladi)'], ['Sog’liq va parhez ma’lumoti', 'Allergiya, laktozasiz, shakarsiz — filtr uchun (yozma rozilik)']],
+r: [['Ma’lumotlarimni olish', 'Fayl 30 kun ichida Telegram’ga yuboriladi'], ['Ma’lumotni tuzatish', 'Ism, manzil, telefon'], ['Hisobni va ma’lumotni o’chirish', 'Qonun saqlashni talab qiladigan cheklar bundan mustasno']],
+done: ['So’rov qabul qilindi · №R-2291', 'Tahrirlash oynasi ochiladi', 'O’chirish so’rovi · 2 qadamli tasdiq'] },
+ru: { title: 'Согласия и приватность', intro: 'Ваши данные используются для выполнения заказа и улучшения сервиса. Каждым пунктом управляете вы сами.', agentsTitle: 'Подключённые AI-агенты', agent: 'Мой помощник (MCP)', agentSub: 'Каталог, корзина, заказ с подтверждением · лимит 500 000', disconnect: 'Отключить', rightsTitle: 'Мои права', foot: 'Оператор: ООО «Yashil Savat» и платформа. Политика конфиденциальности и оферта — uz/ru. Вопросы: Telegram @yordam или 1234.',
+c: [['Оказание услуги', 'Заказ, доставка, оплата, чек. Без этого согласия сервис не работает.'], ['Сообщения и акции', 'Предложения в Telegram и SMS, 09:00–21:00'], ['Рекламные платформы', 'Хешированные события в Meta и Google (передача за рубеж)'], ['Данные о здоровье и питании', 'Аллергия, без лактозы, без сахара — для фильтров (письменное согласие)']],
+r: [['Получить мои данные', 'Файл придёт в Telegram в течение 30 дней'], ['Исправить данные', 'Имя, адрес, телефон'], ['Удалить аккаунт и данные', 'Кроме чеков, которые закон обязывает хранить']],
+done: ['Запрос принят · №R-2291', 'Откроется окно редактирования', 'Запрос на удаление · подтверждение в 2 шага'] }
+};
+const L = T[st.lang];
+const langs = [['uz', 'UZ'], ['ru', 'RU']].map((l) => ({ t: l[1], pressed: st.lang === l[0] ? 'true' : 'false', pick: () => this.setState({ lang: l[0] }),
+style: 'height: 30px; padding: 0 10px; border-radius: 8px; border: none; font-size: 12.5px; font-weight: 800; cursor: pointer; ' + (st.lang === l[0] ? 'background: #16181B; color: #FFFFFF;' : 'background: transparent; color: #5E656C;') }));
+const consents = L.c.map((c, i) => { const on = st.on[i]; const locked = i === 0;
+return { t: c[0], d: c[1], on: on ? 'true' : 'false', locked: locked ? 'true' : 'false',
+toggle: () => { if (locked) return; const a = st.on.slice(); a[i] = !a[i]; this.setState({ on: a }); },
+sw: 'flex: none; width: 46px; height: 26px; border-radius: 13px; border: none; padding: 3px; display: flex; cursor: ' + (locked ? 'not-allowed' : 'pointer') + '; opacity: ' + (locked ? '.6' : '1') + '; ' + (on ? 'background: #0B7A4B; justify-content: flex-end;' : 'background: #C9CED3; justify-content: flex-start;') }; });
+const rights = L.r.map((r, i) => ({ t: r[0], d: r[1], color: i === 2 ? '#9F2D12' : '#16181B', pick: () => this.setState({ req: i }) }));
+return { L, langs, consents, rights, done: st.req >= 0 ? L.done[st.req] : '' };
+}
+}
+</script>
+</body>
+</html>

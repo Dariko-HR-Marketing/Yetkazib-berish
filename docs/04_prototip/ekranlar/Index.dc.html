@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Navigatsiya</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:inherit;text-decoration:none}
+.card:hover{border-color:#0B7A4B !important;box-shadow:0 4px 14px rgba(11,122,75,.12)}
+.card:focus-visible{outline:3px solid #0B7A4B;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 100%; min-width: 1024px; max-width: 1440px; min-height: 100%; margin: 0 auto; box-sizing: border-box; padding: 48px 64px 64px; display: flex; flex-direction: column; gap: 28px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+
+<header style="display: flex; justify-content: space-between; align-items: flex-end; gap: 32px">
+<div style="display: flex; flex-direction: column; gap: 8px; max-width: 760px">
+<span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0B7A4B">Dostavka SaaS platformasi · UX prototip</span>
+<h1 style="margin: 0; font-size: 36px; line-height: 44px; font-weight: 800">Navigatsiya: {{ stats.total }} ta ekran va sxema mantiqiy tartibda</h1>
+<span style="font-size: 15px; line-height: 22px; color: #3C4248">MVP 1-versiya doirasi va pul oqimidan boshlanadi, keyin strategiya, arxitektura, to'lovlar, dizayn tizimi va har bir rolning ekranlari, reyting, oxirida analitika va AI, bildirishnomalar va admin. Kartochkani bosing — ekran ochiladi.</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, auto); gap: 8px 20px; font-size: 13px; color: #3C4248">
+<span><b style="font-size: 22px; color: #16181B">{{ stats.total }}</b> ekran</span>
+<span><b style="font-size: 22px; color: #16181B">{{ stats.inter }}</b> interaktiv</span>
+<span><b style="font-size: 22px; color: #16181B">{{ stats.sections }}</b> bo'lim</span>
+</div>
+</header>
+
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div role="group" aria-label="Rol bo'yicha filtr" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{ chips }}" as="c" hint-placeholder-count="7"><button type="button" onClick="{{ c.pick }}" aria-pressed="{{ c.pressed }}" style="{{ c.style }}">{{ c.label }} <span style="opacity: .7">{{ c.count }}</span></button></sc-for>
+<button type="button" onClick="{{ mvpBtn.pick }}" aria-pressed="{{ mvpBtn.pressed }}" style="{{ mvpBtn.style }}">{{ mvpBtn.label }}</button>
+</div>
+<div style="display: flex; gap: 14px; font-size: 12.5px; color: #5E656C; align-items: center">
+<span><span style="padding: 2px 7px; border-radius: 5px; background: #E5EEF8; color: #154BA8; font-weight: 700">Mobil</span> 390 px</span>
+<span><span style="padding: 2px 7px; border-radius: 5px; background: #E6F2EC; color: #075C38; font-weight: 700">Desktop</span> 1440 px</span>
+<span><span style="padding: 2px 7px; border-radius: 5px; background: #FDF1E3; color: #7A3E06; font-weight: 700">Sxema</span> mantiq</span>
+<span><b style="color: #0B7A4B">●</b> bosiladigan</span>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<b style="font-size: 15px">Tezkor yo'llar</b>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{ paths }}" as="p" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border-radius: 14px; background: #16181B; color: #FFFFFF">
+<b style="font-size: 14px">{{ p.title }}</b>
+<div style="display: flex; flex-wrap: wrap; gap: 4px; align-items: center; font-size: 12.5px">
+<sc-for list="{{ p.steps }}" as="s" hint-placeholder-count="4"><a href="{{ s.href }}" style="padding: 3px 8px; border-radius: 6px; background: #2A2D31; color: #FFFFFF; font-weight: 600">{{ s.n }}. {{ s.t }}</a></sc-for>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<sc-for list="{{ sections }}" as="sec" hint-placeholder-count="10">
+<section style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; align-items: baseline; gap: 12px; padding-bottom: 8px; border-bottom: 1px solid #E4E7E3">
+<span style="font-size: 13px; font-weight: 800; color: #0B7A4B">{{ sec.num }}</span>
+<h2 style="margin: 0; font-size: 22px; line-height: 28px; font-weight: 800">{{ sec.title }}</h2>
+<span style="font-size: 13.5px; color: #5E656C">{{ sec.desc }}</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{ sec.items }}" as="i" hint-placeholder-count="5">
+<a class="card" href="{{ i.href }}" style="display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3; transition: border-color .15s, box-shadow .15s">
+<span style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+<span style="font-size: 12px; font-weight: 800; color: #5E656C">{{ i.n }}</span>
+<span style="display: flex; gap: 6px; align-items: center"><span style="{{ i.verStyle }}">{{ i.ver }}</span><span style="{{ i.typeStyle }}">{{ i.type }}</span><span style="{{ i.dotStyle }}" aria-label="{{ i.dotLabel }}">●</span></span>
+</span>
+<b style="font-size: 14.5px; line-height: 19px">{{ i.title }}</b>
+<span style="font-size: 12.5px; line-height: 17px; color: #3C4248">{{ i.desc }}</span>
+</a>
+</sc-for>
+</div>
+</section>
+</sc-for>
+
+<footer style="display: flex; justify-content: space-between; gap: 20px; padding-top: 16px; border-top: 1px solid #E4E7E3; font-size: 13px; color: #5E656C">
+<span>Har bir ekran o'z kanvas joyida ham turibdi — umumiy ko'rinish uchun kanvasga qayting.</span>
+<span>Namuna ma'lumotlar barcha ekranlarda bir xil: 132,6 mln so'm · 2 070 buyurtma</span>
+</footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":5300}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { role: 'all', mvp: false };
+}
+renderVals() {
+const role = this.state.role;
+// [fayl, sarlavha, tur (m/d/s), interaktiv, tavsif, rollar]
+const S = [
+['MVP 1-versiya: O’zbekiston, o’zbek va rus tili', 'Nimadan boshlaymiz va pul qanday aylanadi', [
+['MVP-Scope', 'MVP doirasi: v1, v2, v3', 's', 1, 'Har rol uchun v1 da nima bor, nima keyinga qoladi; tillar va muvaffaqiyat mezonlari', 'JXKDEA'],
+['Money-Flow', 'Pul, mahsulot va ma’lumot oqimi', 's', 1, '8 bosqich: to’lov, band qilish, yechish, topshirish, kassa, T+1; kim kimga to’laydi', 'JXKDEA']]],
+['Gibrid model: paketlar, kalitlar va kuryer kanallari', 'PRD v1 qarorlari: komissiyasiz, har funksiya yoqiladi/o’chiriladi', [
+['Shop-Marketplace', 'Umumiy katalog: yaqin do’konlar (Telegram)', 'm', 1, 'Do’konlar va mahsulot narxini solishtirish, “Tugadi”, “Reklama” belgisi, uz/ru', 'X'],
+['Owner-Plan', 'Paket va funksiyalar', 'd', 1, '4 paket, 21 funksiya kaliti, limitlar va qo’shimcha xizmatlar', 'E'],
+['Owner-Delivery', 'Kuryer kanallari va qoidalar', 'd', 1, 'O’z kuryeri → platforma puli → tashqi API; ustuvorlik va sinov', 'ED'],
+['Admin-Plans', 'Paket konstruktori', 'd', 1, 'Paket × funksiya matritsasi, uch qatlamli tekshiruv, versiya', 'A'],
+['Admin-CourierPool', 'Platforma kuryerlar puli', 'd', 1, 'Tuman talab/taklif, bonus, kuryerlar va qabul navbati', 'AK']]],
+['Ro’yxatdan o’tish, oferta va roziliklar', 'Har taraf kirishda o’z hujjatini qabul qiladi', [
+['Onboard-Customer', 'Xaridor: ro’yxatdan o’tish va roziliklar (uz/ru)', 'm', 1, 'Oferta, maxfiylik, xizmat roziligi, 18+; ixtiyoriy marketing, reklama, AI profili', 'X'],
+['Onboard-Shop', 'Do’kon: KYC va E-IMZO bilan shartnoma', 'd', 1, 'Kompaniya, rahbar, bank; SaaS ofertasi va DPA imzosi', 'EA'],
+['Onboard-Courier', 'Kuryer: ishga qabul va roziliklar', 'm', 1, 'Maqom, hujjatlar, shartnoma, GPS faqat smenada, o’quv modullari', 'KD'],
+['Admin-Consents', 'Oferta va rozilik markazi (ichki)', 'd', 1, 'Versiyalar, o’zgarmas jurnal, mijoz so’rovlari, muvofiqlik ro’yxati', 'JA']]],
+['Hisoblar, ballar va onboarding', 'Har rolning hisobi, ichki ball, sodiqlik va aksiya kartalari', [
+['Accounts-Architecture', 'Hisoblar, rollar va hamyonlar arxitekturasi', 's', 0, 'Platforma ID, 5 xil hisob, ledger, tenant izolyatsiyasi va talablar', 'JEA'],
+['Points-Model', 'Ball, sodiqlik va aksiya kartalari modeli', 's', 0, 'Yig’ish, sarflash, muddat, 4 xil karta, qonuniy chegara, buxgalteriya', 'JEXA'],
+['Shop-Account', 'Xaridor: hisobim va sodiqlik kartasi (uz/ru)', 'm', 1, 'QR karta, ball balansi, daraja, aksiya kartasi, kuponlar, sovg’a kartasi', 'X'],
+['Shop-Rewards', 'Xaridor: ball do’koni', 'm', 1, 'Mahsulotlarni 100% ball bilan olish', 'X'],
+['Shop-PayPoints', 'Xaridor: ball + pul bilan to’lash', 'm', 1, 'Chekning 30% gacha ball, qolgani karta yoki naqd, keshbek hisobi', 'X'],
+['Owner-PointsLedger', 'Do’kon: ballar, aksiya va sovg’a kartalari', 'd', 1, 'Ball majburiyati, oylik hisob, shtamp kartalar, sovg’a kartasi partiyalari', 'E'],
+['Owner-Team', 'Do’kon: jamoa, rollar va filiallar', 'd', 1, 'Xodimlarni taklif qilish, 7 rol × 12 ruxsat, 2FA, filiallar', 'E'],
+['Courier-Account', 'Kuryer: hisobim, daromad va naqd', 'm', 1, 'Haftalik daromad, soliq chegarasi, naqdni topshirish, hujjatlar muddati', 'K'],
+['Onboarding-Guides', 'Onboarding va yo’riqnomalar', 'd', 1, 'Egasi uchun 10 qadam, xaridor intro, yig’uvchi va kuryer yo’riqnomasi, yordam markazi', 'XKDEA']]],
+['Strategiya va biznes model', 'Nima sotamiz, kimga va qanday pul aylanadi', [
+['SaaS-Model', 'SaaS modeli: pul va xizmat oqimi', 's', 0, 'Platforma, do’kon, xaridor va kuryer o’rtasidagi pul va xizmat oqimi', 'JEA'],
+['Tenant-Lifecycle', 'Do’kon hayot sikli', 's', 0, 'Lid → sinov → faol → qarzdor → to’xtatilgan: har bosqich harakatlari', 'JEA'],
+['Flow-E2E', 'To’liq buyurtma jarayoni', 's', 0, '13 bosqich × 6 ishtirokchi: kim nima qiladi va qachon', 'JXKDEA'],
+['Gaps', 'Bo’shliqlar va tavsiyalar', 's', 0, 'Biznes jarayonidagi uzilishlar va ularni yopish tavsiyalari', 'JEA'],
+['Services-Map', 'Xizmatlar va protseduralar xaritasi', 's', 1, 'Tayyor, qisman va qolib ketgan xizmatlar, SOP va jamoa resurslari', 'JEA'],
+['Store-Brands', 'Har do’konga o’z internet-do’koni', 'd', 0, 'Bitta platforma — har do’kon o’z domeni, rangi va katalogi bilan', 'JEX']]],
+['Arxitektura va mantiq', 'Tizim qanday quriladi va qanday ishlaydi', [
+['Main', 'Arxitektura: 3 ilova, 1 yadro', 's', 0, 'Vitrina, kuryer ilovasi, panel va umumiy backend xizmatlari', 'J'],
+['Flow-Order', 'Buyurtma holatlari mantiqi', 's', 0, 'Holat mashinasi: o’tishlar, taymerlar va xatolik yo’llari', 'JD'],
+['Track-Model', 'Kuzatuv mantiqi: holat, lokatsiya, ETA', 's', 0, 'Har mahsulot holati, kuryer koordinatasi va ETA hisobi', 'JXD'],
+['GPS-Flow', 'GPS: kuryerdan xaridorgacha', 's', 0, 'Har 15/60 soniyada nuqta, geozona, xaridorga uzatish', 'JKX'],
+['Analytics-Method', 'Analitika metodikasi', 's', 0, 'Ko’rsatkichlar formulasi va ma’lumot manbalari', 'JE']]],
+['To’lov tizimlari va xalqaro chiqish', 'Bitta API, ko’p provayder, ko’p davlat', [
+['Pay-Architecture', 'To’lov arxitekturasi', 's', 0, 'Yagona Payment API, orkestrator, adapterlar, ledger, fiskal chek', 'JEA'],
+['Pay-Providers', 'Provayderlar katalogi', 'd', 1, 'UZ, KZ, KG, TJ, RU, TM va xalqaro: usullar va ulanish fazasi', 'JEA'],
+['Expansion', 'Xalqaro kengayish', 's', 0, 'Davlatlar bo’yicha valyuta, soliq, ma’lumot joyi va ochish tartibi', 'JEA'],
+['Shop-Payment', 'Xaridor: to’lov usuli', 'm', 1, 'Payme, Click, Uzum, Humo/Uzcard, Visa/MC, Google Pay, naqd', 'X'],
+['Owner-Payments', 'Egasi: to’lov usullarini ulash', 'd', 1, 'Provayderni yoqish, kalitlar, webhook, test to’lov, MXIK', 'E']]],
+['Dizayn tizimi va rollar', 'Umumiy til: ranglar, komponentlar, holatlar', [
+['Foundations', 'Dizayn tizimi', 'd', 0, 'Rang, shrift, tugmalar, maydonlar, kartochkalar', 'J'],
+['Journeys', 'Rollar va ketma-ketlik', 's', 0, 'Har rolning yo’li: qaysi ekrandan qaysisiga', 'J'],
+['States', 'Tizim holatlari', 'd', 0, 'Bo’sh, yuklanmoqda, xato, oflayn holatlar', 'J']]],
+['Do’kon egasi: ulanishdan sotuvgacha', 'Do’kon platformaga qanday qo’shiladi', [
+['SaaS-Landing', 'Platforma sayti', 'd', 0, 'Do’konlar uchun sotuv sahifasi va tariflar', 'E'],
+['SaaS-Signup', 'Ro’yxatdan o’tish', 'd', 1, 'Telefon, do’kon ma’lumoti, hudud — bosqichma-bosqich', 'E'],
+['Owner-Dashboard', 'Egasi: bosh sahifa', 'd', 0, 'Bugungi savdo, buyurtmalar va ogohlantirishlar', 'E'],
+['Owner-Storefront', 'Internet-do’kon sozlash', 'd', 1, 'Logo, rang, domen va bannerlar — jonli ko’rinish bilan', 'E'],
+['Owner-Product', 'Mahsulot kartochkasi', 'd', 0, 'Narx, rasm, qoldiq, variantlar', 'ED'],
+['Owner-Billing', 'Tarif va to’lov', 'd', 1, 'Obuna, hisob-fakturalar, to’lov usullari', 'E'],
+['Owner-Money', 'Pul oqimi onlayn', 'd', 1, 'Har to’lov soniyalarda: usul, karta, holat; kuryerdagi naqd, payout, solishtirish', 'ED'],
+['Loyalty', 'Sodiqlik dasturi', 'd', 1, 'Keshbek, darajalar, promo-kodlar, iqtisodiy hisob va xaridor ko’rinishi', 'EX']]],
+['Xaridor', 'Kirishdan topshirishgacha', [
+['Shop-Login', 'Kirish (OTP)', 'm', 1, 'Telefon raqami va SMS kod', 'X'],
+['Shop-Home', 'Shaxsiy bosh sahifa (uz/ru)', 'm', 1, 'Tugayotganlar, odatdagi savat, qaytgan mahsulot, mavsum, aksiya, lenta', 'X'],
+['Shop-Search', 'Aqlli qidiruv', 'm', 1, 'Sinonimlar (\u0441\u0443\u0442 \u2192 sut), shaxsiy tartib, natijasiz qidiruvda so’rov', 'X'],
+['Shop-Product', 'Mahsulot kartochkasi', 'm', 1, 'Qoldiq, parhezga moslik ogohlantirishi, eslatma, birga olinadi', 'X'],
+['Shop-Address', 'Manzil', 'm', 1, 'Xaritada manzil va yetkazish zonasi tekshiruvi', 'X'],
+['Shop-Catalog', 'Katalog', 'm', 1, 'Kategoriyalar, qidiruv, savatga qo’shish', 'X'],
+['Shop-Desktop', 'Vitrina: desktop', 'd', 1, 'Katta ekran uchun adaptiv vitrina', 'X'],
+['Shop-Checkout', 'Savat va rasmiylashtirish', 'm', 1, 'Slot, to’lov usuli, muqobil mahsulot qoidasi', 'X'],
+['Shop-CartSmart', 'Aqlli savat', 'm', 1, 'Bepul yetkazishgacha, muqobil afzalligi, yakuniy summa, \u201cNima to’xtatdi?\u201d', 'X'],
+['Shop-Cards', 'Mening kartalarim (uz/ru)', 'm', 1, 'Uzcard/Humo ulash: raqam, SMS kod, token; to’lovlar tarixi', 'X'],
+['Shop-AIAssistant', 'AI yordamchi (uz/ru)', 'm', 1, 'Matn, ovoz yoki ro’yxat suratidan savat; buyurtma holati', 'X'],
+['Shop-Tracking', 'Kuzatuv va tasdiq', 'm', 1, 'Buyurtma holati va muqobilni tasdiqlash', 'X'],
+['Shop-LiveTrack', 'Jonli kuzatuv xaritada', 'm', 1, 'Kuryer nuqtasi, masofa va ETA', 'X'],
+['Shop-Support', 'Murojaat', 'm', 1, 'Muammo turi, surat va javob', 'X'],
+['Shop-Privacy', 'Rozilik va maxfiylik (uz/ru)', 'm', 1, 'Xizmat, marketing, reklama, sog’liq roziligi; AI agentlar; ma’lumot so’rash va o’chirish', 'X']]],
+['Do’kon operatsiyalari', 'Buyurtmani qabul qilish, yig’ish va jo’natish', [
+['Panel-Orders', 'Buyurtmalar', 'd', 1, 'Yangi buyurtmalar, SLA taymer, tasdiqlash', 'D'],
+['Panel-Picking', 'Yig’ish', 'd', 1, 'Yig’uvchi ro’yxati, muqobil va qadoqlash', 'D'],
+['Panel-Dispatch', 'Dispetcher', 'd', 1, 'Kuryerga biriktirish va marshrut', 'D'],
+['Track-Ops', 'Buyurtma yo’li va xarita', 'd', 0, 'Operator uchun barcha kuryerlar xaritada', 'D'],
+['Panel-Stock', 'Qoldiq xizmati', 'd', 1, 'Zal va ombor qoldig’i, yoqish/o’chirish, \u201cTugadi\u201d belgisi, xaridor ko’rinishi', 'DEX'],
+['Integrations-Model', 'POS, CRM, ERP integratsiyasi', 's', 1, 'Integratsiyali, fayl orqali va integratsiyasiz rejim; yig’uvchi POS kassadan o’tkazadi', 'JDEA'],
+['Panel-Catalog', 'Katalog va qoldiq', 'd', 1, 'Mahsulotlar, narxlar va qoldiq nazorati', 'DE'],
+['Panel-Zones', 'Hudud va slotlar', 'd', 1, 'Yetkazish zonalari, narx va vaqt oraliqlari', 'DE'],
+['Panel-Support', 'Murojaatlar', 'd', 1, 'Xaridor murojaatlari va qaytarishlar', 'D'],
+['Panel-Finance', 'Moliya', 'd', 1, 'To’lovlar, kuryer naqdi, solishtirish', 'DE']]],
+['Kuryer', 'Smenadan topshirishgacha', [
+['Courier-Shift', 'Smena va GPS ruxsati', 'm', 1, 'Smenani boshlash va joylashuv ruxsati', 'K'],
+['Courier-Tasks', 'Topshiriqlar', 'm', 1, 'Biriktirilgan buyurtmalar ro’yxati', 'K'],
+['Courier-Route', 'Marshrut va navigatsiya', 'm', 1, 'Manzillar tartibi va yo’l ko’rsatish', 'K'],
+['Courier-Deliver', 'Topshirish (PIN)', 'm', 1, 'PIN kod, naqd yoki onlayn to’lov tasdig’i', 'K'],
+['Courier-Fail', 'Topshirib bo’lmadi', 'm', 1, 'Sabab, surat va qaytarish yo’li', 'K']]],
+['Reyting va ishonch', 'Do’kon, kuryer va xaridor bahosi', [
+['Rating-Model', 'Reyting va ishonch modeli', 's', 0, 'Kim kimni baholaydi, formula, indekslar, chegara va halollik qoidalari', 'JDKEA'],
+['Shop-Review', 'Xaridor: do’kon va kuryerni baholash', 'm', 1, 'Yulduz, teglar, izoh, surat va minnatdorchilik', 'X'],
+['Courier-Rate', 'Kuryer: baholash va mening reytingim', 'm', 1, 'Do’kon va xaridorni baholash, o’z indeksi va izohlar', 'K'],
+['Panel-Reviews', 'Panel: reyting va sharhlar', 'd', 1, 'Sharhga javob, e’tiroz, ishonch indeksi, kuryerlar reytingi', 'DE']]],
+['Analitika, marketing, AI va hisobotlar', 'Raqamlar va AI asosida qaror qabul qilish', [
+['Analytics-Overview', 'Savdo ko’rsatkichlari', 'd', 1, 'Tushum, buyurtmalar, o’rtacha chek, dinamika', 'EA'],
+['Sales-Report', 'Sotuv hisoboti', 'd', 1, 'Guruhlash, filtr va jadvalni eksport qilish', 'ED'],
+['Analytics-ABC', 'ABC / XYZ matritsasi', 'd', 1, 'Mahsulotlar daromad va barqarorlik bo’yicha', 'E'],
+['Analytics-Geo', 'Hudud ABC tahlili', 'd', 1, 'Tumanlar bo’yicha tushum, qamrov, o’sish va oq dog’lar', 'EA'],
+['Analytics-Product', 'Bitta mahsulot', 'd', 0, 'Mahsulot savdosi, qoldiq va prognoz', 'ED'],
+['Marketing-Frameworks', 'Marketing freymvorklari', 'd', 1, 'BCG, RFM, kogorta, AARRR voronka', 'E'],
+['Marketing-Channels', 'Ijtimoiy tarmoqlar', 'd', 0, 'Instagram, Telegram, Facebook — UTM bo’yicha natija', 'E'],
+['Marketing-Campaigns', 'Kampaniya yaratish', 'd', 1, 'Segment, kanal, taklif va vaqt', 'E'],
+['Reports-Scheduler', 'Hisobotlarni rejalashtirish', 'd', 1, 'Avtomatik hisobotlar: kimga va qachon', 'EA'],
+['Data-ImportExport', 'Import / eksport markazi', 'd', 1, 'Excel/CSV yuklash, tekshirish va tarix', 'ED'],
+['AI-Services', 'AI xizmatlari', 's', 1, '15 ta AI yo’nalishi: ta’sir, murakkablik, faza va AI yordamchi', 'JEDA'],
+['AI-Agents', 'AI integratsiya va tashqi agentlar', 's', 1, 'AI shlyuz, do’kon va xaridor AI xizmatlari, MCP orqali shaxsiy agentlarni ulash', 'JXEA']]],
+['Ichki data va jamoa', 'Faqat kompaniya xodimlari uchun: tahlil va ko’nikmalar', [
+['Data-Customer360', 'Mijoz 360 (ichki)', 'd', 1, 'Segment, CLV, ketish xavfi, keyingi xarid prognozi, keyingi eng yaxshi harakat', 'JEA'],
+['Data-Funnel', 'Voronka, talab va kanallar (ichki)', 'd', 1, 'Voronka, \u201cNima to’xtatdi?\u201d, natijasiz qidiruv, CAC, ROAS, sof ta’sir', 'JEA'],
+['Skills-Matrix', 'Ko’nikmalar matritsasi va akademiya', 'd', 1, 'Hard va soft skills: yig’uvchi, kuryer, menejer; modullar va tavsiyalar', 'DEKA']]],
+['Bildirishnomalar', 'Kimga, qachon va qaysi kanal orqali', [
+['Notify-Matrix', 'Bildirishnomalar matritsasi', 's', 1, '15 hodisa × 5 qabul qiluvchi va kanal qoidalari', 'JXKDEA'],
+['Notify-Feeds', 'Xabarlar lentasi', 'm', 0, 'Xaridor, kuryer va do’kon telefonida', 'XKD']]],
+['Platforma admini', 'Barcha do’konlarni boshqarish', [
+['Admin-SaaS', 'Do’konlar va obunalar', 'd', 0, 'MRR, obunalar, qarzdorlar va SLA', 'A'],
+['Admin-Tenants', 'Hamkorni ulash', 'd', 1, 'Yangi do’kon: KYC, sozlash va ishga tushirish', 'A']]]
+];
+const roles = [['all', 'Hammasi'], ['X', 'Xaridor'], ['K', 'Kuryer'], ['D', 'Do’kon'], ['E', 'Egasi'], ['A', 'Admin'], ['J', 'Jamoa']];
+const typeName = { m: 'Mobil', d: 'Desktop', s: 'Sxema' };
+const VER = { 'Expansion': 'v2–v3', 'Pay-Providers': 'v1: UZ', 'Marketing-Frameworks': 'v1+', 'AI-Services': 'v1+', 'Admin-Tenants': 'v1', 'Admin-CourierPool': 'v1 pilot' };
+const typeCss = { m: 'background: #E5EEF8; color: #154BA8;', d: 'background: #E6F2EC; color: #075C38;', s: 'background: #FDF1E3; color: #7A3E06;' };
+let n = 0, inter = 0;
+const counts = {};
+roles.forEach((r) => { counts[r[0]] = 0; });
+const sections = [];
+S.forEach((sec, si) => {
+const items = [];
+sec[2].forEach((e) => {
+n += 1;
+if (e[3]) inter += 1;
+counts.all += 1;
+e[5].split('').forEach((c) => { counts[c] += 1; });
+const ver = VER[e[0]] || 'v1';
+if (role !== 'all' && e[5].indexOf(role) < 0) return;
+if (this.state.mvp && ver.indexOf('v1') < 0) return;
+items.push({ ver, verStyle: 'padding: 2px 6px; border-radius: 5px; font-size: 10.5px; font-weight: 800; ' + (ver.indexOf('v1') === 0 ? 'background: #0B7A4B; color: #FFFFFF;' : 'background: #E5EEF8; color: #154BA8;'), n: String(n).padStart(2, '0'), href: e[0] + '.dc.html', title: e[1], desc: e[4], type: typeName[e[2]],
+typeStyle: 'padding: 2px 7px; border-radius: 5px; font-size: 11px; font-weight: 700; ' + typeCss[e[2]],
+dotStyle: 'font-size: 11px; color: ' + (e[3] ? '#0B7A4B' : '#DCE0DC') + ';', dotLabel: e[3] ? 'interaktiv' : 'statik' });
+});
+if (items.length) sections.push({ num: String(si + 1).padStart(2, '0'), title: sec[0], desc: sec[1], items });
+});
+const chips = roles.map((r) => ({ label: r[1], count: counts[r[0]], pressed: role === r[0] ? 'true' : 'false', pick: () => this.setState({ role: r[0] }),
+style: 'padding: 8px 14px; border-radius: 999px; font: 700 13.5px Manrope, sans-serif; cursor: pointer; ' + (role === r[0] ? 'border: 1px solid #0B7A4B; background: #0B7A4B; color: #FFFFFF;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;') }));
+const idx = {};
+let k = 0;
+S.forEach((sec) => sec[2].forEach((e) => { k += 1; idx[e[0]] = [k, e[1]]; }));
+const path = (title, files) => ({ title, steps: files.map((f) => ({ href: f + '.dc.html', n: idx[f][0], t: idx[f][1] })) });
+const paths = [
+path('Xaridor buyurtma beradi', ['Shop-Address', 'Shop-Catalog', 'Shop-Checkout', 'Shop-LiveTrack']),
+path('MVP pul oqimi', ['Money-Flow', 'Shop-Cards', 'Shop-Payment', 'Owner-Money']),
+path('Shaxsiy xarid va ichki tahlil', ['Shop-Home', 'Shop-Search', 'Shop-CartSmart', 'Data-Customer360']),
+path('Do’kon buyurtmani jo’natadi', ['Panel-Orders', 'Panel-Picking', 'Panel-Dispatch']),
+path('Kuryer yetkazadi', ['Courier-Shift', 'Courier-Route', 'Courier-Deliver']),
+path('Do’kon platformaga ulanadi', ['SaaS-Landing', 'SaaS-Signup', 'Owner-Storefront', 'Owner-Payments']),
+path('To’lov va baho', ['Shop-Checkout', 'Shop-Payment', 'Shop-LiveTrack', 'Shop-Review'])
+];
+const mvpBtn = { label: this.state.mvp ? 'Faqat MVP (v1) ✓' : 'Faqat MVP (v1)', pressed: this.state.mvp ? 'true' : 'false', pick: () => this.setState({ mvp: !this.state.mvp }),
+style: 'padding: 8px 14px; border-radius: 999px; font: 800 13.5px Manrope, sans-serif; cursor: pointer; ' + (this.state.mvp ? 'border: 1px solid #16181B; background: #16181B; color: #FFFFFF;' : 'border: 1px dashed #16181B; background: #FFFFFF; color: #16181B;') };
+return { sections, chips, paths, mvpBtn, stats: { total: n, inter, sections: S.length } };
+}
+}
+</script>
+</body>
+</html>

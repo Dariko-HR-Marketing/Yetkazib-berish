@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Marketing freymvorklari</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+th,td{text-align:center;padding:9px 10px;border-bottom:1px solid #EEF0ED;font-size:13.5px;white-space:nowrap}
+th{font-size:12px;font-weight:700;color:#5E656C}
+</style>
+</helmet>
+<div style="min-height: 900px; display: flex; flex-wrap: wrap; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+
+<nav aria-label="Do'kon paneli" style="flex: 1 1 220px; max-width: 260px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px; padding: 20px 14px; background: #16181B; color: #FFFFFF">
+<div style="display: flex; align-items: center; gap: 10px; padding: 4px 8px 16px"><div style="width: 34px; height: 34px; border-radius: 9px; background: #0B7A4B; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px">YS</div><span style="display: flex; flex-direction: column"><b style="font-size: 15px">Yashil Savat</b><span style="font-size: 12px; color: #C9CED3">Egasi</span></span></div>
+<span style="padding: 14px 12px 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: #8E959C">ANALITIKA</span>
+<a href="Analytics-Overview.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Savdo ko'rsatkichlari</a>
+<a href="Sales-Report.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Sotuv hisoboti</a>
+<a href="Analytics-ABC.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">ABC / XYZ</a>
+<span style="padding: 14px 12px 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: #8E959C">MARKETING</span>
+<a href="Marketing-Frameworks.dc.html" aria-current="page" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; background: #2E3237; color: #FFFFFF; font-weight: 700; font-size: 14px; text-decoration: none">Freymvorklar</a>
+<a href="Marketing-Channels.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Ijtimoiy tarmoqlar</a>
+<a href="Marketing-Campaigns.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Kampaniyalar</a>
+<span style="padding: 14px 12px 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: #8E959C">MA'LUMOT</span>
+<a href="Data-ImportExport.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Import / eksport</a>
+<a href="Reports-Scheduler.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Hisobotlar</a>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; padding: 24px 28px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 26px; line-height: 32px; font-weight: 800">Marketing freymvorklari</h1><span style="font-size: 14px; color: #5E656C">Tahlil → xulosa → harakat · 90 kun · namuna ma'lumotlar</span></div>
+<div style="display: flex; gap: 8px"><button type="button" style="height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 14px Manrope, sans-serif">PNG</button><button type="button" style="height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 14px Manrope, sans-serif">Excel</button><button type="button" style="height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 14px Manrope, sans-serif">PDF taqdimot</button></div>
+</div>
+
+<div role="tablist" aria-label="Freymvork" style="display: flex; flex-wrap: wrap; gap: 6px; padding: 4px; border-radius: 12px; background: #EEF0ED; align-self: flex-start">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="4"><button type="button" role="tab" aria-selected="{{ t.sel }}" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.label }}</button></sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+<section style="flex: 2 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 17px">{{ heading }}</b>
+<span style="font-size: 13px; line-height: 19px; color: #5E656C">{{ sub }}</span>
+
+<sc-if value="{{ isBcg }}" hint-placeholder-val="{{ true }}">
+<div style="position: relative; height: 380px; border-radius: 12px; background: #FAFBF9; border: 1px solid #EEF0ED; overflow: hidden">
+<div style="position: absolute; left: 0; top: 0; width: 66.6%; height: 44%; background: rgba(29,95,209,.05)"></div>
+<div style="position: absolute; left: 66.6%; top: 0; right: 0; height: 44%; background: rgba(11,122,75,.08)"></div>
+<div style="position: absolute; left: 66.6%; top: 44%; right: 0; bottom: 0; background: rgba(180,83,9,.07)"></div>
+<div style="position: absolute; left: 66.6%; top: 0; bottom: 0; width: 1px; background: #C9CEC8"></div>
+<div style="position: absolute; left: 0; right: 0; top: 44%; height: 1px; background: #C9CEC8"></div>
+<span style="position: absolute; left: 10px; top: 8px; font-size: 12px; font-weight: 800; color: #154BA8">SAVOL BELGILARI</span>
+<span style="position: absolute; right: 10px; top: 8px; font-size: 12px; font-weight: 800; color: #075C38">YULDUZLAR</span>
+<span style="position: absolute; right: 10px; bottom: 8px; font-size: 12px; font-weight: 800; color: #7A3E06">SOG'IN SIGIRLAR</span>
+<span style="position: absolute; left: 10px; bottom: 8px; font-size: 12px; font-weight: 800; color: #5E656C">ITLAR</span>
+<sc-for list="{{ bubbles }}" as="b" hint-placeholder-count="7"><div style="{{ b.style }}"><span style="{{ b.labelStyle }}">{{ b.name }}</span></div></sc-for>
+</div>
+<div style="display: flex; justify-content: space-between; font-size: 12px; color: #5E656C"><span>← tushumdagi ulush kam</span><span>chegara: ulush 10%, o'sish 10%</span><span>ulush ko'p →</span></div>
+</sc-if>
+
+<sc-if value="{{ isRfm }}" hint-placeholder-val="{{ false }}">
+<div style="display: grid; grid-template-columns: 60px repeat(5, minmax(0, 1fr)); gap: 4px; font-size: 13px">
+<span></span><span style="text-align: center; font-weight: 700; color: #5E656C">F1</span><span style="text-align: center; font-weight: 700; color: #5E656C">F2</span><span style="text-align: center; font-weight: 700; color: #5E656C">F3</span><span style="text-align: center; font-weight: 700; color: #5E656C">F4</span><span style="text-align: center; font-weight: 700; color: #5E656C">F5</span>
+<sc-for list="{{ rfmRows }}" as="r" hint-placeholder-count="5">
+<span style="display: flex; align-items: center; font-weight: 700; color: #5E656C">{{ r.label }}</span>
+<sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="5"><div style="{{ c.style }}">{{ c.v }}</div></sc-for>
+</sc-for>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; font-size: 12.5px"><span style="padding: 4px 8px; border-radius: 6px; background: #E6F2EC; color: #075C38; font-weight: 700">R5·F4–5: Sodiqlar 186</span><span style="padding: 4px 8px; border-radius: 6px; background: #FDF1E3; color: #7A3E06; font-weight: 700">R2–3·F3–5: Xavf ostida 142</span><span style="padding: 4px 8px; border-radius: 6px; background: #FBE9E4; color: #9F2D12; font-weight: 700">R1: Yo'qotilgan 205</span><span style="padding: 4px 8px; border-radius: 6px; background: #E5EEF8; color: #154BA8; font-weight: 700">R5·F1: Yangi 121</span></div>
+</sc-if>
+
+<sc-if value="{{ isCohort }}" hint-placeholder-val="{{ false }}">
+<div style="overflow-x: auto"><table style="width: 100%; border-collapse: collapse"><thead><tr><th style="text-align: left">Birinchi xarid oyi</th><th>Xaridorlar</th><th>0-oy</th><th>1-oy</th><th>2-oy</th><th>3-oy</th></tr></thead><tbody>
+<sc-for list="{{ cohorts }}" as="k" hint-placeholder-count="4"><tr><td style="text-align: left; font-weight: 700">{{ k.m }}</td><td>{{ k.n }}</td><sc-for list="{{ k.cells }}" as="c" hint-placeholder-count="4"><td style="{{ c.style }}">{{ c.v }}</td></sc-for></tr></sc-for>
+</tbody></table></div>
+<span style="font-size: 12.5px; color: #5E656C">Foiz — shu oyda yana xarid qilganlar ulushi. Sentabrdan Telegram bot ulangach 1-oy saqlanishi 31% dan 40% ga ko'tarildi.</span>
+</sc-if>
+
+<sc-if value="{{ isFunnel }}" hint-placeholder-val="{{ false }}">
+<sc-for list="{{ aarrr }}" as="a" hint-placeholder-count="5">
+<div style="display: grid; grid-template-columns: 150px 1fr 150px; gap: 12px; align-items: center"><span style="display: flex; flex-direction: column"><b style="font-size: 14px">{{ a.stage }}</b><span style="font-size: 12px; color: #5E656C">{{ a.what }}</span></span><div style="height: 26px; border-radius: 8px; background: #EEF0ED"><div style="{{ a.bar }}"></div></div><b style="font-size: 14px; text-align: right">{{ a.v }}</b></div>
+</sc-for>
+</sc-if>
+</section>
+
+<aside style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 16px; background: #16181B; color: #FFFFFF">
+<span style="font-size: 12px; font-weight: 800; letter-spacing: .08em; color: #8FD3B0">SINTEZ: XULOSA VA HARAKAT</span>
+<sc-for list="{{ insights }}" as="i" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 12px; border-radius: 12px; background: #24272B"><b style="font-size: 14px; line-height: 19px">{{ i.t }}</b><span style="font-size: 13px; line-height: 18px; color: #C9CED3">{{ i.a }}</span></div>
+</sc-for>
+<a href="Marketing-Campaigns.dc.html" style="display: flex; align-items: center; justify-content: center; height: 46px; border-radius: 12px; background: #3FB37F; color: #0F1A14; font-weight: 800; font-size: 14px; text-decoration: none">Kampaniyaga aylantirish</a>
+</aside>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { tab: 'bcg' };
+}
+renderVals() {
+const t = this.state.tab;
+const defs = [['bcg', 'BCG matritsasi'], ['rfm', 'RFM xaritasi'], ['cohort', 'Kogorta tahlili'], ['funnel', 'AARRR voronka']];
+const tabs = defs.map(([k, label]) => ({ label, sel: k === t ? 'true' : 'false', pick: () => this.setState({ tab: k }),
+style: 'height: 40px; padding: 0 16px; border-radius: 9px; border: none; font: 700 13.5px Manrope, sans-serif; cursor: pointer; ' + (k === t ? 'background: #FFFFFF; color: #16181B; box-shadow: 0 1px 2px rgba(0,0,0,.1);' : 'background: transparent; color: #3C4248;') }));
+const cats = [['Sut', 22, 6, 9.7], ['Meva-sabzavot', 18, 24, 8], ['Go’sht', 14, 15, 6.2], ['Non', 12, 3, 5.3], ['Ichimliklar', 6, 28, 2.7], ['Maishiy kimyo', 4, 12, 1.8], ['Shirinlik', 4, -5, 1.8]];
+const bubbles = cats.map(([name, share, g, rev]) => {
+const x = share / 30 * 100, y = (30 - g) / 40 * 100, d = 26 + rev * 5;
+const col = share >= 10 && g >= 10 ? '#0B7A4B' : share >= 10 ? '#B45309' : g >= 10 ? '#1D5FD1' : '#8A9199';
+return { name, style: 'position: absolute; left: calc(' + x.toFixed(1) + '% - ' + d / 2 + 'px); top: calc(' + y.toFixed(1) + '% - ' + d / 2 + 'px); width: ' + d + 'px; height: ' + d + 'px; border-radius: 50%; background: ' + col + '; opacity: .9;',
+labelStyle: 'position: absolute; left: ' + (d + 4) + 'px; top: ' + (d / 2 - 9) + 'px; white-space: nowrap; font-size: 12.5px; font-weight: 700; color: #16181B;' };
+});
+const rfm = [[121, 64, 38, 90, 96], [20, 24, 31, 38, 47], [33, 29, 40, 30, 24], [41, 30, 24, 14, 10], [80, 52, 38, 20, 15]];
+const rfmRows = rfm.map((row, i) => ({ label: 'R' + (5 - i), cells: row.map((v) => ({ v, style: 'height: 52px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; background: rgba(11,122,75,' + (0.08 + v / 121 * 0.8).toFixed(2) + '); color: ' + (v > 55 ? '#FFFFFF' : '#0F3D26') + ';' })) }));
+const coh = [['Iyul', 210, [100, 29, 22, 18]], ['Avgust', 248, [100, 31, 24, 19]], ['Sentabr', 305, [100, 40, 33, null]], ['Oktabr', 342, [100, 42, null, null]]];
+const cohorts = coh.map(([m, n, cs]) => ({ m, n, cells: cs.map((v) => ({ v: v === null ? '—' : v + '%', style: v === null ? 'color: #8A9199;' : 'font-weight: 700; background: rgba(29,95,209,' + (v === 100 ? 0.08 : (0.1 + v / 45 * 0.6).toFixed(2)) + '); color: ' + (v !== 100 && v > 30 ? '#FFFFFF' : '#0E2E66') + ';' })) }));
+const ar = [['Jalb', 'vitrinaga tashrif', 4820, '4 820'], ['Faollashuv', 'savatga qo’shdi', 1310, '1 310 · 27%'], ['Daromad', 'buyurtma berdi', 690, '690 · 53%'], ['Qaytish', '30 kunda takror', 283, '283 · 41%'], ['Tavsiya', 'havolani ulashdi', 41, '41 · 6%']];
+const aarrr = ar.map(([stage, what, v, label]) => ({ stage, what, v: label, bar: 'height: 26px; border-radius: 8px; background: #0B7A4B; width: ' + Math.max(1.5, v / 4820 * 100).toFixed(1) + '%;' }));
+const meta = {
+bcg: ['Kategoriyalar portfeli', 'X — kategoriyaning tushumdagi ulushi, Y — oldingi 90 kunga nisbatan o’sish; doira — tushum hajmi.', [
+['Meva-sabzavot va go’sht — yulduzlar', 'Bosh sahifada yuqoriga qo’ying, tugab qolmasligi uchun xavfsizlik zaxirasini oshiring.'],
+['Ichimliklar tez o’smoqda, ulushi kichik', 'Savatga «yana qo’shing» va to’plam takliflari bilan ulushni oshiring.'],
+['Shirinlik qisqarmoqda', 'Assortimentni qisqartiring, qoldiqni chegirma bilan soting.']]],
+rfm: ['Xaridorlar segmentlari', 'R — oxirgi xarid yaqinligi, F — xaridlar soni (1 — kam, 5 — ko’p). Raqam — xaridorlar soni.', [
+['142 ta qimmatli xaridor xavf ostida', '«Sizni sog’indik» kampaniyasi: Telegram bot, 7 kunlik promokod.'],
+['121 yangi xaridor ikkinchi xaridga o’tmagan', 'Birinchi buyurtmadan 5 kun keyin bepul yetkazish taklifi.'],
+['186 sodiq xaridor', 'Erta kirish va tavsiya uchun ball — ular yangi xaridor olib keladi.']]],
+cohort: ['Qaytib kelish (retention)', 'Har oy birinchi marta xarid qilganlar keyingi oylarda qancha qaytgani.', [
+['Bot ulangach saqlanish 9 p.p. oshdi', 'Barcha yangi xaridorlarni Telegram botga obuna qilishni rag’batlantiring.'],
+['Eng katta yo’qotish — 0 → 1-oy', 'Ikkinchi xaridga undovchi avtomatik xabar zanjirini yoqing.']]],
+funnel: ['AARRR voronkasi', 'Jalb → faollashuv → daromad → qaytish → tavsiya; har bosqich oldingisiga nisbatan.', [
+['Eng katta tushish: tashrif → savat (27%)', 'Bosh sahifada mashhur mahsulotlar va narxlar; yetkazish narxini yuqorida ko’rsating.'],
+['Tavsiya kam (6%)', 'Topshirilgach «do’stingizga 10%» havolasi.']]]
+}[t];
+return {
+tabs, bubbles, rfmRows, cohorts, aarrr,
+isBcg: t === 'bcg', isRfm: t === 'rfm', isCohort: t === 'cohort', isFunnel: t === 'funnel',
+heading: meta[0], sub: meta[1], insights: meta[2].map(([tt, a]) => ({ t: tt, a }))
+};
+}
+}
+</script>
+</body>
+</html>

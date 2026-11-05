@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>To'lov provayderlari</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0}</style>
+</helmet>
+<div style="width: 100%; min-width: 1024px; height: 100%; min-height: 900px; box-sizing: border-box; padding: 36px 56px; display: flex; flex-direction: column; gap: 16px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0B7A4B">To'lov provayderlari katalogi</span><h1 style="margin: 0; font-size: 28px; line-height: 36px; font-weight: 800">Davlatlar bo'yicha to'lov usullari: MVP'da faqat O'zbekiston</h1></div>
+<div style="display: flex; gap: 8px; font-size: 12px; font-weight: 700">
+<span style="padding: 4px 9px; border-radius: 6px; background: #0B7A4B; color: #FFFFFF">Faza 1 · ishga tushirish</span><span style="padding: 4px 9px; border-radius: 6px; background: #E5EEF8; color: #154BA8">Faza 2 · o'sish</span><span style="padding: 4px 9px; border-radius: 6px; background: #F1F3F0; color: #3C4248">Faza 3 · ehtiyojga qarab</span>
+</div>
+</div>
+
+<div role="tablist" aria-label="Davlat" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{ tabs }}" as="t" hint-placeholder-count="7"><button type="button" role="tab" aria-selected="{{ t.sel }}" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.flag }} {{ t.label }}</button></sc-for>
+</div>
+
+<div style="display: flex; gap: 16px; flex: 1; min-height: 0">
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; overflow: hidden">
+<div style="display: grid; grid-template-columns: 1.3fr 1fr 1.3fr 90px 1.9fr; gap: 12px; padding: 12px 18px; background: #F1F3F0; font-size: 12px; font-weight: 800; color: #5E656C; letter-spacing: .04em">
+<span>PROVAYDER</span><span>TURI</span><span>ULANISH</span><span>FAZA</span><span>IZOH</span>
+</div>
+<sc-for list="{{ rows }}" as="r" hint-placeholder-count="8">
+<div style="display: grid; grid-template-columns: 1.3fr 1fr 1.3fr 90px 1.9fr; gap: 12px; padding: 12px 18px; border-top: 1px solid #EEF0ED; align-items: center; font-size: 13px; line-height: 18px">
+<b style="font-size: 14px">{{ r.name }}</b>
+<span><span style="padding: 3px 8px; border-radius: 6px; background: #F1F3F0; font-size: 12px; font-weight: 700">{{ r.type }}</span></span>
+<span style="color: #3C4248">{{ r.how }}</span>
+<span><span style="{{ r.phaseStyle }}">{{ r.phase }}</span></span>
+<span style="color: #3C4248">{{ r.note }}</span>
+</div>
+</sc-for>
+</div>
+
+<aside style="flex: none; width: 330px; display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 16px; background: #16181B; color: #FFFFFF">
+<b style="font-size: 18px">{{ c.flag }} {{ c.label }}</b>
+<sc-for list="{{ c.facts }}" as="f" hint-placeholder-count="5"><div style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11.5px; font-weight: 700; color: #9AA1A7; letter-spacing: .04em">{{ f.k }}</span><span style="font-size: 13px; line-height: 18px">{{ f.v }}</span></div></sc-for>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #FDF1E3; color: #7A3E06; font-size: 12.5px; line-height: 18px">
+<b style="font-size: 13.5px">Ulashdan oldin tekshiriladi</b>
+<span>Provayder shartlari, komissiya, litsenziya va soliq talablari o'zgarib turadi. Har davlatga chiqishdan oldin mahalliy yurist va bank bilan tasdiqlanadi.</span>
+</div>
+</aside>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { c: 0 };
+}
+renderVals() {
+const P = (name, type, how, phase, note) => ({ name, type, how, phase, note });
+const C = [
+{ label: 'O’zbekiston', flag: 'UZ', facts: [['Valyuta', 'UZS (so’m)'], ['Asosiy usullar', 'Payme, Click, Uzum hamyonlari; Uzcard va Humo kartalari'], ['Fiskal', 'Har chekda mahsulotning MXIK kodi; provayder chek chiqaradi'], ['Ma’lumot', '2026-yil martdan majburiy mahalliy saqlash faqat biometrik va genetik ma’lumot uchun; xorijga uzatish — rozilik va qonun shartlari bilan'], ['Holat', 'Faza 1 — ishga tushirish davlati']],
+rows: [
+P('Payme', 'Hamyon / agregator', 'Merchant API, checkout sahifasi', 1, 'Uzcard, Humo; fiskal chekni MXIK bilan chiqaradi'),
+P('Click', 'Hamyon / agregator', 'Merchant API, checkout sahifasi', 1, 'Uzcard, Humo; Telegram ichida ham to’lov'),
+P('Uzum Bank', 'Hamyon / bank', 'API, ilovaga yo’naltirish', 1, 'Uzum ekotizimi xaridorlari uchun qulay'),
+P('Uzcard / Humo karta', 'Milliy karta', 'Bank yoki shlyuz orqali, SMS OTP', 1, 'Karta raqami saqlanmaydi — token; takroriy to’lov'),
+P('Naqd kuryerga', 'Naqd', 'Kuryer ilovasi + inkassatsiya', 1, 'Kuryer balansi, smena oxirida kassaga'),
+P('Visa / Mastercard', 'Xalqaro karta', 'Bank ekvayringi, 3-D Secure', 2, 'Chet elliklar va xalqaro kartalar uchun'),
+P('Apple Pay / Google Pay', 'Mobil hamyon', 'Ekvayring orqali token', 2, '2026-yil 27-oktabrdan; hozircha faqat Visa / Mastercard'),
+P('Paynet, Atmos, Octo', 'Agregator / shlyuz', 'Bitta API — bir nechta usul', 2, 'Zaxira yo’nalish yoki tez ulanish uchun'),
+P('Uzum Nasiya, Alif Nasiya', 'Muddatli to’lov', 'Hamkor API', 3, 'Katta savatlar uchun (masalan, maishiy texnika)')] },
+{ label: 'Qozog’iston', flag: 'KZ', facts: [['Valyuta', 'KZT (tenge)'], ['Asosiy usul', 'Kaspi — eng ko’p ishlatiladigan ilova va QR'], ['Fiskal', 'Onlayn kassa va OFD orqali chek'], ['Ma’lumot', 'Shaxsiy ma’lumotni davlat ichida saqlash talabi'], ['Holat', 'Faza 2']],
+rows: [P('Kaspi Pay / QR', 'Hamyon / QR', 'Kaspi biznes API', 1, 'Qozog’istonda asosiy usul'), P('Halyk ePay', 'Bank ekvayringi', 'Kartalar uchun API', 1, 'Visa, Mastercard'), P('Freedom Pay, CloudPayments', 'Agregator', 'Bitta API', 2, 'Zaxira yo’nalish'), P('Naqd kuryerga', 'Naqd', 'Kuryer ilovasi', 1, 'Onlayn kassa talabi bilan')] },
+{ label: 'Qirg’iziston', flag: 'KG', facts: [['Valyuta', 'KGS (som)'], ['Asosiy usullar', 'Elcart kartasi, MBank va O!Dengi hamyonlari, QR'], ['Fiskal', 'Elektron chek talablari — yurist bilan aniqlanadi'], ['Holat', 'Faza 2']],
+rows: [P('Elcart', 'Milliy karta', 'Bank ekvayringi', 1, 'Mahalliy kartalar'), P('MBank', 'Hamyon / bank', 'API yoki QR', 1, 'Keng tarqalgan mobil bank'), P('O!Dengi', 'Hamyon', 'API', 2, 'Operator hamyoni'), P('Visa / Mastercard', 'Xalqaro karta', 'Bank ekvayringi, 3-D Secure', 2, '')] },
+{ label: 'Tojikiston', flag: 'TJ', facts: [['Valyuta', 'TJS (somoniy)'], ['Asosiy usullar', 'Korti Milli kartasi, Alif va DC hamyonlari'], ['Fiskal', 'Mahalliy talablar — yurist bilan aniqlanadi'], ['Holat', 'Faza 3']],
+rows: [P('Korti Milli', 'Milliy karta', 'Bank ekvayringi', 1, ''), P('Alif (alif mobi)', 'Hamyon / bank', 'API', 1, 'Alif Nasiya — muddatli to’lov ham'), P('DC (Dushanbe City)', 'Hamyon / bank', 'API', 2, ''), P('Naqd kuryerga', 'Naqd', 'Kuryer ilovasi', 1, 'Bozorda naqd ulushi yuqori')] },
+{ label: 'Rossiya', flag: 'RU', facts: [['Valyuta', 'RUB'], ['Asosiy usullar', 'Mir kartasi, SBP (tezkor to’lov QR)'], ['Fiskal', '54-FZ: onlayn kassa va OFD orqali chek'], ['Ma’lumot', '152-FZ: fuqarolar ma’lumoti Rossiya ichida'], ['Muhim', 'Rossiyada chiqarilgan Visa / Mastercard xalqaro tarmoqda ishlamaydi; sanksiya talablari alohida tekshiriladi']],
+rows: [P('SBP (QR)', 'Tezkor to’lov', 'Ekvayring banki orqali', 1, 'Komissiyasi past, keng tarqalgan'), P('Mir', 'Milliy karta', 'Bank ekvayringi', 1, ''), P('YooKassa, CloudPayments, T-Bank', 'Agregator / ekvayring', 'Bitta API', 1, 'Biri asosiy, biri zaxira'), P('Naqd kuryerga', 'Naqd', 'Kuryer ilovasi', 2, 'Onlayn kassa talabi')] },
+{ label: 'Turkmaniston', flag: 'TM', facts: [['Valyuta', 'TMT (manat)'], ['Asosiy usul', 'Altyn Asyr milliy kartasi'], ['Bozor', 'Yopiq: mahalliy yuridik shaxs va hamkor talab qilinishi mumkin'], ['Holat', 'Faza 3 — alohida tahlildan keyin']],
+rows: [P('Altyn Asyr', 'Milliy karta', 'Mahalliy bank (Halkbank e-commerce)', 3, 'Mahalliy hamkor orqali'), P('Naqd kuryerga', 'Naqd', 'Kuryer ilovasi', 3, 'Boshlang’ich usul')] },
+{ label: 'Xalqaro', flag: '🌐', facts: [['Valyuta', 'USD, EUR va boshqalar — ko’p valyutali ledger'], ['Usullar', 'Visa, Mastercard, UnionPay, Apple Pay, Google Pay'], ['Kim uchun', 'Turistlar, chet ellik xaridorlar, xalqaro kengayish'], ['Shart', 'Global PSP uchun yuridik shaxs ular xizmat ko’rsatadigan davlatda bo’lishi kerak']],
+rows: [P('Visa / Mastercard', 'Xalqaro karta', 'Mahalliy bank ekvayringi, 3-D Secure', 1, 'Har davlatda mahalliy ekvayring orqali'), P('UnionPay', 'Xalqaro karta', 'Bank ekvayringi', 3, 'Xitoy turistlari uchun'), P('Apple Pay / Google Pay', 'Mobil hamyon', 'Ekvayring orqali token', 2, 'Bir bosishda to’lov'), P('Stripe, Adyen, Checkout.com', 'Global PSP', 'Bitta API, ko’p valyuta', 3, 'Ular ishlaydigan davlatda yuridik shaxs bo’lsa')] }
+];
+const i = this.state.c;
+const tabs = C.map((c, k) => ({ label: c.label + (k === 0 ? ' · v1 MVP' : ' · v2+'), flag: c.flag, sel: k === i ? 'true' : 'false', pick: () => this.setState({ c: k }),
+style: 'padding: 9px 14px; border-radius: 999px; font: 700 13.5px Manrope, sans-serif; cursor: pointer; ' + (k === i ? 'border: 1px solid #16181B; background: #16181B; color: #FFFFFF;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;') }));
+const ph = { 1: 'background: #0B7A4B; color: #FFFFFF;', 2: 'background: #E5EEF8; color: #154BA8;', 3: 'background: #F1F3F0; color: #3C4248;' };
+const rows = C[i].rows.map((r) => Object.assign({}, r, { phase: 'Faza ' + r.phase, phaseStyle: 'padding: 3px 8px; border-radius: 6px; font-size: 12px; font-weight: 700; ' + ph[r.phase], note: r.note || '—' }));
+const c = { label: C[i].label, flag: C[i].flag, facts: C[i].facts.map((f) => ({ k: f[0].toUpperCase(), v: f[1] })) };
+return { tabs, rows, c };
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Panel — murojaatlar</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+textarea::placeholder{color:#7A8087}
+</style>
+</helmet>
+<div style="min-height: 900px; display: flex; flex-wrap: wrap; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+
+<nav aria-label="Panel bo'limlari" style="flex: 1 1 220px; max-width: 260px; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px; padding: 20px 14px; background: #16181B; color: #FFFFFF">
+<div style="display: flex; align-items: center; gap: 10px; padding: 4px 8px 20px"><div style="width: 34px; height: 34px; border-radius: 9px; background: #0B7A4B; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px">DD</div><span style="display: flex; flex-direction: column"><b style="font-size: 15px">Demo Do'kon</b><span style="font-size: 12px; color: #C9CED3">Yordam: Malika</span></span></div>
+<a href="Panel-Orders.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Buyurtmalar</a>
+<a href="Panel-Support.dc.html" aria-current="page" style="display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding: 0 12px; border-radius: 10px; background: #2E3237; color: #FFFFFF; font-weight: 700; font-size: 14px; text-decoration: none">Murojaatlar<span style="padding: 2px 8px; border-radius: 10px; background: #E8A33D; color: #16181B; font-size: 12px">3</span></a>
+<a href="Panel-Finance.dc.html" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Moliya va hisobot</a>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px; padding: 24px 28px">
+<div style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 26px; line-height: 32px; font-weight: 800">Murojaatlar</h1><span style="font-size: 14px; color: #5E656C">Birinchi javob maqsadi ≤ 10 daqiqa · bugun o'rtacha 6 daqiqa</span></div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section aria-label="Navbat" style="flex: 1 1 300px; max-width: 420px; display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{ tickets }}" as="t" hint-placeholder-count="3">
+<button type="button" onClick="{{ t.pick }}" style="{{ t.style }}">
+<span style="display: flex; justify-content: space-between; width: 100%"><b style="font-size: 15px">{{ t.order }}</b><span style="{{ t.badgeStyle }}">{{ t.badge }}</span></span>
+<span style="font-size: 13.5px; color: #3C4248">{{ t.summary }}</span>
+<span style="font-size: 12px; color: #5E656C">{{ t.age }}</span>
+</button>
+</sc-for>
+</section>
+
+<section aria-label="Murojaat tafsiloti" style="flex: 2 1 420px; display: flex; flex-direction: column; gap: 14px; padding: 20px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px"><div style="display: flex; flex-direction: column"><b style="font-size: 18px">{{ cur.order }} · {{ cur.title }}</b><span style="font-size: 13px; color: #5E656C">{{ cur.meta }}</span></div><a href="#qongiroq" style="display: flex; align-items: center; height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid #C9CEC8; color: #16181B; font-weight: 700; font-size: 13px; text-decoration: none">Xaridorga qo'ng'iroq</a></div>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; font-size: 12.5px">
+<div style="padding: 8px 10px; border-radius: 10px; background: #F6F7F4"><b>14:02</b><br>Qabul qilindi</div>
+<div style="padding: 8px 10px; border-radius: 10px; background: #F6F7F4"><b>14:11</b><br>Muqobil tasdiqlandi</div>
+<div style="padding: 8px 10px; border-radius: 10px; background: #F6F7F4"><b>14:20</b><br>Kuryer: Jasur</div>
+<div style="padding: 8px 10px; border-radius: 10px; background: #F6F7F4"><b>14:38</b><br>Topshirildi · PIN</div>
+</div>
+<div style="display: flex; gap: 12px; align-items: flex-start"><div style="flex: none; width: 96px; height: 96px; border-radius: 12px; background: #F5EBDA; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #7A3E06">surat</div><span style="font-size: 14px; line-height: 21px">«{{ cur.message }}»</span></div>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700">Javob (SMS / Telegram orqali boradi)<textarea rows="3" placeholder="Xaridorga javob" style="box-sizing: border-box; padding: 12px 14px; border: 1px solid #C9CEC8; border-radius: 12px; font: 500 14px Manrope, sans-serif; resize: vertical">Kechirasiz! Non uchun 4 000 so'm qaytaramiz.</textarea></label>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px">
+<button type="button" style="height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 14px Manrope, sans-serif; color: #16181B">Qaytarish so'rovi · 4 000</button>
+<div style="display: flex; gap: 8px"><button type="button" style="height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; font: 700 14px Manrope, sans-serif; color: #16181B">Javob yuborish</button><button type="button" style="height: 44px; padding: 0 16px; border-radius: 10px; border: none; background: #0B7A4B; font: 700 14px Manrope, sans-serif; color: #FFFFFF">Hal qilindi</button></div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { sel: 0 };
+}
+renderVals() {
+const data = [
+{ order: 'A-104512', title: 'Non shikastlangan', summary: 'Shikastlangan · Non, tandir', age: '4 daqiqa oldin · surat bor', badge: 'Yangi', kind: 'new', meta: 'Mustaqillik 12 · naqd · 48 440 so’m', message: 'Bitta non ezilgan holda keldi' },
+{ order: 'A-104499', title: 'Kechikish', summary: 'Kechikdi · butun buyurtma', age: '18 daqiqa oldin', badge: 'Jarayonda', kind: 'work', meta: 'Navoiy 40 · onlayn · 82 000 so’m', message: 'Va’da qilingan vaqtdan 25 daqiqa kech keldi' },
+{ order: 'A-104470', title: 'Boshqa mahsulot', summary: 'Boshqa mahsulot · Sut 3,2%', age: 'Kecha · hal qilingan', badge: 'Yopilgan', kind: 'done', meta: 'Bobur 7 · onlayn · 31 500 so’m', message: '2,5% sut keldi, 3,2% buyurtma qilgandim' }
+];
+const badge = { new: 'background: #FDF1E3; color: #7A3E06;', work: 'background: #E5EEF8; color: #154BA8;', done: 'background: #EEF0ED; color: #3C4248;' };
+const tickets = data.map((t, i) => ({
+order: t.order, summary: t.summary, age: t.age, badge: t.badge,
+badgeStyle: 'padding: 2px 8px; border-radius: 8px; font-size: 12px; font-weight: 700; ' + badge[t.kind],
+style: 'display: flex; flex-direction: column; align-items: flex-start; gap: 4px; width: 100%; padding: 14px; border-radius: 14px; text-align: left; font-family: Manrope, sans-serif; color: #16181B; cursor: pointer; background: #FFFFFF; border: ' + (i === this.state.sel ? '2px solid #0B7A4B;' : '1px solid #E4E7E3;'),
+pick: () => this.setState({ sel: i })
+}));
+return { tickets, cur: data[this.state.sel] };
+}
+}
+</script>
+</body>
+</html>

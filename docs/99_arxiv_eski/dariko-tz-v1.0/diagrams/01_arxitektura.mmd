@@ -1,0 +1,55 @@
+%% Universal dostavka platformasi — tizim arxitekturasi
+%% Ko'rish: https://mermaid.live yoki GitHub/GitLab'da avtomatik chiziladi
+flowchart TB
+    subgraph KANAL["Mijoz kanallari"]
+        PWA["Brendli veb-vitrina (PWA, SSR)"]
+        TG["Telegram bot / Mini App"]
+        QR["QR, Instagram havolalari (UTM)"]
+    end
+
+    subgraph PANEL["Ishchi panellar (SPA)"]
+        PORTAL["Hamkor portali"]
+        PICK["Yig'uvchi / oshxona"]
+        DSP["Dispetcher"]
+        CR["Kuryer (mobil veb)"]
+        CS["Yordam / moliya / admin"]
+    end
+
+    GW["API shlyuzi: auth, rate limit, tenant aniqlash"]
+
+    subgraph OMS["Buyurtma yadrosi (OMS) — modular monolith"]
+        CAT[catalog] --- INV[inventory/rezerv]
+        ZON[zones/slot] --- CART[cart/narx]
+        ORD[orders: holat mashinasi] --- PKG[picking]
+        PAY[payments] --- DLV[delivery]
+        NTF[notifications] --- AUD[audit]
+    end
+
+    subgraph DATA["Ma'lumotlar"]
+        PG[("PostgreSQL + PostGIS")]
+        RD[("Redis: kesh, sessiya, navbat")]
+        S3[("MinIO / S3: rasm, PoD surati")]
+    end
+
+    subgraph EVT["Hodisalar"]
+        OUT["outbox_events"] --> WRK["Worker: qayta urinish"] --> DLQ["Dead-letter navbati"]
+    end
+
+    subgraph ADP["Integratsiya adapterlari"]
+        A1["Payme / CLICK"]
+        A2["Fiskal chek"]
+        A3["SMS / Telegram"]
+        A4["Yandex Maps"]
+        A5["POS / ERP (CSV)"]
+        A6["Kuryer xizmati (keyin)"]
+    end
+
+    KANAL --> GW
+    PANEL --> GW
+    GW --> OMS
+    OMS --> PG
+    OMS --> RD
+    OMS --> S3
+    OMS --> OUT
+    WRK --> ADP
+    ADP -- "webhook (imzoli)" --> GW

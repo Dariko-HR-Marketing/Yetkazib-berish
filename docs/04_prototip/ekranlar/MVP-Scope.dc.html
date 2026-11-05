@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>MVP 1-versiya doirasi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 1440px; height: 1060px; box-sizing: border-box; padding: 36px 56px; display: flex; flex-direction: column; gap: 14px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0B7A4B">MVP · 1-versiya · faqat O'zbekiston · o'zbek va rus tillari</span><h1 style="margin: 0; font-size: 30px; line-height: 38px; font-weight: 800">Birinchi versiyada nima bor, nima keyinga qoladi</h1></div>
+<div style="display: flex; gap: 6px"><sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3"><button type="button" aria-pressed="{{ t.pressed }}" onClick="{{ t.pick }}" style="{{ t.style }}">{{ t.t }}</button></sc-for></div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px">
+<sc-for list="{{ facts }}" as="f" hint-placeholder-count="4"><div style="display: flex; flex-direction: column; gap: 3px; padding: 12px 14px; border-radius: 14px; background: #16181B; color: #FFFFFF"><span style="font-size: 11.5px; font-weight: 700; color: #9AA1A7; letter-spacing: .04em">{{ f.k }}</span><b style="font-size: 14.5px; line-height: 19px">{{ f.v }}</b></div></sc-for>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; flex: 1; min-height: 0">
+<sc-for list="{{ cols }}" as="c" hint-placeholder-count="6">
+<div style="display: flex; flex-direction: column; gap: 5px; padding: 14px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">{{ c.t }}</b>
+<sc-for list="{{ c.items }}" as="i" hint-placeholder-count="6"><div style="display: flex; gap: 8px; font-size: 12.5px; line-height: 17px"><span style="{{ i.dot }}">{{ i.m }}</span><span style="{{ i.text }}">{{ i.t }}</span></div></sc-for>
+</div>
+</sc-for>
+</div>
+
+<div style="display: grid; grid-template-columns: 1.1fr 1fr; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">Til: o'zbek (lotin) asosiy, rus — to'liq ikkinchi til</b>
+<div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px 12px; font-size: 12.5px; line-height: 17px">
+<b style="color: #5E656C; font-size: 11.5px">KALIT</b><b style="color: #5E656C; font-size: 11.5px">O'ZBEKCHA</b><b style="color: #5E656C; font-size: 11.5px">РУССКИЙ</b>
+<sc-for list="{{ strings }}" as="s" hint-placeholder-count="5"><code style="font: 600 11.5px ui-monospace, Menlo, monospace; color: #075C38">{{ s.k }}</code><span>{{ s.uz }}</span><span>{{ s.ru }}</span></sc-for>
+</div>
+<span style="font-size: 12px; line-height: 17px; color: #5E656C">Til xaridor profilida saqlanadi va Telegram tilidan avtomatik olinadi. Barcha xabar, chek, SMS va AI javoblari shu tilda. Mahsulot nomi va tavsifi ikki tilda (AI tarjima qiladi, do'kon tasdiqlaydi). Kirill yozuvi — 2-versiyada.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border-radius: 16px; background: #0B7A4B; color: #FFFFFF">
+<b style="font-size: 15px">MVP muvaffaqiyat mezonlari (90 kun)</b>
+<sc-for list="{{ kpi }}" as="k" hint-placeholder-count="6"><div style="display: flex; justify-content: space-between; gap: 10px; font-size: 13px"><span style="color: #DDF0E6">{{ k.t }}</span><b>{{ k.v }}</b></div></sc-for>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1060}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { v: 1 };
+}
+renderVals() {
+const v = this.state.v;
+const tabs = [[1, 'v1 · MVP'], [2, 'v2 · o’sish'], [3, 'v3 · kengayish']].map((t) => ({ t: t[1], pressed: v === t[0] ? 'true' : 'false', pick: () => this.setState({ v: t[0] }),
+style: 'height: 36px; padding: 0 14px; border-radius: 999px; font-size: 13px; font-weight: 800; cursor: pointer; ' + (v === t[0] ? 'border: 1px solid #0B7A4B; background: #0B7A4B; color: #FFFFFF;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;') }));
+const F = {
+1: [['MUDDAT', '17 hafta ishlab chiqish + 8 hafta pilot'], ['HUDUD', 'Toshkent, keyin 2 viloyat markazi'], ['PILOT', '20 do’kon: o’z kuryeri + tashqi xizmat'], ['DAROMAD', 'Paket + qo’shimcha xizmatlar, komissiyasiz']],
+2: [['MUDDAT', '+12 hafta'], ['HUDUD', 'Barcha viloyat markazlari'], ['YANGI', 'Platforma kuryerlari puli, o’zi olib ketish'], ['AI', 'Prognoz, ETA, firibgarlik']],
+3: [['MUDDAT', '+6 oy'], ['HUDUD', 'Qozog’iston, Qirg’iziston (Expansion sxemasi)'], ['YANGI', 'Ko’p valyuta, xalqaro kartalar'], ['MODEL', 'Ochiq API, integratsiyalar do’koni']]
+};
+const ok = (t) => ['✓', t, 1], later = (t) => ['→', t, 0];
+const C = {
+1: [
+['Xaridor', [ok('Telefon + SMS kod, Telegram orqali kirish'), ok('Katalog, qidiruv, savat, slot'), ok('Payme, Click, Uzum, Uzcard/Humo karta, naqd'), ok('Kartani ulash va saqlash (token)'), ok('Jonli kuzatuv, PIN, chek, baho'), ok('Ball (keshbek) va promo-kod'), ok('AI yordamchi: ro’yxatdan savat, savol-javob'), ok('Shaxsiy AI agent (beta): katalog, savat, tasdiq bilan buyurtma')]],
+['Do’kon xodimlari', [ok('Buyurtmalar, yig’ish, muqobil, dispetcher'), ok('Qoldiq xizmati (yoqiladi/o’chiriladi), “Tugadi” belgisi'), ok('POS/ERP: Billz, 1C, Excel — yoki integratsiyasiz'), ok('Yig’uvchi buyurtmani POS kassadan o’tkazadi'), ok('Hudud va slotlar'), ok('Murojaatlar, sharhlarga javob'), ok('Pul oqimi onlayn: to’lov, naqd, payout'), ok('Smena va kassani yopish')]],
+['Kuryer (do’konning o’zi)', [ok('Smena, GPS, topshiriqlar, marshrut'), ok('PIN bilan topshirish, naqd qabul'), ok('Topshirib bo’lmadi jarayoni'), ok('Baholash va o’z reytingi'), ok('Naqd balans va inkassatsiya'), ok('Tashqi xizmat: Yandex Dostavka API'), later('Platforma kuryerlari puli — yurist xulosasidan keyin')]],
+['Do’kon egasi', [ok('Ro’yxatdan o’tish, KYC, internet-do’kon sozlash'), ok('To’lov usullarini ulash (o’z merchant hisobi)'), ok('Tarif, obuna, avtomatik to’lov kartasi'), ok('Analitika: savdo, ABC/XYZ, hudud ABC'), ok('Sodiqlik dasturi sozlamasi'), ok('AI: kartochka, sharh tahlili, “ma’lumotdan so’rang”')]],
+['Platforma admini', [ok('Do’konlar, obunalar, qarzdorlik'), ok('Moderatsiya: sharhlar, e’tirozlar'), ok('Monitoring, status sahifa, zaxira nusxa'), ok('Audit jurnali, rollar va ruxsatlar'), ok('Kunlik solishtirish hisobotlari'), later('Xalqaro sozlamalar — v3')]],
+['Huquqiy va protseduralar', [ok('Oferta, maxfiylik siyosati, rozilik (uz/ru)'), ok('Shaxsiy ma’lumotlar bazasi davlat reyestrida'), ok('Fiskal chek MXIK bilan'), ok('10 ta SOP: kassa, qaytarish, nosozlik va boshq.'), ok('Qaytarish va iste’molchi huquqlari siyosati'), ok('Kuryer shartnomasi namunasi (do’kon uchun)')]]
+],
+2: [
+['Xaridor', [ok('Referal: taklif qil — ball ol'), ok('Takroriy buyurtma (har hafta)'), ok('Shaxsiy tavsiyalar'), ok('Apple Pay / Google Pay'), ok('Muddatli to’lov (Nasiya)'), ok('AI agent: limit ichida tasdiqsiz takroriy buyurtma')]],
+['Do’kon', [ok('Smartup, MoySklad, iiko, Bitrix24, amoCRM ulagichlari'), ok('Talab prognozi va avto-buyurtma'), ok('Marketing kampaniyalari avtomatik'), ok('Ko’p filial'), ok('Ochiq API va webhooklar'), ok('Kirill yozuvi')]],
+['Kuryer', [ok('Platforma kuryerlari puli'), ok('Avtomatik biriktirish'), ok('Marshrut optimizatsiyasi'), ok('ETA bashorati (ML)'), ok('Kuryer daromadi va avtomatik to’lov'), ok('Smena rejalashtirish')]],
+['Moliya', [ok('Split: qo’shimcha xizmat haqini to’lovdan ushlash'), ok('Visa / Mastercard ekvayringi'), ok('Avtomatik solishtirish va farq vazifalari'), ok('Korporativ (B2B) hisob-faktura'), later('Ko’p valyuta — v3'), later('Xalqaro PSP — v3')]],
+['Platforma', [ok('Firibgarlikni aniqlash'), ok('Ketib qolish bashorati'), ok('Integratsiyalar do’koni (beta)'), ok('Yordam markazi va akademiya'), ok('A/B test platformasi'), ok('SLA 99,9%')]],
+['Hudud', [ok('Barcha viloyat markazlari'), ok('Qorong’u ombor (dark store) rejimi'), ok('Sovuq zanjir qoidalari'), later('Qo’shni davlatlar — v3'), later('Turkmaniston — tahlildan keyin'), later('Rossiya — sanksiya tahlilidan keyin')]]
+],
+3: [
+['Xalqaro', [ok('Qozog’iston: Kaspi, Halyk, KZT, qozoq tili'), ok('Qirg’iziston: Elcart, MBank, KGS'), ok('Tojikiston: Korti Milli, Alif'), ok('Hududiy klasterlar'), ok('Soliq moduli adapterlari'), ok('Xalqaro kartalar va global PSP')]],
+['Platforma', [ok('Ochiq API va SDK'), ok('Integratsiyalar do’koni'), ok('Oq yorliq (white label) mobil ilovalar'), ok('Franshiza rejimi'), ok('Ko’p valyutali hisobot'), ok('Mintaqaviy qo’llab-quvvatlash')]],
+['AI', [ok('Narx tavsiyasi'), ok('To’liq avtonom AI agent buyurtmasi (limit bilan)'), ok('Ovozli buyurtma (uz/ru/kk/ky)'), ok('Hudud imkoniyatlari modeli'), ok('Avto-marketing'), ok('Do’kon uchun AI menejer')]],
+['', []], ['', []], ['', []]
+]
+};
+const cols = C[v].filter((c) => c[0]).map((c) => ({ t: c[0], items: c[1].map((i) => ({ m: i[0], t: i[1],
+dot: 'flex: none; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; ' + (i[2] ? 'background: #E6F2EC; color: #075C38;' : 'background: #F1F3F0; color: #5E656C;'),
+text: i[2] ? '' : 'color: #5E656C;' })) }));
+const strings = [['order.status.on_way', 'Kuryer yo’lda', 'Курьер в пути'], ['pay.card.add', 'Karta qo’shish', 'Добавить карту'], ['points.balance', 'Ballar: {n}', 'Баллы: {n}'], ['ai.ask', 'Nima kerak? Yozing yoki suratga oling', 'Что нужно? Напишите или сфотографируйте'], ['sms.otp', 'Kod: {code}. Hech kimga aytmang', 'Код: {code}. Никому не сообщайте']].map((s) => ({ k: s[0], uz: s[1], ru: s[2] }));
+const kpi = [['Faol do’konlar', '≥ 10'], ['Kunlik buyurtma (barcha do’konlar)', '≥ 300'], ['O’z vaqtida yetkazish', '≥ 90%'], ['Onlayn to’lov ulushi', '≥ 60%'], ['To’lov muvaffaqiyati', '≥ 97%'], ['Xaridor reytingi', '≥ 4,6']].map((k) => ({ t: k[0], v: k[1] }));
+return { tabs, facts: F[v].map((f) => ({ k: f[0], v: f[1] })), cols, strings, kpi };
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Dizayn tizimi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1760px; box-sizing: border-box; padding: 56px 64px; display: flex; flex-direction: column; gap: 28px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0B7A4B">Dizayn tizimi · v1.0</span><h1 style="margin: 0; font-size: 36px; line-height: 44px; font-weight: 800">Bitta til — uchta ilova</h1></div>
+<span style="max-width: 520px; font-size: 15px; line-height: 22px; color: #3C4248">Vitrina, panel va kuryer ilovasi bir xil tokenlar, komponentlar va tugma qoidalariga tayanadi. Hamkor faqat asosiy rangni almashtiradi.</span>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3"><b style="font-size: 16px">1. Bir qo'l bilan</b><span style="font-size: 13.5px; line-height: 19px; color: #3C4248">Asosiy amal ekran pastida, bosh barmoq yetadigan joyda.</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3"><b style="font-size: 16px">2. Holat doim ko'rinadi</b><span style="font-size: 13.5px; line-height: 19px; color: #3C4248">Har bir buyurtma, to'lov va jo'natmaning holati rang va so'z bilan.</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3"><b style="font-size: 16px">3. Pul kutilmaganda o'zgarmaydi</b><span style="font-size: 13.5px; line-height: 19px; color: #3C4248">Summa o'zgarsa — eski va yangi qiymat yonma-yon, tasdiq bilan.</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3"><b style="font-size: 16px">4. Xato kechiriladi</b><span style="font-size: 13.5px; line-height: 19px; color: #3C4248">Qaytarib bo'lmaydigan amal oldidan tasdiq; qolganida — bekor qilish.</span></div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px">
+
+<section style="display: flex; flex-direction: column; gap: 14px; padding: 24px; border-radius: 18px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<h2 style="margin: 0; font-size: 20px; font-weight: 800">Ranglar</h2>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; border-radius: 10px; background: {{accent}}"></div><b style="font-size: 13px">accent</b><span style="font-size: 12px; color: #5E656C">{{accent}} · asosiy tugma</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; border-radius: 10px; background: #075C38"></div><b style="font-size: 13px">accent-strong</b><span style="font-size: 12px; color: #5E656C">#075C38 · matn, hover</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; border-radius: 10px; background: #E6F2EC; border: 1px solid #BFDCCB"></div><b style="font-size: 13px">accent-tint</b><span style="font-size: 12px; color: #5E656C">#E6F2EC · tanlangan</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; border-radius: 10px; background: #16181B"></div><b style="font-size: 13px">ink</b><span style="font-size: 12px; color: #5E656C">#16181B · matn, savat</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; border-radius: 10px; background: #5E656C"></div><b style="font-size: 13px">muted</b><span style="font-size: 12px; color: #5E656C">#5E656C · izoh (5,9:1)</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; border-radius: 10px; background: #DCE0DC"></div><b style="font-size: 13px">border</b><span style="font-size: 12px; color: #5E656C">#DCE0DC · chegaralar</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; border-radius: 10px; background: #F6F7F4; border: 1px solid #DCE0DC"></div><b style="font-size: 13px">ground</b><span style="font-size: 12px; color: #5E656C">#F6F7F4 · fon</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px"><div style="height: 56px; border-radius: 10px; background: #FFFFFF; border: 1px solid #DCE0DC"></div><b style="font-size: 13px">surface</b><span style="font-size: 12px; color: #5E656C">#FFFFFF · kartalar</span></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+<div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; background: #FDF1E3; color: #7A3E06; font-size: 13px"><b>Ogohlantirish</b>#7A3E06 / #FDF1E3</div>
+<div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; background: #E5EEF8; color: #154BA8; font-size: 13px"><b>Ma'lumot</b>#154BA8 / #E5EEF8</div>
+<div style="display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; background: #FBE9E4; color: #9F2D12; font-size: 13px"><b>Xavf</b>#9F2D12 / #FBE9E4</div>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 12px; padding: 24px; border-radius: 18px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<h2 style="margin: 0; font-size: 20px; font-weight: 800">Tipografiya · Manrope</h2>
+<div style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid #EEF0ED; padding-bottom: 8px"><span style="font-size: 32px; line-height: 40px; font-weight: 800">Display 32</span><span style="font-size: 12px; color: #5E656C">32/40 · 800 · bosh ekran</span></div>
+<div style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid #EEF0ED; padding-bottom: 8px"><span style="font-size: 26px; line-height: 32px; font-weight: 800">Sarlavha 26</span><span style="font-size: 12px; color: #5E656C">26/32 · 800 · panel sahifasi</span></div>
+<div style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid #EEF0ED; padding-bottom: 8px"><span style="font-size: 22px; line-height: 28px; font-weight: 800">Sarlavha 22</span><span style="font-size: 12px; color: #5E656C">22/28 · 800 · mobil ekran</span></div>
+<div style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid #EEF0ED; padding-bottom: 8px"><span style="font-size: 16px; line-height: 22px; font-weight: 700">Karta sarlavhasi 16</span><span style="font-size: 12px; color: #5E656C">16/22 · 700</span></div>
+<div style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid #EEF0ED; padding-bottom: 8px"><span style="font-size: 15px; line-height: 22px; font-weight: 500">Asosiy matn 15 — o'qish uchun</span><span style="font-size: 12px; color: #5E656C">15/22 · 500</span></div>
+<div style="display: flex; align-items: baseline; justify-content: space-between; border-bottom: 1px solid #EEF0ED; padding-bottom: 8px"><span style="font-size: 13.5px; line-height: 19px; font-weight: 500; color: #3C4248">Ikkilamchi 13,5 — tafsilot</span><span style="font-size: 12px; color: #5E656C">13,5/19 · 500</span></div>
+<div style="display: flex; align-items: baseline; justify-content: space-between"><span style="font-size: 12px; line-height: 16px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #5E656C">Yorliq 12</span><span style="font-size: 12px; color: #5E656C">Narxlar: tabular raqamlar, «so'm» oxirida</span></div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 16px; padding: 24px; border-radius: 18px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<h2 style="margin: 0; font-size: 20px; font-weight: 800">Tugmalar ierarxiyasi</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: center">
+<button type="button" style="height: 54px; border-radius: 14px; border: none; background: {{accent}}; color: #FFFFFF; font: 700 16px Manrope, sans-serif">Asosiy · L 54</button><span style="font-size: 13px; line-height: 18px; color: #3C4248">Ekranda bittadan ortiq emas. Mobil: pastda, to'liq kenglikda.</span>
+<button type="button" style="height: 48px; border-radius: 12px; border: 1px solid #C9CEC8; background: #FFFFFF; color: #16181B; font: 700 15px Manrope, sans-serif">Ikkilamchi · M 48</button><span style="font-size: 13px; line-height: 18px; color: #3C4248">Muqobil yo'l: «Muqobilsiz», «Qo'ng'iroq».</span>
+<button type="button" style="height: 48px; border-radius: 12px; border: 1px solid #C9CEC8; background: #FFFFFF; color: #9F2D12; font: 700 15px Manrope, sans-serif">Xavfli · M 48</button><span style="font-size: 13px; line-height: 18px; color: #3C4248">Bekor qilish, rad etish. Doim chapda, tasdiq oynasi bilan.</span>
+<button type="button" style="height: 40px; border-radius: 10px; border: none; background: #16181B; color: #FFFFFF; font: 700 13px Manrope, sans-serif">Ixcham · S 40</button><span style="font-size: 13px; line-height: 18px; color: #3C4248">Faqat paneldagi karta va jadval ichida.</span>
+<button type="button" disabled style="height: 48px; border-radius: 12px; border: none; background: #DCE0DC; color: #5E656C; font: 700 15px Manrope, sans-serif">Nofaol + sabab</button><span style="font-size: 13px; line-height: 18px; color: #3C4248">Nofaol tugma nima uchun yopiqligini aytadi: «Tayyor — tasdiq kutilmoqda».</span>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 14px; padding: 24px; border-radius: 18px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<h2 style="margin: 0; font-size: 20px; font-weight: 800">Buyurtma holati belgilari</h2>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<span style="padding: 6px 12px; border-radius: 10px; background: #FDF1E3; color: #7A3E06; font-size: 13px; font-weight: 700">Tasdiq kutilmoqda</span>
+<span style="padding: 6px 12px; border-radius: 10px; background: #E6F2EC; color: #075C38; font-size: 13px; font-weight: 700">Qabul qilindi</span>
+<span style="padding: 6px 12px; border-radius: 10px; background: #FFFFFF; border: 1px solid #0B7A4B; color: #075C38; font-size: 13px; font-weight: 700">Tayyorlanmoqda</span>
+<span style="padding: 6px 12px; border-radius: 10px; background: #16181B; color: #FFFFFF; font-size: 13px; font-weight: 700">Tayyor</span>
+<span style="padding: 6px 12px; border-radius: 10px; background: #E5EEF8; color: #154BA8; font-size: 13px; font-weight: 700">Yo'lda</span>
+<span style="padding: 6px 12px; border-radius: 10px; background: #0B7A4B; color: #FFFFFF; font-size: 13px; font-weight: 700">Yakunlandi</span>
+<span style="padding: 6px 12px; border-radius: 10px; background: #FBE9E4; color: #9F2D12; font-size: 13px; font-weight: 700">Bekor qilindi</span>
+</div>
+<span style="font-size: 13px; line-height: 19px; color: #3C4248">Belgi har doim so'z bilan: rangni farqlamaydigan foydalanuvchi ham holatni o'qiydi. Ranglar yorqinligi bilan ham farq qiladi.</span>
+<h3 style="margin: 6px 0 0; font-size: 16px; font-weight: 700">Forma elementlari</h3>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600">Oddiy<input type="text" value="+998 90 123 45 67" style="height: 48px; box-sizing: border-box; padding: 0 12px; border: 1px solid #C9CEC8; border-radius: 12px; font: 500 15px Manrope, sans-serif"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600">Fokusda<input type="text" value="Mustaqillik 12" style="height: 48px; box-sizing: border-box; padding: 0 12px; border: 2px solid {{accent}}; border-radius: 12px; font: 500 15px Manrope, sans-serif; outline: 3px solid #E6F2EC"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 600; color: #9F2D12">Xato<input type="text" value="+998 90 12" aria-invalid="true" style="height: 48px; box-sizing: border-box; padding: 0 12px; border: 2px solid #9F2D12; border-radius: 12px; font: 500 15px Manrope, sans-serif"><span style="font-weight: 500">Raqam to'liq emas</span></label>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 14px; padding: 24px; border-radius: 18px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<h2 style="margin: 0; font-size: 20px; font-weight: 800">O'lchamlar va tegish maydonlari</h2>
+<div style="display: flex; align-items: flex-end; gap: 14px">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><div style="width: 4px; height: 4px; background: {{accent}}"></div><span style="font-size: 12px">4</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><div style="width: 8px; height: 8px; background: {{accent}}"></div><span style="font-size: 12px">8</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><div style="width: 12px; height: 12px; background: {{accent}}"></div><span style="font-size: 12px">12</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><div style="width: 16px; height: 16px; background: {{accent}}"></div><span style="font-size: 12px">16</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><div style="width: 24px; height: 24px; background: {{accent}}"></div><span style="font-size: 12px">24</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px"><div style="width: 32px; height: 32px; background: {{accent}}"></div><span style="font-size: 12px">32</span></div>
+<span style="margin-left: 16px; font-size: 13px; line-height: 19px; color: #3C4248">Bo'shliqlar 4 ga karrali. Burchaklar: 8 · 12 · 16. Soya faqat suzuvchi savat panelida.</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+<div style="padding: 12px; border-radius: 12px; background: #F6F7F4; font-size: 13px; line-height: 19px"><b>44 px</b> — har qanday bosiladigan element minimumi</div>
+<div style="padding: 12px; border-radius: 12px; background: #F6F7F4; font-size: 13px; line-height: 19px"><b>54–56 px</b> — mobil asosiy tugma, kuryer klaviaturasi</div>
+<div style="padding: 12px; border-radius: 12px; background: #F6F7F4; font-size: 13px; line-height: 19px"><b>8 px</b> — yonma-yon tugmalar orasidagi minimal masofa</div>
+</div>
+</section>
+
+<section style="display: flex; flex-direction: column; gap: 14px; padding: 24px; border-radius: 18px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<h2 style="margin: 0; font-size: 20px; font-weight: 800">Adaptivlik: uchta o'lcham</h2>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 12px; border: 1px solid #DCE0DC"><b style="font-size: 15px">Mobil 360–767</b><div style="height: 70px; width: 40px; border-radius: 6px; border: 2px solid #16181B; display: flex; flex-direction: column; justify-content: flex-end; padding: 3px; box-sizing: border-box"><div style="height: 8px; border-radius: 2px; background: {{accent}}"></div></div><span style="font-size: 12.5px; line-height: 18px; color: #3C4248">1 ustun · pastki sticky tugma · katalog 2 ustunli kartalar</span></div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 12px; border: 1px solid #DCE0DC"><b style="font-size: 15px">Planshet 768–1279</b><div style="height: 70px; width: 92px; border-radius: 6px; border: 2px solid #16181B; display: flex; gap: 3px; padding: 3px; box-sizing: border-box"><div style="width: 12px; border-radius: 2px; background: #16181B"></div><div style="flex: 1; border-radius: 2px; background: #E4E7E3"></div></div><span style="font-size: 12.5px; line-height: 18px; color: #3C4248">Yig'uvchi plansheti · menyu ixcham ikonkali · 3 ustunli katalog</span></div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 14px; border-radius: 12px; border: 1px solid #DCE0DC"><b style="font-size: 15px">Desktop 1280+</b><div style="height: 70px; width: 120px; border-radius: 6px; border: 2px solid #16181B; display: flex; gap: 3px; padding: 3px; box-sizing: border-box"><div style="width: 22px; border-radius: 2px; background: #16181B"></div><div style="flex: 1; border-radius: 2px; background: #E4E7E3"></div><div style="width: 26px; border-radius: 2px; background: {{accent}}"></div></div><span style="font-size: 12.5px; line-height: 18px; color: #3C4248">Yon menyu + kontent · savat o'ng panelda · 4–5 ustun</span></div>
+</div>
+</section>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#0B7A4B","options":["#0B7A4B","#1D5FD1","#B4441F","#16181B"]},"$preview":{"width":1440,"height":1760}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#0B7A4B' };
+}
+}
+</script>
+</body>
+</html>

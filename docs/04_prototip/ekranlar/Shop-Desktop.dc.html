@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Vitrina — desktop</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+input::placeholder{color:#7A8087}
+</style>
+</helmet>
+<div style="min-height: 900px; display: flex; flex-direction: column; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; padding: 14px clamp(16px, 3vw, 40px); background: #FFFFFF; border-bottom: 1px solid #E4E7E3">
+<div style="display: flex; align-items: center; gap: 10px"><div style="width: 40px; height: 40px; border-radius: 11px; background: {{accent}}; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 800">DD</div><span style="display: flex; flex-direction: column"><b style="font-size: 17px">Demo Do'kon</b><span style="font-size: 12px; color: #5E656C">08:00–22:00 · ochiq</span></span></div>
+<a href="Shop-Address.dc.html" style="display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border-radius: 12px; background: #F1F3F0; color: #16181B; text-decoration: none; font-size: 14px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0B7A4B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><b>Mustaqillik ko'chasi, 12</b><span style="color: #5E656C">· ~35 daq</span></a>
+<label style="flex: 1 1 260px; display: flex; align-items: center; gap: 8px; height: 46px; padding: 0 14px; border-radius: 12px; border: 1px solid #DCE0DC; background: #FFFFFF"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5E656C" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="search" aria-label="Mahsulot qidirish" placeholder="Mahsulot qidirish" style="flex: 1; min-width: 0; border: none; outline: none; background: transparent; font: 500 15px Manrope, sans-serif"></label>
+<a href="Shop-Login.dc.html" style="display: flex; align-items: center; height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #C9CEC8; color: #16181B; font-weight: 700; font-size: 14px; text-decoration: none">Kirish</a>
+</header>
+
+<div style="flex: 1; display: flex; flex-wrap: wrap; gap: 24px; padding: 24px clamp(16px, 3vw, 40px); align-items: flex-start">
+
+<nav aria-label="Kategoriyalar" style="flex: 1 1 200px; max-width: 240px; display: flex; flex-direction: column; gap: 4px">
+<b style="font-size: 13px; letter-spacing: .04em; text-transform: uppercase; color: #5E656C; padding: 0 12px 8px">Kategoriyalar</b>
+<a href="#all" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; background: #16181B; color: #FFFFFF; font-weight: 700; font-size: 14px; text-decoration: none">Hammasi</a>
+<a href="#fruit" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; color: #16181B; font-weight: 600; font-size: 14px; text-decoration: none">Meva-sabzavot</a>
+<a href="#bread" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; color: #16181B; font-weight: 600; font-size: 14px; text-decoration: none">Non</a>
+<a href="#milk" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; color: #16181B; font-weight: 600; font-size: 14px; text-decoration: none">Sut mahsulotlari</a>
+<a href="#drinks" style="display: flex; align-items: center; min-height: 44px; padding: 0 12px; border-radius: 10px; color: #16181B; font-weight: 600; font-size: 14px; text-decoration: none">Ichimliklar</a>
+</nav>
+
+<main style="flex: 999 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+<h1 style="margin: 0; font-size: 26px; line-height: 32px; font-weight: 800">Hammasi</h1>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px">
+<sc-for list="{{ products }}" as="p" hint-placeholder-count="8">
+<article style="display: flex; flex-direction: column; gap: 6px; padding: 12px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="{{ p.imgStyle }}">{{ p.tag }}</div>
+<b style="font-size: 15px; line-height: 20px">{{ p.name }}</b>
+<span style="font-size: 12.5px; color: #5E656C">{{ p.unit }}</span>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px"><b style="font-size: 15px">{{ p.priceText }}</b>
+<button type="button" onClick="{{ p.add }}" aria-label="{{ p.addLabel }}" style="{{ p.btnStyle }}">{{ p.btnText }}</button></div>
+</article>
+</sc-for>
+</div>
+</main>
+
+<aside aria-label="Savat" style="flex: 1 1 300px; max-width: 380px; box-sizing: border-box; display: flex; flex-direction: column; gap: 12px; padding: 18px; border-radius: 18px; background: #FFFFFF; border: 1px solid #E4E7E3; box-shadow: 0 8px 24px rgba(22,24,27,.06)">
+<div style="display: flex; justify-content: space-between; align-items: center"><h2 style="margin: 0; font-size: 20px; font-weight: 800">Savat</h2><span style="font-size: 13px; color: #5E656C">{{ countText }}</span></div>
+<sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+<div style="padding: 24px 12px; border-radius: 12px; background: #F6F7F4; text-align: center; font-size: 14px; line-height: 20px; color: #3C4248">Savat bo'sh.<br>Mahsulot yonidagi «+» ni bosing.</div>
+</sc-if>
+<sc-for list="{{ lines }}" as="l" hint-placeholder-count="2">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 44px; border-bottom: 1px solid #EEF0ED; font-size: 14px">
+<span><b>{{ l.name }}</b> × {{ l.qty }}</span>
+<span style="display: flex; align-items: center; gap: 6px"><span style="font-weight: 700">{{ l.sum }}</span><button type="button" onClick="{{ l.remove }}" aria-label="{{ l.removeLabel }}" style="width: 32px; height: 32px; border-radius: 16px; border: 1px solid #DCE0DC; background: #FFFFFF; font: 700 16px Manrope, sans-serif; color: #3C4248">−</button></span>
+</div>
+</sc-for>
+<div style="display: flex; flex-direction: column; gap: 4px; font-size: 14px">
+<div style="display: flex; justify-content: space-between"><span style="color: #3C4248">Mahsulotlar</span><span>{{ subtotal }}</span></div>
+<div style="display: flex; justify-content: space-between"><span style="color: #3C4248">Yetkazish</span><span>{{ fee }}</span></div>
+<div style="display: flex; justify-content: space-between; font-size: 17px; font-weight: 800; padding-top: 4px"><span>Jami</span><span>{{ total }}</span></div>
+</div>
+<sc-if value="{{ belowMin }}" hint-placeholder-val="{{ false }}">
+<div style="padding: 10px 12px; border-radius: 10px; background: #FDF1E3; color: #7A3E06; font-size: 13px; line-height: 18px">{{ minText }}</div>
+</sc-if>
+<a href="Shop-Checkout.dc.html" style="{{ ctaStyle }}">Rasmiylashtirish</a>
+</aside>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#0B7A4B","options":["#0B7A4B","#1D5FD1","#B4441F","#16181B"]},"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { cart: { bread: 2, qatiq: 1 } };
+}
+renderVals() {
+const accent = this.props.accent ?? '#0B7A4B';
+const fmt = (n) => n.toLocaleString('ru-RU').replace(/ /g, ' ') + ' so’m';
+const items = [
+{ id: 'apple', name: 'Olma, qizil', unit: '1 kg · tarozida', price: 18000, bg: '#F7E6E1', tag: 'meva', ok: true },
+{ id: 'bread', name: 'Non, tandir', unit: '1 dona', price: 4000, bg: '#F5EBDA', tag: 'non', ok: true },
+{ id: 'milk', name: 'Sut 3,2%', unit: '1 l', price: 12500, bg: '#E5EEF8', tag: 'sut', ok: true },
+{ id: 'tomato', name: 'Pomidor', unit: '1 kg · tarozida', price: 22000, bg: '#E8F1E3', tag: 'sabzavot', ok: true },
+{ id: 'water', name: 'Mineral suv', unit: '1,5 l', price: 5000, bg: '#F1F3F0', tag: 'tugagan', ok: false },
+{ id: 'qatiq', name: 'Qatiq', unit: '0,5 kg', price: 9000, bg: '#FBF3D9', tag: 'sut', ok: true },
+{ id: 'cheese', name: 'Pishloq', unit: '200 g', price: 27000, bg: '#FBF3D9', tag: 'sut', ok: true },
+{ id: 'cucumber', name: 'Bodring', unit: '1 kg · tarozida', price: 15000, bg: '#E8F1E3', tag: 'sabzavot', ok: true }
+];
+const cart = this.state.cart;
+const setQty = (id, q) => { const c = Object.assign({}, this.state.cart); if (q <= 0) delete c[id]; else c[id] = q; this.setState({ cart: c }); };
+const products = items.map((p) => {
+const q = cart[p.id] || 0;
+return {
+name: p.name, unit: p.unit, tag: p.tag, priceText: fmt(p.price),
+imgStyle: 'height: 120px; border-radius: 12px; background: ' + p.bg + '; display: flex; align-items: flex-end; padding: 8px; box-sizing: border-box; font-size: 11.5px; font-weight: 700; color: #3C4248;',
+btnText: !p.ok ? 'Yo’q' : q ? q + ' · +' : '+',
+addLabel: p.ok ? p.name + ' savatga qo’shish' : p.name + ' tugagan',
+btnStyle: 'min-width: 44px; height: 40px; padding: 0 12px; border-radius: 20px; border: none; font: 700 15px Manrope, sans-serif; ' + (p.ok ? (q ? 'background: #E6F2EC; color: #075C38;' : 'background: ' + accent + '; color: #FFFFFF;') : 'background: #E4E7E3; color: #5E656C;'),
+add: () => { if (p.ok) setQty(p.id, q + 1); }
+};
+});
+const lines = items.filter((p) => cart[p.id]).map((p) => ({ name: p.name, qty: cart[p.id], sum: fmt(p.price * cart[p.id]), removeLabel: p.name + ' kamaytirish', remove: () => setQty(p.id, cart[p.id] - 1) }));
+const sub = items.reduce((s, p) => s + p.price * (cart[p.id] || 0), 0);
+const minOrder = 30000;
+const fee = sub >= 150000 || sub === 0 ? 0 : 10000;
+const count = Object.values(cart).reduce((a, b) => a + b, 0);
+const below = sub > 0 && sub < minOrder;
+return {
+accent, products, lines,
+empty: lines.length === 0,
+countText: count + ' ta',
+subtotal: fmt(sub), fee: fmt(fee), total: fmt(sub + fee),
+belowMin: below,
+minText: 'Minimal buyurtma ' + fmt(minOrder) + '. Yana ' + fmt(minOrder - sub) + ' qo’shing.',
+ctaStyle: 'display: flex; align-items: center; justify-content: center; height: 54px; border-radius: 14px; font-weight: 700; font-size: 16px; text-decoration: none; ' + (below || sub === 0 ? 'background: #DCE0DC; color: #5E656C; pointer-events: none;' : 'background: ' + accent + '; color: #FFFFFF;')
+};
+}
+}
+</script>
+</body>
+</html>

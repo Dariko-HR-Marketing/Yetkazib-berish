@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Xaridor: aqlli qidiruv</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; display: flex; flex-direction: column; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B; overflow: hidden">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 16px 16px 12px; background: #FFFFFF; border-bottom: 1px solid #E4E7E3">
+<div style="height: 46px; display: flex; align-items: center; gap: 8px; padding: 0 12px; border-radius: 12px; border: 1.5px solid #0B7A4B; font-size: 15px"><span aria-hidden="true" style="color: #5E656C">⌕</span><b style="flex: 1">{{ q }}</b><span style="color: #9AA1A7">✕</span></div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap"><span style="font-size: 12px; color: #5E656C; align-self: center">Namuna:</span><sc-for list="{{ demos }}" as="d" hint-placeholder-count="3"><button type="button" aria-pressed="{{ d.pressed }}" onClick="{{ d.pick }}" style="{{ d.style }}">{{ d.t }}</button></sc-for></div>
+</div>
+
+<sc-if value="{{ isEmpty }}">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 14px; padding: 16px">
+<b style="font-size: 15px">Oxirgi qidiruvlar</b>
+<div style="display: flex; flex-wrap: wrap; gap: 6px"><sc-for list="{{ recent }}" as="r" hint-placeholder-count="4"><span style="padding: 7px 11px; border-radius: 999px; background: #FFFFFF; border: 1px solid #DCE0DC; font-size: 13px">↺ {{ r }}</span></sc-for></div>
+<b style="font-size: 15px">Hozir tumaningizda ko'p qidirilmoqda</b>
+<sc-for list="{{ popular }}" as="r" hint-placeholder-count="4"><div style="display: flex; justify-content: space-between; padding: 10px 12px; border-radius: 12px; background: #FFFFFF; font-size: 13.5px"><span>{{ r.t }}</span><span style="color: #5E656C">{{ r.n }}</span></div></sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isFound }}">
+<div style="flex: 1; overflow: auto; display: flex; flex-direction: column; gap: 10px; padding: 12px 16px">
+<span style="font-size: 12.5px; color: #3C4248">"сут" → <b>sut</b> · 24 natija · <span style="color: #0B7A4B; font-weight: 700">Halol</span> filtri profilingizdan</span>
+<div style="display: flex; gap: 6px"><sc-for list="{{ filters }}" as="f" hint-placeholder-count="4"><span style="{{ f.style }}">{{ f.t }}</span></sc-for></div>
+<sc-for list="{{ results }}" as="r" hint-placeholder-count="5">
+<div style="display: flex; gap: 10px; align-items: center; padding: 10px; border-radius: 14px; background: #FFFFFF; border: 1px solid {{ r.border }}">
+<div style="width: 60px; height: 60px; flex: none; border-radius: 10px; background: {{ r.bg }}; opacity: {{ r.op }}"></div>
+<div style="flex: 1; display: flex; flex-direction: column; gap: 3px"><b style="font-size: 13.5px">{{ r.n }}</b><span style="{{ r.tagStyle }}">{{ r.tag }}</span><b style="font-size: 13.5px">{{ r.price }}</b></div>
+<span style="{{ r.btnStyle }}">{{ r.btn }}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ isNone }}">
+<div style="flex: 1; display: flex; flex-direction: column; gap: 12px; padding: 16px">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3; text-align: center; align-items: center">
+<span style="font-size: 28px">🔍</span>
+<b style="font-size: 16px">"Kokos suti" hozircha yo'q</b>
+<span style="font-size: 13px; line-height: 18px; color: #3C4248">Do'konga so'rov yuboramiz. Mahsulot paydo bo'lsa, Telegram orqali xabar beramiz.</span>
+<button type="button" onClick="{{ ask }}" style="{{ askStyle }}">{{ askLabel }}</button>
+</div>
+<b style="font-size: 15px">Balki shular mos keladi</b>
+<sc-for list="{{ alts }}" as="r" hint-placeholder-count="3"><div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; border-radius: 12px; background: #FFFFFF; font-size: 13.5px"><span>{{ r.n }}</span><b>{{ r.p }}</b></div></sc-for>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { d: 1, asked: false };
+}
+renderVals() {
+const st = this.state;
+const D = ['Bo’sh', 'сут', 'kokos suti'];
+const demos = D.map((t, i) => ({ t, pressed: st.d === i ? 'true' : 'false', pick: () => this.setState({ d: i, asked: false }),
+style: 'height: 30px; padding: 0 11px; border-radius: 999px; font-size: 12.5px; font-weight: 700; cursor: pointer; ' + (st.d === i ? 'border: 1px solid #16181B; background: #16181B; color: #FFFFFF;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;') }));
+const fp = (t, on) => ({ t, style: 'padding: 5px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; ' + (on ? 'background: #E6F2EC; color: #075C38;' : 'background: #FFFFFF; border: 1px solid #DCE0DC;') });
+const filters = [fp('Halol ✓', true), fp('1 l', false), fp('Arzonroq', false), fp('Brend', false)];
+const tagCss = { usual: 'background: #E6F2EC; color: #075C38;', low: 'background: #FDF1E3; color: #7A3E06;', out: 'background: #FBE9E4; color: #9F2D12;', none: 'background: transparent; color: #5E656C;' };
+const results = [['Sut 3,2% 1 l', 'Siz odatda olasiz', 'usual', '13 000', '#E5EEF8'], ['Sut 2,5% 1 l', 'Kam qoldi', 'low', '12 000', '#E5EEF8'], ['Sut 3,2% 0,5 l', '', 'none', '7 200', '#E5EEF8'], ['Pishirilgan sut 4%', '', 'none', '14 500', '#FFF6E0'], ['Laktozasiz sut 1,5%', 'Tugadi · kelganda xabar', 'out', '18 000', '#F1F3F0']].map((r) => {
+const out = r[2] === 'out';
+return { n: r[0], tag: r[1], tagStyle: 'align-self: flex-start; padding: 1px 7px; border-radius: 5px; font-size: 11px; font-weight: 700; ' + tagCss[r[2]], price: r[3] + ' so’m', bg: r[4], op: out ? '.45' : '1', border: r[2] === 'usual' ? '#0B7A4B' : '#E4E7E3',
+btn: out ? '🔔' : '+', btnStyle: 'width: 36px; height: 36px; flex: none; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 17px; font-weight: 800; ' + (out ? 'background: #F1F3F0;' : 'background: #0B7A4B; color: #FFFFFF;') }; });
+const recent = ['sut', 'non buxanka', 'tuxum', 'guruch devzira'];
+const popular = [['Mandarin', '↑ 3 baravar'], ['Sho’rva to’plami', 'yangi'], ['Issiq choy', '↑ 2 baravar'], ['Asal', '↑ 40%']].map((p) => ({ t: p[0], n: p[1] }));
+const alts = [['Kokos yong’og’i (butun)', '22 000'], ['Bodom suti 1 l', '34 000'], ['Qaymoq 20%', '12 500']].map((a) => ({ n: a[0], p: a[1] }));
+return { demos, filters, results, recent, popular, alts, q: st.d === 0 ? '' : D[st.d], isEmpty: st.d === 0, isFound: st.d === 1, isNone: st.d === 2,
+askLabel: st.asked ? 'So’rov yuborildi ✓' : 'Kelganda xabar bering', ask: () => this.setState({ asked: true }),
+askStyle: 'margin-top: 6px; height: 44px; padding: 0 18px; border-radius: 12px; border: none; font-size: 14px; font-weight: 800; cursor: pointer; ' + (st.asked ? 'background: #E6F2EC; color: #0B7A4B;' : 'background: #0B7A4B; color: #FFFFFF;') };
+}
+}
+</script>
+</body>
+</html>

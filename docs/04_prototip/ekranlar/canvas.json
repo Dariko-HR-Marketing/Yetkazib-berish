@@ -1,0 +1,1103 @@
+{
+ "v": 3,
+ "createdOnFiles": {
+  "v": 1,
+  "at": "2026-11-05T00:55:00+05:00"
+ },
+ "title": "Dostavka SaaS platformasi — UX prototip",
+ "launch": {
+  "view": "focused",
+  "file": "Index.dc.html"
+ },
+ "pages": [],
+ "boards": {
+  "Main.dc.html": {
+   "x": 0,
+   "y": 0,
+   "w": 1600,
+   "h": 1060,
+   "title": "Arxitektura: 3 ilova, 1 yadro"
+  },
+  "Shop-Address.dc.html": {
+   "x": 0,
+   "y": 1420,
+   "w": 390,
+   "h": 844,
+   "title": "1. Manzil",
+   "is_interactive": true
+  },
+  "Shop-Catalog.dc.html": {
+   "x": 470,
+   "y": 1420,
+   "w": 390,
+   "h": 844,
+   "title": "2. Katalog",
+   "is_interactive": true
+  },
+  "Shop-Checkout.dc.html": {
+   "x": 940,
+   "y": 1420,
+   "w": 390,
+   "h": 844,
+   "title": "3. Savat va rasmiylashtirish",
+   "is_interactive": true
+  },
+  "Shop-Tracking.dc.html": {
+   "x": 1410,
+   "y": 1420,
+   "w": 390,
+   "h": 844,
+   "title": "4. Kuzatuv va tasdiq",
+   "is_interactive": true
+  },
+  "Courier-Tasks.dc.html": {
+   "x": 0,
+   "y": 2624,
+   "w": 390,
+   "h": 844,
+   "title": "Kuryer: topshiriqlar",
+   "is_interactive": true
+  },
+  "Courier-Deliver.dc.html": {
+   "x": 470,
+   "y": 2624,
+   "w": 390,
+   "h": 844,
+   "title": "Kuryer: topshirish (PIN)",
+   "is_interactive": true
+  },
+  "Panel-Orders.dc.html": {
+   "x": 0,
+   "y": 3828,
+   "w": 1440,
+   "h": 900,
+   "title": "Panel: buyurtmalar",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Panel-Picking.dc.html": {
+   "x": 1520,
+   "y": 3828,
+   "w": 1440,
+   "h": 900,
+   "title": "Panel: yig'ish",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Panel-Dispatch.dc.html": {
+   "x": 3040,
+   "y": 3828,
+   "w": 1440,
+   "h": 900,
+   "title": "Panel: dispetcher",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Foundations.dc.html": {
+   "x": 0,
+   "y": 5088,
+   "w": 1440,
+   "h": 1760,
+   "title": "Dizayn tizimi"
+  },
+  "Journeys.dc.html": {
+   "x": 1520,
+   "y": 5088,
+   "w": 1440,
+   "h": 1900,
+   "title": "Rollar va ketma-ketlik"
+  },
+  "Flow-Order.dc.html": {
+   "x": 3040,
+   "y": 5088,
+   "w": 1600,
+   "h": 1060,
+   "title": "Buyurtma holatlari mantiqi"
+  },
+  "Shop-Login.dc.html": {
+   "x": 0,
+   "y": 7368,
+   "w": 390,
+   "h": 844,
+   "title": "Xaridor: kirish (OTP)",
+   "is_interactive": true
+  },
+  "Shop-Support.dc.html": {
+   "x": 470,
+   "y": 7368,
+   "w": 390,
+   "h": 844,
+   "title": "Xaridor: murojaat",
+   "is_interactive": true
+  },
+  "Courier-Fail.dc.html": {
+   "x": 940,
+   "y": 7368,
+   "w": 390,
+   "h": 844,
+   "title": "Kuryer: topshirib bo'lmadi",
+   "is_interactive": true
+  },
+  "Shop-Desktop.dc.html": {
+   "x": 1410,
+   "y": 7368,
+   "w": 1440,
+   "h": 900,
+   "title": "Vitrina: desktop (adaptiv)",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "States.dc.html": {
+   "x": 2930,
+   "y": 7368,
+   "w": 1440,
+   "h": 900,
+   "title": "Tizim holatlari"
+  },
+  "Panel-Catalog.dc.html": {
+   "x": 0,
+   "y": 8628,
+   "w": 1440,
+   "h": 900,
+   "title": "Panel: katalog va qoldiq",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Panel-Zones.dc.html": {
+   "x": 1520,
+   "y": 8628,
+   "w": 1440,
+   "h": 900,
+   "title": "Panel: hudud va slotlar",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Panel-Finance.dc.html": {
+   "x": 3040,
+   "y": 8628,
+   "w": 1440,
+   "h": 900,
+   "title": "Panel: moliya",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Panel-Support.dc.html": {
+   "x": 4560,
+   "y": 8628,
+   "w": 1440,
+   "h": 900,
+   "title": "Panel: murojaatlar",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Admin-Tenants.dc.html": {
+   "x": 6080,
+   "y": 8628,
+   "w": 1440,
+   "h": 900,
+   "title": "Admin: hamkorni ulash",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "SaaS-Model.dc.html": {
+   "x": 0,
+   "y": 9888,
+   "w": 1600,
+   "h": 1060,
+   "title": "SaaS modeli: pul va xizmat oqimi"
+  },
+  "Flow-E2E.dc.html": {
+   "x": 1680,
+   "y": 9888,
+   "w": 2400,
+   "h": 1060,
+   "title": "To'liq buyurtma jarayoni: 13 bosqich × 6 ishtirokchi"
+  },
+  "Store-Brands.dc.html": {
+   "x": 7760,
+   "y": 9888,
+   "w": 1440,
+   "h": 1060,
+   "title": "Har do'konga o'z internet-do'koni"
+  },
+  "SaaS-Landing.dc.html": {
+   "x": 0,
+   "y": 11308,
+   "w": 1440,
+   "h": 1560,
+   "title": "Platforma sayti: do'konlar uchun",
+   "expand": "fill"
+  },
+  "SaaS-Signup.dc.html": {
+   "x": 1520,
+   "y": 11308,
+   "w": 1440,
+   "h": 900,
+   "title": "Do'kon egasi: ro'yxatdan o'tish",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Owner-Dashboard.dc.html": {
+   "x": 3040,
+   "y": 11308,
+   "w": 1440,
+   "h": 900,
+   "title": "Do'kon egasi: bosh sahifa",
+   "expand": "fill"
+  },
+  "Owner-Storefront.dc.html": {
+   "x": 4560,
+   "y": 11308,
+   "w": 1440,
+   "h": 900,
+   "title": "Do'kon egasi: internet-do'kon sozlash",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Owner-Product.dc.html": {
+   "x": 6080,
+   "y": 11308,
+   "w": 1440,
+   "h": 900,
+   "title": "Do'kon egasi: mahsulot kartochkasi",
+   "expand": "fill"
+  },
+  "Owner-Billing.dc.html": {
+   "x": 7600,
+   "y": 11308,
+   "w": 1440,
+   "h": 900,
+   "title": "Do'kon egasi: tarif va to'lov",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Admin-SaaS.dc.html": {
+   "x": 9120,
+   "y": 11308,
+   "w": 1440,
+   "h": 900,
+   "title": "Platforma admini: do'konlar va obunalar",
+   "expand": "fill"
+  },
+  "Tenant-Lifecycle.dc.html": {
+   "x": 4160,
+   "y": 9888,
+   "w": 2000,
+   "h": 1060,
+   "title": "Do'kon hayot sikli (SaaS mijozi)"
+  },
+  "Gaps.dc.html": {
+   "x": 6240,
+   "y": 9888,
+   "w": 1440,
+   "h": 1060,
+   "title": "Bo'shliqlar va tavsiyalar"
+  },
+  "Analytics-Method.dc.html": {
+   "x": 0,
+   "y": 13228,
+   "w": 1440,
+   "h": 1060,
+   "title": "Analitika metodikasi va ma'lumot manbalari"
+  },
+  "Analytics-Overview.dc.html": {
+   "x": 1520,
+   "y": 13228,
+   "w": 1440,
+   "h": 900,
+   "title": "Analitika: savdo ko'rsatkichlari",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Analytics-ABC.dc.html": {
+   "x": 3040,
+   "y": 13228,
+   "w": 1440,
+   "h": 900,
+   "title": "Analitika: ABC / XYZ matritsasi",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Analytics-Product.dc.html": {
+   "x": 4560,
+   "y": 13228,
+   "w": 1440,
+   "h": 900,
+   "title": "Analitika: bitta mahsulot",
+   "expand": "fill"
+  },
+  "Marketing-Channels.dc.html": {
+   "x": 6080,
+   "y": 13228,
+   "w": 1440,
+   "h": 900,
+   "title": "Marketing: ijtimoiy tarmoqlar",
+   "expand": "fill"
+  },
+  "Marketing-Campaigns.dc.html": {
+   "x": 7600,
+   "y": 13228,
+   "w": 1440,
+   "h": 900,
+   "title": "Marketing: kampaniya yaratish",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Reports-Scheduler.dc.html": {
+   "x": 9120,
+   "y": 13228,
+   "w": 1440,
+   "h": 900,
+   "title": "Hisobotlar: yaratish va rejalashtirish",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Shop-LiveTrack.dc.html": {
+   "x": 0,
+   "y": 14648,
+   "w": 390,
+   "h": 844,
+   "title": "Xaridor: jonli kuzatuv xaritada",
+   "is_interactive": true
+  },
+  "Track-Model.dc.html": {
+   "x": 470,
+   "y": 14648,
+   "w": 1440,
+   "h": 1060,
+   "title": "Kuzatuv mantiqi: holat, lokatsiya, ETA"
+  },
+  "Track-Ops.dc.html": {
+   "x": 1990,
+   "y": 14648,
+   "w": 1440,
+   "h": 900,
+   "title": "Operator: buyurtma yo'li va xarita",
+   "expand": "fill"
+  },
+  "Courier-Shift.dc.html": {
+   "x": 3510,
+   "y": 14648,
+   "w": 390,
+   "h": 844,
+   "title": "Kuryer: smena va GPS ruxsati",
+   "is_interactive": true
+  },
+  "Courier-Route.dc.html": {
+   "x": 3980,
+   "y": 14648,
+   "w": 390,
+   "h": 844,
+   "title": "Kuryer: marshrut va navigatsiya",
+   "is_interactive": true
+  },
+  "GPS-Flow.dc.html": {
+   "x": 4450,
+   "y": 14648,
+   "w": 1440,
+   "h": 1060,
+   "title": "GPS: kuryerdan xaridorgacha"
+  },
+  "Marketing-Frameworks.dc.html": {
+   "x": 0,
+   "y": 16068,
+   "w": 1440,
+   "h": 900,
+   "title": "Marketing freymvorklari: BCG, RFM, kogorta, voronka",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Sales-Report.dc.html": {
+   "x": 1520,
+   "y": 16068,
+   "w": 1440,
+   "h": 900,
+   "title": "Sotuv hisoboti va jadval asboblari",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Data-ImportExport.dc.html": {
+   "x": 3040,
+   "y": 16068,
+   "w": 1440,
+   "h": 900,
+   "title": "Import / eksport markazi",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Notify-Matrix.dc.html": {
+   "x": 4560,
+   "y": 16068,
+   "w": 1440,
+   "h": 1060,
+   "title": "Bildirishnomalar: kimga, qachon, qaysi kanal",
+   "is_interactive": true
+  },
+  "Notify-Feeds.dc.html": {
+   "x": 6080,
+   "y": 16068,
+   "w": 1440,
+   "h": 900,
+   "title": "Bildirishnomalar: xaridor, kuryer, do'kon"
+  },
+  "Index.dc.html": {
+   "x": -1560,
+   "y": 0,
+   "w": 1440,
+   "h": 4900,
+   "title": "Navigatsiya: barcha ekranlar",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Pay-Architecture.dc.html": {
+   "x": 0,
+   "y": 17488,
+   "w": 1440,
+   "h": 1060,
+   "title": "To'lov arxitekturasi: bitta API, ko'p provayder"
+  },
+  "Pay-Providers.dc.html": {
+   "x": 1520,
+   "y": 17488,
+   "w": 1440,
+   "h": 900,
+   "title": "To'lov provayderlari: davlatlar bo'yicha",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Shop-Payment.dc.html": {
+   "x": 3040,
+   "y": 17488,
+   "w": 390,
+   "h": 844,
+   "title": "Xaridor: to'lov usuli",
+   "is_interactive": true
+  },
+  "Owner-Payments.dc.html": {
+   "x": 3510,
+   "y": 17488,
+   "w": 1440,
+   "h": 900,
+   "title": "Do'kon egasi: to'lov usullarini ulash",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Expansion.dc.html": {
+   "x": 5030,
+   "y": 17488,
+   "w": 1440,
+   "h": 1060,
+   "title": "Xalqaro kengayish"
+  },
+  "Rating-Model.dc.html": {
+   "x": 0,
+   "y": 18908,
+   "w": 1440,
+   "h": 1060,
+   "title": "Reyting va ishonch modeli"
+  },
+  "Shop-Review.dc.html": {
+   "x": 1520,
+   "y": 18908,
+   "w": 390,
+   "h": 844,
+   "title": "Xaridor: do'kon va kuryerni baholash",
+   "is_interactive": true
+  },
+  "Courier-Rate.dc.html": {
+   "x": 1990,
+   "y": 18908,
+   "w": 390,
+   "h": 844,
+   "title": "Kuryer: baholash va mening reytingim",
+   "is_interactive": true
+  },
+  "Panel-Reviews.dc.html": {
+   "x": 2460,
+   "y": 18908,
+   "w": 1440,
+   "h": 900,
+   "title": "Panel: reyting va sharhlar",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Analytics-Geo.dc.html": {
+   "x": 0,
+   "y": 20328,
+   "w": 1440,
+   "h": 900,
+   "title": "Analitika: hudud ABC tahlili",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "AI-Services.dc.html": {
+   "x": 1520,
+   "y": 20328,
+   "w": 1440,
+   "h": 1060,
+   "title": "AI xizmatlari: tavsiyalar va yordamchi",
+   "is_interactive": true
+  },
+  "Services-Map.dc.html": {
+   "x": 3040,
+   "y": 20328,
+   "w": 1440,
+   "h": 1160,
+   "title": "Xizmatlar, protseduralar va resurslar xaritasi",
+   "is_interactive": true
+  },
+  "MVP-Scope.dc.html": {
+   "x": 0,
+   "y": 21848,
+   "w": 1440,
+   "h": 1060,
+   "title": "MVP 1-versiya doirasi: O'zbekiston, uz/ru",
+   "is_interactive": true
+  },
+  "Money-Flow.dc.html": {
+   "x": 1520,
+   "y": 21848,
+   "w": 1600,
+   "h": 1060,
+   "title": "Pul, mahsulot va ma'lumot oqimi",
+   "is_interactive": true
+  },
+  "Owner-Money.dc.html": {
+   "x": 3200,
+   "y": 21848,
+   "w": 1440,
+   "h": 900,
+   "title": "Do'kon egasi: pul oqimi onlayn",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Shop-Cards.dc.html": {
+   "x": 4720,
+   "y": 21848,
+   "w": 390,
+   "h": 844,
+   "title": "Xaridor: kartalarim (uz/ru)",
+   "is_interactive": true
+  },
+  "Loyalty.dc.html": {
+   "x": 5190,
+   "y": 21848,
+   "w": 1440,
+   "h": 900,
+   "title": "Sodiqlik dasturi",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Shop-AIAssistant.dc.html": {
+   "x": 0,
+   "y": 23268,
+   "w": 390,
+   "h": 844,
+   "title": "Xaridor: AI yordamchi (uz/ru)",
+   "is_interactive": true
+  },
+  "AI-Agents.dc.html": {
+   "x": 470,
+   "y": 23268,
+   "w": 1600,
+   "h": 1100,
+   "title": "AI integratsiya va tashqi agentlar",
+   "is_interactive": true
+  },
+  "Integrations-Model.dc.html": {
+   "x": 2150,
+   "y": 23268,
+   "w": 1600,
+   "h": 1060,
+   "title": "POS, CRM, ERP integratsiyasi",
+   "is_interactive": true
+  },
+  "Panel-Stock.dc.html": {
+   "x": 3830,
+   "y": 23268,
+   "w": 1440,
+   "h": 900,
+   "title": "Panel: qoldiq xizmati",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "Shop-Home.dc.html": {
+   "x": 0,
+   "y": 24728,
+   "w": 390,
+   "h": 844,
+   "title": "Xaridor: shaxsiy bosh sahifa (uz/ru)",
+   "is_interactive": true
+  },
+  "Shop-Search.dc.html": {
+   "x": 470,
+   "y": 24728,
+   "w": 390,
+   "h": 844,
+   "title": "Xaridor: aqlli qidiruv",
+   "is_interactive": true
+  },
+  "Shop-Product.dc.html": {
+   "x": 940,
+   "y": 24728,
+   "w": 390,
+   "h": 844,
+   "title": "Xaridor: mahsulot kartochkasi",
+   "is_interactive": true
+  },
+  "Shop-CartSmart.dc.html": {
+   "x": 1410,
+   "y": 24728,
+   "w": 390,
+   "h": 844,
+   "title": "Xaridor: aqlli savat",
+   "is_interactive": true
+  },
+  "Shop-Privacy.dc.html": {
+   "x": 1880,
+   "y": 24728,
+   "w": 390,
+   "h": 844,
+   "title": "Xaridor: rozilik va maxfiylik (uz/ru)",
+   "is_interactive": true
+  },
+  "Data-Customer360.dc.html": {
+   "x": 2350,
+   "y": 24728,
+   "w": 1440,
+   "h": 900,
+   "title": "Ichki: Mijoz 360",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "Data-Funnel.dc.html": {
+   "x": 3870,
+   "y": 24728,
+   "w": 1440,
+   "h": 900,
+   "title": "Ichki: voronka, talab va kanallar",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "Skills-Matrix.dc.html": {
+   "x": 5390,
+   "y": 24728,
+   "w": 1440,
+   "h": 900,
+   "title": "Ko'nikmalar matritsasi va akademiya",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "Onboard-Customer.dc.html": {
+   "x": 0,
+   "y": 25988,
+   "w": 390,
+   "h": 844,
+   "title": "Xaridor: ro'yxatdan o'tish va roziliklar (uz/ru)",
+   "is_interactive": true
+  },
+  "Onboard-Courier.dc.html": {
+   "x": 470,
+   "y": 25988,
+   "w": 390,
+   "h": 844,
+   "title": "Kuryer: ishga qabul va roziliklar",
+   "is_interactive": true
+  },
+  "Onboard-Shop.dc.html": {
+   "x": 940,
+   "y": 25988,
+   "w": 1440,
+   "h": 900,
+   "title": "Do'kon: KYC va E-IMZO bilan shartnoma",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "Admin-Consents.dc.html": {
+   "x": 2460,
+   "y": 25988,
+   "w": 1440,
+   "h": 900,
+   "title": "Ichki: oferta va rozilik markazi",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "Accounts-Architecture.dc.html": {
+   "x": 0,
+   "y": 27248,
+   "w": 1600,
+   "h": 1100,
+   "title": "Hisoblar, rollar va hamyonlar arxitekturasi"
+  },
+  "Points-Model.dc.html": {
+   "x": 1680,
+   "y": 27248,
+   "w": 1440,
+   "h": 1100,
+   "title": "Ball, sodiqlik va aksiya kartalari modeli"
+  },
+  "Shop-Account.dc.html": {
+   "x": 3200,
+   "y": 27248,
+   "w": 390,
+   "h": 844,
+   "title": "Xaridor: hisobim va sodiqlik kartasi (uz/ru)",
+   "is_interactive": true
+  },
+  "Shop-Rewards.dc.html": {
+   "x": 3670,
+   "y": 27248,
+   "w": 390,
+   "h": 844,
+   "title": "Xaridor: ball do'koni",
+   "is_interactive": true
+  },
+  "Shop-PayPoints.dc.html": {
+   "x": 4140,
+   "y": 27248,
+   "w": 390,
+   "h": 844,
+   "title": "Xaridor: ball + pul bilan to'lash",
+   "is_interactive": true
+  },
+  "Courier-Account.dc.html": {
+   "x": 4610,
+   "y": 27248,
+   "w": 390,
+   "h": 844,
+   "title": "Kuryer: hisobim, daromad va naqd",
+   "is_interactive": true
+  },
+  "Owner-PointsLedger.dc.html": {
+   "x": 5080,
+   "y": 27248,
+   "w": 1440,
+   "h": 900,
+   "title": "Do'kon: ballar, aksiya va sovg'a kartalari",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Owner-Team.dc.html": {
+   "x": 6600,
+   "y": 27248,
+   "w": 1440,
+   "h": 900,
+   "title": "Do'kon: jamoa, rollar va filiallar",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Onboarding-Guides.dc.html": {
+   "x": 8120,
+   "y": 27248,
+   "w": 1440,
+   "h": 900,
+   "title": "Onboarding va yo'riqnomalar",
+   "expand": "fill",
+   "is_interactive": true
+  },
+  "Shop-Marketplace.dc.html": {
+   "x": 0,
+   "y": 28648,
+   "w": 390,
+   "h": 844,
+   "title": "Umumiy katalog (Telegram)",
+   "is_interactive": true
+  },
+  "Owner-Plan.dc.html": {
+   "x": 470,
+   "y": 28648,
+   "w": 1440,
+   "h": 900,
+   "title": "Paket va funksiyalar",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "Owner-Delivery.dc.html": {
+   "x": 1990,
+   "y": 28648,
+   "w": 1440,
+   "h": 900,
+   "title": "Kuryer kanallari",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "Admin-Plans.dc.html": {
+   "x": 3510,
+   "y": 28648,
+   "w": 1440,
+   "h": 900,
+   "title": "Paket konstruktori",
+   "is_interactive": true,
+   "expand": "fill"
+  },
+  "Admin-CourierPool.dc.html": {
+   "x": 5030,
+   "y": 28648,
+   "w": 1440,
+   "h": 900,
+   "title": "Kuryerlar puli",
+   "is_interactive": true,
+   "expand": "fill"
+  }
+ },
+ "order": [
+  "Index.dc.html",
+  "Main.dc.html",
+  "Shop-Address.dc.html",
+  "Shop-Catalog.dc.html",
+  "Shop-Checkout.dc.html",
+  "Shop-Tracking.dc.html",
+  "Courier-Tasks.dc.html",
+  "Courier-Deliver.dc.html",
+  "Panel-Orders.dc.html",
+  "Panel-Picking.dc.html",
+  "Panel-Dispatch.dc.html",
+  "Foundations.dc.html",
+  "Journeys.dc.html",
+  "Flow-Order.dc.html",
+  "Shop-Login.dc.html",
+  "Shop-Support.dc.html",
+  "Courier-Fail.dc.html",
+  "Shop-Desktop.dc.html",
+  "States.dc.html",
+  "Panel-Catalog.dc.html",
+  "Panel-Zones.dc.html",
+  "Panel-Finance.dc.html",
+  "Panel-Support.dc.html",
+  "Admin-Tenants.dc.html",
+  "SaaS-Model.dc.html",
+  "Flow-E2E.dc.html",
+  "Tenant-Lifecycle.dc.html",
+  "Gaps.dc.html",
+  "Store-Brands.dc.html",
+  "SaaS-Landing.dc.html",
+  "SaaS-Signup.dc.html",
+  "Owner-Dashboard.dc.html",
+  "Owner-Storefront.dc.html",
+  "Owner-Product.dc.html",
+  "Owner-Billing.dc.html",
+  "Admin-SaaS.dc.html",
+  "Analytics-Method.dc.html",
+  "Analytics-Overview.dc.html",
+  "Analytics-ABC.dc.html",
+  "Analytics-Product.dc.html",
+  "Marketing-Channels.dc.html",
+  "Marketing-Campaigns.dc.html",
+  "Reports-Scheduler.dc.html",
+  "Shop-LiveTrack.dc.html",
+  "Track-Model.dc.html",
+  "Track-Ops.dc.html",
+  "Courier-Shift.dc.html",
+  "Courier-Route.dc.html",
+  "GPS-Flow.dc.html",
+  "Marketing-Frameworks.dc.html",
+  "Sales-Report.dc.html",
+  "Data-ImportExport.dc.html",
+  "Notify-Matrix.dc.html",
+  "Notify-Feeds.dc.html",
+  "Pay-Architecture.dc.html",
+  "Pay-Providers.dc.html",
+  "Shop-Payment.dc.html",
+  "Owner-Payments.dc.html",
+  "Expansion.dc.html",
+  "Rating-Model.dc.html",
+  "Shop-Review.dc.html",
+  "Courier-Rate.dc.html",
+  "Panel-Reviews.dc.html",
+  "Analytics-Geo.dc.html",
+  "AI-Services.dc.html",
+  "Services-Map.dc.html",
+  "MVP-Scope.dc.html",
+  "Money-Flow.dc.html",
+  "Owner-Money.dc.html",
+  "Shop-Cards.dc.html",
+  "Loyalty.dc.html",
+  "Shop-AIAssistant.dc.html",
+  "AI-Agents.dc.html",
+  "Integrations-Model.dc.html",
+  "Panel-Stock.dc.html",
+  "Shop-Home.dc.html",
+  "Shop-Search.dc.html",
+  "Shop-Product.dc.html",
+  "Shop-CartSmart.dc.html",
+  "Shop-Privacy.dc.html",
+  "Data-Customer360.dc.html",
+  "Data-Funnel.dc.html",
+  "Skills-Matrix.dc.html",
+  "Onboard-Customer.dc.html",
+  "Onboard-Courier.dc.html",
+  "Onboard-Shop.dc.html",
+  "Admin-Consents.dc.html",
+  "Accounts-Architecture.dc.html",
+  "Points-Model.dc.html",
+  "Shop-Account.dc.html",
+  "Shop-Rewards.dc.html",
+  "Shop-PayPoints.dc.html",
+  "Courier-Account.dc.html",
+  "Owner-PointsLedger.dc.html",
+  "Owner-Team.dc.html",
+  "Onboarding-Guides.dc.html",
+  "Shop-Marketplace.dc.html",
+  "Owner-Plan.dc.html",
+  "Owner-Delivery.dc.html",
+  "Admin-Plans.dc.html",
+  "Admin-CourierPool.dc.html"
+ ],
+ "notes": {
+  "t-arch": {
+   "x": 0,
+   "y": -260,
+   "text": "Arxitektura va ekranlar xaritasi",
+   "kind": "title1",
+   "maxW": 1600
+  },
+  "t-shop": {
+   "x": 0,
+   "y": 1160,
+   "text": "Xaridor: manzildan topshirishgacha",
+   "kind": "title1",
+   "maxW": 1800
+  },
+  "t-courier": {
+   "x": 0,
+   "y": 2364,
+   "text": "Kuryer ilovasi",
+   "kind": "title1",
+   "maxW": 860
+  },
+  "t-panel": {
+   "x": 0,
+   "y": 3568,
+   "text": "Hamkor va operator paneli",
+   "kind": "title1",
+   "maxW": 4480
+  },
+  "t-system": {
+   "x": 0,
+   "y": 4828,
+   "text": "Dizayn tizimi, rollar va mantiq",
+   "kind": "title1",
+   "maxW": 4640
+  },
+  "t-extra": {
+   "x": 0,
+   "y": 7108,
+   "text": "Qo'shimcha ekranlar, adaptivlik va holatlar",
+   "kind": "title1",
+   "maxW": 4370
+  },
+  "t-manage": {
+   "x": 0,
+   "y": 8368,
+   "text": "Boshqaruv bo'limlari",
+   "kind": "title1",
+   "maxW": 7520
+  },
+  "t-saas": {
+   "x": 0,
+   "y": 9628,
+   "text": "SaaS: platforma, do'konlar va xaridorlar",
+   "kind": "title1",
+   "maxW": 9200
+  },
+  "t-owner": {
+   "x": 0,
+   "y": 11048,
+   "text": "Do'kon egasi: ro'yxatdan o'tishdan sotuvgacha",
+   "kind": "title1",
+   "maxW": 10560
+  },
+  "t-analytics": {
+   "x": 0,
+   "y": 12968,
+   "text": "Analitika, marketing va hisobotlar",
+   "kind": "title1",
+   "maxW": 10560
+  },
+  "t-track": {
+   "x": 0,
+   "y": 14388,
+   "text": "Jonli kuzatuv: har mahsulot va kuryer xaritada",
+   "kind": "title1",
+   "maxW": 5890
+  },
+  "t-tools": {
+   "x": 0,
+   "y": 15808,
+   "text": "Marketing freymvorklari, hisobotlar, import/eksport va bildirishnomalar",
+   "kind": "title1",
+   "maxW": 7520
+  },
+  "t-nav": {
+   "x": -1560,
+   "y": -260,
+   "text": "Navigatsiya",
+   "kind": "title1",
+   "maxW": 1440
+  },
+  "t-pay": {
+   "x": 0,
+   "y": 17228,
+   "text": "To'lov tizimlari va xalqaro chiqish",
+   "kind": "title1",
+   "maxW": 6470
+  },
+  "t-rating": {
+   "x": 0,
+   "y": 18648,
+   "text": "Reyting va ishonch: do'kon, kuryer, xaridor",
+   "kind": "title1",
+   "maxW": 3900
+  },
+  "t-ai": {
+   "x": 0,
+   "y": 20068,
+   "text": "Hudud tahlili, AI xizmatlari va qolib ketgan xizmatlar",
+   "kind": "title1",
+   "maxW": 4480
+  },
+  "t-mvp": {
+   "x": 0,
+   "y": 21588,
+   "text": "MVP 1-versiya: O'zbekiston, o'zbek va rus tili, pul oqimi, sodiqlik",
+   "kind": "title1",
+   "maxW": 6630
+  },
+  "t-mvp-ai": {
+   "x": 0,
+   "y": 23008,
+   "text": "MVP: AI, tashqi agentlar, POS/ERP integratsiya va qoldiq xizmati",
+   "kind": "title1",
+   "maxW": 5270
+  },
+  "t-personal": {
+   "x": 0,
+   "y": 24468,
+   "text": "Shaxsiylashtirish: xaridor ekranlari va ichki tahlil",
+   "kind": "title1",
+   "maxW": 6830
+  },
+  "t-legal": {
+   "x": 0,
+   "y": 25728,
+   "text": "Ro'yxatdan o'tish, oferta va roziliklar",
+   "kind": "title1",
+   "maxW": 3900
+  },
+  "t-accounts": {
+   "x": 0,
+   "y": 26988,
+   "text": "Hisoblar, ichki ballar, sodiqlik va onboarding",
+   "kind": "title1",
+   "maxW": 9560
+  },
+  "t-hybrid": {
+   "x": 0,
+   "y": 28388,
+   "text": "Gibrid model: paketlar, funksiya kalitlari va kuryer kanallari",
+   "kind": "title1",
+   "maxW": 6150
+  }
+ },
+ "designSystems": []
+}

@@ -1,0 +1,2413 @@
+{
+  "screens": [
+    {
+      "file": "MVP-Scope.dc.html",
+      "png": "MVP-Scope.png",
+      "section": "MVP 1-versiya: O’zbekiston, o’zbek va rus tili",
+      "title": "MVP doirasi: v1, v2, v3",
+      "type": "s",
+      "interactive": true,
+      "roles": [
+        "Ichki jamoa",
+        "Xaridor",
+        "Kuryer",
+        "Do'kon xodimi",
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Har rol uchun v1 da nima bor, nima keyinga qoladi; tillar va muvaffaqiyat mezonlari",
+      "size": [
+        1440,
+        1060
+      ]
+    },
+    {
+      "file": "Money-Flow.dc.html",
+      "png": "Money-Flow.png",
+      "section": "MVP 1-versiya: O’zbekiston, o’zbek va rus tili",
+      "title": "Pul, mahsulot va ma’lumot oqimi",
+      "type": "s",
+      "interactive": true,
+      "roles": [
+        "Ichki jamoa",
+        "Xaridor",
+        "Kuryer",
+        "Do'kon xodimi",
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "8 bosqich: to’lov, band qilish, yechish, topshirish, kassa, T+1; kim kimga to’laydi",
+      "size": [
+        1600,
+        1060
+      ]
+    },
+    {
+      "file": "Shop-Marketplace.dc.html",
+      "png": "Shop-Marketplace.png",
+      "section": "Gibrid model: paketlar, kalitlar va kuryer kanallari",
+      "title": "Umumiy katalog: yaqin do’konlar (Telegram)",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        4
+      ],
+      "version_note": "v1",
+      "description": "Do’konlar va mahsulot narxini solishtirish, “Tugadi”, “Reklama” belgisi, uz/ru",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Owner-Plan.dc.html",
+      "png": "Owner-Plan.png",
+      "section": "Gibrid model: paketlar, kalitlar va kuryer kanallari",
+      "title": "Paket va funksiyalar",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon egasi"
+      ],
+      "v1_screens": [
+        24,
+        31
+      ],
+      "version_note": "v1",
+      "description": "4 paket, 21 funksiya kaliti, limitlar va qo’shimcha xizmatlar",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Owner-Delivery.dc.html",
+      "png": "Owner-Delivery.png",
+      "section": "Gibrid model: paketlar, kalitlar va kuryer kanallari",
+      "title": "Kuryer kanallari va qoidalar",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon egasi",
+        "Do'kon xodimi"
+      ],
+      "v1_screens": [
+        21
+      ],
+      "version_note": "v1",
+      "description": "O’z kuryeri → platforma puli → tashqi API; ustuvorlik va sinov",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Admin-Plans.dc.html",
+      "png": "Admin-Plans.png",
+      "section": "Gibrid model: paketlar, kalitlar va kuryer kanallari",
+      "title": "Paket konstruktori",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Platforma admini"
+      ],
+      "v1_screens": [
+        37
+      ],
+      "version_note": "v1",
+      "description": "Paket × funksiya matritsasi, uch qatlamli tekshiruv, versiya",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Admin-CourierPool.dc.html",
+      "png": "Admin-CourierPool.png",
+      "section": "Gibrid model: paketlar, kalitlar va kuryer kanallari",
+      "title": "Platforma kuryerlar puli",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Platforma admini",
+        "Kuryer"
+      ],
+      "v1_screens": [
+        38
+      ],
+      "version_note": "v1 pilot",
+      "description": "Tuman talab/taklif, bonus, kuryerlar va qabul navbati",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Onboard-Customer.dc.html",
+      "png": "Onboard-Customer.png",
+      "section": "Ro’yxatdan o’tish, oferta va roziliklar",
+      "title": "Xaridor: ro’yxatdan o’tish va roziliklar (uz/ru)",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        1
+      ],
+      "version_note": "v1",
+      "description": "Oferta, maxfiylik, xizmat roziligi, 18+; ixtiyoriy marketing, reklama, AI profili",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Onboard-Shop.dc.html",
+      "png": "Onboard-Shop.png",
+      "section": "Ro’yxatdan o’tish, oferta va roziliklar",
+      "title": "Do’kon: KYC va E-IMZO bilan shartnoma",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [
+        16
+      ],
+      "version_note": "v1",
+      "description": "Kompaniya, rahbar, bank; SaaS ofertasi va DPA imzosi",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Onboard-Courier.dc.html",
+      "png": "Onboard-Courier.png",
+      "section": "Ro’yxatdan o’tish, oferta va roziliklar",
+      "title": "Kuryer: ishga qabul va roziliklar",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Kuryer",
+        "Do'kon xodimi"
+      ],
+      "v1_screens": [
+        33
+      ],
+      "version_note": "v1",
+      "description": "Maqom, hujjatlar, shartnoma, GPS faqat smenada, o’quv modullari",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Admin-Consents.dc.html",
+      "png": "Admin-Consents.png",
+      "section": "Ro’yxatdan o’tish, oferta va roziliklar",
+      "title": "Oferta va rozilik markazi (ichki)",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Ichki jamoa",
+        "Platforma admini"
+      ],
+      "v1_screens": [
+        39
+      ],
+      "version_note": "v1",
+      "description": "Versiyalar, o’zgarmas jurnal, mijoz so’rovlari, muvofiqlik ro’yxati",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Accounts-Architecture.dc.html",
+      "png": "Accounts-Architecture.png",
+      "section": "Hisoblar, ballar va onboarding",
+      "title": "Hisoblar, rollar va hamyonlar arxitekturasi",
+      "type": "s",
+      "interactive": false,
+      "roles": [
+        "Ichki jamoa",
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Platforma ID, 5 xil hisob, ledger, tenant izolyatsiyasi va talablar",
+      "size": [
+        1600,
+        1100
+      ]
+    },
+    {
+      "file": "Points-Model.dc.html",
+      "png": "Points-Model.png",
+      "section": "Hisoblar, ballar va onboarding",
+      "title": "Ball, sodiqlik va aksiya kartalari modeli",
+      "type": "s",
+      "interactive": false,
+      "roles": [
+        "Ichki jamoa",
+        "Do'kon egasi",
+        "Xaridor",
+        "Platforma admini"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Yig’ish, sarflash, muddat, 4 xil karta, qonuniy chegara, buxgalteriya",
+      "size": [
+        1440,
+        1100
+      ]
+    },
+    {
+      "file": "Shop-Account.dc.html",
+      "png": "Shop-Account.png",
+      "section": "Hisoblar, ballar va onboarding",
+      "title": "Xaridor: hisobim va sodiqlik kartasi (uz/ru)",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        13
+      ],
+      "version_note": "v1",
+      "description": "QR karta, ball balansi, daraja, aksiya kartasi, kuponlar, sovg’a kartasi",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Shop-Rewards.dc.html",
+      "png": "Shop-Rewards.png",
+      "section": "Hisoblar, ballar va onboarding",
+      "title": "Xaridor: ball do’koni",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        13
+      ],
+      "version_note": "v1",
+      "description": "Mahsulotlarni 100% ball bilan olish",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Shop-PayPoints.dc.html",
+      "png": "Shop-PayPoints.png",
+      "section": "Hisoblar, ballar va onboarding",
+      "title": "Xaridor: ball + pul bilan to’lash",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        8
+      ],
+      "version_note": "v1",
+      "description": "Chekning 30% gacha ball, qolgani karta yoki naqd, keshbek hisobi",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Owner-PointsLedger.dc.html",
+      "png": "Owner-PointsLedger.png",
+      "section": "Hisoblar, ballar va onboarding",
+      "title": "Do’kon: ballar, aksiya va sovg’a kartalari",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon egasi"
+      ],
+      "v1_screens": [
+        26
+      ],
+      "version_note": "v1",
+      "description": "Ball majburiyati, oylik hisob, shtamp kartalar, sovg’a kartasi partiyalari",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Owner-Team.dc.html",
+      "png": "Owner-Team.png",
+      "section": "Hisoblar, ballar va onboarding",
+      "title": "Do’kon: jamoa, rollar va filiallar",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon egasi"
+      ],
+      "v1_screens": [
+        30
+      ],
+      "version_note": "v1",
+      "description": "Xodimlarni taklif qilish, 7 rol × 12 ruxsat, 2FA, filiallar",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Courier-Account.dc.html",
+      "png": "Courier-Account.png",
+      "section": "Hisoblar, ballar va onboarding",
+      "title": "Kuryer: hisobim, daromad va naqd",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Kuryer"
+      ],
+      "v1_screens": [
+        36
+      ],
+      "version_note": "v1",
+      "description": "Haftalik daromad, soliq chegarasi, naqdni topshirish, hujjatlar muddati",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Onboarding-Guides.dc.html",
+      "png": "Onboarding-Guides.png",
+      "section": "Hisoblar, ballar va onboarding",
+      "title": "Onboarding va yo’riqnomalar",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Xaridor",
+        "Kuryer",
+        "Do'kon xodimi",
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [
+        17
+      ],
+      "version_note": "v1",
+      "description": "Egasi uchun 10 qadam, xaridor intro, yig’uvchi va kuryer yo’riqnomasi, yordam markazi",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "SaaS-Model.dc.html",
+      "png": "SaaS-Model.png",
+      "section": "Strategiya va biznes model",
+      "title": "SaaS modeli: pul va xizmat oqimi",
+      "type": "s",
+      "interactive": false,
+      "roles": [
+        "Ichki jamoa",
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Platforma, do’kon, xaridor va kuryer o’rtasidagi pul va xizmat oqimi",
+      "size": [
+        1600,
+        1060
+      ]
+    },
+    {
+      "file": "Tenant-Lifecycle.dc.html",
+      "png": "Tenant-Lifecycle.png",
+      "section": "Strategiya va biznes model",
+      "title": "Do’kon hayot sikli",
+      "type": "s",
+      "interactive": false,
+      "roles": [
+        "Ichki jamoa",
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Lid → sinov → faol → qarzdor → to’xtatilgan: har bosqich harakatlari",
+      "size": [
+        2000,
+        1060
+      ]
+    },
+    {
+      "file": "Flow-E2E.dc.html",
+      "png": "Flow-E2E.png",
+      "section": "Strategiya va biznes model",
+      "title": "To’liq buyurtma jarayoni",
+      "type": "s",
+      "interactive": false,
+      "roles": [
+        "Ichki jamoa",
+        "Xaridor",
+        "Kuryer",
+        "Do'kon xodimi",
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "13 bosqich × 6 ishtirokchi: kim nima qiladi va qachon",
+      "size": [
+        2400,
+        1060
+      ]
+    },
+    {
+      "file": "Gaps.dc.html",
+      "png": "Gaps.png",
+      "section": "Strategiya va biznes model",
+      "title": "Bo’shliqlar va tavsiyalar",
+      "type": "s",
+      "interactive": false,
+      "roles": [
+        "Ichki jamoa",
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Biznes jarayonidagi uzilishlar va ularni yopish tavsiyalari",
+      "size": [
+        1440,
+        1060
+      ]
+    },
+    {
+      "file": "Services-Map.dc.html",
+      "png": "Services-Map.png",
+      "section": "Strategiya va biznes model",
+      "title": "Xizmatlar va protseduralar xaritasi",
+      "type": "s",
+      "interactive": true,
+      "roles": [
+        "Ichki jamoa",
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Tayyor, qisman va qolib ketgan xizmatlar, SOP va jamoa resurslari",
+      "size": [
+        1440,
+        1160
+      ]
+    },
+    {
+      "file": "Store-Brands.dc.html",
+      "png": "Store-Brands.png",
+      "section": "Strategiya va biznes model",
+      "title": "Har do’konga o’z internet-do’koni",
+      "type": "d",
+      "interactive": false,
+      "roles": [
+        "Ichki jamoa",
+        "Do'kon egasi",
+        "Xaridor"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Bitta platforma — har do’kon o’z domeni, rangi va katalogi bilan",
+      "size": [
+        1440,
+        1060
+      ]
+    },
+    {
+      "file": "Main.dc.html",
+      "png": "Main.png",
+      "section": "Arxitektura va mantiq",
+      "title": "Arxitektura: 3 ilova, 1 yadro",
+      "type": "s",
+      "interactive": false,
+      "roles": [
+        "Ichki jamoa"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Vitrina, kuryer ilovasi, panel va umumiy backend xizmatlari",
+      "size": [
+        1600,
+        1060
+      ]
+    },
+    {
+      "file": "Flow-Order.dc.html",
+      "png": "Flow-Order.png",
+      "section": "Arxitektura va mantiq",
+      "title": "Buyurtma holatlari mantiqi",
+      "type": "s",
+      "interactive": false,
+      "roles": [
+        "Ichki jamoa",
+        "Do'kon xodimi"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Holat mashinasi: o’tishlar, taymerlar va xatolik yo’llari",
+      "size": [
+        1600,
+        1060
+      ]
+    },
+    {
+      "file": "Track-Model.dc.html",
+      "png": "Track-Model.png",
+      "section": "Arxitektura va mantiq",
+      "title": "Kuzatuv mantiqi: holat, lokatsiya, ETA",
+      "type": "s",
+      "interactive": false,
+      "roles": [
+        "Ichki jamoa",
+        "Xaridor",
+        "Do'kon xodimi"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Har mahsulot holati, kuryer koordinatasi va ETA hisobi",
+      "size": [
+        1440,
+        1060
+      ]
+    },
+    {
+      "file": "GPS-Flow.dc.html",
+      "png": "GPS-Flow.png",
+      "section": "Arxitektura va mantiq",
+      "title": "GPS: kuryerdan xaridorgacha",
+      "type": "s",
+      "interactive": false,
+      "roles": [
+        "Ichki jamoa",
+        "Kuryer",
+        "Xaridor"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Har 15/60 soniyada nuqta, geozona, xaridorga uzatish",
+      "size": [
+        1440,
+        1060
+      ]
+    },
+    {
+      "file": "Analytics-Method.dc.html",
+      "png": "Analytics-Method.png",
+      "section": "Arxitektura va mantiq",
+      "title": "Analitika metodikasi",
+      "type": "s",
+      "interactive": false,
+      "roles": [
+        "Ichki jamoa",
+        "Do'kon egasi"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Ko’rsatkichlar formulasi va ma’lumot manbalari",
+      "size": [
+        1440,
+        1060
+      ]
+    },
+    {
+      "file": "Pay-Architecture.dc.html",
+      "png": "Pay-Architecture.png",
+      "section": "To’lov tizimlari va xalqaro chiqish",
+      "title": "To’lov arxitekturasi",
+      "type": "s",
+      "interactive": false,
+      "roles": [
+        "Ichki jamoa",
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Yagona Payment API, orkestrator, adapterlar, ledger, fiskal chek",
+      "size": [
+        1440,
+        1060
+      ]
+    },
+    {
+      "file": "Pay-Providers.dc.html",
+      "png": "Pay-Providers.png",
+      "section": "To’lov tizimlari va xalqaro chiqish",
+      "title": "Provayderlar katalogi",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Ichki jamoa",
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [],
+      "version_note": "v1: UZ",
+      "description": "UZ, KZ, KG, TJ, RU, TM va xalqaro: usullar va ulanish fazasi",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Expansion.dc.html",
+      "png": "Expansion.png",
+      "section": "To’lov tizimlari va xalqaro chiqish",
+      "title": "Xalqaro kengayish",
+      "type": "s",
+      "interactive": false,
+      "roles": [
+        "Ichki jamoa",
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [],
+      "version_note": "v2–v3",
+      "description": "Davlatlar bo’yicha valyuta, soliq, ma’lumot joyi va ochish tartibi",
+      "size": [
+        1440,
+        1060
+      ]
+    },
+    {
+      "file": "Shop-Payment.dc.html",
+      "png": "Shop-Payment.png",
+      "section": "To’lov tizimlari va xalqaro chiqish",
+      "title": "Xaridor: to’lov usuli",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        8
+      ],
+      "version_note": "v1",
+      "description": "Payme, Click, Uzum, Humo/Uzcard, Visa/MC, Google Pay, naqd",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Owner-Payments.dc.html",
+      "png": "Owner-Payments.png",
+      "section": "To’lov tizimlari va xalqaro chiqish",
+      "title": "Egasi: to’lov usullarini ulash",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon egasi"
+      ],
+      "v1_screens": [
+        25
+      ],
+      "version_note": "v1",
+      "description": "Provayderni yoqish, kalitlar, webhook, test to’lov, MXIK",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Foundations.dc.html",
+      "png": "Foundations.png",
+      "section": "Dizayn tizimi va rollar",
+      "title": "Dizayn tizimi",
+      "type": "d",
+      "interactive": false,
+      "roles": [
+        "Ichki jamoa"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Rang, shrift, tugmalar, maydonlar, kartochkalar",
+      "size": [
+        1440,
+        1760
+      ]
+    },
+    {
+      "file": "Journeys.dc.html",
+      "png": "Journeys.png",
+      "section": "Dizayn tizimi va rollar",
+      "title": "Rollar va ketma-ketlik",
+      "type": "s",
+      "interactive": false,
+      "roles": [
+        "Ichki jamoa"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Har rolning yo’li: qaysi ekrandan qaysisiga",
+      "size": [
+        1440,
+        1900
+      ]
+    },
+    {
+      "file": "States.dc.html",
+      "png": "States.png",
+      "section": "Dizayn tizimi va rollar",
+      "title": "Tizim holatlari",
+      "type": "d",
+      "interactive": false,
+      "roles": [
+        "Ichki jamoa"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Bo’sh, yuklanmoqda, xato, oflayn holatlar",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "SaaS-Landing.dc.html",
+      "png": "SaaS-Landing.png",
+      "section": "Do’kon egasi: ulanishdan sotuvgacha",
+      "title": "Platforma sayti",
+      "type": "d",
+      "interactive": false,
+      "roles": [
+        "Do'kon egasi"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Do’konlar uchun sotuv sahifasi va tariflar",
+      "size": [
+        1440,
+        1560
+      ]
+    },
+    {
+      "file": "SaaS-Signup.dc.html",
+      "png": "SaaS-Signup.png",
+      "section": "Do’kon egasi: ulanishdan sotuvgacha",
+      "title": "Ro’yxatdan o’tish",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon egasi"
+      ],
+      "v1_screens": [
+        16
+      ],
+      "version_note": "v1",
+      "description": "Telefon, do’kon ma’lumoti, hudud — bosqichma-bosqich",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Owner-Dashboard.dc.html",
+      "png": "Owner-Dashboard.png",
+      "section": "Do’kon egasi: ulanishdan sotuvgacha",
+      "title": "Egasi: bosh sahifa",
+      "type": "d",
+      "interactive": false,
+      "roles": [
+        "Do'kon egasi"
+      ],
+      "v1_screens": [
+        18
+      ],
+      "version_note": "v1",
+      "description": "Bugungi savdo, buyurtmalar va ogohlantirishlar",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Owner-Storefront.dc.html",
+      "png": "Owner-Storefront.png",
+      "section": "Do’kon egasi: ulanishdan sotuvgacha",
+      "title": "Internet-do’kon sozlash",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon egasi"
+      ],
+      "v1_screens": [
+        24
+      ],
+      "version_note": "v1",
+      "description": "Logo, rang, domen va bannerlar — jonli ko’rinish bilan",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Owner-Product.dc.html",
+      "png": "Owner-Product.png",
+      "section": "Do’kon egasi: ulanishdan sotuvgacha",
+      "title": "Mahsulot kartochkasi",
+      "type": "d",
+      "interactive": false,
+      "roles": [
+        "Do'kon egasi",
+        "Do'kon xodimi"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Narx, rasm, qoldiq, variantlar",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Owner-Billing.dc.html",
+      "png": "Owner-Billing.png",
+      "section": "Do’kon egasi: ulanishdan sotuvgacha",
+      "title": "Tarif va to’lov",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon egasi"
+      ],
+      "v1_screens": [
+        31
+      ],
+      "version_note": "v1",
+      "description": "Obuna, hisob-fakturalar, to’lov usullari",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Owner-Money.dc.html",
+      "png": "Owner-Money.png",
+      "section": "Do’kon egasi: ulanishdan sotuvgacha",
+      "title": "Pul oqimi onlayn",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon egasi",
+        "Do'kon xodimi"
+      ],
+      "v1_screens": [
+        25
+      ],
+      "version_note": "v1",
+      "description": "Har to’lov soniyalarda: usul, karta, holat; kuryerdagi naqd, payout, solishtirish",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Loyalty.dc.html",
+      "png": "Loyalty.png",
+      "section": "Do’kon egasi: ulanishdan sotuvgacha",
+      "title": "Sodiqlik dasturi",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon egasi",
+        "Xaridor"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Keshbek, darajalar, promo-kodlar, iqtisodiy hisob va xaridor ko’rinishi",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Shop-Login.dc.html",
+      "png": "Shop-Login.png",
+      "section": "Xaridor",
+      "title": "Kirish (OTP)",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        1
+      ],
+      "version_note": "v1",
+      "description": "Telefon raqami va SMS kod",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Shop-Home.dc.html",
+      "png": "Shop-Home.png",
+      "section": "Xaridor",
+      "title": "Shaxsiy bosh sahifa (uz/ru)",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        3
+      ],
+      "version_note": "v1",
+      "description": "Tugayotganlar, odatdagi savat, qaytgan mahsulot, mavsum, aksiya, lenta",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Shop-Search.dc.html",
+      "png": "Shop-Search.png",
+      "section": "Xaridor",
+      "title": "Aqlli qidiruv",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        5
+      ],
+      "version_note": "v1",
+      "description": "Sinonimlar (сут → sut), shaxsiy tartib, natijasiz qidiruvda so’rov",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Shop-Product.dc.html",
+      "png": "Shop-Product.png",
+      "section": "Xaridor",
+      "title": "Mahsulot kartochkasi",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        6
+      ],
+      "version_note": "v1",
+      "description": "Qoldiq, parhezga moslik ogohlantirishi, eslatma, birga olinadi",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Shop-Address.dc.html",
+      "png": "Shop-Address.png",
+      "section": "Xaridor",
+      "title": "Manzil",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        2
+      ],
+      "version_note": "v1",
+      "description": "Xaritada manzil va yetkazish zonasi tekshiruvi",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Shop-Catalog.dc.html",
+      "png": "Shop-Catalog.png",
+      "section": "Xaridor",
+      "title": "Katalog",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        3
+      ],
+      "version_note": "v1",
+      "description": "Kategoriyalar, qidiruv, savatga qo’shish",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Shop-Desktop.dc.html",
+      "png": "Shop-Desktop.png",
+      "section": "Xaridor",
+      "title": "Vitrina: desktop",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Katta ekran uchun adaptiv vitrina",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Shop-Checkout.dc.html",
+      "png": "Shop-Checkout.png",
+      "section": "Xaridor",
+      "title": "Savat va rasmiylashtirish",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        8
+      ],
+      "version_note": "v1",
+      "description": "Slot, to’lov usuli, muqobil mahsulot qoidasi",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Shop-CartSmart.dc.html",
+      "png": "Shop-CartSmart.png",
+      "section": "Xaridor",
+      "title": "Aqlli savat",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        7
+      ],
+      "version_note": "v1",
+      "description": "Bepul yetkazishgacha, muqobil afzalligi, yakuniy summa, “Nima to’xtatdi?”",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Shop-Cards.dc.html",
+      "png": "Shop-Cards.png",
+      "section": "Xaridor",
+      "title": "Mening kartalarim (uz/ru)",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        9
+      ],
+      "version_note": "v1",
+      "description": "Uzcard/Humo ulash: raqam, SMS kod, token; to’lovlar tarixi",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Shop-AIAssistant.dc.html",
+      "png": "Shop-AIAssistant.png",
+      "section": "Xaridor",
+      "title": "AI yordamchi (uz/ru)",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        15
+      ],
+      "version_note": "v1",
+      "description": "Matn, ovoz yoki ro’yxat suratidan savat; buyurtma holati",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Shop-Tracking.dc.html",
+      "png": "Shop-Tracking.png",
+      "section": "Xaridor",
+      "title": "Kuzatuv va tasdiq",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        10
+      ],
+      "version_note": "v1",
+      "description": "Buyurtma holati va muqobilni tasdiqlash",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Shop-LiveTrack.dc.html",
+      "png": "Shop-LiveTrack.png",
+      "section": "Xaridor",
+      "title": "Jonli kuzatuv xaritada",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        10
+      ],
+      "version_note": "v1",
+      "description": "Kuryer nuqtasi, masofa va ETA",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Shop-Support.dc.html",
+      "png": "Shop-Support.png",
+      "section": "Xaridor",
+      "title": "Murojaat",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        12
+      ],
+      "version_note": "v1",
+      "description": "Muammo turi, surat va javob",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Shop-Privacy.dc.html",
+      "png": "Shop-Privacy.png",
+      "section": "Xaridor",
+      "title": "Rozilik va maxfiylik (uz/ru)",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        14
+      ],
+      "version_note": "v1",
+      "description": "Xizmat, marketing, reklama, sog’liq roziligi; AI agentlar; ma’lumot so’rash va o’chirish",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Panel-Orders.dc.html",
+      "png": "Panel-Orders.png",
+      "section": "Do’kon operatsiyalari",
+      "title": "Buyurtmalar",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon xodimi"
+      ],
+      "v1_screens": [
+        19
+      ],
+      "version_note": "v1",
+      "description": "Yangi buyurtmalar, SLA taymer, tasdiqlash",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Panel-Picking.dc.html",
+      "png": "Panel-Picking.png",
+      "section": "Do’kon operatsiyalari",
+      "title": "Yig’ish",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon xodimi"
+      ],
+      "v1_screens": [
+        20
+      ],
+      "version_note": "v1",
+      "description": "Yig’uvchi ro’yxati, muqobil va qadoqlash",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Panel-Dispatch.dc.html",
+      "png": "Panel-Dispatch.png",
+      "section": "Do’kon operatsiyalari",
+      "title": "Dispetcher",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon xodimi"
+      ],
+      "v1_screens": [
+        21
+      ],
+      "version_note": "v1",
+      "description": "Kuryerga biriktirish va marshrut",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Track-Ops.dc.html",
+      "png": "Track-Ops.png",
+      "section": "Do’kon operatsiyalari",
+      "title": "Buyurtma yo’li va xarita",
+      "type": "d",
+      "interactive": false,
+      "roles": [
+        "Do'kon xodimi"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Operator uchun barcha kuryerlar xaritada",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Panel-Stock.dc.html",
+      "png": "Panel-Stock.png",
+      "section": "Do’kon operatsiyalari",
+      "title": "Qoldiq xizmati",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon xodimi",
+        "Do'kon egasi",
+        "Xaridor"
+      ],
+      "v1_screens": [
+        22
+      ],
+      "version_note": "v1",
+      "description": "Zal va ombor qoldig’i, yoqish/o’chirish, “Tugadi” belgisi, xaridor ko’rinishi",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Integrations-Model.dc.html",
+      "png": "Integrations-Model.png",
+      "section": "Do’kon operatsiyalari",
+      "title": "POS, CRM, ERP integratsiyasi",
+      "type": "s",
+      "interactive": true,
+      "roles": [
+        "Ichki jamoa",
+        "Do'kon xodimi",
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [
+        32
+      ],
+      "version_note": "v1",
+      "description": "Integratsiyali, fayl orqali va integratsiyasiz rejim; yig’uvchi POS kassadan o’tkazadi",
+      "size": [
+        1600,
+        1060
+      ]
+    },
+    {
+      "file": "Panel-Catalog.dc.html",
+      "png": "Panel-Catalog.png",
+      "section": "Do’kon operatsiyalari",
+      "title": "Katalog va qoldiq",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon xodimi",
+        "Do'kon egasi"
+      ],
+      "v1_screens": [
+        22
+      ],
+      "version_note": "v1",
+      "description": "Mahsulotlar, narxlar va qoldiq nazorati",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Panel-Zones.dc.html",
+      "png": "Panel-Zones.png",
+      "section": "Do’kon operatsiyalari",
+      "title": "Hudud va slotlar",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon xodimi",
+        "Do'kon egasi"
+      ],
+      "v1_screens": [
+        23
+      ],
+      "version_note": "v1",
+      "description": "Yetkazish zonalari, narx va vaqt oraliqlari",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Panel-Support.dc.html",
+      "png": "Panel-Support.png",
+      "section": "Do’kon operatsiyalari",
+      "title": "Murojaatlar",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon xodimi"
+      ],
+      "v1_screens": [
+        28
+      ],
+      "version_note": "v1",
+      "description": "Xaridor murojaatlari va qaytarishlar",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Panel-Finance.dc.html",
+      "png": "Panel-Finance.png",
+      "section": "Do’kon operatsiyalari",
+      "title": "Moliya",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon xodimi",
+        "Do'kon egasi"
+      ],
+      "v1_screens": [
+        25
+      ],
+      "version_note": "v1",
+      "description": "To’lovlar, kuryer naqdi, solishtirish",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Courier-Shift.dc.html",
+      "png": "Courier-Shift.png",
+      "section": "Kuryer",
+      "title": "Smena va GPS ruxsati",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Kuryer"
+      ],
+      "v1_screens": [
+        34
+      ],
+      "version_note": "v1",
+      "description": "Smenani boshlash va joylashuv ruxsati",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Courier-Tasks.dc.html",
+      "png": "Courier-Tasks.png",
+      "section": "Kuryer",
+      "title": "Topshiriqlar",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Kuryer"
+      ],
+      "v1_screens": [
+        34
+      ],
+      "version_note": "v1",
+      "description": "Biriktirilgan buyurtmalar ro’yxati",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Courier-Route.dc.html",
+      "png": "Courier-Route.png",
+      "section": "Kuryer",
+      "title": "Marshrut va navigatsiya",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Kuryer"
+      ],
+      "v1_screens": [
+        35
+      ],
+      "version_note": "v1",
+      "description": "Manzillar tartibi va yo’l ko’rsatish",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Courier-Deliver.dc.html",
+      "png": "Courier-Deliver.png",
+      "section": "Kuryer",
+      "title": "Topshirish (PIN)",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Kuryer"
+      ],
+      "v1_screens": [
+        35
+      ],
+      "version_note": "v1",
+      "description": "PIN kod, naqd yoki onlayn to’lov tasdig’i",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Courier-Fail.dc.html",
+      "png": "Courier-Fail.png",
+      "section": "Kuryer",
+      "title": "Topshirib bo’lmadi",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Kuryer"
+      ],
+      "v1_screens": [
+        35
+      ],
+      "version_note": "v1",
+      "description": "Sabab, surat va qaytarish yo’li",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Rating-Model.dc.html",
+      "png": "Rating-Model.png",
+      "section": "Reyting va ishonch",
+      "title": "Reyting va ishonch modeli",
+      "type": "s",
+      "interactive": false,
+      "roles": [
+        "Ichki jamoa",
+        "Do'kon xodimi",
+        "Kuryer",
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Kim kimni baholaydi, formula, indekslar, chegara va halollik qoidalari",
+      "size": [
+        1440,
+        1060
+      ]
+    },
+    {
+      "file": "Shop-Review.dc.html",
+      "png": "Shop-Review.png",
+      "section": "Reyting va ishonch",
+      "title": "Xaridor: do’kon va kuryerni baholash",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Xaridor"
+      ],
+      "v1_screens": [
+        11
+      ],
+      "version_note": "v1",
+      "description": "Yulduz, teglar, izoh, surat va minnatdorchilik",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Courier-Rate.dc.html",
+      "png": "Courier-Rate.png",
+      "section": "Reyting va ishonch",
+      "title": "Kuryer: baholash va mening reytingim",
+      "type": "m",
+      "interactive": true,
+      "roles": [
+        "Kuryer"
+      ],
+      "v1_screens": [
+        36
+      ],
+      "version_note": "v1",
+      "description": "Do’kon va xaridorni baholash, o’z indeksi va izohlar",
+      "size": [
+        390,
+        844
+      ]
+    },
+    {
+      "file": "Panel-Reviews.dc.html",
+      "png": "Panel-Reviews.png",
+      "section": "Reyting va ishonch",
+      "title": "Panel: reyting va sharhlar",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon xodimi",
+        "Do'kon egasi"
+      ],
+      "v1_screens": [
+        27
+      ],
+      "version_note": "v1",
+      "description": "Sharhga javob, e’tiroz, ishonch indeksi, kuryerlar reytingi",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Analytics-Overview.dc.html",
+      "png": "Analytics-Overview.png",
+      "section": "Analitika, marketing, AI va hisobotlar",
+      "title": "Savdo ko’rsatkichlari",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [
+        29
+      ],
+      "version_note": "v1",
+      "description": "Tushum, buyurtmalar, o’rtacha chek, dinamika",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Sales-Report.dc.html",
+      "png": "Sales-Report.png",
+      "section": "Analitika, marketing, AI va hisobotlar",
+      "title": "Sotuv hisoboti",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon egasi",
+        "Do'kon xodimi"
+      ],
+      "v1_screens": [
+        29
+      ],
+      "version_note": "v1",
+      "description": "Guruhlash, filtr va jadvalni eksport qilish",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Analytics-ABC.dc.html",
+      "png": "Analytics-ABC.png",
+      "section": "Analitika, marketing, AI va hisobotlar",
+      "title": "ABC / XYZ matritsasi",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon egasi"
+      ],
+      "v1_screens": [
+        29
+      ],
+      "version_note": "v1",
+      "description": "Mahsulotlar daromad va barqarorlik bo’yicha",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Analytics-Geo.dc.html",
+      "png": "Analytics-Geo.png",
+      "section": "Analitika, marketing, AI va hisobotlar",
+      "title": "Hudud ABC tahlili",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [
+        29
+      ],
+      "version_note": "v1",
+      "description": "Tumanlar bo’yicha tushum, qamrov, o’sish va oq dog’lar",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Analytics-Product.dc.html",
+      "png": "Analytics-Product.png",
+      "section": "Analitika, marketing, AI va hisobotlar",
+      "title": "Bitta mahsulot",
+      "type": "d",
+      "interactive": false,
+      "roles": [
+        "Do'kon egasi",
+        "Do'kon xodimi"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Mahsulot savdosi, qoldiq va prognoz",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Marketing-Frameworks.dc.html",
+      "png": "Marketing-Frameworks.png",
+      "section": "Analitika, marketing, AI va hisobotlar",
+      "title": "Marketing freymvorklari",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon egasi"
+      ],
+      "v1_screens": [],
+      "version_note": "v1+",
+      "description": "BCG, RFM, kogorta, AARRR voronka",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Marketing-Channels.dc.html",
+      "png": "Marketing-Channels.png",
+      "section": "Analitika, marketing, AI va hisobotlar",
+      "title": "Ijtimoiy tarmoqlar",
+      "type": "d",
+      "interactive": false,
+      "roles": [
+        "Do'kon egasi"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Instagram, Telegram, Facebook — UTM bo’yicha natija",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Marketing-Campaigns.dc.html",
+      "png": "Marketing-Campaigns.png",
+      "section": "Analitika, marketing, AI va hisobotlar",
+      "title": "Kampaniya yaratish",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon egasi"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Segment, kanal, taklif va vaqt",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Reports-Scheduler.dc.html",
+      "png": "Reports-Scheduler.png",
+      "section": "Analitika, marketing, AI va hisobotlar",
+      "title": "Hisobotlarni rejalashtirish",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Avtomatik hisobotlar: kimga va qachon",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Data-ImportExport.dc.html",
+      "png": "Data-ImportExport.png",
+      "section": "Analitika, marketing, AI va hisobotlar",
+      "title": "Import / eksport markazi",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon egasi",
+        "Do'kon xodimi"
+      ],
+      "v1_screens": [
+        22
+      ],
+      "version_note": "v1",
+      "description": "Excel/CSV yuklash, tekshirish va tarix",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "AI-Services.dc.html",
+      "png": "AI-Services.png",
+      "section": "Analitika, marketing, AI va hisobotlar",
+      "title": "AI xizmatlari",
+      "type": "s",
+      "interactive": true,
+      "roles": [
+        "Ichki jamoa",
+        "Do'kon egasi",
+        "Do'kon xodimi",
+        "Platforma admini"
+      ],
+      "v1_screens": [],
+      "version_note": "v1+",
+      "description": "15 ta AI yo’nalishi: ta’sir, murakkablik, faza va AI yordamchi",
+      "size": [
+        1440,
+        1060
+      ]
+    },
+    {
+      "file": "AI-Agents.dc.html",
+      "png": "AI-Agents.png",
+      "section": "Analitika, marketing, AI va hisobotlar",
+      "title": "AI integratsiya va tashqi agentlar",
+      "type": "s",
+      "interactive": true,
+      "roles": [
+        "Ichki jamoa",
+        "Xaridor",
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "AI shlyuz, do’kon va xaridor AI xizmatlari, MCP orqali shaxsiy agentlarni ulash",
+      "size": [
+        1600,
+        1100
+      ]
+    },
+    {
+      "file": "Data-Customer360.dc.html",
+      "png": "Data-Customer360.png",
+      "section": "Ichki data va jamoa",
+      "title": "Mijoz 360 (ichki)",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Ichki jamoa",
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [
+        40
+      ],
+      "version_note": "v1",
+      "description": "Segment, CLV, ketish xavfi, keyingi xarid prognozi, keyingi eng yaxshi harakat",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Data-Funnel.dc.html",
+      "png": "Data-Funnel.png",
+      "section": "Ichki data va jamoa",
+      "title": "Voronka, talab va kanallar (ichki)",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Ichki jamoa",
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [
+        40
+      ],
+      "version_note": "v1",
+      "description": "Voronka, “Nima to’xtatdi?”, natijasiz qidiruv, CAC, ROAS, sof ta’sir",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Skills-Matrix.dc.html",
+      "png": "Skills-Matrix.png",
+      "section": "Ichki data va jamoa",
+      "title": "Ko’nikmalar matritsasi va akademiya",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Do'kon xodimi",
+        "Do'kon egasi",
+        "Kuryer",
+        "Platforma admini"
+      ],
+      "v1_screens": [
+        30
+      ],
+      "version_note": "v1",
+      "description": "Hard va soft skills: yig’uvchi, kuryer, menejer; modullar va tavsiyalar",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Notify-Matrix.dc.html",
+      "png": "Notify-Matrix.png",
+      "section": "Bildirishnomalar",
+      "title": "Bildirishnomalar matritsasi",
+      "type": "s",
+      "interactive": true,
+      "roles": [
+        "Ichki jamoa",
+        "Xaridor",
+        "Kuryer",
+        "Do'kon xodimi",
+        "Do'kon egasi",
+        "Platforma admini"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "15 hodisa × 5 qabul qiluvchi va kanal qoidalari",
+      "size": [
+        1440,
+        1060
+      ]
+    },
+    {
+      "file": "Notify-Feeds.dc.html",
+      "png": "Notify-Feeds.png",
+      "section": "Bildirishnomalar",
+      "title": "Xabarlar lentasi",
+      "type": "m",
+      "interactive": false,
+      "roles": [
+        "Xaridor",
+        "Kuryer",
+        "Do'kon xodimi"
+      ],
+      "v1_screens": [],
+      "version_note": "",
+      "description": "Xaridor, kuryer va do’kon telefonida",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Admin-SaaS.dc.html",
+      "png": "Admin-SaaS.png",
+      "section": "Platforma admini",
+      "title": "Do’konlar va obunalar",
+      "type": "d",
+      "interactive": false,
+      "roles": [
+        "Platforma admini"
+      ],
+      "v1_screens": [
+        37
+      ],
+      "version_note": "v1",
+      "description": "MRR, obunalar, qarzdorlar va SLA",
+      "size": [
+        1440,
+        900
+      ]
+    },
+    {
+      "file": "Admin-Tenants.dc.html",
+      "png": "Admin-Tenants.png",
+      "section": "Platforma admini",
+      "title": "Hamkorni ulash",
+      "type": "d",
+      "interactive": true,
+      "roles": [
+        "Platforma admini"
+      ],
+      "v1_screens": [
+        37
+      ],
+      "version_note": "v1",
+      "description": "Yangi do’kon: KYC, sozlash va ishga tushirish",
+      "size": [
+        1440,
+        900
+      ]
+    }
+  ],
+  "v1_screens": [
+    {
+      "n": 1,
+      "role": "Xaridor",
+      "screen": "Kirish va roziliklar",
+      "prototypes": [
+        "Onboard-Customer",
+        "Shop-Login"
+      ],
+      "required_states": "xato kod, SMS kechikishi"
+    },
+    {
+      "n": 2,
+      "role": "Xaridor",
+      "screen": "Manzil va zona",
+      "prototypes": [
+        "Shop-Address"
+      ],
+      "required_states": "zona tashqarisi"
+    },
+    {
+      "n": 3,
+      "role": "Xaridor",
+      "screen": "Do'kon bosh sahifasi",
+      "prototypes": [
+        "Shop-Home",
+        "Shop-Catalog"
+      ],
+      "required_states": "bo'sh, yuklanish"
+    },
+    {
+      "n": 4,
+      "role": "Xaridor",
+      "screen": "Umumiy katalog: yaqin do'konlar",
+      "prototypes": [
+        "Shop-Marketplace"
+      ],
+      "required_states": "yaqinda do'kon yo'q"
+    },
+    {
+      "n": 5,
+      "role": "Xaridor",
+      "screen": "Qidiruv",
+      "prototypes": [
+        "Shop-Search"
+      ],
+      "required_states": "natija yo'q"
+    },
+    {
+      "n": 6,
+      "role": "Xaridor",
+      "screen": "Mahsulot",
+      "prototypes": [
+        "Shop-Product"
+      ],
+      "required_states": "tugadi, parhezga zid"
+    },
+    {
+      "n": 7,
+      "role": "Xaridor",
+      "screen": "Savat",
+      "prototypes": [
+        "Shop-CartSmart"
+      ],
+      "required_states": "bo'sh, narx o'zgardi"
+    },
+    {
+      "n": 8,
+      "role": "Xaridor",
+      "screen": "To'lov (ball + pul)",
+      "prototypes": [
+        "Shop-Payment",
+        "Shop-PayPoints",
+        "Shop-Checkout"
+      ],
+      "required_states": "rad etildi, 3DS/OTP"
+    },
+    {
+      "n": 9,
+      "role": "Xaridor",
+      "screen": "Kartalarim",
+      "prototypes": [
+        "Shop-Cards"
+      ],
+      "required_states": "token xatosi"
+    },
+    {
+      "n": 10,
+      "role": "Xaridor",
+      "screen": "Kuzatuv va xarita",
+      "prototypes": [
+        "Shop-Tracking",
+        "Shop-LiveTrack"
+      ],
+      "required_states": "GPS yo'q, kechikish"
+    },
+    {
+      "n": 11,
+      "role": "Xaridor",
+      "screen": "Baholash",
+      "prototypes": [
+        "Shop-Review"
+      ],
+      "required_states": "—"
+    },
+    {
+      "n": 12,
+      "role": "Xaridor",
+      "screen": "Murojaat",
+      "prototypes": [
+        "Shop-Support"
+      ],
+      "required_states": "—"
+    },
+    {
+      "n": 13,
+      "role": "Xaridor",
+      "screen": "Hisobim, sodiqlik, ball do'koni",
+      "prototypes": [
+        "Shop-Account",
+        "Shop-Rewards"
+      ],
+      "required_states": "ball yetmaydi"
+    },
+    {
+      "n": 14,
+      "role": "Xaridor",
+      "screen": "Rozilik va maxfiylik",
+      "prototypes": [
+        "Shop-Privacy"
+      ],
+      "required_states": "—"
+    },
+    {
+      "n": 15,
+      "role": "Xaridor",
+      "screen": "AI yordamchi",
+      "prototypes": [
+        "Shop-AIAssistant"
+      ],
+      "required_states": "AI javob bermadi"
+    },
+    {
+      "n": 16,
+      "role": "Do'kon",
+      "screen": "Ro'yxatdan o'tish va KYC",
+      "prototypes": [
+        "Onboard-Shop",
+        "SaaS-Signup"
+      ],
+      "required_states": "E-IMZO xatosi"
+    },
+    {
+      "n": 17,
+      "role": "Do'kon",
+      "screen": "Ishga tushirish ro'yxati",
+      "prototypes": [
+        "Onboarding-Guides"
+      ],
+      "required_states": "—"
+    },
+    {
+      "n": 18,
+      "role": "Do'kon",
+      "screen": "Bosh sahifa",
+      "prototypes": [
+        "Owner-Dashboard"
+      ],
+      "required_states": "yangi do'kon (ma'lumotsiz)"
+    },
+    {
+      "n": 19,
+      "role": "Do'kon",
+      "screen": "Buyurtmalar",
+      "prototypes": [
+        "Panel-Orders"
+      ],
+      "required_states": "SLA o'tdi"
+    },
+    {
+      "n": 20,
+      "role": "Do'kon",
+      "screen": "Yig'ish (planshet)",
+      "prototypes": [
+        "Panel-Picking"
+      ],
+      "required_states": "skaner xatosi"
+    },
+    {
+      "n": 21,
+      "role": "Do'kon",
+      "screen": "Dispetcher va kuryer kanallari",
+      "prototypes": [
+        "Panel-Dispatch",
+        "Owner-Delivery"
+      ],
+      "required_states": "kuryer topilmadi"
+    },
+    {
+      "n": 22,
+      "role": "Do'kon",
+      "screen": "Katalog, qoldiq, import",
+      "prototypes": [
+        "Panel-Catalog",
+        "Panel-Stock",
+        "Data-ImportExport"
+      ],
+      "required_states": "import xatolari"
+    },
+    {
+      "n": 23,
+      "role": "Do'kon",
+      "screen": "Hudud va slotlar",
+      "prototypes": [
+        "Panel-Zones"
+      ],
+      "required_states": "—"
+    },
+    {
+      "n": 24,
+      "role": "Do'kon",
+      "screen": "Vitrina va katalogga chiqish",
+      "prototypes": [
+        "Owner-Storefront",
+        "Owner-Plan"
+      ],
+      "required_states": "paketda yo'q"
+    },
+    {
+      "n": 25,
+      "role": "Do'kon",
+      "screen": "To'lovlar va pul oqimi",
+      "prototypes": [
+        "Owner-Payments",
+        "Owner-Money",
+        "Panel-Finance"
+      ],
+      "required_states": "provayder uzildi"
+    },
+    {
+      "n": 26,
+      "role": "Do'kon",
+      "screen": "Sodiqlik va ballar",
+      "prototypes": [
+        "Owner-PointsLedger"
+      ],
+      "required_states": "—"
+    },
+    {
+      "n": 27,
+      "role": "Do'kon",
+      "screen": "Sharhlar",
+      "prototypes": [
+        "Panel-Reviews"
+      ],
+      "required_states": "—"
+    },
+    {
+      "n": 28,
+      "role": "Do'kon",
+      "screen": "Murojaatlar",
+      "prototypes": [
+        "Panel-Support"
+      ],
+      "required_states": "—"
+    },
+    {
+      "n": 29,
+      "role": "Do'kon",
+      "screen": "Analitika",
+      "prototypes": [
+        "Analytics-Overview",
+        "Sales-Report",
+        "Analytics-ABC",
+        "Analytics-Geo"
+      ],
+      "required_states": "ma'lumot kam"
+    },
+    {
+      "n": 30,
+      "role": "Do'kon",
+      "screen": "Jamoa, rollar, ko'nikmalar",
+      "prototypes": [
+        "Owner-Team",
+        "Skills-Matrix"
+      ],
+      "required_states": "—"
+    },
+    {
+      "n": 31,
+      "role": "Do'kon",
+      "screen": "Paket va funksiyalar",
+      "prototypes": [
+        "Owner-Billing",
+        "Owner-Plan"
+      ],
+      "required_states": "to'lov kechikdi"
+    },
+    {
+      "n": 32,
+      "role": "Do'kon",
+      "screen": "Integratsiyalar",
+      "prototypes": [
+        "Integrations-Model"
+      ],
+      "required_states": "sinxron uzildi"
+    },
+    {
+      "n": 33,
+      "role": "Kuryer",
+      "screen": "Ishga kirish",
+      "prototypes": [
+        "Onboard-Courier"
+      ],
+      "required_states": "hujjat rad etildi"
+    },
+    {
+      "n": 34,
+      "role": "Kuryer",
+      "screen": "Smena va topshiriqlar",
+      "prototypes": [
+        "Courier-Shift",
+        "Courier-Tasks"
+      ],
+      "required_states": "GPS ruxsati yo'q"
+    },
+    {
+      "n": 35,
+      "role": "Kuryer",
+      "screen": "Marshrut, topshirish, topshirib bo'lmadi",
+      "prototypes": [
+        "Courier-Route",
+        "Courier-Deliver",
+        "Courier-Fail"
+      ],
+      "required_states": "oflayn"
+    },
+    {
+      "n": 36,
+      "role": "Kuryer",
+      "screen": "Hisobim va reyting",
+      "prototypes": [
+        "Courier-Account",
+        "Courier-Rate"
+      ],
+      "required_states": "—"
+    },
+    {
+      "n": 37,
+      "role": "Admin",
+      "screen": "Do'konlar va paket konstruktori",
+      "prototypes": [
+        "Admin-SaaS",
+        "Admin-Tenants",
+        "Admin-Plans"
+      ],
+      "required_states": "—"
+    },
+    {
+      "n": 38,
+      "role": "Admin",
+      "screen": "Platforma kuryerlar puli",
+      "prototypes": [
+        "Admin-CourierPool"
+      ],
+      "required_states": "kuryer yetishmaydi"
+    },
+    {
+      "n": 39,
+      "role": "Admin",
+      "screen": "Oferta va rozilik markazi",
+      "prototypes": [
+        "Admin-Consents"
+      ],
+      "required_states": "—"
+    },
+    {
+      "n": 40,
+      "role": "Admin",
+      "screen": "Ichki tahlil",
+      "prototypes": [
+        "Data-Customer360",
+        "Data-Funnel"
+      ],
+      "required_states": "—"
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Analitika — savdo ko'rsatkichlari</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid #EEF0ED;font-size:13.5px;white-space:nowrap}
+th{font-size:12px;font-weight:700;color:#5E656C;text-transform:uppercase;letter-spacing:.04em}
+</style>
+</helmet>
+<div style="min-height: 900px; display: flex; flex-wrap: wrap; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+
+<nav aria-label="Do'kon paneli" style="flex: 1 1 220px; max-width: 260px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px; padding: 20px 14px; background: #16181B; color: #FFFFFF">
+<div style="display: flex; align-items: center; gap: 10px; padding: 4px 8px 16px"><div style="width: 34px; height: 34px; border-radius: 9px; background: #0B7A4B; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px">YS</div><span style="display: flex; flex-direction: column"><b style="font-size: 15px">Yashil Savat</b><span style="font-size: 12px; color: #C9CED3">Egasi</span></span></div>
+<a href="Owner-Dashboard.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Bosh sahifa</a>
+<a href="Panel-Orders.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Buyurtmalar</a>
+<span style="padding: 14px 12px 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: #8E959C">ANALITIKA</span>
+<a href="Analytics-Overview.dc.html" aria-current="page" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; background: #2E3237; color: #FFFFFF; font-weight: 700; font-size: 14px; text-decoration: none">Savdo ko'rsatkichlari</a>
+<a href="Analytics-ABC.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">ABC / XYZ</a>
+<a href="Analytics-Product.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Mahsulot tahlili</a>
+<span style="padding: 14px 12px 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: #8E959C">MARKETING</span>
+<a href="Marketing-Channels.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Ijtimoiy tarmoqlar</a>
+<a href="Marketing-Campaigns.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Kampaniyalar</a>
+<a href="Reports-Scheduler.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Hisobotlar</a>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px; padding: 24px 28px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 26px; line-height: 32px; font-weight: 800">Savdo ko'rsatkichlari</h1><span style="font-size: 14px; color: #5E656C">Barcha filiallar · namuna ma'lumotlar · oldingi davr bilan taqqoslash</span></div>
+<div style="display: flex; gap: 8px; align-items: center">
+<div role="group" aria-label="Davr" style="display: flex; padding: 4px; border-radius: 12px; background: #EEF0ED">
+<sc-for list="{{ periods }}" as="p" hint-placeholder-count="3"><button type="button" onClick="{{ p.pick }}" aria-pressed="{{ p.pressed }}" style="{{ p.style }}">{{ p.label }}</button></sc-for>
+</div>
+<a href="Reports-Scheduler.dc.html" style="display: flex; align-items: center; height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; color: #16181B; font-weight: 700; font-size: 14px; text-decoration: none">Hisobot sifatida</a>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px">
+<sc-for list="{{ kpis }}" as="k" hint-placeholder-count="5">
+<div style="display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3"><span style="font-size: 12.5px; font-weight: 600; color: #5E656C">{{ k.label }}</span><b style="font-size: 24px">{{ k.value }}</b><span style="{{ k.deltaStyle }}">{{ k.delta }}</span></div>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: stretch">
+<section style="flex: 2 1 480px; display: flex; flex-direction: column; gap: 8px; padding: 16px 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 16px">Tushum, kunlik</b><span style="font-size: 12.5px; color: #5E656C">{{ chartNote }}</span></div>
+<svg viewBox="0 0 640 200" role="img" aria-label="Kunlik tushum grafigi" style="width: 100%; height: 200px">
+<line x1="0" y1="180" x2="640" y2="180" stroke="#DCE0DC" stroke-width="1"></line>
+<line x1="0" y1="120" x2="640" y2="120" stroke="#EEF0ED" stroke-width="1"></line>
+<line x1="0" y1="60" x2="640" y2="60" stroke="#EEF0ED" stroke-width="1"></line>
+<path d="{{ area }}" fill="#E6F2EC"></path>
+<path d="{{ line }}" fill="none" stroke="#0B7A4B" stroke-width="2.5" stroke-linejoin="round"></path>
+<path d="{{ prevLine }}" fill="none" stroke="#8A9199" stroke-width="1.5" stroke-dasharray="5 5"></path>
+</svg>
+<div style="display: flex; gap: 16px; font-size: 12.5px; color: #3C4248"><span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 3px; background: #0B7A4B"></span>Joriy davr</span><span style="display: flex; align-items: center; gap: 6px"><span style="width: 16px; height: 0; border-top: 2px dashed #8A9199"></span>Oldingi davr</span></div>
+</section>
+<section style="flex: 1 1 280px; display: flex; flex-direction: column; gap: 10px; padding: 16px 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Konversiya voronkasi</b>
+<sc-for list="{{ funnel }}" as="f" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 4px"><div style="display: flex; justify-content: space-between; font-size: 13px"><span>{{ f.label }}</span><b>{{ f.value }}</b></div><div style="height: 10px; border-radius: 5px; background: #EEF0ED"><div style="{{ f.bar }}"></div></div><span style="font-size: 11.5px; color: #5E656C">{{ f.rate }}</span></div>
+</sc-for>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+<section style="flex: 1 1 300px; display: flex; flex-direction: column; gap: 10px; padding: 16px 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 16px">Kanallar bo'yicha buyurtmalar</b>
+<sc-for list="{{ channels }}" as="c" hint-placeholder-count="5">
+<div style="display: grid; grid-template-columns: 110px 1fr 48px; gap: 10px; align-items: center; font-size: 13px"><span>{{ c.name }}</span><div style="height: 12px; border-radius: 6px; background: #EEF0ED"><div style="{{ c.bar }}"></div></div><b style="text-align: right">{{ c.share }}</b></div>
+</sc-for>
+</section>
+<section style="flex: 2 1 420px; display: flex; flex-direction: column; gap: 6px; padding: 16px 18px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="display: flex; justify-content: space-between"><b style="font-size: 16px">Top mahsulotlar</b><a href="Analytics-ABC.dc.html" style="font-size: 13px; font-weight: 700">ABC/XYZ →</a></div>
+<div style="overflow-x: auto"><table style="width: 100%; border-collapse: collapse"><thead><tr><th scope="col">Mahsulot</th><th scope="col">Sotildi</th><th scope="col">Tushum</th><th scope="col">Marja</th><th scope="col">Sinf</th></tr></thead><tbody>
+<tr><td><a href="Analytics-Product.dc.html">Sut 3,2%</a></td><td>412 l</td><td>5 150 000</td><td>18%</td><td><b>AX</b></td></tr>
+<tr><td>Non, tandir</td><td>1 180 dona</td><td>4 720 000</td><td>22%</td><td><b>AX</b></td></tr>
+<tr><td>Mol go'shti</td><td>39 kg</td><td>3 820 000</td><td>14%</td><td><b>AY</b></td></tr>
+<tr><td>Olma, qizil</td><td>186 kg</td><td>3 350 000</td><td>27%</td><td><b>AZ</b></td></tr>
+</tbody></table></div>
+</section>
+</div>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { days: 30 };
+}
+renderVals() {
+const d = this.state.days;
+const f = d / 30;
+const fmt = (n) => Math.round(n).toLocaleString('ru-RU').replace(/ /g, ' ');
+const periods = [[7, '7 kun'], [30, '30 kun'], [90, '90 kun']].map(([v, label]) => ({ label, pressed: v === d ? 'true' : 'false', pick: () => this.setState({ days: v }),
+style: 'height: 38px; padding: 0 14px; border-radius: 9px; border: none; font: 700 13px Manrope, sans-serif; ' + (v === d ? 'background: #FFFFFF; color: #16181B; box-shadow: 0 1px 2px rgba(0,0,0,.1);' : 'background: transparent; color: #3C4248;') }));
+const orders = 690 * f, revenue = 44200000 * f;
+const kpis = [
+{ label: 'Tushum, so’m', value: fmt(revenue), delta: '+12% oldingi davrga', up: true },
+{ label: 'Buyurtmalar', value: fmt(orders), delta: '+9%', up: true },
+{ label: 'O’rtacha chek, so’m', value: fmt(revenue / orders), delta: '+3%', up: true },
+{ label: 'Takroriy xaridorlar', value: '41%', delta: '+4 p.p.', up: true },
+{ label: 'Bekor qilish', value: '4,8%', delta: '+0,6 p.p.', up: false }
+].map((k) => ({ ...k, deltaStyle: 'font-size: 12.5px; font-weight: 700; color: ' + (k.up ? '#075C38' : '#9F2D12') + ';' }));
+const n = d === 7 ? 7 : d === 30 ? 30 : 13;
+const pts = [], prev = [];
+for (let i = 0; i < n; i++) {
+const base = 0.55 + 0.25 * Math.sin(i * 0.9) + 0.12 * Math.sin(i * 2.3) + i / n * 0.15;
+pts.push(base); prev.push(0.5 + 0.2 * Math.sin(i * 0.8 + 1) + 0.08 * Math.cos(i * 1.9));
+}
+const X = (i) => (n === 1 ? 0 : i * 640 / (n - 1)), Y = (v) => 180 - v * 160;
+const pathOf = (arr) => arr.map((v, i) => (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(v).toFixed(1)).join(' ');
+const line = pathOf(pts);
+const area = line + ' L640 180 L0 180 Z';
+const visits = 4820 * f, cart = 1310 * f, delivered = 640 * f;
+const fun = [['Vitrinaga tashrif', visits, ''], ['Savatga qo’shdi', cart, Math.round(cart / visits * 100) + '% tashrifdan'], ['Buyurtma berdi', orders, Math.round(orders / cart * 100) + '% savatdan'], ['Topshirildi', delivered, Math.round(delivered / orders * 100) + '% buyurtmadan']];
+const funnel = fun.map(([label, v, rate]) => ({ label, value: fmt(v), rate: rate || 'boshlanish nuqtasi', bar: 'height: 10px; border-radius: 5px; background: #0B7A4B; width: ' + (v / visits * 100).toFixed(1) + '%;' }));
+const ch = [['Instagram', 34], ['QR stiker', 22], ['Telegram bot', 19], ['To’g’ridan-to’g’ri', 17], ['Facebook', 8]];
+const channels = ch.map(([name, s]) => ({ name, share: s + '%', bar: 'height: 12px; border-radius: 6px; background: #154BA8; width: ' + (s / 34 * 100) + '%;' }));
+return { periods, kpis, line, area, prevLine: pathOf(prev), chartNote: d === 90 ? 'haftalik nuqtalar' : 'kunlik nuqtalar', funnel, channels };
+}
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Sotuv hisoboti</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0B7A4B}a:hover{color:#075C38}
+th,td{text-align:right;padding:11px 14px;border-bottom:1px solid #EEF0ED;font-size:14px;white-space:nowrap}
+th{font-size:12px;font-weight:700;color:#5E656C;text-transform:uppercase;letter-spacing:.04em;background:#FAFBF9}
+th:first-child,td:first-child{text-align:left}
+input::placeholder{color:#7A8087}
+</style>
+</helmet>
+<div style="min-height: 900px; display: flex; flex-wrap: wrap; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+
+<nav aria-label="Do'kon paneli" style="flex: 1 1 220px; max-width: 260px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px; padding: 20px 14px; background: #16181B; color: #FFFFFF">
+<div style="display: flex; align-items: center; gap: 10px; padding: 4px 8px 16px"><div style="width: 34px; height: 34px; border-radius: 9px; background: #0B7A4B; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px">YS</div><span style="display: flex; flex-direction: column"><b style="font-size: 15px">Yashil Savat</b><span style="font-size: 12px; color: #C9CED3">Egasi</span></span></div>
+<span style="padding: 14px 12px 4px; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; color: #8E959C">ANALITIKA</span>
+<a href="Analytics-Overview.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Savdo ko'rsatkichlari</a>
+<a href="Sales-Report.dc.html" aria-current="page" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; background: #2E3237; color: #FFFFFF; font-weight: 700; font-size: 14px; text-decoration: none">Sotuv hisoboti</a>
+<a href="Analytics-ABC.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">ABC / XYZ</a>
+<a href="Marketing-Frameworks.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Freymvorklar</a>
+<a href="Data-ImportExport.dc.html" style="display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: #E3E6E9; font-weight: 600; font-size: 14px; text-decoration: none">Import / eksport</a>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 14px; padding: 24px 28px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column"><h1 style="margin: 0; font-size: 26px; line-height: 32px; font-weight: 800">Sotuv hisoboti</h1><span style="font-size: 14px; color: #5E656C">01.10.2026 – 31.10.2026 · oldingi oy bilan taqqoslash · namuna</span></div>
+<a href="Reports-Scheduler.dc.html" style="display: flex; align-items: center; height: 44px; padding: 0 14px; border-radius: 10px; border: 1px solid #C9CEC8; background: #FFFFFF; color: #16181B; font-weight: 700; font-size: 14px; text-decoration: none">Jadvalga qo'yish</a>
+</div>
+
+<div role="toolbar" aria-label="Jadval asboblari" style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px; border-radius: 14px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<label style="flex: 1 1 200px; display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px; border-radius: 10px; background: #F1F3F0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5E656C" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input type="search" aria-label="Jadvaldan qidirish" placeholder="Qidirish" style="flex: 1; min-width: 0; border: none; outline: none; background: transparent; font: 500 14px Manrope, sans-serif"></label>
+<button type="button" style="height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid #DCE0DC; background: #FFFFFF; font: 700 13px Manrope, sans-serif">Davr</button>
+<button type="button" style="height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid #DCE0DC; background: #FFFFFF; font: 700 13px Manrope, sans-serif">Filtr · 1</button>
+<button type="button" style="height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid #DCE0DC; background: #FFFFFF; font: 700 13px Manrope, sans-serif">Ustunlar</button>
+<span style="width: 1px; height: 28px; background: #DCE0DC"></span>
+<span style="font-size: 13px; font-weight: 700; color: #5E656C">Guruhlash:</span>
+<sc-for list="{{ groups }}" as="g" hint-placeholder-count="4"><button type="button" onClick="{{ g.pick }}" aria-pressed="{{ g.pressed }}" style="{{ g.style }}">{{ g.label }}</button></sc-for>
+<span style="width: 1px; height: 28px; background: #DCE0DC"></span>
+<a href="Data-ImportExport.dc.html" style="display: flex; align-items: center; height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid #DCE0DC; color: #16181B; font-weight: 700; font-size: 13px; text-decoration: none">Import</a>
+<button type="button" onClick="{{ toggleExport }}" aria-expanded="{{ exportOpen }}" style="height: 40px; padding: 0 14px; border-radius: 10px; border: none; background: #16181B; color: #FFFFFF; font: 700 13px Manrope, sans-serif">Eksport ▾</button>
+</div>
+
+<sc-if value="{{ showExport }}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-wrap: wrap; gap: 8px; align-self: flex-end; padding: 10px; border-radius: 14px; background: #FFFFFF; border: 1px solid #DCE0DC; box-shadow: 0 8px 20px rgba(0,0,0,.08)">
+<button type="button" style="height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid #DCE0DC; background: #FFFFFF; font: 700 13px Manrope, sans-serif">Excel (.xlsx)</button>
+<button type="button" style="height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid #DCE0DC; background: #FFFFFF; font: 700 13px Manrope, sans-serif">CSV</button>
+<button type="button" style="height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid #DCE0DC; background: #FFFFFF; font: 700 13px Manrope, sans-serif">PDF</button>
+<button type="button" style="height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid #DCE0DC; background: #FFFFFF; font: 700 13px Manrope, sans-serif">Chop etish</button>
+<button type="button" style="height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid #DCE0DC; background: #FFFFFF; font: 700 13px Manrope, sans-serif">Telegramga yuborish</button>
+</div>
+</sc-if>
+
+<div style="overflow-x: auto; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<table style="width: 100%; min-width: 840px; border-collapse: collapse">
+<thead><tr><th scope="col">{{ colName }}</th><th scope="col">Buyurtma</th><th scope="col">Sotildi, dona/kg</th><th scope="col">Tushum, so'm</th><th scope="col">Marja, so'm</th><th scope="col">O'rtacha chek</th><th scope="col">O'tgan oyga</th></tr></thead>
+<tbody>
+<sc-for list="{{ rows }}" as="r" hint-placeholder-count="5"><tr><td><b>{{ r.name }}</b></td><td>{{ r.o }}</td><td>{{ r.q }}</td><td>{{ r.rev }}</td><td>{{ r.m }}</td><td>{{ r.avg }}</td><td style="{{ r.dStyle }}">{{ r.d }}</td></tr></sc-for>
+<tr style="background: #F6F7F4"><td><b>Jami</b></td><td><b>2 070</b></td><td><b>—</b></td><td><b>132 600 000</b></td><td><b>25 200 000</b></td><td><b>64 060</b></td><td style="color: #075C38; font-weight: 800">+11%</td></tr>
+</tbody>
+</table>
+</div>
+<span style="font-size: 12.5px; color: #5E656C">Har bir jadvalda bir xil asboblar paneli: qidiruv, davr, filtr, ustunlar, guruhlash, import, eksport. Saralash — ustun sarlavhasini bosish orqali.</span>
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":900}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { g: 'cat', exp: false };
+}
+renderVals() {
+const g = this.state.g;
+const sets = {
+cat: ['Kategoriya', [['Sut mahsulotlari', '980', '1 840', '29 200 000', '5 260 000', '29 800', '+6%'], ['Meva-sabzavot', '870', '2 410 kg', '23 900 000', '6 450 000', '27 500', '+24%'], ['Go’sht', '410', '186 kg', '18 600 000', '2 600 000', '45 400', '+15%'], ['Non', '1 120', '3 560', '15 800 000', '3 480 000', '14 100', '+3%'], ['Boshqa', '—', '—', '45 100 000', '7 410 000', '—', '+9%']]],
+branch: ['Filial', [['Markaziy', '1 240', '—', '79 600 000', '15 100 000', '64 200', '+12%'], ['Chilonzor', '830', '—', '53 000 000', '10 100 000', '63 860', '+9%']]],
+week: ['Hafta', [['1-hafta', '470', '—', '29 900 000', '5 700 000', '63 600', '+8%'], ['2-hafta', '505', '—', '32 300 000', '6 140 000', '63 960', '+10%'], ['3-hafta', '520', '—', '33 400 000', '6 350 000', '64 230', '+12%'], ['4-hafta', '575', '—', '37 000 000', '7 010 000', '64 350', '+14%']]],
+channel: ['Kanal', [['Instagram', '705', '—', '45 100 000', '8 570 000', '63 970', '+18%'], ['QR stiker', '455', '—', '29 200 000', '5 540 000', '64 180', '+9%'], ['Telegram bot', '395', '—', '25 200 000', '4 790 000', '63 800', '+22%'], ['To’g’ridan-to’g’ri', '350', '—', '22 400 000', '4 260 000', '64 000', '-2%'], ['Facebook', '165', '—', '10 700 000', '2 040 000', '64 850', '+4%']]]
+};
+const set = sets[g];
+const groups = [['cat', 'Kategoriya'], ['branch', 'Filial'], ['week', 'Hafta'], ['channel', 'Kanal']].map(([k, label]) => ({ label, pressed: k === g ? 'true' : 'false', pick: () => this.setState({ g: k }),
+style: 'height: 36px; padding: 0 12px; border-radius: 18px; font: 700 13px Manrope, sans-serif; cursor: pointer; ' + (k === g ? 'border: none; background: #0B7A4B; color: #FFFFFF;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;') }));
+const rows = set[1].map(([name, o, q, rev, m, avg, d]) => ({ name, o, q, rev, m, avg, d, dStyle: 'font-weight: 700; color: ' + (d.startsWith('-') ? '#9F2D12' : '#075C38') + ';' }));
+return { groups, rows, colName: set[0], showExport: this.state.exp, exportOpen: this.state.exp ? 'true' : 'false', toggleExport: () => this.setState({ exp: !this.state.exp }) };
+}
+}
+</script>
+</body>
+</html>

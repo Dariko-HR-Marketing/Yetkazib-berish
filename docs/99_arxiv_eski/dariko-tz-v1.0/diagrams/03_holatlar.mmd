@@ -1,0 +1,20 @@
+%% Buyurtma holatlari mashinasi (order_status)
+stateDiagram-v2
+    [*] --> created
+    created --> pending_confirmation: rezerv olindi
+    pending_confirmation --> accepted: filial tasdiqladi / avto
+    pending_confirmation --> cancelled: rad etildi / vaqt tugadi
+    accepted --> preparing: yig'ish boshlandi
+    accepted --> cancelled: xaridor bekor qildi
+    preparing --> ready: qadoqlandi
+    preparing --> cancelled: operator bekor qildi
+    ready --> in_delivery: kuryer olib ketdi
+    in_delivery --> completed: topshirildi (PoD)
+    in_delivery --> cancelled: topshirib bo'lmadi, qaytarildi
+    completed --> [*]
+    cancelled --> [*]
+
+    note right of cancelled
+        Rezerv bo'shatiladi,
+        to'lov bo'lsa refund yaratiladi
+    end note

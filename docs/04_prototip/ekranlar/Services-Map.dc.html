@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<title>Xizmatlar xaritasi</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>body{margin:0} button{font-family:Manrope,system-ui,sans-serif}</style>
+</helmet>
+<div style="width: 1440px; height: 1160px; box-sizing: border-box; padding: 36px 56px; display: flex; flex-direction: column; gap: 14px; background: #F6F7F4; font-family: Manrope, system-ui, sans-serif; color: #16181B">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; gap: 20px">
+<div style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0B7A4B">Xizmatlar, jarayonlar, resurslar va protseduralar</span><h1 style="margin: 0; font-size: 30px; line-height: 38px; font-weight: 800">Nima tayyor, nima qisman va nima hali qolib ketgan</h1></div>
+<div role="group" aria-label="Holat bo'yicha filtr" style="display: flex; gap: 6px"><sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><button type="button" aria-pressed="{{ c.pressed }}" onClick="{{ c.pick }}" style="{{ c.style }}">{{ c.t }} <span style="opacity: .75">{{ c.n }}</span></button></sc-for></div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{ cats }}" as="c" hint-placeholder-count="6">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<div style="display: flex; justify-content: space-between; align-items: baseline"><b style="font-size: 15px">{{ c.t }}</b><span style="font-size: 12px; color: #5E656C">{{ c.count }}</span></div>
+<sc-for list="{{ c.items }}" as="i" hint-placeholder-count="6"><div style="display: flex; align-items: center; gap: 8px; font-size: 12.5px; line-height: 17px"><span style="{{ i.prStyle }}">{{ i.p }}</span><span style="flex: 1">{{ i.t }}</span><span style="{{ i.stStyle }}">{{ i.st }}</span></div></sc-for>
+</div>
+</sc-for>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 16px; background: #16181B; color: #FFFFFF">
+<b style="font-size: 15px">Protseduralar (SOP) — yozib, xodimlarga o'rgatiladi</b>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px"><sc-for list="{{ sops }}" as="s" hint-placeholder-count="10"><div style="display: flex; flex-direction: column; gap: 1px"><b style="font-size: 13px">{{ s.t }}</b><span style="font-size: 11.5px; line-height: 16px; color: #C9CED3">{{ s.d }}</span></div></sc-for></div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 16px; background: #FFFFFF; border: 1px solid #E4E7E3">
+<b style="font-size: 15px">Resurslar: jamoa (1-yil, Faza 1–2)</b>
+<div style="display: grid; grid-template-columns: 1.4fr .5fr 1.6fr; gap: 5px 12px; font-size: 12.5px; line-height: 17px">
+<b style="color: #5E656C; font-size: 11.5px">ROL</b><b style="color: #5E656C; font-size: 11.5px">SONI</b><b style="color: #5E656C; font-size: 11.5px">VAZIFA</b>
+<sc-for list="{{ team }}" as="r" hint-placeholder-count="10"><b>{{ r.r }}</b><span>{{ r.n }}</span><span style="color: #3C4248">{{ r.d }}</span></sc-for>
+</div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1160}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { f: 'all' };
+}
+renderVals() {
+const st = this.state;
+// [holat: B bor (prototipda), Q qisman, Y yo'q (qo'shish kerak)], ustuvorlik, nom
+const C = [
+['Huquqiy va muvofiqlik', [['Q', 1, 'Ommaviy oferta va foydalanish shartlari'], ['Y', 1, 'Shaxsiy ma’lumotlar siyosati va rozilik boshqaruvi'], ['B', 1, 'Fiskal chek va MXIK kodlari'], ['Q', 1, 'Do’kon KYC va shartnoma'], ['Y', 2, 'Qaytarish va iste’molchi huquqlari siyosati'], ['Y', 2, 'Kuryer bilan shartnoma (o’zini o’zi band qilgan / xodim)']]],
+['Moliya', [['B', 1, 'To’lov orkestratori va adapterlar'], ['Y', 1, 'Pul qaytarish (refund) jarayoni va ekrani'], ['Q', 1, 'Kunlik solishtirish (reconciliation)'], ['B', 1, 'Do’konga pul o’tkazish (payout)'], ['Y', 1, 'Kuryer daromadi va to’lov hisob-kitobi'], ['B', 2, 'Ko’p valyutali ledger']]],
+['Operatsiya va logistika', [['Y', 1, 'Kuryer onboarding: hujjat, o’qitish, termosumka'], ['Y', 1, 'Qoldiq sinxronizatsiyasi: 1C, Billz, POS'], ['Y', 2, 'Kuryer smenalarini rejalashtirish'], ['Y', 2, 'Sovuq zanjir: muzlatilgan mahsulot qoidalari'], ['Q', 2, 'Qaytarilgan mahsulot logistikasi'], ['Y', 3, 'Qorong’u ombor (dark store) rejimi']]],
+['Xaridor xizmatlari', [['B', 1, 'Reyting va sharhlar'], ['Y', 2, 'Promo-kod, ball va sodiqlik dasturi'], ['Y', 2, 'Taklif qil — ball ol (referal)'], ['Y', 2, 'Sevimlilar va bir bosishda qayta buyurtma'], ['Y', 3, 'Takroriy buyurtma (har hafta)'], ['Y', 3, 'Korporativ (B2B) buyurtma va hisob-faktura']]],
+['Platforma va xavfsizlik', [['Y', 1, 'Monitoring, status sahifasi, alertlar'], ['Y', 1, 'Zaxira nusxa va tiklash rejasi (DR)'], ['Q', 1, 'Rollar va ruxsatlar, audit jurnali'], ['Q', 1, 'Ko’p tillilik (uz lotin/kirill, ru)'], ['Y', 2, 'Do’konlar uchun ochiq API va webhooklar'], ['Y', 3, 'Integratsiyalar do’koni (ilovalar)']]],
+['Qo’llab-quvvatlash va o’sish', [['Q', 1, 'Eskalatsiya va SLA matritsasi'], ['B', 1, 'Nizolar: sharhga e’tiroz'], ['Y', 2, 'Yordam markazi va FAQ (xaridor, do’kon)'], ['Y', 2, 'Do’kon egalari uchun o’quv akademiyasi'], ['Y', 2, 'Hamkorlarni jalb qilish (sales) jarayoni'], ['Q', 2, 'AI xizmatlari (prognoz, bot, qidiruv)']]]
+];
+const stName = { B: 'Tayyor', Q: 'Qisman', Y: 'Qo’shish kerak' };
+const stCss = { B: 'background: #E6F2EC; color: #075C38;', Q: 'background: #E5EEF8; color: #154BA8;', Y: 'background: #FBE9E4; color: #9F2D12;' };
+const prCss = { 1: 'background: #16181B; color: #FFFFFF;', 2: 'background: #5E656C; color: #FFFFFF;', 3: 'background: #DCE0DC; color: #3C4248;' };
+const all = [].concat.apply([], C.map((c) => c[1]));
+const chips = ['all', 'B', 'Q', 'Y'].map((k) => ({ t: k === 'all' ? 'Hammasi' : stName[k], n: k === 'all' ? all.length : all.filter((x) => x[0] === k).length, pressed: st.f === k ? 'true' : 'false', pick: () => this.setState({ f: k }),
+style: 'height: 34px; padding: 0 12px; border-radius: 999px; font-size: 12.5px; font-weight: 700; cursor: pointer; ' + (st.f === k ? 'border: 1px solid #16181B; background: #16181B; color: #FFFFFF;' : 'border: 1px solid #DCE0DC; background: #FFFFFF; color: #16181B;') }));
+const cats = C.map((c) => { const items = c[1].filter((x) => st.f === 'all' || x[0] === st.f).map((x) => ({ t: x[2], p: 'P' + x[1], st: stName[x[0]],
+prStyle: 'flex: none; width: 26px; text-align: center; padding: 2px 0; border-radius: 5px; font-size: 11px; font-weight: 800; ' + prCss[x[1]],
+stStyle: 'flex: none; padding: 2px 7px; border-radius: 5px; font-size: 11px; font-weight: 700; ' + stCss[x[0]] }));
+return { t: c[0], items, count: c[1].filter((x) => x[0] === 'B').length + ' / ' + c[1].length + ' tayyor' }; });
+const sops = [['Kunlik kassani yopish', 'Kuryer naqdi, onlayn to’lovlar va chek soni solishtiriladi'], ['To’lov tizimi ishlamasa', 'Avtomatik zaxira provayder, xaridorga xabar, 15 daq ichida tekshiruv'], ['Topshirib bo’lmadi', '10 daq kutish, 2 qo’ng’iroq, do’konga qaytarish, pulni qaytarish'], ['Pul qaytarish', 'Kim tasdiqlaydi, qaysi summagacha avtomatik, muddat 1–3 kun'], ['Shikastlangan mahsulot', 'Surat, murojaat, kimning aybi, kompensatsiya'], ['Kuryer bilan baxtsiz hodisa', 'Xavfsizlik, buyurtmani boshqa kuryerga, sug’urta'], ['Ma’lumot sizib chiqishi', '72 soat ichida baholash, xabar berish, kalitlarni almashtirish'], ['Do’konni to’xtatish', 'Qarzdorlik yoki reyting < 4,0: ogohlantirish, muddat, to’xtatish'], ['Narx xatosi vitrinada', 'Buyurtmani ushlash, xaridorga taklif, tuzatish'], ['Yangi do’konni ulash', 'KYC, katalog importi, MXIK, to’lov testi, pilot 7 kun']].map((s) => ({ t: s[0], d: s[1] }));
+const team = [['Mahsulot menejeri', 1, 'Yo’l xaritasi, ustuvorlik'], ['UX/UI dizayner', 1, 'Ekranlar, dizayn tizimi'], ['Backend dasturchi', 3, 'Buyurtma, to’lov, analitika'], ['Frontend / mobil', 2, 'Vitrina, panel, kuryer ilovasi'], ['QA muhandis', 1, 'Test, regressiya'], ['DevOps / SRE', 1, 'Server, monitoring, zaxira'], ['Data / ML muhandis', 1, 'Analitika, prognoz, AI (Faza 2)'], ['Hamkorlar menejeri', 2, 'Do’konlarni jalb qilish va ulash'], ['Qo’llab-quvvatlash', 3, '7/7 smenada, Telegram'], ['Yurist va buxgalter', 1, 'Shartnomalar, soliq (autsorsing ham bo’ladi)']].map((r) => ({ r: r[0], n: r[1], d: r[2] }));
+return { chips, cats, sops, team };
+}
+}
+</script>
+</body>
+</html>
