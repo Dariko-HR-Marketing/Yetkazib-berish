@@ -51,7 +51,7 @@ export async function ownerFlow(page: Page, request: APIRequestContext, phone: s
   await page.getByRole("button", { name: /Do'kon yaratish|Создать магазин/ }).click();
   await expect(page).toHaveURL(/xavfsizlik/);
   const secret = (await page.getByTestId("totp-secret").textContent())!.trim();
-  await page.getByLabel(/SMS kod|Код из SMS/).fill(totp(secret));
+  await page.getByLabel(/Autentifikator kodi|Код аутентификатора/).fill(totp(secret));
   await page.getByRole("button", { name: BTN_VERIFY }).click();
   await expect(page).toHaveURL(/jamoa/);
   return secret;

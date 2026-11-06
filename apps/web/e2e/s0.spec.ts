@@ -49,10 +49,10 @@ test("egasi: kirish -> do'kon yaratish (STIR xatosi) -> TOTP -> jamoa", async ({
   await page.getByRole("button", { name: "Do'kon yaratish" }).click();
   await expect(page).toHaveURL(/xavfsizlik/);
   const secret = (await page.getByTestId("totp-secret").textContent())!.trim();
-  await page.getByLabel("SMS kod").fill("000000");
+  await page.getByLabel(/Autentifikator kodi/).fill("000000");
   await page.getByRole("button", { name: BTN_VERIFY }).click();
   await expect(alertOf(page)).toContainText("Tasdiqlash kodi noto'g'ri");
-  await page.getByLabel("SMS kod").fill(totp(secret));
+  await page.getByLabel(/Autentifikator kodi/).fill(totp(secret));
   await page.getByRole("button", { name: BTN_VERIFY }).click();
   await expect(page).toHaveURL(/jamoa/);
   await expect(page.getByRole("heading", { name: "Jamoa" })).toBeVisible();

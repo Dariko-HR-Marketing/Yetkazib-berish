@@ -15,5 +15,10 @@ echo "==> PostgreSQL is ready!"
 echo "==> Applying migrations and seed..."
 node dist/db/migrate-cli.js
 
+if [ "$DEMO_SEED" = "on" ]; then
+  echo "==> Demo ma'lumotlar (DEMO_SEED=on)..."
+  node dist/db/demo-cli.js
+fi
+
 echo "==> Starting API server..."
 exec "$@"

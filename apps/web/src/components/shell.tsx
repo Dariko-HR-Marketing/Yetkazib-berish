@@ -31,7 +31,8 @@ export function Shell({ title, subtitle, tenantName, children, actions, role }: 
   const nav = [
     ...(role && CATALOG_ROLES.has(role) ? [{ href: "/katalog", label: t("nav.catalog") }] : []),
     ...(role && IMPORT_ROLES.has(role) ? [{ href: "/import", label: t("nav.import") }] : []),
-    { href: "/jamoa", label: t("nav.team") }, { href: "/paket", label: t("nav.plan") },
+    ...(role === "owner" || role === "manager" ? [{ href: "/jamoa", label: t("nav.team") }] : []),
+    { href: "/paket", label: t("nav.plan") },
   ];
   const logout = async () => {
     try { await api("/v1/auth/logout", { method: "POST", noRetry: true }); } catch { /* sessiya baribir tozalanadi */ }

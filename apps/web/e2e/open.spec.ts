@@ -29,5 +29,5 @@ test("sinov rejimi: faqat telefon bilan kirish, do'kon yaratish — SMS, TOTP va
     await expect(page.getByRole("button", { name: "Kirish", exact: true })).toBeEnabled({ timeout: 1000 });
   }).toPass();
   await page.getByRole("button", { name: "Kirish", exact: true }).click();
-  await expect(page).toHaveURL(/jamoa/);
+  await expect(page).toHaveURL(/katalog/);
 });

@@ -11,7 +11,8 @@
     "start": "node dist/main.js",
     "dev": "tsx watch src/main.ts",
     "db:migrate": "tsx src/db/migrate-cli.ts",
-    "db:reset": "tsx src/db/reset-cli.ts"
+    "db:reset": "tsx src/db/reset-cli.ts",
+    "db:demo": "tsx src/db/demo-cli.ts"
   },
   "dependencies": {
     "@dostavka/contracts": "workspace:*",

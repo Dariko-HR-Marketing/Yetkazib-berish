@@ -51,7 +51,8 @@ export default function LoginPage() {
     const active = me.memberships.find((m) => m.status === "active");
     if (active) setSession({ ...getSession()!, tenantId: active.tenant_id });
     if (pending) { router.replace(`/taklif/${pending}`); return; }
-    router.replace(active ? "/jamoa" : "/dokon-yaratish");
+    // Rolga mos birinchi sahifa: katalog/qoldiq paneli bor rollar — /katalog; dispetcher va kuryer uchun hozircha faqat /paket (ularning ish ekranlari keyingi sprintlarda)
+    router.replace(!active ? "/dokon-yaratish" : ["dispatcher", "courier"].includes(active.role) ? "/paket" : "/katalog");
   }, [router]);
 
   const handleSignIn = useCallback(async (r: SignIn) => {
