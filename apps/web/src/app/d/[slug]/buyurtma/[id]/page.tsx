@@ -9,7 +9,7 @@ import { useI18n } from "@/lib/i18n";
 import { getSession } from "@/lib/session";
 
 interface Item { id: string; name_uz: string; name_ru: string | null; unit: string; quantity_milli: number; line_total_tiyin: number }
-interface Ord { id: string; number: number; status: string; fulfillment: string; total_tiyin: number; delivery_address: string | null; note: string | null; cancel_reason: string | null; items: Item[] }
+interface Ord { id: string; number: number; status: string; fulfillment: string; total_tiyin: number; delivery_address: string | null; note: string | null; cancel_reason: string | null; items: Item[]; payment: { status: string; amount_tiyin: number; refunded_tiyin: number; pay_url: string | null; expires_at: string } | null }
 const TONE: Record<string, "info" | "ok" | "danger" | "warning"> = { placed: "info", accepted: "warning", picking: "warning", ready: "info", delivering: "warning", completed: "ok", cancelled: "danger", failed: "danger" };
 
 export default function OrderPage({ params }: { params: Promise<{ slug: string; id: string }> }) {
@@ -46,7 +46,14 @@ export default function OrderPage({ params }: { params: Promise<{ slug: string; 
               <h1 className="text-title font-extrabold">{t("order.title", { number: o.number })}</h1>
               <Badge tone={TONE[o.status] ?? "neutral"}>{t(`order.status_${o.status}`)}</Badge>
             </div>
-            {o.status === "placed" && <p role="status" className="text-body text-muted">{t("order.shop_wait")}</p>}
+            {o.payment && (
+              <Card className="flex flex-col gap-2" data-testid="order-payment">
+                <p className="font-bold">{t(`pay.status_${o.payment.status}`)}</p>
+                {o.payment.refunded_tiyin > 0 && <p className="text-body-sm text-muted">{t("pay.refunded", { amount: money(o.payment.refunded_tiyin) })}</p>}
+                {o.payment.pay_url && <><p className="text-body-sm text-muted">{t("pay.expires", { time: new Date(o.payment.expires_at).toLocaleTimeString(locale === "ru" ? "ru-RU" : "uz-UZ", { timeZone: "Asia/Tashkent", hour: "2-digit", minute: "2-digit" }) })}</p><Button onClick={() => router.push(o.payment!.pay_url!)}>{t("pay.go")}</Button></>}
+              </Card>
+            )}
+            {o.status === "placed" && o.payment?.status !== "pending" && <p role="status" className="text-body text-muted">{t("order.shop_wait")}</p>}
             {o.status === "cancelled" && o.cancel_reason && <p className="text-body text-muted">{t("order.reason")}: {o.cancel_reason}</p>}
             <Card className="flex flex-col gap-2">
               <h2 className="text-title-sm font-extrabold">{t("order.items")}</h2>

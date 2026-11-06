@@ -158,3 +158,16 @@ Inson ko'rib chiqishi: qoldiq yozilishi (yig'ish/bajarish), ruxsatlar (`picking`
 | S7 | Hisobot (`/hisobot`), admin paneli (`/admin`), umumiy katalog (`/yaqin`). **AI yordamchi, billing/hisob-faktura, tahlil — qilinmadi** | qisman |
 | S8 | k6 skripti, zaxira/tiklash skriptlari, ishga tushirish ro'yxati (`ISHGA_TUSHIRISH.md`). **Yuklama/pentest natijalari yo'q** (staging kerak) | qisman |
 | S3 | Onlayn to'lov — tashqi kalitlar kerak | boshlanmagan |
+
+## 13. S3 (onlayn to'lov) — holat (2026-11-06)
+| Nima | Holat |
+| --- | --- |
+| Migratsiya 0013: `tenant_payment_settings` (kalit AES-GCM, qaytmaydi), `payments`, `payment_webhook_events` | ✅ |
+| Holat mashinasi: pending → authorized → captured / failed / cancelled; kech kelgan `captured` avtomatik qaytariladi; muddati (15 daq) tugasa bekor | ✅ |
+| Webhook: imzo (mock: HMAC-SHA256), `(provider, event_id)` bo'yicha takrorlanmaslik, summa tekshiruvi, jurnal | ✅ |
+| Buyurtma: onlayn to'lovsiz qabul qilinmaydi; bekor/muvaffaqiyatsizda band bo'shaydi va to'lov qaytariladi; qisman qaytarish (moliya ruxsati) | ✅ |
+| Sandbox sahifasi (`/d/<slug>/tolov/<id>`), egasi sozlamalari (`/paket`) | ✅ |
+| Mezon «50 to'lov + 10 qaytarish xatosiz, idempotentlik» | ✅ (mock bilan avtomatik test) |
+| **Payme / Click / Uzum adapterlari** | ⛔ provayder hujjati va merchant sandbox kalitlari kerak |
+| Fiskal chek | ⛔ OFD/provayder tanlanmagan |
+Pul platformadan o'tmaydi: platforma faqat provayder webhooki orqali holatni yozadi.

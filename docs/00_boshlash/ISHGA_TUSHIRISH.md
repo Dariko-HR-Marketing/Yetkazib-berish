@@ -9,7 +9,7 @@ Holat: **kod tomoni tayyor, lekin pilotga chiqish uchun quyidagi tashqi va inson
 | 2 | Haqiqiy SMS provayder (O10) va Telegram bot tokeni (O12) | Egasi | ⛔ |
 | 3 | Yurist tasdiqlagan oferta/maxfiylik/DPA matnlari (`[...]` to'ldirilgan), ruscha tarjimalar | Yurist | ⛔ |
 | 4 | Texnik mas'ul (O7) kirish, ruxsat, BFF, qoldiq/ball mantig'ini ko'rib chiqishi (har PR'da belgilangan) | Mas'ul | ⛔ |
-| 5 | Onlayn to'lov (Payme/Click/Uzum) — S3, merchant sandbox kalitlari kerak | Egasi + dasturchi | ⛔ boshlanmagan |
+| 5 | Onlayn to'lov: holat mashinasi, imzolangan webhook, qaytarish va sandbox **tayyor**; Payme/Click/Uzum **adapterlari** (provayder protokoli va imzo) merchant sandbox kalitlari va hujjatlari bilan qo'shiladi; fiskal chek integratsiyasi | Egasi + dasturchi | ⛔ adapterlar kutilmoqda |
 | 6 | Platforma kuryerlari puli — yurist xulosasigacha **yoqmaslik** (CLAUDE.md §9) | Yurist | ⛔ |
 | 7 | KYC (E-IMZO) va fiskal chek integratsiyasi | Egasi | ⛔ |
 | 8 | Tashqi xavfsizlik tekshiruvi (pentest) | Tashqi firma | ⛔ |

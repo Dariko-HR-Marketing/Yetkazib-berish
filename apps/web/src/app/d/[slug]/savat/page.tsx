@@ -19,6 +19,8 @@ export default function CartPage({ params }: { params: Promise<{ slug: string }>
   const session = useSessionValue();
   const [shopName, setShopName] = useState(slug);
   const [cashOk, setCashOk] = useState(true);
+  const [onlineOk, setOnlineOk] = useState(false);
+  const [method, setMethod] = useState<"cash" | "online">("cash");
   const [delivery, setDelivery] = useState({ fee_tiyin: 0, free_from_tiyin: null as number | null, min_order_tiyin: 0 });
   const [loyal, setLoyal] = useState<{ enabled: boolean; spendable_points: number; pending_points: number; point_value_tiyin: number; max_pay_share_pct: number; hold_hours: number; tier: string; cashback_pct: number } | null>(null);
   const [points, setPoints] = useState("");
@@ -29,7 +31,7 @@ export default function CartPage({ params }: { params: Promise<{ slug: string }>
   const [toast, setToast] = useState<{ msg: string; tone: "ok" | "danger" } | null>(null);
   const [short, setShort] = useState<Record<string, number>>({});
 
-  useEffect(() => { api<{ name: string; features: { cash: boolean }; delivery: { fee_tiyin: number; free_from_tiyin: number | null; min_order_tiyin: number } }>(`/v1/shops/${slug}`, { auth: false }).then((s) => { setShopName(s.name); setCashOk(s.features.cash); setDelivery(s.delivery); }).catch(() => undefined); }, [slug]);
+  useEffect(() => { api<{ name: string; features: { cash: boolean; online?: boolean }; delivery: { fee_tiyin: number; free_from_tiyin: number | null; min_order_tiyin: number } }>(`/v1/shops/${slug}`, { auth: false }).then((s) => { setShopName(s.name); setCashOk(s.features.cash); setOnlineOk(Boolean(s.features.online)); if (!s.features.cash && s.features.online) setMethod("online"); setDelivery(s.delivery); }).catch(() => undefined); }, [slug]);
 
   const signedIn = Boolean(session?.signedIn);
   useEffect(() => { if (signedIn) api<NonNullable<typeof loyal>>(`/v1/shops/${slug}/loyalty`).then((l) => setLoyal(l.enabled ? l : null)).catch(() => setLoyal(null)); }, [signedIn, slug]);
@@ -49,10 +51,10 @@ export default function CartPage({ params }: { params: Promise<{ slug: string }>
     if (!cart.branch_id) return;
     setBusy(true); setShort({});
     try {
-      const body = { branch_id: cart.branch_id, fulfillment, ...(fulfillment === "delivery" ? { delivery_address: address.trim() } : {}), ...(note.trim() ? { note: note.trim() } : {}), ...(pointsNum > 0 ? { points_to_use: pointsNum } : {}), items: cart.lines.map((l) => ({ product_id: l.id, quantity_milli: l.quantity_milli })) };
-      const o = await api<{ id: string }>(`/v1/shops/${slug}/orders`, { method: "POST", body });
+      const body = { branch_id: cart.branch_id, fulfillment, payment_type: method, ...(fulfillment === "delivery" ? { delivery_address: address.trim() } : {}), ...(note.trim() ? { note: note.trim() } : {}), ...(pointsNum > 0 ? { points_to_use: pointsNum } : {}), items: cart.lines.map((l) => ({ product_id: l.id, quantity_milli: l.quantity_milli })) };
+      const o = await api<{ id: string; payment: { pay_url: string | null } | null }>(`/v1/shops/${slug}/orders`, { method: "POST", body });
       clearCart(slug);
-      router.replace(`/d/${slug}/buyurtma/${o.id}`);
+      router.replace(o.payment?.pay_url ?? `/d/${slug}/buyurtma/${o.id}`);
     } catch (e) {
       if (e instanceof ApiError && e.code === "order.out_of_stock") {
         setShort(Object.fromEntries(((e.details.items as { product_id: string; available_milli: number }[]) ?? []).map((i) => [i.product_id, i.available_milli])));
@@ -60,9 +62,9 @@ export default function CartPage({ params }: { params: Promise<{ slug: string }>
       } else if (e instanceof ApiError && e.code === "order.product_unavailable") setToast({ msg: t("cart.unavailable"), tone: "danger" });
       else setToast({ msg: e instanceof ApiError ? e.text(locale) : e instanceof NetworkError ? t("ui.error_network") : t("ui.error_generic"), tone: "danger" });
     } finally { setBusy(false); }
-  }, [cart, fulfillment, address, note, slug, router, t, locale]);
+  }, [cart, fulfillment, address, note, slug, router, t, locale, method, pointsNum]);
 
-  const canPlace = cart.lines.length > 0 && addressOk && cashOk && !belowMin;
+  const canPlace = cart.lines.length > 0 && addressOk && (method === "online" ? onlineOk : cashOk) && !belowMin;
 
   return (
     <ShopShell slug={slug} name={shopName} back>
@@ -111,7 +113,14 @@ export default function CartPage({ params }: { params: Promise<{ slug: string }>
                 <p className="text-body-sm text-muted">{t("loyalty.tier", { tier: loyal.tier, pct: loyal.cashback_pct })}</p>
               </div>
             )}
-            <p className="text-body-sm text-muted">{cashOk ? t("cart.payment") : t("cart.cash_off")}</p>
+            {onlineOk && cashOk ? (
+              <fieldset className="flex flex-col gap-2">
+                <legend className="mb-1 text-body font-semibold">{t("pay.method")}</legend>
+                {(["cash", "online"] as const).map((m) => (
+                  <label key={m} className="flex min-h-touch items-center gap-3 text-body"><input type="radio" name="pay" className="h-5 w-5 accent-[var(--c-brand)]" checked={method === m} onChange={() => setMethod(m)} />{t(`pay.${m}`)}</label>
+                ))}
+              </fieldset>
+            ) : <p className="text-body-sm text-muted">{onlineOk && !cashOk ? t("pay.online") : cashOk ? t("cart.payment") : t("cart.cash_off")}</p>}
             <dl className="flex flex-col gap-1 border-t border-line-soft pt-3 text-body">
               <div className="flex justify-between"><dt>{t("cart.subtotal")}</dt><dd>{money(subtotal)}</dd></div>
               <div className="flex justify-between"><dt>{t("cart.delivery_fee")}</dt><dd>{fee === 0 ? t("cart.free") : money(fee)}</dd></div>

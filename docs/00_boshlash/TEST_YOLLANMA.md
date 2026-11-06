@@ -115,6 +115,12 @@ Nimani sinab ko'rish:
 - **/paket** (Egasi): «Yetkazish sozlamalari» — narx, bepul chegarasi, minimal buyurtma (so'mda). Savatda yetkazish narxi va minimal buyurtma ko'rinadi.
 - Ball: Egasi `loyalty.points` ni yoqadi (Biznes paketi va undan yuqori; demo Tarmoq paketida yoqiq emas — yoqing). Bajarilgan buyurtmadan 2% (daraja bilan ko'proq) keshbek, 24 soatdan keyin ishlatiladi; savatda «Ball bilan to'lash» (mahsulot narxining 30% igacha, yetkazish ballga to'lanmaydi). Bekor qilinsa ball qaytadi.
 
+### Onlayn to'lov (sandbox)
+- Demo do'konda onlayn to'lov (mock provayder) va ball yoqilgan. Savatda «To'lov usuli»: Naqd / Onlayn (karta). Onlayn tanlansa «Buyurtma berish» sinov to'lov sahifasiga olib boradi: **«To'lash»** (muvaffaqiyatli) yoki **«Rad etish»** (buyurtma bekor, band qaytadi). Haqiqiy pul yechilmaydi.
+- To'lovgacha Egasi buyurtmani qabul qila olmaydi («Onlayn to'lov hali kelmagan»); to'langach panelda «To'langan» belgisi chiqadi. To'lov 15 daqiqada kelmasa buyurtma avtomatik bekor bo'ladi.
+- Egasi/Buxgalter: to'langan buyurtmada «Qaytarish» (to'liq; API orqali qisman ham mumkin). Bekor qilingan to'langan buyurtma avtomatik qaytariladi.
+- **/paket** (Egasi): «Onlayn to'lov» — provayder (hozir faqat `mock`), merchant ID, webhook kaliti (faqat yoziladi), yoqish. Payme/Click/Uzum — merchant kalitlari va hujjatlar kelgach.
+
 ### /jamoa — xodimlar (Egasi: to'liq; Menejer: faqat ko'rish)
 - Jadval: a'zolar (telefon maskalangan), rol tanlash (faqat egasi), to'xtatish/yoqish tugmasi, kutilayotgan takliflar.
 - O'ngda «Taklif» formasi (faqat egasi): telefon + rol → SMS orqali havola (hozir SMS ketmaydi, havola serverda yaratiladi).

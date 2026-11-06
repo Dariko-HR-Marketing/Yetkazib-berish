@@ -6,6 +6,7 @@ import { ApiError, NetworkError, api } from "@/lib/api";
 import { useI18n } from "@/lib/i18n";
 import { useRequireSession } from "@/lib/use-session";
 import { DeliverySettingsCard } from "@/components/delivery-settings";
+import { PaymentSettingsCard } from "@/components/payment-settings";
 import { PageSkeleton, Shell } from "@/components/shell";
 
 interface Feature { key: string; enabled: boolean; platform_enabled: boolean; in_plan: boolean; shop_enabled: boolean; min_plan: string; requires: string[]; blocked_by?: string[]; toggled_by: string }
@@ -110,6 +111,7 @@ export default function PlanPage() {
             </div>
             <aside className="flex h-fit flex-col gap-4">
               {isOwner && <DeliverySettingsCard onToast={(msg, tone) => setToast({ msg, tone })} />}
+              {isOwner && membership.tenant_slug && <PaymentSettingsCard slug={membership.tenant_slug} onToast={(msg, tone) => setToast({ msg, tone })} />}
               <Card className="flex flex-col gap-3">
                 <h2 className="text-title-sm font-extrabold">{t("plan.limits")}</h2>
                 <Meter label={t("plan.limit.staff")} used={usage?.staff ?? 0} max={data.plan.limits.staff} unlimitedLabel={t("plan.unlimited")} />

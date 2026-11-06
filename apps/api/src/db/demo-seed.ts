@@ -1,4 +1,5 @@
 import { Client } from "pg";
+import { encrypt } from "../common/crypto";
 
 /** Demo hisoblar (OPEN_LOGIN rejimida parolsiz, faqat telefon bilan kiriladi). Hujjat: docs/00_boshlash/TEST_YOLLANMA.md */
 export const DEMO_ACCOUNTS = [
@@ -31,7 +32,8 @@ const PRODUCTS: { sku: string; uz: string; ru: string; price: number; unit: "pie
 ];
 
 /** Idempotent: demo do'kon (STIR 200000001) bor bo'lsa hech narsa qilmaydi. `url` — jadval egasi/superuser (RLS'ni chetlab o'tadi). */
-export async function seedDemo(url: string): Promise<{ created: boolean }> {
+export const DEMO_WEBHOOK_SECRET = "demo-webhook-secret";
+export async function seedDemo(url: string, encKey?: string): Promise<{ created: boolean }> {
   const c = new Client({ connectionString: url });
   await c.connect();
   try {
@@ -61,6 +63,9 @@ export async function seedDemo(url: string): Promise<{ created: boolean }> {
       await c.query("insert into stock_movements (tenant_id, product_id, branch_id, delta_milli, quantity_after_milli, reason, source) values ($1,$2,$3,$4,$4,'set','system')", [tid, pid, b1, p.qty]);
     }
 
+    // Sandbox: onlayn to'lov (mock provayder) va ball tizimi demo do'konda yoqiq
+    if (encKey) await c.query("insert into tenant_payment_settings (tenant_id, provider, merchant_id, secret_enc, enabled) values ($1,'mock','DEMO-MERCHANT',$2,true)", [tid, encrypt(DEMO_WEBHOOK_SECRET, encKey)]);
+    await c.query("insert into tenant_features (tenant_id, feature_key, enabled) values ($1,'loyalty.points',true) on conflict (tenant_id, feature_key) do update set enabled = true", [tid]);
     // Demo buyurtmalar: biri yangi (placed), biri qabul qilingan (accepted) — panel va yig'ish ekranlarida darhol ko'rinadi
     const customer = await user(DEMO_CUSTOMER);
     const prod = async (sku: string) => (await c.query<{ id: string; name_uz: string; name_ru: string | null; unit: string; price_tiyin: string }>("select id, name_uz, name_ru, unit, price_tiyin from products where tenant_id = $1 and sku = $2", [tid, sku])).rows[0]!;

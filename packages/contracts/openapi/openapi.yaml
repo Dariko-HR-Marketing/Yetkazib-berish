@@ -1467,7 +1467,7 @@ components:
         slug: { type: string }
         name: { type: string }
         branches: { type: array, items: { type: object, required: [id, name, address], properties: { id: { type: string, format: uuid }, name: { type: string }, address: { type: string } } } }
-        features: { type: object, required: [cash, stock_visible, loyalty], properties: { cash: { type: boolean }, stock_visible: { type: boolean }, loyalty: { type: boolean } } }
+        features: { type: object, required: [cash, stock_visible, loyalty, online], properties: { cash: { type: boolean }, stock_visible: { type: boolean }, loyalty: { type: boolean }, online: { type: boolean } } }
         delivery: { $ref: '#/components/schemas/DeliverySettings' }
     ShopProduct:
       type: object
@@ -1671,5 +1671,5 @@ components:
       properties:
         provider: { type: string, enum: [mock, payme, click, uzum] }
         merchant_id: { type: [string, 'null'], maxLength: 100 }
-        secret: { type: string, minLength: 8, maxLength: 200, description: Faqat yoziladi (shifrlanadi), hech qachon qaytmaydi }
+        secret: { type: string, minLength: 8, maxLength: 200, description: "Faqat yoziladi (shifrlanadi), hech qachon qaytmaydi" }
         enabled: { type: boolean }

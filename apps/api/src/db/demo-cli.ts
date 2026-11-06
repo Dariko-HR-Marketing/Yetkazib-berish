@@ -3,7 +3,7 @@ import { DEMO_ACCOUNTS, DEMO_CUSTOMER, OTHER_OWNER, PLATFORM_ADMIN, seedDemo } f
 
 async function main() {
   const cfg = loadConfig();
-  const r = await seedDemo(cfg.DATABASE_URL);
+  const r = await seedDemo(cfg.DATABASE_URL, cfg.DATA_ENCRYPTION_KEY);
   process.stdout.write(r.created ? "Demo ma'lumotlar yaratildi\n" : "Demo ma'lumotlar allaqachon bor\n");
   for (const a of DEMO_ACCOUNTS) process.stdout.write(`  ${a.role.padEnd(11)} ${a.phone}\n`);
   process.stdout.write(`  xaridor (vitrina /d/demo) ${DEMO_CUSTOMER}\n`);

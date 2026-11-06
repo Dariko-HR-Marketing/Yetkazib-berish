@@ -10,11 +10,12 @@ import { useRequireSession } from "@/lib/use-session";
 import { PageSkeleton, Shell } from "@/components/shell";
 
 interface Item { id: string; name_uz: string; name_ru: string | null; unit: string; quantity_milli: number }
-interface Ord { id: string; number: number; status: "placed" | "accepted" | "picking" | "ready" | "delivering" | "completed" | "cancelled" | "failed"; fulfillment: string; total_tiyin: number; delivery_address: string | null; customer_phone: string | null; note: string | null; created_at: string; items: Item[] }
+interface Ord { id: string; number: number; status: "placed" | "accepted" | "picking" | "ready" | "delivering" | "completed" | "cancelled" | "failed"; fulfillment: string; total_tiyin: number; delivery_address: string | null; customer_phone: string | null; note: string | null; created_at: string; items: Item[]; payment?: { status: string; amount_tiyin: number; refunded_tiyin: number } | null }
 interface Page { items: Ord[]; next_cursor: string | null; counts: Record<string, number> }
 type Tab = "all" | Ord["status"];
 const TONE: Record<string, "info" | "ok" | "danger" | "warning"> = { placed: "info", accepted: "warning", picking: "warning", ready: "info", delivering: "warning", completed: "ok", cancelled: "danger", failed: "danger" };
 const WRITE = new Set(["owner", "manager", "dispatcher"]);
+const REFUND = new Set(["owner", "accountant"]);
 const READ = new Set(["owner", "manager", "picker", "cashier", "dispatcher", "accountant", "marketer"]);
 
 export default function OrdersPage() {
@@ -78,6 +79,7 @@ export default function OrdersPage() {
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <p className="text-body-lg font-extrabold">{t("order.title", { number: o.number })}</p>
                     <Badge tone={TONE[o.status] ?? "neutral"}>{t(`order.status_${o.status}`)}</Badge>
+                    {o.payment && <Badge tone={o.payment.status === "captured" ? "ok" : o.payment.status === "pending" || o.payment.status === "authorized" ? "warning" : "danger"}>{o.payment.status === "captured" ? t("pay.paid_badge") : o.payment.status === "pending" ? t("pay.waiting_badge") : t(`pay.status_${o.payment.status}`)}</Badge>}
                     <p className="text-body-sm text-muted">{new Date(o.created_at).toLocaleString(locale === "ru" ? "ru-RU" : "uz-UZ", { timeZone: "Asia/Tashkent", dateStyle: "short", timeStyle: "short" })}</p>
                   </div>
                   <ul className="text-body">{o.items.map((i) => <li key={i.id} className="break-words">{nameOf(i)} × {formatQty(i.quantity_milli)} {t(`unit.${i.unit}`)}</li>)}</ul>
@@ -92,6 +94,12 @@ export default function OrdersPage() {
                       </div>
                     )}
                   </div>
+                  {o.payment?.status === "captured" && REFUND.has(role) && o.payment.refunded_tiyin < o.payment.amount_tiyin && (
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Button variant="ghost" loading={busyId === `r${o.id}`} onClick={async () => { setBusyId(`r${o.id}`); try { await api(`/v1/orders/${o.id}/refund`, { method: "POST", tenant: true, body: { reason: t("pay.refund_reason") } }); setToast({ msg: t("pay.refund_done"), tone: "ok" }); await load(); } catch (e) { setToast({ msg: errText(e), tone: "danger" }); } finally { setBusyId(null); } }}>{t("pay.refund")}</Button>
+                      {o.payment.refunded_tiyin > 0 && <span className="text-body-sm text-muted">{t("pay.refunded", { amount: money(o.payment.refunded_tiyin) })}</span>}
+                    </div>
+                  )}
                   {cancelId === o.id && (
                     <div className="flex flex-wrap items-end gap-2">
                       <label className="flex min-w-0 flex-1 basis-56 flex-col gap-1 text-body font-semibold">{t("orders.reason_prompt")}
