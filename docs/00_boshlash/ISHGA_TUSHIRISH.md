@@ -43,7 +43,7 @@ k6 run -e BASE_URL=https://<staging> -e SLUG=demo -e BRANCH_ID=<filial-uuid> inf
 - ✅ Idempotentlik (pul/holat so'rovlarida), o'zgarmas ledger/audit/harakat jurnali (trigger).
 - ✅ Tokenlar httpOnly cookie (BFF), CSRF Origin tekshiruvi, CSP `frame-ancestors`, IP bo'yicha so'rov cheklovi.
 - ✅ Parser xavfsizligi: XLSX zip-bomba chegarasi, CSV formula in'ektsiyasidan himoya (xatolar fayli).
-- ⛔ `pnpm audit`: 8 o'rta daraja (NestJS 10 → 11 ko'chishi) — alohida PR.
+- ✅ `pnpm audit --prod`: zaifliklar yo'q (NestJS 11 + Express 5 ga ko'childi, minimatch override).
 - ⛔ Tashqi pentest, maxfiy kalitlarni aylantirish tartibi, ma'lumotni ustun darajasida shifrlash (telefon) — reyestr (O4) qaroriga qarab.
 
 ## 7. Qabul qilish yo'riqnomasi

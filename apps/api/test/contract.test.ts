@@ -57,7 +57,7 @@ describe("OpenAPI shartnomasi", () => {
   });
 
   it("har bir marshrut shartnomada bor va aksincha (shartnoma ↔ kod)", () => {
-    const stack = (h.app.getHttpAdapter().getInstance() as { _router: { stack: { route?: { path: string; methods: Record<string, boolean> } }[] } })._router.stack;
+    const stack = (h.app.getHttpAdapter().getInstance() as { router: { stack: { route?: { path: string; methods: Record<string, boolean> } }[] } }).router.stack; // Express 5
     const routes = new Set<string>();
     for (const l of stack) if (l.route) for (const m of Object.keys(l.route.methods)) if (!l.route.path.startsWith("/v1/_dev")) routes.add(`${m} ${l.route.path.replace(/:(\w+)/g, "{$1}")}`);
     const contract = new Set<string>();
