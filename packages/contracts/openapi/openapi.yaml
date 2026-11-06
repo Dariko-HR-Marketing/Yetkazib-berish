@@ -20,6 +20,8 @@ tags:
   - { name: admin }
   - { name: legal }
   - { name: catalog }
+  - { name: storefront }
+  - { name: orders }
 security:
   - bearer: []
 paths:
@@ -612,6 +614,122 @@ paths:
         '200': { description: Import va xatolar, content: { application/json: { schema: { $ref: '#/components/schemas/ImportJobDetail' } } } }
         '403': { $ref: '#/components/responses/Error' }
         '404': { $ref: '#/components/responses/Error' }
+  /v1/shops/{slug}:
+    get:
+      tags: [storefront]
+      operationId: getShop
+      security: []
+      summary: Ommaviy vitrina ma'lumoti (faol do'kon va storefront.own yoqilgan bo'lsa; aks holda 404)
+      parameters: [{ name: slug, in: path, required: true, schema: { type: string } }]
+      responses:
+        '200': { description: Do'kon, content: { application/json: { schema: { $ref: '#/components/schemas/Shop' } } } }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/shops/{slug}/categories:
+    get:
+      tags: [storefront]
+      operationId: listShopCategories
+      security: []
+      parameters: [{ name: slug, in: path, required: true, schema: { type: string } }]
+      responses:
+        '200': { description: Kategoriyalar, content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { $ref: '#/components/schemas/Category' } } } } } } }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/shops/{slug}/products:
+    get:
+      tags: [storefront]
+      operationId: listShopProducts
+      security: []
+      summary: Vitrina mahsulotlari (faol, yashirinlarsiz); mavjudlik filial bo'yicha
+      parameters:
+        - { name: slug, in: path, required: true, schema: { type: string } }
+        - { name: branch_id, in: query, schema: { type: string, format: uuid } }
+        - { name: q, in: query, schema: { type: string, maxLength: 100 } }
+        - { name: category_id, in: query, schema: { type: string, format: uuid } }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 60, default: 30 } }
+        - { name: cursor, in: query, schema: { type: string } }
+      responses:
+        '200': { description: Mahsulotlar, content: { application/json: { schema: { $ref: '#/components/schemas/ShopProductPage' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/shops/{slug}/orders:
+    get:
+      tags: [storefront]
+      operationId: listMyOrders
+      summary: Xaridorning shu do'kondagi buyurtmalari
+      parameters: [{ name: slug, in: path, required: true, schema: { type: string } }, { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 50, default: 20 } }]
+      responses:
+        '200': { description: Buyurtmalar, content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { $ref: '#/components/schemas/Order' } } } } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+    post:
+      tags: [storefront]
+      operationId: placeOrder
+      summary: Buyurtma berish (naqd). Qoldiq band qilinadi; yetmasa 409 order.out_of_stock
+      parameters: [{ name: slug, in: path, required: true, schema: { type: string } }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/OrderCreate' } } } }
+      responses:
+        '201': { description: Buyurtma qabul qilindi, content: { application/json: { schema: { $ref: '#/components/schemas/Order' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+        '422': { $ref: '#/components/responses/Error' }
+  /v1/shops/{slug}/orders/{id}:
+    get:
+      tags: [storefront]
+      operationId: getMyOrder
+      parameters: [{ name: slug, in: path, required: true, schema: { type: string } }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: Buyurtma, content: { application/json: { schema: { $ref: '#/components/schemas/Order' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/shops/{slug}/orders/{id}/cancel:
+    post:
+      tags: [storefront]
+      operationId: cancelMyOrder
+      summary: Xaridor bekor qiladi (faqat «placed» holatida)
+      parameters: [{ name: slug, in: path, required: true, schema: { type: string } }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: false, content: { application/json: { schema: { type: object, additionalProperties: false, properties: { reason: { type: string, maxLength: 200 } } } } } }
+      responses:
+        '200': { description: Bekor qilindi, content: { application/json: { schema: { $ref: '#/components/schemas/Order' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+  /v1/orders:
+    get:
+      tags: [orders]
+      operationId: listOrders
+      parameters:
+        - { $ref: '#/components/parameters/TenantId' }
+        - { name: status, in: query, schema: { type: string, enum: [placed, accepted, completed, cancelled] } }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 30 } }
+        - { name: cursor, in: query, schema: { type: string } }
+      responses:
+        '200': { description: Buyurtmalar (telefon maskalangan), content: { application/json: { schema: { $ref: '#/components/schemas/OrderPage' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/orders/{id}:
+    get:
+      tags: [orders]
+      operationId: getOrder
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: Buyurtma va holat tarixi, content: { application/json: { schema: { $ref: '#/components/schemas/OrderDetail' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/orders/{id}/status:
+    post:
+      tags: [orders]
+      operationId: setOrderStatus
+      summary: 'Holat o''zgartirish: placed→accepted|cancelled, accepted→completed|cancelled. Bekor — band bo''shaydi; bajarildi — qoldiqdan ayriladi'
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [status], additionalProperties: false, properties: { status: { type: string, enum: [accepted, completed, cancelled] }, reason: { type: string, maxLength: 200 } } } } } }
+      responses:
+        '200': { description: Yangilandi, content: { application/json: { schema: { $ref: '#/components/schemas/Order' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
 components:
   securitySchemes:
     bearer: { type: http, scheme: bearer, bearerFormat: JWT }
@@ -801,10 +919,11 @@ components:
         status: { type: string, enum: [active] }
     Tenant:
       type: object
-      required: [id, name, tin, status, plan, created_at]
+      required: [id, name, slug, tin, status, plan, created_at]
       properties:
         id: { type: string, format: uuid }
         name: { type: string }
+        slug: { type: string, description: "Vitrina havolasi: /d/<slug>" }
         tin: { type: string }
         status: { type: string, enum: [draft, active, suspended] }
         plan:
@@ -1097,3 +1216,90 @@ components:
       allOf:
         - { $ref: '#/components/schemas/ImportJob' }
         - { type: object, required: [errors], properties: { errors: { type: array, items: { $ref: '#/components/schemas/ImportRowError' } } } }
+    Shop:
+      type: object
+      required: [slug, name, branches, features]
+      properties:
+        slug: { type: string }
+        name: { type: string }
+        branches: { type: array, items: { type: object, required: [id, name, address], properties: { id: { type: string, format: uuid }, name: { type: string }, address: { type: string } } } }
+        features: { type: object, required: [cash, stock_visible], properties: { cash: { type: boolean }, stock_visible: { type: boolean } } }
+    ShopProduct:
+      type: object
+      required: [id, category_id, name_uz, name_ru, unit, price_tiyin, availability]
+      properties:
+        id: { type: string, format: uuid }
+        category_id: { type: [string, 'null'], format: uuid }
+        name_uz: { type: string }
+        name_ru: { type: [string, 'null'] }
+        unit: { type: string, enum: [piece, kg, l] }
+        price_tiyin: { type: integer }
+        description_uz: { type: [string, 'null'] }
+        description_ru: { type: [string, 'null'] }
+        availability:
+          type: object
+          required: [state, available_milli]
+          description: "«Tugadi» har qanday rejimda; son faqat stock.visible yoqilgan bo'lsa"
+          properties: { state: { type: string, enum: [in, low, out] }, available_milli: { type: [integer, 'null'] } }
+    ShopProductPage:
+      type: object
+      required: [branch_id, items, next_cursor]
+      properties: { branch_id: { type: [string, 'null'], format: uuid }, items: { type: array, items: { $ref: '#/components/schemas/ShopProduct' } }, next_cursor: { type: [string, 'null'] } }
+    OrderCreate:
+      type: object
+      required: [branch_id, items, fulfillment]
+      additionalProperties: false
+      properties:
+        branch_id: { type: string, format: uuid }
+        items: { type: array, minItems: 1, maxItems: 50, items: { type: object, required: [product_id, quantity_milli], additionalProperties: false, properties: { product_id: { type: string, format: uuid }, quantity_milli: { type: integer, minimum: 1 } } } }
+        fulfillment: { type: string, enum: [delivery, pickup] }
+        delivery_address: { type: string, minLength: 5, maxLength: 300 }
+        note: { type: string, maxLength: 300 }
+        payment_type: { type: string, enum: [cash], default: cash }
+        channel: { type: string, enum: [vitrina, telegram], default: vitrina }
+    OrderItem:
+      type: object
+      required: [id, product_id, name_uz, name_ru, unit, quantity_milli, price_tiyin, line_total_tiyin]
+      properties:
+        id: { type: string, format: uuid }
+        product_id: { type: string, format: uuid }
+        name_uz: { type: string }
+        name_ru: { type: [string, 'null'] }
+        unit: { type: string }
+        quantity_milli: { type: integer }
+        price_tiyin: { type: integer, description: Buyurtma paytidagi narx (o'zgarmaydi) }
+        line_total_tiyin: { type: integer }
+    Order:
+      type: object
+      required: [id, number, branch_id, status, fulfillment, payment_type, channel, subtotal_tiyin, delivery_fee_tiyin, total_tiyin, delivery_address, customer_phone, note, cancel_reason, created_at, updated_at, items]
+      properties:
+        id: { type: string, format: uuid }
+        number: { type: integer }
+        branch_id: { type: string, format: uuid }
+        status: { type: string, enum: [placed, accepted, completed, cancelled] }
+        fulfillment: { type: string, enum: [delivery, pickup] }
+        payment_type: { type: string }
+        channel: { type: string }
+        subtotal_tiyin: { type: integer }
+        delivery_fee_tiyin: { type: integer }
+        total_tiyin: { type: integer }
+        delivery_address: { type: [string, 'null'] }
+        customer_phone: { type: [string, 'null'], description: Panelda maskalangan }
+        note: { type: [string, 'null'] }
+        cancel_reason: { type: [string, 'null'] }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+        items: { type: array, items: { $ref: '#/components/schemas/OrderItem' } }
+    OrderPage:
+      type: object
+      required: [items, next_cursor, counts]
+      properties:
+        items: { type: array, items: { $ref: '#/components/schemas/Order' } }
+        next_cursor: { type: [string, 'null'] }
+        counts: { type: object, additionalProperties: { type: integer } }
+    OrderDetail:
+      allOf:
+        - { $ref: '#/components/schemas/Order' }
+        - type: object
+          required: [history]
+          properties: { history: { type: array, items: { type: object, required: [from_status, to_status, created_at], properties: { from_status: { type: [string, 'null'] }, to_status: { type: string }, created_at: { type: string, format: date-time } } } } }

@@ -42,7 +42,7 @@ export async function seedDemo(url: string): Promise<{ created: boolean }> {
 
     await user(PLATFORM_ADMIN, true);
     const tarmoq = await plan("tarmoq");
-    const tid = (await c.query<{ id: string }>("insert into tenants (name, tin, status, plan_code, plan_version) values ('Demo Do''kon','200000001','active','tarmoq',$1) returning id", [tarmoq])).rows[0]!.id;
+    const tid = (await c.query<{ id: string }>("insert into tenants (name, slug, tin, status, plan_code, plan_version) values ('Demo Do''kon','demo','200000001','active','tarmoq',$1) returning id", [tarmoq])).rows[0]!.id;
     const b1 = (await c.query<{ id: string }>("insert into branches (tenant_id, name, address, lat, lng) values ($1,'Markaziy filial','Toshkent, Chilonzor 1',41.2856,69.2037) returning id", [tid])).rows[0]!.id;
     await c.query("insert into branches (tenant_id, name, address, lat, lng) values ($1,'Yunusobod filiali','Toshkent, Yunusobod 4',41.3646,69.2878)", [tid]);
     for (const a of DEMO_ACCOUNTS) {
@@ -62,7 +62,7 @@ export async function seedDemo(url: string): Promise<{ created: boolean }> {
 
     // Ikkinchi, begona do'kon: ma'lumotlar izolyatsiyasini (404) tekshirish uchun
     const otherUser = await user(OTHER_OWNER);
-    const t2 = (await c.query<{ id: string }>("insert into tenants (name, tin, status, plan_code, plan_version) values ('Boshqa Do''kon','200000002','active','start',$1) returning id", [await plan("start")])).rows[0]!.id;
+    const t2 = (await c.query<{ id: string }>("insert into tenants (name, slug, tin, status, plan_code, plan_version) values ('Boshqa Do''kon','boshqa','200000002','active','start',$1) returning id", [await plan("start")])).rows[0]!.id;
     await c.query("insert into memberships (tenant_id, user_id, role) values ($1,$2,'owner')", [t2, otherUser]);
     const b2 = (await c.query<{ id: string }>("insert into branches (tenant_id, name, address) values ($1,'Asosiy','Samarqand, Registon 1') returning id", [t2])).rows[0]!.id;
     const p2 = (await c.query<{ id: string }>("insert into products (tenant_id, name_uz, sku, price_tiyin) values ($1,'Boshqa do''kon mahsuloti','OTHER-1',999900) returning id", [t2])).rows[0]!.id;

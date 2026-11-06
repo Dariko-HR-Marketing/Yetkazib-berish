@@ -111,9 +111,9 @@ export class AdminPlansService {
       await tx.query("update tenants set plan_code = $2, plan_version = $3, plan_migrate_at = null, updated_at = $4 where id = $1", [tenantId, planCode, plan.version, this.clock.now()]);
       await this.events.emit(tx, "plan.changed", { old: `${t.plan_code}@${t.plan_version}`, new: `${planCode}@${plan.version}` }, { tenantId, actorId, source: "panel" });
       await this.audit.record(tx, { tenantId, actorId, action: "plan.changed", entity: "tenant", entityId: tenantId, before: { plan_code: t.plan_code, plan_version: t.plan_version }, after: { plan_code: planCode, plan_version: plan.version }, ip });
-      return (await tx.query("select id, name, tin, status, plan_code, plan_version, created_at from tenants where id = $1", [tenantId])).rows[0]!;
+      return (await tx.query("select id, name, slug, tin, status, plan_code, plan_version, created_at from tenants where id = $1", [tenantId])).rows[0]!;
     });
     await this.features.invalidate(tenantId);
-    return { id: out.id, name: out.name, tin: out.tin, status: out.status, plan: { code: out.plan_code, version: out.plan_version }, created_at: out.created_at };
+    return { id: out.id, name: out.name, slug: out.slug, tin: out.tin, status: out.status, plan: { code: out.plan_code, version: out.plan_version }, created_at: out.created_at };
   }
 }

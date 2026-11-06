@@ -7,6 +7,7 @@ import { CONFIG, type Config } from "../../config";
 import { DbService, type Tx } from "../../db/db.service";
 import { AuditService } from "../audit-events/audit.service";
 import { maskPhone } from "../identity/identity.service";
+import { slugify } from "../orders/slug";
 import { SMS_SENDER, type SmsSender } from "../identity/sms.sender";
 import { effectivePlan, nextPlan, type EffectivePlan, type TenantPlanRef } from "../plans-flags/plans";
 import { FeaturesService } from "../plans-flags/features.service";
@@ -15,8 +16,8 @@ import { EventsService } from "../audit-events/events.service";
 
 export const INVITE_TTL_MS = 72 * 3600 * 1000;
 
-interface TenantRow extends TenantPlanRef { id: string; name: string; tin: string; status: string; created_at: Date }
-const tenantDto = (t: TenantRow) => ({ id: t.id, name: t.name, tin: t.tin, status: t.status, plan: { code: t.plan_code, version: t.plan_version }, created_at: t.created_at });
+interface TenantRow extends TenantPlanRef { id: string; name: string; slug: string; tin: string; status: string; created_at: Date }
+const tenantDto = (t: TenantRow) => ({ id: t.id, name: t.name, slug: t.slug, tin: t.tin, status: t.status, plan: { code: t.plan_code, version: t.plan_version }, created_at: t.created_at });
 
 @Injectable()
 export class TenancyService {
@@ -33,9 +34,15 @@ export class TenancyService {
       if (ev.missing.length && this.cfg.OPEN_LOGIN !== "on") throw new ApiError(422, "consent.required", { documents: ev.missing, scope: "shop" });
       const plan = (await tx.query<{ version: number }>("select version from plans where code = 'start' and status = 'published' order by version desc limit 1")).rows[0];
       if (!plan) throw new ApiError(500, "internal_error", { reason: "start_plan_missing" });
+      // Vitrina havolasi: nomdan, band bo'lsa -2, -3 ... Sinov rejimida KYC o'tkazib yuboriladi: do'kon darhol faol (vitrina ochiq).
+      const base = slugify(d.name);
+      let slug = base;
+      await tx.query("select set_config('app.platform', 'on', true)"); // slug butun platforma bo'yicha yagona: RLS'siz qisqa tekshiruv (faqat shu so'rov)
+      for (let n = 2; (await tx.query("select 1 from tenants where slug = $1", [slug])).rowCount; n++) slug = `${base.slice(0, 36)}-${n}`;
+      await tx.query("select set_config('app.platform', 'off', true)");
       const t = (await tx.query<TenantRow>(
-        `insert into tenants (id, name, tin, status, plan_code, plan_version, created_at, updated_at) values ($1,$2,$3,'draft','start',$4,$5,$5) returning *`,
-        [id, d.name, d.tin, plan.version, this.clock.now()])).rows[0]!;
+        `insert into tenants (id, name, slug, tin, status, plan_code, plan_version, created_at, updated_at) values ($1,$2,$3,$4,$5,'start',$6,$7,$7) returning *`,
+        [id, d.name, slug, d.tin, this.cfg.OPEN_LOGIN === "on" ? "active" : "draft", plan.version, this.clock.now()])).rows[0]!;
       const m = (await tx.query<{ id: string }>("insert into memberships (tenant_id, user_id, role) values ($1,$2,'owner') returning id", [id, userId])).rows[0]!;
       await this.audit.record(tx, { tenantId: id, actorId: userId, action: "tenant.created", entity: "tenant", entityId: id, after: { name: d.name, plan: "start" }, ip });
       await this.audit.record(tx, { tenantId: id, actorId: userId, action: "member.role_set", entity: "membership", entityId: m.id, after: { role: "owner" }, ip });

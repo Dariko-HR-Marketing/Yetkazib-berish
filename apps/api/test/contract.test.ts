@@ -197,6 +197,34 @@ describe("OpenAPI shartnomasi", () => {
     await op("delete", "/v1/categories/{id}", `/v1/categories/${cat.body.id}`, 200, T);
   });
 
+  it("javoblar shartnomaga mos: vitrina va buyurtmalar", async () => {
+    const o = await makeOwner(h, "+998901000001");
+    const T = { token: o.token, tenant: o.tenantId };
+    await call(h, "patch", `/v1/tenants/${o.tenantId}`, { ...T, body: { status: "active" } }).expect(200);
+    const slug = (await call(h, "get", `/v1/tenants/${o.tenantId}`, T)).body.slug as string;
+    const br = (await call(h, "post", "/v1/branches", { ...T, body: { name: "Markaz", address: "Chilonzor 1" } }).expect(201)).body.id as string;
+    const p = (await call(h, "post", "/v1/products", { ...T, body: { name_uz: "Sut", price_tiyin: 1250000, unit: "l" } }).expect(201)).body.id as string;
+    await call(h, "put", `/v1/products/${p}/stock`, { ...T, body: { branch_id: br, quantity_milli: 10000 } }).expect(200);
+    await op("get", "/v1/shops/{slug}", `/v1/shops/${slug}`, 200);
+    await op("get", "/v1/shops/{slug}", "/v1/shops/yoq", 404);
+    await op("get", "/v1/shops/{slug}/categories", `/v1/shops/${slug}/categories`, 200);
+    await op("get", "/v1/shops/{slug}/products", `/v1/shops/${slug}/products?branch_id=${br}`, 200);
+    const c = await signUp(h, "+998905550001");
+    const body = { branch_id: br, fulfillment: "delivery", delivery_address: "Toshkent, Bobur 5", items: [{ product_id: p, quantity_milli: 2000 }] };
+    await op("post", "/v1/shops/{slug}/orders", `/v1/shops/${slug}/orders`, 400, { token: c.token, body: { ...body, items: [] } });
+    await op("post", "/v1/shops/{slug}/orders", `/v1/shops/${slug}/orders`, 409, { token: c.token, body: { ...body, items: [{ product_id: p, quantity_milli: 99000 }] } });
+    const ord = await op("post", "/v1/shops/{slug}/orders", `/v1/shops/${slug}/orders`, 201, { token: c.token, body });
+    await op("get", "/v1/shops/{slug}/orders", `/v1/shops/${slug}/orders`, 200, { token: c.token });
+    await op("get", "/v1/shops/{slug}/orders/{id}", `/v1/shops/${slug}/orders/${ord.body.id}`, 200, { token: c.token });
+    await op("get", "/v1/orders", "/v1/orders?status=placed", 200, T);
+    await op("get", "/v1/orders/{id}", `/v1/orders/${ord.body.id}`, 200, T);
+    await op("post", "/v1/orders/{id}/status", `/v1/orders/${ord.body.id}/status`, 409, { ...T, body: { status: "completed" } });
+    await op("post", "/v1/orders/{id}/status", `/v1/orders/${ord.body.id}/status`, 200, { ...T, body: { status: "accepted" } });
+    await op("post", "/v1/shops/{slug}/orders/{id}/cancel", `/v1/shops/${slug}/orders/${ord.body.id}/cancel`, 409, { token: c.token, body: {} });
+    const o2 = await call(h, "post", `/v1/shops/${slug}/orders`, { token: c.token, body }).expect(201);
+    await op("post", "/v1/shops/{slug}/orders/{id}/cancel", `/v1/shops/${slug}/orders/${o2.body.id}/cancel`, 200, { token: c.token, body: { reason: "fikrim o'zgardi" } });
+  });
+
   it("shartnoma o'zgarmasligini kafolatlovchi: har operatsiya testda ishlatilgan", () => {
     const used = new Set(checked);
     const missing: string[] = [];
