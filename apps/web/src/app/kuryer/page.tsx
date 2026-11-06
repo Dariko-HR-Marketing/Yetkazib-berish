@@ -20,6 +20,7 @@ export default function CourierPage() {
   const membership = me?.memberships.find((m) => m.tenant_id === session?.tenantId);
   const role = membership?.role ?? "";
   const [list, setList] = useState<Delivery[] | null>(null);
+  const [cash, setCash] = useState<{ on_hand: number; limit: number } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [toast, setToast] = useState<{ msg: string; tone: "ok" | "danger" } | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
@@ -29,7 +30,7 @@ export default function CourierPage() {
   const last = useRef<{ lat: number; lng: number; acc: number } | null>(null);
 
   const errText = useCallback((e: unknown) => (e instanceof ApiError ? e.text(locale) : e instanceof NetworkError ? t("ui.error_network") : t("ui.error_generic")), [locale, t]);
-  const load = useCallback(async () => { try { setList((await api<{ items: Delivery[] }>("/v1/courier/deliveries", { tenant: true })).items); setError(null); } catch (e) { setError(errText(e)); } }, [errText]);
+  const load = useCallback(async () => { try { { const r = await api<{ items: Delivery[]; cash_on_hand_tiyin: number; cash_limit_tiyin: number }>("/v1/courier/deliveries", { tenant: true }); setList(r.items); setCash({ on_hand: r.cash_on_hand_tiyin, limit: r.cash_limit_tiyin }); } setError(null); } catch (e) { setError(errText(e)); } }, [errText]);
 
   useEffect(() => {
     if (!ready) return;
@@ -65,8 +66,10 @@ export default function CourierPage() {
       actions={active && gps !== "idle" ? <Badge tone={gps === "on" ? "ok" : "warning"}>{gps === "on" ? t("courier.gps_on") : t("courier.gps_off")}</Badge> : undefined}>
       {error && !list ? <ErrorState message={error} onRetry={load} retryLabel={t("ui.retry")} />
         : !list ? <div className="flex flex-col gap-3" aria-busy="true"><Skeleton className="h-36" /><Skeleton className="h-36" /></div>
-        : list.length === 0 ? <EmptyState title={t("courier.empty")} />
+        : list.length === 0 ? <><EmptyState title={t("courier.empty")} />{cash && <p className="mt-3 text-center text-body font-semibold">{t("courier.cash_hand", { amount: money(cash.on_hand), limit: money(cash.limit) })}</p>}</>
         : (
+          <>
+          {cash && <p className="mb-3 text-body font-semibold" data-testid="courier-cash">{t("courier.cash_hand", { amount: money(cash.on_hand), limit: money(cash.limit) })}</p>}
           <ul className="flex flex-col gap-4">
             {list.map((d) => (
               <li key={d.delivery_id}>
@@ -99,6 +102,7 @@ export default function CourierPage() {
               </li>
             ))}
           </ul>
+          </>
         )}
       {toast && <Toast message={toast.msg} tone={toast.tone} onClose={() => setToast(null)} />}
     </Shell>

@@ -816,7 +816,7 @@ paths:
       summary: Kuryerning o'z topshiriqlari (mijoz telefoni to'liq — faqat shu kuryerga)
       parameters: [{ $ref: '#/components/parameters/TenantId' }]
       responses:
-        '200': { description: Topshiriqlar, content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { $ref: '#/components/schemas/CourierDelivery' } } } } } } }
+        '200': { description: Topshiriqlar va kuryerdagi naqd, content: { application/json: { schema: { type: object, required: [items, cash_on_hand_tiyin, cash_limit_tiyin], properties: { cash_on_hand_tiyin: { type: integer }, cash_limit_tiyin: { type: integer }, items: { type: array, items: { $ref: '#/components/schemas/CourierDelivery' } } } } } } }
         '403': { $ref: '#/components/responses/Error' }
         '404': { $ref: '#/components/responses/Error' }
   /v1/courier/deliveries/{id}/pickup:
@@ -975,6 +975,29 @@ paths:
       requestBody: { required: true, content: { application/json: { schema: { type: object, required: [reason], additionalProperties: false, properties: { amount_tiyin: { type: integer, minimum: 1 }, reason: { type: string, minLength: 2, maxLength: 60 } } } } } }
       responses:
         '200': { description: Qaytarildi, content: { application/json: { schema: { $ref: '#/components/schemas/Payment' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '422': { $ref: '#/components/responses/Error' }
+  /v1/cash/couriers:
+    get:
+      tags: [payments]
+      operationId: cashCouriers
+      summary: "Kuryerlardagi naqd (yetkazilgan − topshirilgan) va chegara"
+      parameters: [{ $ref: '#/components/parameters/TenantId' }]
+      responses:
+        '200': { description: Kuryerlar naqdi, content: { application/json: { schema: { $ref: '#/components/schemas/CashCouriers' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/cash/handover:
+    post:
+      tags: [payments]
+      operationId: cashHandover
+      summary: "Kuryer naqdini kassaga topshirish (o'zgarmas yozuv; mavjud naqddan oshmaydi)"
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [courier_user_id, amount_tiyin], additionalProperties: false, properties: { courier_user_id: { type: string, format: uuid }, amount_tiyin: { type: integer, minimum: 1 }, note: { type: string, maxLength: 200 } } } } } }
+      responses:
+        '200': { description: Qayd etildi, content: { application/json: { schema: { type: object, required: [id, on_hand_tiyin], properties: { id: { type: integer }, on_hand_tiyin: { type: integer } } } } } }
         '400': { $ref: '#/components/responses/Error' }
         '403': { $ref: '#/components/responses/Error' }
         '404': { $ref: '#/components/responses/Error' }
@@ -1683,3 +1706,9 @@ components:
         merchant_id: { type: [string, 'null'], maxLength: 100 }
         secret: { type: string, minLength: 8, maxLength: 200, description: "Faqat yoziladi (shifrlanadi), hech qachon qaytmaydi" }
         enabled: { type: boolean }
+    CashCouriers:
+      type: object
+      required: [limit_tiyin, items]
+      properties:
+        limit_tiyin: { type: integer }
+        items: { type: array, items: { type: object, required: [user_id, phone, on_hand_tiyin, over_limit, last_handover_at], properties: { user_id: { type: string, format: uuid }, phone: { type: [string, 'null'] }, on_hand_tiyin: { type: integer }, over_limit: { type: boolean }, last_handover_at: { type: [string, 'null'], format: date-time } } } }

@@ -105,6 +105,10 @@ Nimani sinab ko'rish:
 ### /hisobot — savdo hisoboti (Egasi, Menejer, Dispetcher, Buxgalter, Marketolog)
 - Davr: 7 / 30 / 90 kun. Raqamlar: buyurtmalar, daromad, o'rtacha chek, bekor/yetkazilmagan ulushi; kunlar bo'yicha daromad (chiziqcha), eng ko'p sotilgan 10 mahsulot, ball chegirmasi. Faqat **bajarilgan** buyurtmalar daromadga kiradi.
 
+### /kassa — kuryer naqdi (Egasi, Kassir, Buxgalter topshirishni qayd etadi; Menejer ko'radi)
+- Har kuryer: hozir qo'lidagi naqd (yetkazilgan buyurtmalardan olingan − topshirilgan), chegaradan oshgan bo'lsa belgi. Summa kiritib «Topshirildi» yoki «Hammasi». Mavjud naqddan ortiq topshirib bo'lmaydi.
+- **Chegara 1 500 000 so'm:** kuryerdagi naqd + yangi buyurtma jami chegaradan oshsa dispetcher buyurtmani biriktira olmaydi («Kuryerda naqd chegarasi to'lgan»). Kuryer sahifasida ham «Sizda naqd: …» ko'rinadi.
+
 ### /admin — platforma admini (faqat admin: `+998 90 100 00 00`)
 - Do'konlar (qidiruv, paketni o'zgartirish), Funksiyalar (platformada yoqish/o'chirish), Hujjatlar (versiyalar). Admin kirgach bevosita shu sahifaga tushadi.
 

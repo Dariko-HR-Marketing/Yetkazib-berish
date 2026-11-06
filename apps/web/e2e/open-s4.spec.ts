@@ -124,6 +124,14 @@ test("to'liq zanjir: xaridor -> qabul -> yig'ish (kam yig'ildi) -> kuryer birikt
   await expect(c.page.getByTestId("order-total")).toContainText("20");
   await c.ctx.close();
 
+  // kassa: kuryerda 20 000 so'm naqd; to'liq topshirildi
+  await owner.goto("/kassa");
+  const cc = owner.getByTestId("cash-courier").first();
+  await expect(cc.getByTestId("cash-on-hand")).toContainText("20");
+  await cc.getByRole("button", { name: "Hammasi" }).click();
+  await expect(owner.getByText("Topshirish qayd etildi")).toBeVisible();
+  await expect(owner.getByTestId("cash-courier").first().getByTestId("cash-on-hand")).toContainText("0 so'm");
+
   // qoldiq: 10 - 1 = 9 kg, band 0
   await owner.goto("/katalog");
   await expect(owner.getByTestId("product-row").filter({ hasText: "Olma" })).toContainText("9");

@@ -501,5 +501,21 @@
  "pay.refund_reason": "Qaytarish sababi",
  "pay.refund_done": "Qaytarildi",
  "admin.publish": "Kuchga kiritish",
- "admin.published": "Hujjat kuchga kirdi"
+ "admin.published": "Hujjat kuchga kirdi",
+ "courier.cash_limit": "Kuryerda naqd chegarasi to'lgan ({limit} so'm). Avval kassaga topshirsin",
+ "cash.exceeds_on_hand": "Kuryerda bunchalik naqd yo'q (eng ko'pi {max} so'm)",
+ "nav.cash": "Kassa",
+ "cash.title": "Kassa: kuryer naqdi",
+ "cash.subtitle": "Kuryerlar yetkazishda olgan naqd. Chegara: {limit}",
+ "cash.on_hand": "Kuryerda: {amount}",
+ "cash.over": "Chegaradan oshgan",
+ "cash.handover": "Topshirildi",
+ "cash.amount": "Summa, so'm",
+ "cash.note": "Izoh",
+ "cash.all": "Hammasi",
+ "cash.done": "Topshirish qayd etildi",
+ "cash.empty": "Kuryerlar yo'q",
+ "cash.last": "Oxirgi topshirish: {date}",
+ "cash.never": "Hali topshirmagan",
+ "courier.cash_hand": "Sizda naqd: {amount} (chegara {limit})"
 }

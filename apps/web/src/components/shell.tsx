@@ -26,6 +26,7 @@ const ORDER_ROLES = new Set(["owner", "manager", "picker", "cashier", "dispatche
 const PICK_ROLES = new Set(["owner", "manager", "picker", "dispatcher"]);
 const DISPATCH_ROLES = new Set(["owner", "manager", "dispatcher"]);
 const REPORT_ROLES = new Set(["owner", "manager", "dispatcher", "accountant", "marketer"]);
+const CASH_ROLES = new Set(["owner", "manager", "cashier", "accountant"]);
 const IMPORT_ROLES = new Set(["owner", "manager"]);
 
 export function Shell({ title, subtitle, tenantName, children, actions, role }: { title: string; subtitle?: string; tenantName?: string; children: ReactNode; actions?: ReactNode; role?: string }) {
@@ -37,6 +38,7 @@ export function Shell({ title, subtitle, tenantName, children, actions, role }: 
     ...(role && PICK_ROLES.has(role) ? [{ href: "/yigish", label: t("nav.picking") }] : []),
     ...(role && DISPATCH_ROLES.has(role) ? [{ href: "/dispetcher", label: t("nav.dispatch") }] : []),
     ...(role && ORDER_ROLES.has(role) ? [{ href: "/buyurtmalar", label: t("nav.orders") }] : []),
+    ...(role && CASH_ROLES.has(role) ? [{ href: "/kassa", label: t("nav.cash") }] : []),
     ...(role && REPORT_ROLES.has(role) ? [{ href: "/hisobot", label: t("nav.reports") }] : []),
     ...(role === "platform_admin" ? [{ href: "/admin", label: t("nav.admin") }] : []),
     ...(role && CATALOG_ROLES.has(role) ? [{ href: "/katalog", label: t("nav.catalog") }] : []),

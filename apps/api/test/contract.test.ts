@@ -262,6 +262,8 @@ describe("OpenAPI shartnomasi", () => {
     await op("put", "/v1/orders/{id}/items/{itemId}/pick", `/v1/orders/${ord.id}/items/${itemId}/pick`, 200, { ...T, body: { status: "picked" } });
     await op("post", "/v1/orders/{id}/pick/finish", `/v1/orders/${ord.id}/pick/finish`, 200, T);
     await op("get", "/v1/dispatch/couriers", "/v1/dispatch/couriers", 200, T);
+    await op("get", "/v1/cash/couriers", "/v1/cash/couriers", 200, T);
+    await op("post", "/v1/cash/handover", "/v1/cash/handover", 422, { ...T, body: { courier_user_id: cid, amount_tiyin: 100 } });
     await op("post", "/v1/orders/{id}/assign", `/v1/orders/${ord.id}/assign`, 200, { ...T, body: { courier_user_id: cid } });
     const K = { token: courier.token, tenant: o.tenantId };
     const mine = await op("get", "/v1/courier/deliveries", "/v1/courier/deliveries", 200, K);
@@ -269,6 +271,7 @@ describe("OpenAPI shartnomasi", () => {
     await op("post", "/v1/courier/location", "/v1/courier/location", 200, { ...K, body: { lat: 41.3, lng: 69.2 } });
     await op("post", "/v1/courier/deliveries/{id}/pickup", `/v1/courier/deliveries/${did}/pickup`, 200, K);
     await op("post", "/v1/courier/deliveries/{id}/deliver", `/v1/courier/deliveries/${did}/deliver`, 200, K);
+    await op("post", "/v1/cash/handover", "/v1/cash/handover", 200, { ...T, body: { courier_user_id: cid, amount_tiyin: 100000, note: "ertalab" } });
     const ord2 = (await call(h, "post", `/v1/shops/${slug}/orders`, { token: c.token, body: { branch_id: br, fulfillment: "delivery", delivery_address: "Toshkent, Bobur 5", items: [{ product_id: p, quantity_milli: 1000 }] } }).expect(201)).body;
     await call(h, "post", `/v1/orders/${ord2.id}/status`, { ...T, body: { status: "accepted" } }).expect(200);
     await call(h, "post", `/v1/orders/${ord2.id}/pick/start`, T).expect(200);

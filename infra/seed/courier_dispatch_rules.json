@@ -1,0 +1,36 @@
+{
+  "_izoh": "Manba: PRD 'Kuryer muammosi yechimi' + Owner-Delivery prototipi.",
+  "channel_order_default": [
+    "own",
+    "pool",
+    "third_party"
+  ],
+  "order_configurable_by": "owner",
+  "rules": {
+    "offer_timeout_s": 180,
+    "cash_only_channel": "own",
+    "cash_wait_alert_min": 10,
+    "pool_and_third_party_prepaid_only": true,
+    "max_distance_km": 7,
+    "third_party_price_confirm_above_uzs": 35000,
+    "max_orders_per_courier_batch": 3,
+    "pool_accept_sla_min": 3,
+    "pool_pickup_sla_min": 15,
+    "courier_cash_limit_uzs": 1500000,
+    "gps_interval_s": 15,
+    "location_retention_days": 90
+  },
+  "pricing": {
+    "pool": "12 000 so'm ≤3 km, +2 000 so'm/km (do'konga)",
+    "third_party": "tarif + 5%",
+    "own": "do'kon belgilaydi"
+  },
+  "pool_balancing": {
+    "demand_supply_hot": 1.5,
+    "bonus_hot": 1.2,
+    "demand_supply_critical": 2.0,
+    "bonus_critical": 1.4,
+    "critical_action": "do'konlarga tashqi xizmat tavsiya"
+  },
+  "tax": "O'zini o'zi band kuryer yillik daromadi 100 mln so'mdan oshsa — soliq agenti (VM 200-son qaror, 2025)"
+}

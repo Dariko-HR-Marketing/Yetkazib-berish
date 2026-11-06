@@ -501,5 +501,21 @@
  "pay.refund_reason": "Причина возврата",
  "pay.refund_done": "Возврат выполнен",
  "admin.publish": "Ввести в силу",
- "admin.published": "Документ вступил в силу"
+ "admin.published": "Документ вступил в силу",
+ "courier.cash_limit": "Лимит наличных у курьера исчерпан ({limit} сум). Пусть сначала сдаст в кассу",
+ "cash.exceeds_on_hand": "У курьера нет столько наличных (не более {max} сум)",
+ "nav.cash": "Касса",
+ "cash.title": "Касса: наличные курьеров",
+ "cash.subtitle": "Наличные, полученные курьерами при доставке. Лимит: {limit}",
+ "cash.on_hand": "У курьера: {amount}",
+ "cash.over": "Превышен лимит",
+ "cash.handover": "Сдано",
+ "cash.amount": "Сумма, сум",
+ "cash.note": "Комментарий",
+ "cash.all": "Всё",
+ "cash.done": "Сдача наличных записана",
+ "cash.empty": "Курьеров нет",
+ "cash.last": "Последняя сдача: {date}",
+ "cash.never": "Ещё не сдавал",
+ "courier.cash_hand": "У вас наличных: {amount} (лимит {limit})"
 }

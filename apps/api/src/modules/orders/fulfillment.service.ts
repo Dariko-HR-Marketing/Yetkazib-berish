@@ -3,6 +3,7 @@ import { ApiError } from "../../common/errors";
 import { DbService, type Tx } from "../../db/db.service";
 import { AuditService } from "../audit-events/audit.service";
 import { EventsService } from "../audit-events/events.service";
+import { CashService, COURIER_CASH_LIMIT_TIYIN } from "./cash.service";
 import { LoyaltyService, POINT_TIYIN, RULES } from "../loyalty/loyalty.service";
 import { lineTotal, orderDto, OrdersService, type OrderRow, type Status } from "./orders.service";
 
@@ -11,7 +12,7 @@ const FRESH_LOCATION_MS = 5 * 60_000;
 /** Yig'ish, kuryerga biriktirish va yetkazish. Barcha o'tishlar OrdersService.transition orqali (qoldiq va jurnal bitta joyda). */
 @Injectable()
 export class FulfillmentService {
-  constructor(private readonly db: DbService, private readonly orders: OrdersService, private readonly audit: AuditService, private readonly events: EventsService, private readonly loyalty: LoyaltyService) {}
+  constructor(private readonly db: DbService, private readonly orders: OrdersService, private readonly audit: AuditService, private readonly events: EventsService, private readonly loyalty: LoyaltyService, private readonly cash: CashService) {}
 
   private async lockOrder(tx: Tx, tenantId: string, id: string): Promise<OrderRow> {
     const o = (await tx.query<OrderRow>("select *, '' as cur_at from orders where id = $1 and tenant_id = $2 for update", [id, tenantId])).rows[0];
@@ -114,6 +115,8 @@ export class FulfillmentService {
       if (o.fulfillment !== "delivery") throw new ApiError(409, "order.not_delivery");
       const c = await tx.query("select 1 from memberships where tenant_id = $1 and user_id = $2 and role = 'courier' and status = 'active'", [tenantId, courierUserId]);
       if (!c.rowCount) throw new ApiError(404, "not_found"); // kuryer emas yoki boshqa do'kon — oshkor bo'lmaydi
+      const onHand = await this.cash.onHand(tx, tenantId, courierUserId);
+      if (onHand + Number(o.total_tiyin) > COURIER_CASH_LIMIT_TIYIN) throw new ApiError(422, "courier.cash_limit", { on_hand_tiyin: onHand, limit_tiyin: COURIER_CASH_LIMIT_TIYIN }, { limit: Math.round(COURIER_CASH_LIMIT_TIYIN / 100) });
       const ex = (await tx.query<{ status: string }>("select status from deliveries where order_id = $1 and tenant_id = $2 for update", [orderId, tenantId])).rows[0];
       if (ex && ex.status !== "assigned") throw new ApiError(409, "delivery.already_started");
       if (ex) await tx.query("update deliveries set courier_user_id = $3, assigned_by = $4, assigned_at = now(), updated_at = now() where order_id = $1 and tenant_id = $2", [orderId, tenantId, courierUserId, userId]);
@@ -140,7 +143,8 @@ export class FulfillmentService {
           order by (d.status in ('assigned', 'picked_up')) desc, d.assigned_at desc limit 50`, [tenantId, courierId]);
       const items = await this.orders.loadItems(tx, tenantId, r.rows.map((x) => x.id));
       // kuryer mijoz telefonini to'liq ko'radi (qo'ng'iroq uchun) — faqat o'ziga biriktirilgan buyurtmada
-      return { items: r.rows.map((x) => ({ delivery_id: x.delivery_id, delivery_status: x.d_status, assigned_at: x.assigned_at, order: orderDto(x, items.get(x.id) ?? [], false) })) };
+      const onHand = await this.cash.onHand(tx, tenantId, courierId);
+      return { cash_on_hand_tiyin: onHand, cash_limit_tiyin: COURIER_CASH_LIMIT_TIYIN, items: r.rows.map((x) => ({ delivery_id: x.delivery_id, delivery_status: x.d_status, assigned_at: x.assigned_at, order: orderDto(x, items.get(x.id) ?? [], false) })) };
     });
   }
 
