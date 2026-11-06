@@ -21,6 +21,9 @@ Holat: **kod tomoni tayyor, lekin pilotga chiqish uchun quyidagi tashqi va inson
 - Redis: `maxmemory-policy noeviction` (BullMQ), persistence yoqilgan. Ko'p nusxa: Redis qulf (`job:loyalty:daily`) bitta nusxada bajaradi; BFF yangilash umumlashtirishi xotirada — ko'p nusxada API'da qisqa «reuse» oynasi qo'shiladi (O6 hosting aniq bo'lgach).
 - `EVENTS_DISPATCH=on` (outbox), `BACKGROUND_JOBS=on` (ball muddati va ledger solishtirish).
 
+## 2a. Xabarnomalar (xaridorga)
+Buyurtma holati o'zgarganda (qabul, tasdiq, tayyor, yo'lda, bajarildi, bekor, yetkazilmadi) xabar navbatga yoziladi va fonda yuboriladi: Telegram (foydalanuvchi `telegram_id` va `TELEGRAM_BOT_TOKEN` bo'lsa), aks holda SMS. Xato bo'lsa 5 martagacha kechikish bilan qayta uriniladi. **Hozir SMS provayder soxta (mock) — haqiqiy SMS faqat O10 provayder ulangach ketadi.** Xabar matnida shaxsiy ma'lumot yo'q (faqat do'kon nomi va buyurtma raqami).
+
 ## 3. Zaxira va tiklash (Texnik spetsifikatsiya §5: yo'qotish ≤ 15 daqiqa, tiklash ≤ 4 soat)
 - `deploy/backup.sh` — `pg_dump` (cron: har 4 soatda) + **WAL arxivlash** (`archive_mode=on`, `archive_command` → S3) — 15 daqiqalik chegara uchun majburiy.
 - `deploy/restore-test.sh` — **oyiga bir marta** oxirgi nusxani vaqtinchalik bazaga tiklab tekshiradi. Natijani jurnalga yozing.

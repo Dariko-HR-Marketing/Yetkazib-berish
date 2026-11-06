@@ -7,6 +7,7 @@ import { EventsService } from "../audit-events/events.service";
 import { decodeCursor, encodeCursor } from "../catalog/stock-state";
 import { maskPhone } from "../identity/identity.service";
 import { LoyaltyService, POINT_TIYIN } from "../loyalty/loyalty.service";
+import { NotificationsService } from "../notifications/notifications.service";
 import { PaymentsService } from "../payments/payments.service";
 import { FeaturesService } from "../plans-flags/features.service";
 import { StorefrontService } from "./storefront.service";
@@ -41,7 +42,7 @@ export const orderDto = (o: OrderRow, items: ItemRow[], mask: boolean, delivery?
 @Injectable()
 export class OrdersService {
   constructor(private readonly db: DbService, private readonly shops: StorefrontService, private readonly features: FeaturesService,
-              private readonly audit: AuditService, private readonly events: EventsService, private readonly loyalty: LoyaltyService, private readonly payments: PaymentsService, private readonly clock: Clock) {}
+              private readonly audit: AuditService, private readonly events: EventsService, private readonly loyalty: LoyaltyService, private readonly payments: PaymentsService, private readonly clock: Clock, private readonly notify: NotificationsService) {}
 
   async loadItems(tx: Tx, tenantId: string, ids: string[]): Promise<Map<string, ItemRow[]>> {
     const m = new Map<string, ItemRow[]>();
@@ -112,6 +113,7 @@ export class OrdersService {
           [o.id, shop.id, l.p.id, l.p.name_uz, l.p.name_ru, l.p.unit, l.q, Number(l.p.price_tiyin), l.total]);
       }
       await tx.query("insert into order_status_history (tenant_id, order_id, from_status, to_status, actor_id) values ($1,$2,null,'placed',$3)", [shop.id, o.id, userId]);
+      await this.notify.enqueue(tx, shop.id, userId, "notify.order_placed", { number: Number(o.number), shop: shop.name });
       await this.events.emit(tx, "order.placed", { order_id: o.id, amount_tiyin: subtotal + fee - discount, payment_type: d.payment_type, channel: d.channel }, { tenantId: shop.id, actorId: userId, source: d.channel === "telegram" ? "telegram" : "vitrina" });
       return { ...orderDto(o, (await this.loadItems(tx, shop.id, [o.id])).get(o.id) ?? [], false), payment };
     });
@@ -232,6 +234,11 @@ export class OrdersService {
     if (to === "cancelled") await this.events.emit(tx, "order.failed", { reason: (byCustomer ? "customer_cancelled" : "shop_cancelled") }, { tenantId, actorId, source: byCustomer ? "vitrina" : "panel" });
     if (to === "failed") await this.events.emit(tx, "order.failed", { reason: "delivery_failed" }, { tenantId, actorId, source: "kuryer" });
     if (to === "completed") await this.events.emit(tx, "order.delivered", { duration_seconds: Math.max(0, Math.round((Date.now() - new Date(o.created_at).getTime()) / 1000)) }, { tenantId, actorId, source: "panel" });
+    const tpl = to === "accepted" ? "order_accepted" : to === "ready" ? (o.fulfillment === "pickup" ? "order_ready_pickup" : null) : to === "delivering" ? "order_delivering" : to === "completed" ? "order_completed" : to === "cancelled" && !byCustomer ? "order_cancelled" : to === "failed" ? "order_failed" : null;
+    if (tpl) {
+      const shopName = (await tx.query<{ name: string }>("select name from tenants where id = $1", [tenantId])).rows[0]?.name ?? "";
+      await this.notify.enqueue(tx, tenantId, o.customer_id, `notify.${tpl}`, { number: Number(o.number), shop: shopName });
+    }
     const fresh = items.map((i) => ({ ...i, reserved_milli: to === "cancelled" || to === "completed" || to === "failed" ? "0" : i.reserved_milli }));
     return orderDto({ ...o, status: to, cancel_reason: why }, fresh, !byCustomer);
   }

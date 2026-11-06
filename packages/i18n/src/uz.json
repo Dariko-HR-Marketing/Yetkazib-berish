@@ -517,5 +517,12 @@
  "cash.empty": "Kuryerlar yo'q",
  "cash.last": "Oxirgi topshirish: {date}",
  "cash.never": "Hali topshirmagan",
- "courier.cash_hand": "Sizda naqd: {amount} (chegara {limit})"
+ "courier.cash_hand": "Sizda naqd: {amount} (chegara {limit})",
+ "notify.order_placed": "{shop}: №{number} buyurtmangiz qabul qilindi",
+ "notify.order_accepted": "{shop}: №{number} buyurtmangiz tasdiqlandi",
+ "notify.order_ready_pickup": "{shop}: №{number} buyurtmangiz tayyor, olib ketishingiz mumkin",
+ "notify.order_delivering": "{shop}: №{number} buyurtmangiz yo'lda",
+ "notify.order_completed": "{shop}: №{number} buyurtma bajarildi. Rahmat!",
+ "notify.order_cancelled": "{shop}: №{number} buyurtma bekor qilindi",
+ "notify.order_failed": "{shop}: №{number} buyurtmani yetkazib bo'lmadi. Do'kon siz bilan bog'lanadi"
 }

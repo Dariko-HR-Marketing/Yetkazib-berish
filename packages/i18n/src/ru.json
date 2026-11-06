@@ -517,5 +517,12 @@
  "cash.empty": "Курьеров нет",
  "cash.last": "Последняя сдача: {date}",
  "cash.never": "Ещё не сдавал",
- "courier.cash_hand": "У вас наличных: {amount} (лимит {limit})"
+ "courier.cash_hand": "У вас наличных: {amount} (лимит {limit})",
+ "notify.order_placed": "{shop}: ваш заказ №{number} принят",
+ "notify.order_accepted": "{shop}: ваш заказ №{number} подтверждён",
+ "notify.order_ready_pickup": "{shop}: ваш заказ №{number} готов, можно забирать",
+ "notify.order_delivering": "{shop}: ваш заказ №{number} в пути",
+ "notify.order_completed": "{shop}: заказ №{number} выполнен. Спасибо!",
+ "notify.order_cancelled": "{shop}: заказ №{number} отменён",
+ "notify.order_failed": "{shop}: заказ №{number} доставить не удалось. Магазин свяжется с вами"
 }
