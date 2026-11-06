@@ -178,3 +178,18 @@ Pul platformadan o'tmaydi: platforma faqat provayder webhooki orqali holatni yoz
 - **Kassa:** kuryer naqdi, topshirish (o'zgarmas jurnal), 1 500 000 so'm chegarasi, `/kassa`.
 - **Admin:** hujjatni kuchga kiritish tugmasi.
 - Testlar: API 276, web 27, E2E 128 + ochiq rejim 9.
+
+## 15. Qo'shimcha sahifalar va imkoniyatlar (2026-11-06)
+| Imkoniyat | Holat |
+|---|---|
+| Landing (`/`) + ommaviy paketlar `GET /v1/plans`, `/panel` (rolga ko'ra yo'naltirish) | ✅ |
+| Audit jurnali `GET /v1/audit` + `/audit` (egasi, menejer, buxgalter; telefon maskalangan, IP yo'q) | ✅ |
+| Mijoz 360 `GET /v1/customers` + `/mijozlar` (egasi, menejer, marketolog; maskalangan, xaridorga ko'rsatilmaydi) | ✅ |
+| Xaridor profili `/profil` (marketing roziligi alohida, rozilik tarixi, chiqish) | ✅ |
+| Filial ish vaqti `PATCH /v1/branches/{id}`, `open_now`, yopiq filialda `422 order.branch_closed` (Asia/Tashkent) | ✅ |
+| Mahsulot rasmi `image_url` (faqat https), CSP `img-src https:` | ✅ |
+| Saqlangan manzillar `customer_addresses` (RLS: faqat egasi), ≤ 5, savatda chip | ✅ |
+| Migratsiya | `0016_customer_addresses` |
+| **Hali bajarilmagan (yurist/tashqi bog'liqlik)** | Payme/Click/Uzum, SMS/Telegram, fiskal chek, hosting, pentest — foydalanuvchi ma'lumotlarini kutmoqda |
+| Rasm yuklash (S3/CDN) va promo-kodlar | v1 dan keyin (alohida qaror) |
+- Testlar: API 292; ochiq rejim E2E 13; asosiy E2E layout 139+ (yangi sahifalar a11y/responsive ro'yxatida).
