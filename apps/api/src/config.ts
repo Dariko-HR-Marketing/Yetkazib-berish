@@ -25,7 +25,7 @@ const schema = z.object({
   EVENTS_DISPATCH: z.enum(["on", "off"]).default("off"),
   /** Kunlik ishlar: ball muddati va ledger solishtirish. Testlarda o'chiq. */
   /** Prometheus /v1/metrics uchun Bearer token; bo'sh bo'lsa endpoint yopiq (404). */
-  METRICS_TOKEN: z.string().min(16).optional(),
+  METRICS_TOKEN: z.string().optional().transform((s) => (s && s.length >= 16 ? s : undefined)),
   BACKGROUND_JOBS: z.enum(["on", "off"]).default("on"),
   /** IP bo'yicha so'rovlar chegarasi (daqiqada): kirish endpointlari va umumiy. */
   RATE_LIMIT_AUTH_PER_MIN: z.coerce.number().int().positive().default(30),
