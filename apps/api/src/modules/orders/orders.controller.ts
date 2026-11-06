@@ -1,10 +1,12 @@
-import { Body, Controller, Get, HttpCode, Param, Post, Query, Req } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, Param, Post, Put, Query, Req } from "@nestjs/common";
 import { Public, TenantScoped } from "../../common/access";
 import { ApiError } from "../../common/errors";
 import type { AppRequest } from "../../common/request-context";
 import { parse, uuidSchema } from "../../common/validate";
 import { z } from "zod";
-import { cancelDto, orderCreateDto, orderListDto, orderStatusDto, shopProductsDto } from "./orders.dto";
+import { cancelDto, deliverySettingsDto, orderCreateDto, orderListDto, orderStatusDto, shopProductsDto } from "./orders.dto";
+import { DeliverySettingsService } from "./delivery-settings.service";
+import { LoyaltyService } from "../loyalty/loyalty.service";
 import { OrdersService } from "./orders.service";
 import { StorefrontService } from "./storefront.service";
 
@@ -13,7 +15,7 @@ const limitDto = z.object({ limit: z.coerce.number().int().min(1).max(50).defaul
 
 @Controller("v1")
 export class OrdersController {
-  constructor(private readonly shops: StorefrontService, private readonly orders: OrdersService) {}
+  constructor(private readonly shops: StorefrontService, private readonly orders: OrdersService, private readonly delivery: DeliverySettingsService, private readonly loyalty: LoyaltyService) {}
 
   // ommaviy vitrina
   @Public() @Get("shops/:slug")
@@ -37,6 +39,16 @@ export class OrdersController {
 
   @Post("shops/:slug/orders/:id/cancel") @HttpCode(200)
   cancel(@Param("slug") slug: string, @Param("id") oid: string, @Body() b: unknown, @Req() req: AppRequest) { return this.orders.customerCancel(slug, req.auth!.userId, id(oid), parse(cancelDto, b ?? {}).reason); }
+
+  @Get("shops/:slug/loyalty")
+  async myLoyalty(@Param("slug") slug: string, @Req() req: AppRequest) { const s = await this.shops.resolve(slug); return this.loyalty.summary(s.id, req.auth!.userId); }
+
+  // yetkazish sozlamalari
+  @Get("delivery/settings") @TenantScoped("orders:read")
+  getDelivery(@Req() req: AppRequest) { return this.delivery.get(req.tenant!.tenantId, req.auth!.userId); }
+
+  @Put("delivery/settings") @TenantScoped("tenant:manage")
+  setDelivery(@Body() b: unknown, @Req() req: AppRequest) { return this.delivery.set(req.tenant!.tenantId, req.auth!.userId, parse(deliverySettingsDto, b), req.ip); }
 
   // panel
   @Get("orders") @TenantScoped("orders:read")

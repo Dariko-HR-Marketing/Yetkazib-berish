@@ -215,6 +215,10 @@ describe("OpenAPI shartnomasi", () => {
     await op("post", "/v1/shops/{slug}/orders", `/v1/shops/${slug}/orders`, 409, { token: c.token, body: { ...body, items: [{ product_id: p, quantity_milli: 99000 }] } });
     const ord = await op("post", "/v1/shops/{slug}/orders", `/v1/shops/${slug}/orders`, 201, { token: c.token, body });
     await op("get", "/v1/shops/{slug}/orders", `/v1/shops/${slug}/orders`, 200, { token: c.token });
+    await op("get", "/v1/shops/{slug}/loyalty", `/v1/shops/${slug}/loyalty`, 200, { token: c.token });
+    await op("get", "/v1/delivery/settings", "/v1/delivery/settings", 200, T);
+    await op("put", "/v1/delivery/settings", "/v1/delivery/settings", 200, { ...T, body: { fee_tiyin: 0, free_from_tiyin: null, min_order_tiyin: 0 } });
+    await op("put", "/v1/delivery/settings", "/v1/delivery/settings", 400, { ...T, body: { fee_tiyin: -5, free_from_tiyin: null, min_order_tiyin: 0 } });
     await op("get", "/v1/shops/{slug}/orders/{id}", `/v1/shops/${slug}/orders/${ord.body.id}`, 200, { token: c.token });
     await op("get", "/v1/orders", "/v1/orders?status=placed", 200, T);
     await op("get", "/v1/orders/{id}", `/v1/orders/${ord.body.id}`, 200, T);

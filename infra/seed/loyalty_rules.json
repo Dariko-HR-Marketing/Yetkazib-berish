@@ -1,0 +1,31 @@
+{
+  "_izoh": "Xaridor uchun yagona atama: BALL (bonus emas). 'Bonus' faqat kuryer to'lov koeffitsienti.",
+  "point_value_uzs": 1,
+  "cashable": false,
+  "transferable": false,
+  "expiry_days": 90,
+  "max_pay_share_of_goods_pct": 30,
+  "delivery_payable_by_points": false,
+  "accrual_hold_hours": 24,
+  "accrual_base": "faqat pul bilan to'langan mahsulot qismi",
+  "default_cashback_pct": 2,
+  "tiers": [
+    {
+      "name": "Bronza",
+      "from_uzs_90d": 0,
+      "extra_pct": 0
+    },
+    {
+      "name": "Kumush",
+      "from_uzs_90d": 500000,
+      "extra_pct": 1
+    },
+    {
+      "name": "Oltin",
+      "from_uzs_90d": 1500000,
+      "extra_pct": 3
+    }
+  ],
+  "ledger": "o'zgarmas yozuvlar (ledger_entries), har kuni balans solishtiriladi",
+  "legal_open": "Ballar elektron pul hisoblanmasligi — yurist xulosasi kerak"
+}

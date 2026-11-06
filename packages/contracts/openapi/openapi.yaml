@@ -852,6 +852,36 @@ paths:
         '400': { $ref: '#/components/responses/Error' }
         '403': { $ref: '#/components/responses/Error' }
         '404': { $ref: '#/components/responses/Error' }
+  /v1/shops/{slug}/loyalty:
+    get:
+      tags: [storefront]
+      operationId: myLoyalty
+      summary: Xaridorning shu do'kondagi ball balansi
+      parameters: [{ name: slug, in: path, required: true, schema: { type: string } }]
+      responses:
+        '200': { description: Ball, content: { application/json: { schema: { $ref: '#/components/schemas/LoyaltySummary' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/delivery/settings:
+    get:
+      tags: [orders]
+      operationId: getDeliverySettings
+      parameters: [{ $ref: '#/components/parameters/TenantId' }]
+      responses:
+        '200': { description: Yetkazish sozlamalari, content: { application/json: { schema: { $ref: '#/components/schemas/DeliverySettings' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+    put:
+      tags: [orders]
+      operationId: setDeliverySettings
+      summary: Yetkazish narxi, bepul chegarasi va minimal buyurtma (faqat egasi)
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/DeliverySettings' } } } }
+      responses:
+        '200': { description: Saqlandi, content: { application/json: { schema: { $ref: '#/components/schemas/DeliverySettings' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
 components:
   securitySchemes:
     bearer: { type: http, scheme: bearer, bearerFormat: JWT }
@@ -1341,12 +1371,13 @@ components:
         - { type: object, required: [errors], properties: { errors: { type: array, items: { $ref: '#/components/schemas/ImportRowError' } } } }
     Shop:
       type: object
-      required: [slug, name, branches, features]
+      required: [slug, name, branches, features, delivery]
       properties:
         slug: { type: string }
         name: { type: string }
         branches: { type: array, items: { type: object, required: [id, name, address], properties: { id: { type: string, format: uuid }, name: { type: string }, address: { type: string } } } }
-        features: { type: object, required: [cash, stock_visible], properties: { cash: { type: boolean }, stock_visible: { type: boolean } } }
+        features: { type: object, required: [cash, stock_visible, loyalty], properties: { cash: { type: boolean }, stock_visible: { type: boolean }, loyalty: { type: boolean } } }
+        delivery: { $ref: '#/components/schemas/DeliverySettings' }
     ShopProduct:
       type: object
       required: [id, category_id, name_uz, name_ru, unit, price_tiyin, availability]
@@ -1380,6 +1411,7 @@ components:
         note: { type: string, maxLength: 300 }
         payment_type: { type: string, enum: [cash], default: cash }
         channel: { type: string, enum: [vitrina, telegram], default: vitrina }
+        points_to_use: { type: integer, minimum: 0, default: 0, description: Ball bilan to'lash (1 ball = 1 so'm; mahsulot narxining 30% igacha) }
     OrderItem:
       type: object
       required: [id, product_id, name_uz, name_ru, unit, quantity_milli, price_tiyin, line_total_tiyin, pick_status, picked_milli]
@@ -1396,7 +1428,7 @@ components:
         line_total_tiyin: { type: integer }
     Order:
       type: object
-      required: [id, number, branch_id, status, fulfillment, payment_type, channel, subtotal_tiyin, delivery_fee_tiyin, total_tiyin, delivery_address, customer_phone, note, cancel_reason, created_at, updated_at, items]
+      required: [id, number, branch_id, status, fulfillment, payment_type, channel, subtotal_tiyin, delivery_fee_tiyin, discount_tiyin, points_spent, total_tiyin, delivery_address, customer_phone, note, cancel_reason, created_at, updated_at, items]
       properties:
         id: { type: string, format: uuid }
         number: { type: integer }
@@ -1407,6 +1439,8 @@ components:
         channel: { type: string }
         subtotal_tiyin: { type: integer }
         delivery_fee_tiyin: { type: integer }
+        discount_tiyin: { type: integer, description: Ball chegirmasi }
+        points_spent: { type: integer }
         total_tiyin: { type: integer }
         delivery_address: { type: [string, 'null'] }
         customer_phone: { type: [string, 'null'], description: Panelda maskalangan }
@@ -1456,3 +1490,25 @@ components:
         delivery_status: { type: string, enum: [assigned, picked_up, delivered, failed] }
         assigned_at: { type: string, format: date-time }
         order: { $ref: '#/components/schemas/Order' }
+    DeliverySettings:
+      type: object
+      required: [fee_tiyin, free_from_tiyin, min_order_tiyin]
+      additionalProperties: false
+      properties:
+        fee_tiyin: { type: integer, minimum: 0 }
+        free_from_tiyin: { type: [integer, 'null'], minimum: 0, description: "Shu summadan yetkazish bepul (bo'sh = yo'q)" }
+        min_order_tiyin: { type: integer, minimum: 0 }
+    LoyaltySummary:
+      type: object
+      required: [enabled, balance_points, spendable_points, pending_points, tier, cashback_pct, point_value_tiyin, max_pay_share_pct, hold_hours, expiry_days]
+      properties:
+        enabled: { type: boolean }
+        balance_points: { type: integer }
+        spendable_points: { type: integer }
+        pending_points: { type: integer }
+        tier: { type: string }
+        cashback_pct: { type: integer }
+        point_value_tiyin: { type: integer }
+        max_pay_share_pct: { type: integer }
+        hold_hours: { type: integer }
+        expiry_days: { type: integer }

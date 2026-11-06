@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ApiError } from "../../common/errors";
 import { DbService, type DbCtx } from "../../db/db.service";
 import { FeaturesService } from "../plans-flags/features.service";
+import { DeliverySettingsService } from "./delivery-settings.service";
 import { decodeCursor, encodeCursor, LOW_STOCK_MILLI } from "../catalog/stock-state";
 
 export interface ShopRef { id: string; name: string; slug: string }
@@ -9,7 +10,7 @@ export interface ShopRef { id: string; name: string; slug: string }
 /** Ommaviy vitrina: kirishsiz o'qish. Faqat faol do'kon va storefront.own yoqilgan bo'lsa; aks holda 404 (mavjudligi oshkor bo'lmaydi). */
 @Injectable()
 export class StorefrontService {
-  constructor(private readonly db: DbService, private readonly features: FeaturesService) {}
+  constructor(private readonly db: DbService, private readonly features: FeaturesService, private readonly delivery: DeliverySettingsService) {}
 
   /** slug -> do'kon. Yagona platforma-kontekst so'rovi: faqat id/nom/holat o'qiladi (RLS tenant kontekstini talab qiladi). */
   async resolve(slug: string): Promise<ShopRef> {
@@ -25,7 +26,7 @@ export class StorefrontService {
     const s = await this.resolve(slug);
     const [cash, stockVisible] = await Promise.all([this.features.can(s.id, "payment.cash"), this.features.can(s.id, "stock.visible")]);
     const branches = await this.db.tx({ tenantId: s.id }, (tx) => tx.query<{ id: string; name: string; address: string }>("select id, name, address from branches where tenant_id = $1 order by created_at", [s.id]));
-    return { slug: s.slug, name: s.name, branches: branches.rows, features: { cash, stock_visible: stockVisible } };
+    return { slug: s.slug, name: s.name, branches: branches.rows, features: { cash, stock_visible: stockVisible, loyalty: await this.features.can(s.id, "loyalty.points") }, delivery: await this.delivery.get(s.id) };
   }
 
   async categories(slug: string) {

@@ -10,6 +10,7 @@ export const orderCreateDto = z.object({
   note: z.string().trim().max(300).optional(),
   payment_type: z.literal("cash").default("cash"),
   channel: z.enum(["vitrina", "telegram"]).default("vitrina"),
+  points_to_use: z.number().int().min(0).max(10_000_000).default(0),
 }).strict().refine((v) => v.fulfillment === "pickup" || !!v.delivery_address, { message: "validation.failed", path: ["delivery_address"] });
 
 export const shopProductsDto = z.object({
@@ -22,3 +23,9 @@ export const orderListDto = z.object({
 });
 export const orderStatusDto = z.object({ status: z.enum(["accepted", "completed", "cancelled"]), reason: z.string().trim().max(200).optional() }).strict();
 export const cancelDto = z.object({ reason: z.string().trim().max(200).optional() }).strict();
+
+export const deliverySettingsDto = z.object({
+  fee_tiyin: z.number().int().min(0).max(100_000_000),
+  free_from_tiyin: z.number().int().min(0).max(100_000_000_000).nullable(),
+  min_order_tiyin: z.number().int().min(0).max(100_000_000_000),
+}).strict();

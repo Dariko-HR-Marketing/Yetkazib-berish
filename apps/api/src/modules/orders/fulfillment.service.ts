@@ -3,6 +3,7 @@ import { ApiError } from "../../common/errors";
 import { DbService, type Tx } from "../../db/db.service";
 import { AuditService } from "../audit-events/audit.service";
 import { EventsService } from "../audit-events/events.service";
+import { LoyaltyService, POINT_TIYIN, RULES } from "../loyalty/loyalty.service";
 import { lineTotal, orderDto, OrdersService, type OrderRow, type Status } from "./orders.service";
 
 const FRESH_LOCATION_MS = 5 * 60_000;
@@ -10,7 +11,7 @@ const FRESH_LOCATION_MS = 5 * 60_000;
 /** Yig'ish, kuryerga biriktirish va yetkazish. Barcha o'tishlar OrdersService.transition orqali (qoldiq va jurnal bitta joyda). */
 @Injectable()
 export class FulfillmentService {
-  constructor(private readonly db: DbService, private readonly orders: OrdersService, private readonly audit: AuditService, private readonly events: EventsService) {}
+  constructor(private readonly db: DbService, private readonly orders: OrdersService, private readonly audit: AuditService, private readonly events: EventsService, private readonly loyalty: LoyaltyService) {}
 
   private async lockOrder(tx: Tx, tenantId: string, id: string): Promise<OrderRow> {
     const o = (await tx.query<OrderRow>("select *, '' as cur_at from orders where id = $1 and tenant_id = $2 for update", [id, tenantId])).rows[0];
@@ -81,7 +82,11 @@ export class FulfillmentService {
         await tx.query("update order_items set reserved_milli = $3, line_total_tiyin = $4 where id = $1 and tenant_id = $2", [i.id, tenantId, picked, total]);
       }
       if (subtotal === 0) throw new ApiError(409, "order.nothing_picked"); // hammasi yo'q — buyurtmani bekor qiling
-      await tx.query("update orders set subtotal_tiyin = $3, total_tiyin = $3 + delivery_fee_tiyin, picked_at = now() where id = $1 and tenant_id = $2", [orderId, tenantId, subtotal]);
+      // ball bilan to'lash: yig'ishdan keyin jami kamaygan bo'lsa, chegara (30%) qayta tekshiriladi, ortiqcha ball qaytariladi
+      let points = Number(o.points_spent);
+      const allowed = Math.floor((subtotal * RULES.max_pay_share_of_goods_pct) / 100 / POINT_TIYIN);
+      if (points > allowed) { await this.loyalty.refundDifference(tx, tenantId, o.customer_id, orderId, points - allowed); points = allowed; }
+      await tx.query("update orders set subtotal_tiyin = $3, points_spent = $4, discount_tiyin = $5, total_tiyin = $3 + delivery_fee_tiyin - $5, picked_at = now() where id = $1 and tenant_id = $2", [orderId, tenantId, subtotal, points, points * POINT_TIYIN]);
       await this.events.emit(tx, "order.picked", { substitutions: 0, out_of_stock: missing }, { tenantId, actorId: userId, source: "panel" });
       return this.orders.transition(tx, tenantId, userId, orderId, "ready", undefined, false);
     });

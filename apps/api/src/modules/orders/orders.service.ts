@@ -5,6 +5,7 @@ import { AuditService } from "../audit-events/audit.service";
 import { EventsService } from "../audit-events/events.service";
 import { decodeCursor, encodeCursor } from "../catalog/stock-state";
 import { maskPhone } from "../identity/identity.service";
+import { LoyaltyService, POINT_TIYIN } from "../loyalty/loyalty.service";
 import { FeaturesService } from "../plans-flags/features.service";
 import { StorefrontService } from "./storefront.service";
 
@@ -20,7 +21,7 @@ export const lineTotal = (quantityMilli: number, priceTiyin: number): number => 
 
 export interface OrderRow {
   id: string; number: string; branch_id: string; customer_id: string; status: Status; fulfillment: string; payment_type: string; channel: string;
-  subtotal_tiyin: string; delivery_fee_tiyin: string; total_tiyin: string; delivery_address: string | null; customer_phone: string | null; note: string | null;
+  subtotal_tiyin: string; delivery_fee_tiyin: string; discount_tiyin: string; points_spent: string; total_tiyin: string; delivery_address: string | null; customer_phone: string | null; note: string | null;
   cancel_reason: string | null; created_at: Date; updated_at: Date; cur_at: string;
 }
 export interface ItemRow { id: string; product_id: string; name_uz: string; name_ru: string | null; unit: string; quantity_milli: string; price_tiyin: string; line_total_tiyin: string; pick_status: string; picked_milli: string | null; reserved_milli: string }
@@ -29,7 +30,7 @@ export const itemDto = (i: ItemRow) => ({ id: i.id, product_id: i.product_id, na
 export interface DeliveryRef { courier_user_id: string; status: string }
 export const orderDto = (o: OrderRow, items: ItemRow[], mask: boolean, delivery?: DeliveryRef | null) => ({
   id: o.id, number: Number(o.number), branch_id: o.branch_id, status: o.status, fulfillment: o.fulfillment, payment_type: o.payment_type, channel: o.channel,
-  subtotal_tiyin: Number(o.subtotal_tiyin), delivery_fee_tiyin: Number(o.delivery_fee_tiyin), total_tiyin: Number(o.total_tiyin),
+  subtotal_tiyin: Number(o.subtotal_tiyin), delivery_fee_tiyin: Number(o.delivery_fee_tiyin), discount_tiyin: Number(o.discount_tiyin), points_spent: Number(o.points_spent), total_tiyin: Number(o.total_tiyin),
   delivery_address: o.delivery_address, customer_phone: mask ? maskPhone(o.customer_phone) : o.customer_phone, note: o.note, cancel_reason: o.cancel_reason,
   created_at: o.created_at, updated_at: o.updated_at, items: items.map(itemDto),
   ...(delivery !== undefined ? { delivery } : {}),
@@ -38,7 +39,7 @@ export const orderDto = (o: OrderRow, items: ItemRow[], mask: boolean, delivery?
 @Injectable()
 export class OrdersService {
   constructor(private readonly db: DbService, private readonly shops: StorefrontService, private readonly features: FeaturesService,
-              private readonly audit: AuditService, private readonly events: EventsService) {}
+              private readonly audit: AuditService, private readonly events: EventsService, private readonly loyalty: LoyaltyService) {}
 
   async loadItems(tx: Tx, tenantId: string, ids: string[]): Promise<Map<string, ItemRow[]>> {
     const m = new Map<string, ItemRow[]>();
@@ -58,9 +59,10 @@ export class OrdersService {
   }
 
   // ---------------------------------------------------------------- xaridor
-  async place(slug: string, userId: string, d: { branch_id: string; items: { product_id: string; quantity_milli: number }[]; fulfillment: "delivery" | "pickup"; delivery_address?: string; note?: string; payment_type: "cash"; channel: "vitrina" | "telegram" }) {
+  async place(slug: string, userId: string, d: { branch_id: string; items: { product_id: string; quantity_milli: number }[]; fulfillment: "delivery" | "pickup"; delivery_address?: string; note?: string; payment_type: "cash"; channel: "vitrina" | "telegram"; points_to_use: number }) {
     const shop = await this.shops.resolve(slug);
     if (!(await this.features.can(shop.id, "payment.cash"))) throw new ApiError(422, "order.payment_unavailable");
+    if (d.points_to_use > 0 && !(await this.loyalty.enabled(shop.id))) throw new ApiError(422, "loyalty.disabled");
     const merged = new Map<string, number>();
     for (const i of d.items) merged.set(i.product_id, (merged.get(i.product_id) ?? 0) + i.quantity_milli);
     const ids = [...merged.keys()].sort(); // qulf tartibi: deadlock bo'lmasin
@@ -86,17 +88,23 @@ export class OrdersService {
 
       const lines = ids.map((id) => { const p = byId.get(id)!; const q = merged.get(id)!; return { p, q, total: lineTotal(q, Number(p.price_tiyin)) }; });
       const subtotal = lines.reduce((a, l) => a + l.total, 0);
+      const cfg = (await tx.query<{ fee_tiyin: string; free_from_tiyin: string | null; min_order_tiyin: string }>("select fee_tiyin, free_from_tiyin, min_order_tiyin from delivery_settings where tenant_id = $1", [shop.id])).rows[0];
+      const minOrder = Number(cfg?.min_order_tiyin ?? 0);
+      if (subtotal < minOrder) throw new ApiError(422, "order.below_minimum", { min_tiyin: minOrder, subtotal_tiyin: subtotal }, { min: Math.round(minOrder / 100) });
+      const fee = d.fulfillment === "delivery" && cfg ? (cfg.free_from_tiyin !== null && subtotal >= Number(cfg.free_from_tiyin) ? 0 : Number(cfg.fee_tiyin)) : 0;
+      const discount = d.points_to_use * POINT_TIYIN;
       const phone = (await tx.query<{ phone: string | null }>("select phone from users where id = $1", [userId])).rows[0]?.phone ?? null;
       const o = (await tx.query<OrderRow>(
-        `insert into orders (tenant_id, branch_id, customer_id, fulfillment, payment_type, channel, subtotal_tiyin, delivery_fee_tiyin, total_tiyin, delivery_address, customer_phone, note)
-         values ($1,$2,$3,$4,$5,$6,$7,0,$7,$8,$9,$10) returning *, to_char(created_at at time zone 'utc', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') as cur_at`,
-        [shop.id, d.branch_id, userId, d.fulfillment, d.payment_type, d.channel, subtotal, d.fulfillment === "delivery" ? d.delivery_address : null, phone, d.note ?? null])).rows[0]!;
+        `insert into orders (tenant_id, branch_id, customer_id, fulfillment, payment_type, channel, subtotal_tiyin, delivery_fee_tiyin, discount_tiyin, points_spent, total_tiyin, delivery_address, customer_phone, note)
+         values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) returning *, to_char(created_at at time zone 'utc', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') as cur_at`,
+        [shop.id, d.branch_id, userId, d.fulfillment, d.payment_type, d.channel, subtotal, fee, discount, d.points_to_use, subtotal + fee - discount, d.fulfillment === "delivery" ? d.delivery_address : null, phone, d.note ?? null])).rows[0]!;
+      if (d.points_to_use > 0) await this.loyalty.spendForOrder(tx, shop.id, userId, o.id, d.points_to_use, subtotal); // chegara va balansni tekshiradi; xatoda butun buyurtma bekor
       for (const l of lines) {
         await tx.query("insert into order_items (order_id, tenant_id, product_id, name_uz, name_ru, unit, quantity_milli, price_tiyin, line_total_tiyin, reserved_milli) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$7)",
           [o.id, shop.id, l.p.id, l.p.name_uz, l.p.name_ru, l.p.unit, l.q, Number(l.p.price_tiyin), l.total]);
       }
       await tx.query("insert into order_status_history (tenant_id, order_id, from_status, to_status, actor_id) values ($1,$2,null,'placed',$3)", [shop.id, o.id, userId]);
-      await this.events.emit(tx, "order.placed", { order_id: o.id, amount_tiyin: subtotal, payment_type: d.payment_type, channel: d.channel }, { tenantId: shop.id, actorId: userId, source: d.channel === "telegram" ? "telegram" : "vitrina" });
+      await this.events.emit(tx, "order.placed", { order_id: o.id, amount_tiyin: subtotal + fee - discount, payment_type: d.payment_type, channel: d.channel }, { tenantId: shop.id, actorId: userId, source: d.channel === "telegram" ? "telegram" : "vitrina" });
       return orderDto(o, (await this.loadItems(tx, shop.id, [o.id])).get(o.id) ?? [], false);
     });
   }
@@ -201,6 +209,8 @@ export class OrdersService {
         await tx.query("update order_items set reserved_milli = 0 where id = $1 and tenant_id = $2", [i.id, tenantId]);
       }
     }
+    if ((to === "cancelled" || to === "failed") && Number(o.points_spent) > 0) await this.loyalty.reverseForOrder(tx, tenantId, o.customer_id, id, Number(o.points_spent));
+    if (to === "completed") await this.loyalty.accrueForOrder(tx, tenantId, o.customer_id, id, Number(o.subtotal_tiyin) - Number(o.discount_tiyin));
     const why = to === "cancelled" || to === "failed" ? reason ?? null : null;
     await tx.query("update orders set status = $3, cancel_reason = $4, updated_at = now(), delivered_at = case when $3 = 'completed' then now() else delivered_at end where id = $1 and tenant_id = $2", [id, tenantId, to, why]);
     await tx.query("insert into order_status_history (tenant_id, order_id, from_status, to_status, actor_id) values ($1,$2,$3,$4,$5)", [tenantId, id, from, to, actorId]);
