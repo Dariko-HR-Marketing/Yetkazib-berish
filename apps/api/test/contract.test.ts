@@ -225,6 +225,46 @@ describe("OpenAPI shartnomasi", () => {
     await op("post", "/v1/shops/{slug}/orders/{id}/cancel", `/v1/shops/${slug}/orders/${o2.body.id}/cancel`, 200, { token: c.token, body: { reason: "fikrim o'zgardi" } });
   });
 
+  it("javoblar shartnomaga mos: yig'ish, dispetcher, kuryer", async () => {
+    const o = await makeOwner(h, "+998901000001");
+    const T = { token: o.token, tenant: o.tenantId };
+    await call(h, "patch", `/v1/tenants/${o.tenantId}`, { ...T, body: { status: "active" } }).expect(200);
+    await h.admin.query("update tenants set plan_code = 'pro' where id = $1", [o.tenantId]);
+    const slug = (await call(h, "get", `/v1/tenants/${o.tenantId}`, T)).body.slug as string;
+    const br = (await call(h, "post", "/v1/branches", { ...T, body: { name: "Markaz", address: "Chilonzor 1" } }).expect(201)).body.id as string;
+    const p = (await call(h, "post", "/v1/products", { ...T, body: { name_uz: "Non", price_tiyin: 500000 } }).expect(201)).body.id as string;
+    await call(h, "put", `/v1/products/${p}/stock`, { ...T, body: { branch_id: br, quantity_milli: 10000 } }).expect(200);
+    const courier = await addStaff(h, o, "+998901000013", "courier");
+    const cid = (await h.admin.query("select id from users where phone = '+998901000013'")).rows[0].id as string;
+    const c = await signUp(h, "+998905550001");
+    const ord = (await call(h, "post", `/v1/shops/${slug}/orders`, { token: c.token, body: { branch_id: br, fulfillment: "delivery", delivery_address: "Toshkent, Bobur 5", items: [{ product_id: p, quantity_milli: 2000 }] } }).expect(201)).body;
+    await call(h, "post", `/v1/orders/${ord.id}/status`, { ...T, body: { status: "accepted" } }).expect(200);
+    await op("get", "/v1/picking", "/v1/picking", 200, T);
+    await op("post", "/v1/orders/{id}/pick/start", `/v1/orders/${ord.id}/pick/start`, 200, T);
+    await op("post", "/v1/orders/{id}/pick/finish", `/v1/orders/${ord.id}/pick/finish`, 409, T);
+    const itemId = (await call(h, "get", `/v1/orders/${ord.id}`, T)).body.items[0].id as string;
+    await op("put", "/v1/orders/{id}/items/{itemId}/pick", `/v1/orders/${ord.id}/items/${itemId}/pick`, 200, { ...T, body: { status: "picked" } });
+    await op("post", "/v1/orders/{id}/pick/finish", `/v1/orders/${ord.id}/pick/finish`, 200, T);
+    await op("get", "/v1/dispatch/couriers", "/v1/dispatch/couriers", 200, T);
+    await op("post", "/v1/orders/{id}/assign", `/v1/orders/${ord.id}/assign`, 200, { ...T, body: { courier_user_id: cid } });
+    const K = { token: courier.token, tenant: o.tenantId };
+    const mine = await op("get", "/v1/courier/deliveries", "/v1/courier/deliveries", 200, K);
+    const did = mine.body.items[0].delivery_id as string;
+    await op("post", "/v1/courier/location", "/v1/courier/location", 200, { ...K, body: { lat: 41.3, lng: 69.2 } });
+    await op("post", "/v1/courier/deliveries/{id}/pickup", `/v1/courier/deliveries/${did}/pickup`, 200, K);
+    await op("post", "/v1/courier/deliveries/{id}/deliver", `/v1/courier/deliveries/${did}/deliver`, 200, K);
+    const ord2 = (await call(h, "post", `/v1/shops/${slug}/orders`, { token: c.token, body: { branch_id: br, fulfillment: "delivery", delivery_address: "Toshkent, Bobur 5", items: [{ product_id: p, quantity_milli: 1000 }] } }).expect(201)).body;
+    await call(h, "post", `/v1/orders/${ord2.id}/status`, { ...T, body: { status: "accepted" } }).expect(200);
+    await call(h, "post", `/v1/orders/${ord2.id}/pick/start`, T).expect(200);
+    const i2 = (await call(h, "get", `/v1/orders/${ord2.id}`, T)).body.items[0].id as string;
+    await call(h, "put", `/v1/orders/${ord2.id}/items/${i2}/pick`, { ...T, body: { status: "picked" } }).expect(200);
+    await call(h, "post", `/v1/orders/${ord2.id}/pick/finish`, T).expect(200);
+    await call(h, "post", `/v1/orders/${ord2.id}/assign`, { ...T, body: { courier_user_id: cid } }).expect(200);
+    const d2 = (await call(h, "get", "/v1/courier/deliveries", K)).body.items.find((x: { order: { id: string } }) => x.order.id === ord2.id).delivery_id as string;
+    await call(h, "post", `/v1/courier/deliveries/${d2}/pickup`, K).expect(200);
+    await op("post", "/v1/courier/deliveries/{id}/fail", `/v1/courier/deliveries/${d2}/fail`, 200, { ...K, body: { reason: "xaridor javob bermadi" } });
+  });
+
   it("shartnoma o'zgarmasligini kafolatlovchi: har operatsiya testda ishlatilgan", () => {
     const used = new Set(checked);
     const missing: string[] = [];

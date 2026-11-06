@@ -32,6 +32,7 @@ function build(): Map<string, Set<string>> {
     }
   });
   for (const p of OWNER_ONLY) map.get("owner")!.add(p);
+  map.get("courier")!.add("courier:self"); // kuryer ilovasi: faqat o'z topshiriqlari (matritsada alohida rol)
   return map;
 }
 

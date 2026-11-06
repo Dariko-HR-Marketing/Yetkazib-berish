@@ -8,22 +8,25 @@ import { maskPhone } from "../identity/identity.service";
 import { FeaturesService } from "../plans-flags/features.service";
 import { StorefrontService } from "./storefront.service";
 
-type Status = "placed" | "accepted" | "completed" | "cancelled";
+export type Status = "placed" | "accepted" | "picking" | "ready" | "delivering" | "completed" | "cancelled" | "failed";
 /** Ruxsat etilgan o'tishlar (S4'da yig'ish/yetkazish holatlari qo'shiladi). */
-const TRANSITIONS: Record<Status, Status[]> = { placed: ["accepted", "cancelled"], accepted: ["completed", "cancelled"], completed: [], cancelled: [] };
+export const TRANSITIONS: Record<Status, Status[]> = {
+  placed: ["accepted", "cancelled"], accepted: ["picking", "completed", "cancelled"], picking: ["ready", "cancelled"], ready: ["delivering", "completed", "cancelled"],
+  delivering: ["completed", "failed"], completed: [], cancelled: [], failed: [],
+};
 
 /** milli-birlik × tiyin / 1000, yarim yuqoriga yaxlitlash. Float yo'q. */
 export const lineTotal = (quantityMilli: number, priceTiyin: number): number => Number((BigInt(quantityMilli) * BigInt(priceTiyin) + 500n) / 1000n);
 
-interface OrderRow {
+export interface OrderRow {
   id: string; number: string; branch_id: string; customer_id: string; status: Status; fulfillment: string; payment_type: string; channel: string;
   subtotal_tiyin: string; delivery_fee_tiyin: string; total_tiyin: string; delivery_address: string | null; customer_phone: string | null; note: string | null;
   cancel_reason: string | null; created_at: Date; updated_at: Date; cur_at: string;
 }
-interface ItemRow { id: string; product_id: string; name_uz: string; name_ru: string | null; unit: string; quantity_milli: string; price_tiyin: string; line_total_tiyin: string }
+export interface ItemRow { id: string; product_id: string; name_uz: string; name_ru: string | null; unit: string; quantity_milli: string; price_tiyin: string; line_total_tiyin: string; pick_status: string; picked_milli: string | null; reserved_milli: string }
 
-const itemDto = (i: ItemRow) => ({ id: i.id, product_id: i.product_id, name_uz: i.name_uz, name_ru: i.name_ru, unit: i.unit, quantity_milli: Number(i.quantity_milli), price_tiyin: Number(i.price_tiyin), line_total_tiyin: Number(i.line_total_tiyin) });
-const orderDto = (o: OrderRow, items: ItemRow[], mask: boolean) => ({
+export const itemDto = (i: ItemRow) => ({ id: i.id, product_id: i.product_id, name_uz: i.name_uz, name_ru: i.name_ru, unit: i.unit, quantity_milli: Number(i.quantity_milli), price_tiyin: Number(i.price_tiyin), line_total_tiyin: Number(i.line_total_tiyin), pick_status: i.pick_status, picked_milli: i.picked_milli === null ? null : Number(i.picked_milli) });
+export const orderDto = (o: OrderRow, items: ItemRow[], mask: boolean) => ({
   id: o.id, number: Number(o.number), branch_id: o.branch_id, status: o.status, fulfillment: o.fulfillment, payment_type: o.payment_type, channel: o.channel,
   subtotal_tiyin: Number(o.subtotal_tiyin), delivery_fee_tiyin: Number(o.delivery_fee_tiyin), total_tiyin: Number(o.total_tiyin),
   delivery_address: o.delivery_address, customer_phone: mask ? maskPhone(o.customer_phone) : o.customer_phone, note: o.note, cancel_reason: o.cancel_reason,
@@ -35,10 +38,10 @@ export class OrdersService {
   constructor(private readonly db: DbService, private readonly shops: StorefrontService, private readonly features: FeaturesService,
               private readonly audit: AuditService, private readonly events: EventsService) {}
 
-  private async loadItems(tx: Tx, tenantId: string, ids: string[]): Promise<Map<string, ItemRow[]>> {
+  async loadItems(tx: Tx, tenantId: string, ids: string[]): Promise<Map<string, ItemRow[]>> {
     const m = new Map<string, ItemRow[]>();
     if (!ids.length) return m;
-    const r = await tx.query<ItemRow & { order_id: string }>("select id, order_id, product_id, name_uz, name_ru, unit, quantity_milli, price_tiyin, line_total_tiyin from order_items where tenant_id = $1 and order_id = any($2::uuid[]) order by id", [tenantId, ids]);
+    const r = await tx.query<ItemRow & { order_id: string }>("select id, order_id, product_id, name_uz, name_ru, unit, quantity_milli, price_tiyin, line_total_tiyin, pick_status, picked_milli, reserved_milli from order_items where tenant_id = $1 and order_id = any($2::uuid[]) order by id", [tenantId, ids]);
     for (const i of r.rows) { const a = m.get(i.order_id) ?? []; a.push(i); m.set(i.order_id, a); }
     return m;
   }
@@ -78,7 +81,7 @@ export class OrdersService {
          values ($1,$2,$3,$4,$5,$6,$7,0,$7,$8,$9,$10) returning *, to_char(created_at at time zone 'utc', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') as cur_at`,
         [shop.id, d.branch_id, userId, d.fulfillment, d.payment_type, d.channel, subtotal, d.fulfillment === "delivery" ? d.delivery_address : null, phone, d.note ?? null])).rows[0]!;
       for (const l of lines) {
-        await tx.query("insert into order_items (order_id, tenant_id, product_id, name_uz, name_ru, unit, quantity_milli, price_tiyin, line_total_tiyin) values ($1,$2,$3,$4,$5,$6,$7,$8,$9)",
+        await tx.query("insert into order_items (order_id, tenant_id, product_id, name_uz, name_ru, unit, quantity_milli, price_tiyin, line_total_tiyin, reserved_milli) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$7)",
           [o.id, shop.id, l.p.id, l.p.name_uz, l.p.name_ru, l.p.unit, l.q, Number(l.p.price_tiyin), l.total]);
       }
       await tx.query("insert into order_status_history (tenant_id, order_id, from_status, to_status, actor_id) values ($1,$2,null,'placed',$3)", [shop.id, o.id, userId]);
@@ -151,35 +154,48 @@ export class OrdersService {
       const cur = (await tx.query<{ status: Status }>("select status from orders where id = $1 and tenant_id = $2 for update", [id, tenantId])).rows[0];
       if (!cur) throw new ApiError(404, "not_found");
       if (!TRANSITIONS[cur.status].includes(to)) throw new ApiError(409, "order.invalid_transition", { from: cur.status, to });
+      if (to === "completed") {
+        // qo'lda yakunlash: olib ketish topshirildi yoki kuryersiz tezkor yo'l; kuryer biriktirilgan bo'lsa yetkazish kuryer orqali tugaydi
+        const o = (await tx.query<{ fulfillment: string }>("select fulfillment from orders where id = $1 and tenant_id = $2", [id, tenantId])).rows[0]!;
+        const hasDelivery = (await tx.query("select 1 from deliveries where order_id = $1 and tenant_id = $2", [id, tenantId])).rowCount;
+        if (hasDelivery || (cur.status === "ready" && o.fulfillment !== "pickup")) throw new ApiError(409, "order.invalid_transition", { from: cur.status, to });
+      }
       const out = await this.transition(tx, tenantId, userId, id, to, reason, false);
       await this.audit.record(tx, { tenantId, actorId: userId, action: `order.${to}`, entity: "order", entityId: id, before: { status: cur.status }, after: { status: to }, ip });
       return out;
     });
   }
 
-  /** Holat o'tishi + qoldiq ta'siri: bekor — band bo'shaydi; bajarildi — qoldiqdan ayriladi (harakat jurnali: sale). Chaqiruvchi qatorni qulflagan. */
-  private async transition(tx: Tx, tenantId: string, actorId: string, id: string, to: Status, reason: string | undefined, byCustomer: boolean) {
+  /** Holat o'tishi + qoldiq ta'siri. Bekor/muvaffaqiyatsiz — band bo'shaydi; bajarildi — band qilingan (yig'ilgan) miqdor qoldiqdan ayriladi (jurnal: sale). Chaqiruvchi qatorni qulflagan. */
+  async transition(tx: Tx, tenantId: string, actorId: string, id: string, to: Status, reason: string | undefined, byCustomer: boolean) {
     const o = (await tx.query<OrderRow>("select *, '' as cur_at from orders where id = $1 and tenant_id = $2", [id, tenantId])).rows[0]!;
     const from = o.status;
     const items = (await this.loadItems(tx, tenantId, [id])).get(id) ?? [];
-    if (to === "cancelled" || to === "completed") {
+    if (to === "cancelled" || to === "completed" || to === "failed") {
       for (const i of [...items].sort((a, b) => (a.product_id < b.product_id ? -1 : 1))) {
-        const q = Number(i.quantity_milli);
+        const q = Number(i.reserved_milli);
+        if (q === 0) continue;
         const st = (await tx.query<{ quantity_milli: string; reserved_milli: string }>("select quantity_milli, reserved_milli from stock where product_id = $1 and branch_id = $2 and tenant_id = $3 for update", [i.product_id, o.branch_id, tenantId])).rows[0];
-        if (!st) continue;
-        const reserved = Math.max(0, Number(st.reserved_milli) - q);
-        if (to === "completed") {
-          const qty = Math.max(0, Number(st.quantity_milli) - q);
-          await tx.query("update stock set quantity_milli = $4, reserved_milli = $5, updated_at = now() where product_id = $1 and branch_id = $2 and tenant_id = $3", [i.product_id, o.branch_id, tenantId, qty, reserved]);
-          await tx.query("insert into stock_movements (tenant_id, product_id, branch_id, delta_milli, quantity_after_milli, reason, source, actor_id) values ($1,$2,$3,$4,$5,'sale','system',$6)", [tenantId, i.product_id, o.branch_id, qty - Number(st.quantity_milli), qty, actorId]);
-        } else {
-          await tx.query("update stock set reserved_milli = $4, updated_at = now() where product_id = $1 and branch_id = $2 and tenant_id = $3", [i.product_id, o.branch_id, tenantId, reserved]);
+        if (st) {
+          const reserved = Math.max(0, Number(st.reserved_milli) - q);
+          if (to === "completed") {
+            const qty = Math.max(0, Number(st.quantity_milli) - q);
+            await tx.query("update stock set quantity_milli = $4, reserved_milli = $5, updated_at = now() where product_id = $1 and branch_id = $2 and tenant_id = $3", [i.product_id, o.branch_id, tenantId, qty, reserved]);
+            await tx.query("insert into stock_movements (tenant_id, product_id, branch_id, delta_milli, quantity_after_milli, reason, source, actor_id) values ($1,$2,$3,$4,$5,'sale','system',$6)", [tenantId, i.product_id, o.branch_id, qty - Number(st.quantity_milli), qty, actorId]);
+          } else {
+            await tx.query("update stock set reserved_milli = $4, updated_at = now() where product_id = $1 and branch_id = $2 and tenant_id = $3", [i.product_id, o.branch_id, tenantId, reserved]);
+          }
         }
+        await tx.query("update order_items set reserved_milli = 0 where id = $1 and tenant_id = $2", [i.id, tenantId]);
       }
     }
-    await tx.query("update orders set status = $3, cancel_reason = $4, updated_at = now() where id = $1 and tenant_id = $2", [id, tenantId, to, to === "cancelled" ? reason ?? null : null]);
+    const why = to === "cancelled" || to === "failed" ? reason ?? null : null;
+    await tx.query("update orders set status = $3, cancel_reason = $4, updated_at = now(), delivered_at = case when $3 = 'completed' then now() else delivered_at end where id = $1 and tenant_id = $2", [id, tenantId, to, why]);
     await tx.query("insert into order_status_history (tenant_id, order_id, from_status, to_status, actor_id) values ($1,$2,$3,$4,$5)", [tenantId, id, from, to, actorId]);
     if (to === "cancelled") await this.events.emit(tx, "order.failed", { reason: (byCustomer ? "customer_cancelled" : "shop_cancelled") }, { tenantId, actorId, source: byCustomer ? "vitrina" : "panel" });
-    return orderDto({ ...o, status: to, cancel_reason: to === "cancelled" ? reason ?? null : null }, items, !byCustomer);
+    if (to === "failed") await this.events.emit(tx, "order.failed", { reason: "delivery_failed" }, { tenantId, actorId, source: "kuryer" });
+    if (to === "completed") await this.events.emit(tx, "order.delivered", { duration_seconds: Math.max(0, Math.round((Date.now() - new Date(o.created_at).getTime()) / 1000)) }, { tenantId, actorId, source: "panel" });
+    const fresh = items.map((i) => ({ ...i, reserved_milli: to === "cancelled" || to === "completed" || to === "failed" ? "0" : i.reserved_milli }));
+    return orderDto({ ...o, status: to, cancel_reason: why }, fresh, !byCustomer);
   }
 }

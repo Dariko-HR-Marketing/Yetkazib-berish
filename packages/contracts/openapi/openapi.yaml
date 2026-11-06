@@ -22,6 +22,7 @@ tags:
   - { name: catalog }
   - { name: storefront }
   - { name: orders }
+  - { name: fulfillment }
 security:
   - bearer: []
 paths:
@@ -700,7 +701,7 @@ paths:
       operationId: listOrders
       parameters:
         - { $ref: '#/components/parameters/TenantId' }
-        - { name: status, in: query, schema: { type: string, enum: [placed, accepted, completed, cancelled] } }
+        - { name: status, in: query, schema: { type: string, enum: [placed, accepted, picking, ready, delivering, completed, cancelled, failed] } }
         - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 30 } }
         - { name: cursor, in: query, schema: { type: string } }
       responses:
@@ -730,6 +731,127 @@ paths:
         '403': { $ref: '#/components/responses/Error' }
         '404': { $ref: '#/components/responses/Error' }
         '409': { $ref: '#/components/responses/Error' }
+  /v1/picking:
+    get:
+      tags: [fulfillment]
+      operationId: pickingQueue
+      summary: "Yig'ish navbati (qabul qilingan va yig'ilayotgan buyurtmalar)"
+      parameters: [{ $ref: '#/components/parameters/TenantId' }]
+      responses:
+        '200': { description: Navbat, content: { application/json: { schema: { $ref: '#/components/schemas/OrderList' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/orders/{id}/pick/start:
+    post:
+      tags: [fulfillment]
+      operationId: startPicking
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: "Yig'ish boshlandi", content: { application/json: { schema: { $ref: '#/components/schemas/Order' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+  /v1/orders/{id}/items/{itemId}/pick:
+    put:
+      tags: [fulfillment]
+      operationId: pickItem
+      summary: "Qatorni belgilash: yig'ildi (miqdor kam bo'lishi mumkin) / yo'q / kutilmoqda"
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }, { name: itemId, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [status], additionalProperties: false, properties: { status: { type: string, enum: [picked, missing, pending] }, picked_milli: { type: integer, minimum: 0 } } } } } }
+      responses:
+        '200': { description: Yangilandi, content: { application/json: { schema: { $ref: '#/components/schemas/Order' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+  /v1/orders/{id}/pick/finish:
+    post:
+      tags: [fulfillment]
+      operationId: finishPicking
+      summary: "Yig'ish tugadi: jami yig'ilganga qarab qayta hisoblanadi, ortiqcha band bo'shaydi; buyurtma «ready»"
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: Tayyor, content: { application/json: { schema: { $ref: '#/components/schemas/Order' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+  /v1/dispatch/couriers:
+    get:
+      tags: [fulfillment]
+      operationId: listCouriers
+      parameters: [{ $ref: '#/components/parameters/TenantId' }]
+      responses:
+        '200': { description: Kuryerlar va oxirgi joylashuvi, content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { $ref: '#/components/schemas/CourierInfo' } } } } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/orders/{id}/assign:
+    post:
+      tags: [fulfillment]
+      operationId: assignCourier
+      summary: "Tayyor yetkazish buyurtmasiga o'z kuryerini biriktirish (olinmaguncha qayta biriktirish mumkin)"
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [courier_user_id], additionalProperties: false, properties: { courier_user_id: { type: string, format: uuid } } } } } }
+      responses:
+        '200': { description: Biriktirildi, content: { application/json: { schema: { $ref: '#/components/schemas/Order' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+  /v1/courier/deliveries:
+    get:
+      tags: [fulfillment]
+      operationId: myDeliveries
+      summary: Kuryerning o'z topshiriqlari (mijoz telefoni to'liq — faqat shu kuryerga)
+      parameters: [{ $ref: '#/components/parameters/TenantId' }]
+      responses:
+        '200': { description: Topshiriqlar, content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { $ref: '#/components/schemas/CourierDelivery' } } } } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/courier/deliveries/{id}/pickup:
+    post:
+      tags: [fulfillment]
+      operationId: courierPickup
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: "Buyurtma olindi (delivering)", content: { application/json: { schema: { $ref: '#/components/schemas/Order' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+  /v1/courier/deliveries/{id}/deliver:
+    post:
+      tags: [fulfillment]
+      operationId: courierDeliver
+      summary: "Yetkazildi: buyurtma completed, qoldiq ayriladi, naqd yig'ilgani yoziladi"
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200': { description: Yetkazildi, content: { application/json: { schema: { $ref: '#/components/schemas/Order' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+  /v1/courier/deliveries/{id}/fail:
+    post:
+      tags: [fulfillment]
+      operationId: courierFail
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [reason], additionalProperties: false, properties: { reason: { type: string, minLength: 2, maxLength: 200 } } } } } }
+      responses:
+        '200': { description: "Muvaffaqiyatsiz (failed), band bo'shaydi", content: { application/json: { schema: { $ref: '#/components/schemas/Order' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+  /v1/courier/location:
+    post:
+      tags: [fulfillment]
+      operationId: courierLocation
+      summary: GPS nuqtasi (har 15 soniyada)
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [lat, lng], additionalProperties: false, properties: { lat: { type: number, minimum: -90, maximum: 90 }, lng: { type: number, minimum: -180, maximum: 180 }, accuracy_m: { type: integer, minimum: 0 } } } } } }
+      responses:
+        '200': { description: Saqlandi, content: { application/json: { schema: { type: object, required: [ok], properties: { ok: { type: boolean } } } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
 components:
   securitySchemes:
     bearer: { type: http, scheme: bearer, bearerFormat: JWT }
@@ -1260,8 +1382,10 @@ components:
         channel: { type: string, enum: [vitrina, telegram], default: vitrina }
     OrderItem:
       type: object
-      required: [id, product_id, name_uz, name_ru, unit, quantity_milli, price_tiyin, line_total_tiyin]
+      required: [id, product_id, name_uz, name_ru, unit, quantity_milli, price_tiyin, line_total_tiyin, pick_status, picked_milli]
       properties:
+        pick_status: { type: string, enum: [pending, picked, missing] }
+        picked_milli: { type: [integer, 'null'] }
         id: { type: string, format: uuid }
         product_id: { type: string, format: uuid }
         name_uz: { type: string }
@@ -1277,7 +1401,7 @@ components:
         id: { type: string, format: uuid }
         number: { type: integer }
         branch_id: { type: string, format: uuid }
-        status: { type: string, enum: [placed, accepted, completed, cancelled] }
+        status: { type: string, enum: [placed, accepted, picking, ready, delivering, completed, cancelled, failed] }
         fulfillment: { type: string, enum: [delivery, pickup] }
         payment_type: { type: string }
         channel: { type: string }
@@ -1304,3 +1428,26 @@ components:
         - type: object
           required: [history]
           properties: { history: { type: array, items: { type: object, required: [from_status, to_status, created_at], properties: { from_status: { type: [string, 'null'] }, to_status: { type: string }, created_at: { type: string, format: date-time } } } } }
+    OrderList:
+      type: object
+      required: [items]
+      properties: { items: { type: array, items: { $ref: '#/components/schemas/Order' } } }
+    CourierInfo:
+      type: object
+      required: [user_id, phone, active_deliveries, location]
+      properties:
+        user_id: { type: string, format: uuid }
+        phone: { type: [string, 'null'] }
+        active_deliveries: { type: integer }
+        location:
+          oneOf:
+            - { type: 'null' }
+            - { type: object, required: [lat, lng, at, fresh], properties: { lat: { type: number }, lng: { type: number }, at: { type: string, format: date-time }, fresh: { type: boolean } } }
+    CourierDelivery:
+      type: object
+      required: [delivery_id, delivery_status, assigned_at, order]
+      properties:
+        delivery_id: { type: string, format: uuid }
+        delivery_status: { type: string, enum: [assigned, picked_up, delivered, failed] }
+        assigned_at: { type: string, format: date-time }
+        order: { $ref: '#/components/schemas/Order' }

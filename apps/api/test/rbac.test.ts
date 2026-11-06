@@ -25,7 +25,7 @@ describe("roles_permissions.json <-> RBAC", () => {
   });
 
   it("kuryer panel ruxsatlariga ega emas (faqat kuryer ilovasi)", () => {
-    expect(permissionsOf("courier").size).toBe(0);
+    expect([...permissionsOf("courier")]).toEqual(["courier:self"]); // panel (matritsa) ruxsatlari yo'q; faqat o'z topshiriqlari
   });
 
   it("faqat egasi do'kon va kalitlarni boshqaradi; 2FA — egasi va buxgalter", () => {
