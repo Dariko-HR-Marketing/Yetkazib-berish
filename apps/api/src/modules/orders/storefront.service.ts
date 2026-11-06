@@ -56,8 +56,8 @@ export class StorefrontService {
       let branchId = q.branch_id ?? null;
       if (branchId) { if (!(await tx.query("select 1 from branches where id = $1 and tenant_id = $2", [branchId, s.id])).rowCount) throw new ApiError(404, "not_found"); }
       else branchId = (await tx.query<{ id: string }>("select id from branches where tenant_id = $1 order by created_at limit 1", [s.id])).rows[0]?.id ?? null;
-      const r = await tx.query<{ id: string; category_id: string | null; name_uz: string; name_ru: string | null; unit: string; price_tiyin: string; description_uz: string | null; description_ru: string | null; avail: string; cur_at: string; created_at: Date }>(
-        `select p.id, p.category_id, p.name_uz, p.name_ru, p.unit, p.price_tiyin, p.description_uz, p.description_ru, p.created_at,
+      const r = await tx.query<{ id: string; category_id: string | null; name_uz: string; name_ru: string | null; unit: string; price_tiyin: string; description_uz: string | null; description_ru: string | null; image_url: string | null; avail: string; cur_at: string; created_at: Date }>(
+        `select p.id, p.category_id, p.name_uz, p.name_ru, p.unit, p.price_tiyin, p.description_uz, p.description_ru, p.image_url, p.created_at,
                 to_char(p.created_at at time zone 'utc', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') as cur_at,
                 coalesce((select case when st.out_marked then 0 else greatest(0, st.quantity_milli - st.reserved_milli) end from stock st
                            where st.product_id = p.id and st.tenant_id = p.tenant_id and st.branch_id = $2::uuid), 0) as avail
@@ -76,7 +76,7 @@ export class StorefrontService {
           const a = Number(p.avail);
           const state = a <= 0 ? "out" : visible && a <= LOW_STOCK_MILLI ? "low" : "in";
           return { id: p.id, category_id: p.category_id, name_uz: p.name_uz, name_ru: p.name_ru, unit: p.unit, price_tiyin: Number(p.price_tiyin),
-            description_uz: p.description_uz, description_ru: p.description_ru, availability: { state, available_milli: visible ? a : null } };
+            description_uz: p.description_uz, description_ru: p.description_ru, image_url: p.image_url, availability: { state, available_milli: visible ? a : null } };
         }),
         next_cursor: r.rows.length > q.limit && last ? encodeCursor({ at: last.cur_at, id: last.id }) : null,
       };

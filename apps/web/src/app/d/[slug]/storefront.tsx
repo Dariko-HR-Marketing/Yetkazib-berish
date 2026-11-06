@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Badge, Button, Card, EmptyState, ErrorState, Input, Skeleton } from "@dostavka/ui";
+import { ProductImage } from "@/components/product-image";
 import { ShopShell, unitLabel } from "@/components/shop-shell";
 import { ApiError, NetworkError, api } from "@/lib/api";
 import { cartTotal, changeQty, setBranch, stepOf, useCart } from "@/lib/cart";
@@ -12,7 +13,7 @@ import { MainAction } from "@/lib/telegram";
 
 export interface ShopData { slug: string; name: string; branches: { id: string; name: string; address: string; open_now: boolean }[]; features: { cash: boolean; stock_visible: boolean } }
 export interface CategoryItem { id: string; name_uz: string; name_ru: string | null }
-export interface ShopProduct { id: string; category_id: string | null; name_uz: string; name_ru: string | null; unit: "piece" | "kg" | "l"; price_tiyin: number; availability: { state: "in" | "low" | "out"; available_milli: number | null } }
+export interface ShopProduct { id: string; category_id: string | null; name_uz: string; name_ru: string | null; unit: "piece" | "kg" | "l"; price_tiyin: number; image_url?: string | null; availability: { state: "in" | "low" | "out"; available_milli: number | null } }
 export interface ProductPage { branch_id: string | null; items: ShopProduct[]; next_cursor: string | null }
 
 export function Storefront({ slug, shop, categories, initial }: { slug: string; shop: ShopData; categories: CategoryItem[]; initial: ProductPage }) {
@@ -102,6 +103,7 @@ export function Storefront({ slug, shop, categories, initial }: { slug: string; 
                 return (
                   <li key={p.id}>
                     <Card className="flex h-full flex-col gap-2 p-3" data-testid="shop-product">
+                      {p.image_url && <ProductImage src={p.image_url} size={160} className="aspect-square !h-auto w-full max-w-full" />}
                       <div className="flex items-start justify-between gap-2">
                         <p className="break-words text-body-lg font-bold">{nameOf(p)}</p>
                         {out ? <Badge tone="danger">{t("shop.out")}</Badge> : p.availability.state === "low" ? <Badge tone="warning">{t("shop.low")}</Badge> : null}

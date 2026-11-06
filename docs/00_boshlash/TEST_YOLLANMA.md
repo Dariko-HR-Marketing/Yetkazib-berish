@@ -198,3 +198,12 @@ Ruxsat: kassir, yig'uvchi, dispetcher, kuryer `/audit` va `/mijozlar` ni ko'rmay
 | `/d/<do'kon>/savat` | Yopiq filialda qizil xabar va "Buyurtma berish" o'chiq; API ham `422 order.branch_closed` qaytaradi |
 
 Vaqt Asia/Tashkent (UTC+5). Jadval berilmagan filial doim ochiq. API: `PATCH /v1/branches/{id}` (`tenant:manage`), audit: `branch.work_hours_updated`.
+
+### Mahsulot rasmi
+
+| Joy | Nimani tekshirish |
+|---|---|
+| `/katalog` → mahsulot formasi → "Rasm havolasi (https)" | Faqat `https://` qabul qilinadi (`http://`, `javascript:`, `data:`, `user:pw@` va `localhost` rad etiladi, ≤ 500 belgi); bo'sh qoldirish mumkin; saqlangach ro'yxatda 56×56 belgi |
+| `/d/<do'kon>` | Mahsulot kartasida rasm; yuklanmasa yashiriladi (joy buzilmaydi); rasm kech yuklanadi |
+
+Eslatma (xavfsizlik/maxfiylik): rasmlar do'konning o'z saytidan yuklanadi, shuning uchun CSP `img-src` ga `https:` qo'shildi; rasm egasi xaridorning IP manzilini ko'radi (referrer yuborilmaydi). Fayl yuklash (S3/CDN) v1 dan keyin.

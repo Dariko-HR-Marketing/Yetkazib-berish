@@ -2,7 +2,7 @@ const csp = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' https://telegram.org" + (process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""),
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
   "connect-src 'self'",
   "frame-ancestors 'self' https://web.telegram.org https://*.telegram.org",

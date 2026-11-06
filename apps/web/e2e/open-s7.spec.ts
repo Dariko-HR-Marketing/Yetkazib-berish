@@ -141,3 +141,33 @@ test("ish vaqti: egasi filialni yopadi — vitrinada 'Hozir yopiq', buyurtma tug
   await cust.reload();
   await expect(cust.getByTestId("branch-closed")).toHaveCount(0);
 });
+
+test("mahsulot rasmi: faqat https qabul qilinadi, vitrinada yuklanadi (CSP ruxsat beradi)", async ({ browser }) => {
+  const PNG = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==", "base64");
+  const owner = await login(browser, "90 777 66 06");
+  await expect(owner).toHaveURL(/dokon-yaratish/);
+  await owner.getByLabel("Do'kon nomi", { exact: true }).fill("Rasmli Bozor");
+  await owner.getByLabel(/STIR/).fill("323456789");
+  await owner.getByRole("button", { name: "Do'kon yaratish" }).click();
+  await expect(owner).toHaveURL(/katalog/);
+  await owner.getByLabel("Filial nomi").fill("Markaziy");
+  await owner.getByLabel("Manzil", { exact: true }).fill("Toshkent, Chilonzor 1");
+  await owner.getByRole("button", { name: "Filial qo'shish" }).click();
+  await owner.getByRole("button", { name: "Mahsulot qo'shish" }).click();
+  await owner.getByLabel("Nomi (o'zbekcha)").fill("Non");
+  await owner.getByLabel("Narx, so'm").fill("5 000");
+  await owner.getByLabel("Qoldiq (tanlangan filialda)").fill("20");
+  await owner.getByLabel(/Rasm havolasi/).fill("http://cdn.example.uz/non.png");
+  await owner.getByRole("button", { name: "Saqlash", exact: true }).click();
+  await expect(owner.getByText("Faqat https:// bilan boshlanadigan havola")).toBeVisible();
+  await owner.getByLabel(/Rasm havolasi/).fill("https://cdn.example.uz/non.png");
+  await owner.getByRole("button", { name: "Saqlash", exact: true }).click();
+  await expect(owner.getByTestId("product-row")).toHaveCount(1);
+
+  const cust = await login(browser, "90 777 77 07");
+  await cust.route("https://cdn.example.uz/**", (r) => r.fulfill({ status: 200, contentType: "image/png", body: PNG }));
+  await cust.goto("/d/rasmli-bozor");
+  const img = cust.getByTestId("shop-product").locator("img");
+  await expect(img).toHaveAttribute("src", "https://cdn.example.uz/non.png");
+  await expect.poll(() => img.evaluate((e: HTMLImageElement) => e.complete && e.naturalWidth > 0)).toBe(true);
+});

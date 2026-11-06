@@ -1455,6 +1455,7 @@ components:
         status: { type: string, enum: [active, hidden, archived] }
         description_uz: { type: [string, 'null'] }
         description_ru: { type: [string, 'null'] }
+        image_url: { type: [string, 'null'], maxLength: 500, description: "Faqat https havola" }
         stock:
           description: stock:read huquqi bo'lmagan rolda (masalan, marketolog) null
           oneOf:
@@ -1482,6 +1483,7 @@ components:
         status: { type: string, enum: [active, hidden], default: active }
         description_uz: { type: [string, 'null'], maxLength: 2000 }
         description_ru: { type: [string, 'null'], maxLength: 2000 }
+        image_url: { type: [string, 'null'], maxLength: 500, description: "Faqat https havola (hisob ma'lumotisiz)" }
     ProductUpdate:
       type: object
       minProperties: 1
@@ -1498,6 +1500,7 @@ components:
         status: { type: string, enum: [active, hidden, archived] }
         description_uz: { type: [string, 'null'], maxLength: 2000 }
         description_ru: { type: [string, 'null'], maxLength: 2000 }
+        image_url: { type: [string, 'null'], maxLength: 500, description: "Faqat https havola (hisob ma'lumotisiz)" }
     CatalogSummary:
       type: object
       required: [products, mxik_missing, out, low, last_import_at]
@@ -1601,6 +1604,7 @@ components:
         price_tiyin: { type: integer }
         description_uz: { type: [string, 'null'] }
         description_ru: { type: [string, 'null'] }
+        image_url: { type: [string, 'null'], maxLength: 500, description: "Faqat https havola (hisob ma'lumotisiz)" }
         availability:
           type: object
           required: [state, available_milli]

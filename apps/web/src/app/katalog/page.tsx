@@ -7,12 +7,13 @@ import { ApiError, NetworkError, api } from "@/lib/api";
 import { formatQty, formatSom, parseQty, parseSom } from "@/lib/catalog";
 import { useI18n } from "@/lib/i18n";
 import { useRequireSession } from "@/lib/use-session";
+import { isHttpsUrl, ProductImage } from "@/components/product-image";
 import { PageSkeleton, Shell } from "@/components/shell";
 
 interface StockView { quantity_milli: number; reserved_milli: number; available_milli: number; out_marked: boolean; state: "out" | "low" | "in" }
 interface Product {
   id: string; category_id: string | null; name_uz: string; name_ru: string | null; sku: string | null; barcode: string | null; mxik: string | null;
-  unit: "piece" | "kg" | "l"; price_tiyin: number; status: "active" | "hidden" | "archived"; stock: StockView;
+  unit: "piece" | "kg" | "l"; price_tiyin: number; status: "active" | "hidden" | "archived"; image_url: string | null; stock: StockView;
 }
 interface Page { items: Product[]; next_cursor: string | null }
 interface Summary { products: number; mxik_missing: number; out: number; low: number; last_import_at: string | null }
@@ -25,8 +26,8 @@ const CATALOG_WRITE = new Set(["owner", "manager"]);
 const STOCK_WRITE = new Set(["owner", "manager", "picker"]);
 const TONE = { in: "ok", low: "warning", out: "danger" } as const;
 
-interface Form { id: string | null; name_uz: string; name_ru: string; price: string; unit: Product["unit"]; sku: string; barcode: string; mxik: string; category_id: string; status: "active" | "hidden"; qty: string }
-const EMPTY: Form = { id: null, name_uz: "", name_ru: "", price: "", unit: "piece", sku: "", barcode: "", mxik: "", category_id: "", status: "active", qty: "" };
+interface Form { id: string | null; name_uz: string; name_ru: string; price: string; unit: Product["unit"]; sku: string; barcode: string; mxik: string; category_id: string; status: "active" | "hidden"; qty: string; image_url: string }
+const EMPTY: Form = { id: null, name_uz: "", name_ru: "", price: "", unit: "piece", sku: "", barcode: "", mxik: "", category_id: "", status: "active", qty: "", image_url: "" };
 
 export default function CatalogPage() {
   const { t, locale, money } = useI18n();
@@ -127,7 +128,7 @@ export default function CatalogPage() {
 
   const openForm = (p?: Product) => {
     setFormErr({});
-    setForm(p ? { id: p.id, name_uz: p.name_uz, name_ru: p.name_ru ?? "", price: formatSom(p.price_tiyin), unit: p.unit, sku: p.sku ?? "", barcode: p.barcode ?? "", mxik: p.mxik ?? "", category_id: p.category_id ?? "", status: p.status === "hidden" ? "hidden" : "active", qty: "" } : { ...EMPTY });
+    setForm(p ? { id: p.id, name_uz: p.name_uz, name_ru: p.name_ru ?? "", price: formatSom(p.price_tiyin), unit: p.unit, sku: p.sku ?? "", barcode: p.barcode ?? "", mxik: p.mxik ?? "", category_id: p.category_id ?? "", status: p.status === "hidden" ? "hidden" : "active", qty: "", image_url: p.image_url ?? "" } : { ...EMPTY });
     setTimeout(() => document.getElementById("pf-name")?.focus(), 0);
   };
 
@@ -139,11 +140,12 @@ export default function CatalogPage() {
     const qtyMilli = form.qty.trim() === "" ? null : parseQty(form.qty);
     if (form.qty.trim() !== "" && qtyMilli === null) err.qty = t("product.qty_invalid");
     if (form.name_uz.trim().length < 1) err.name = t("validation.failed");
+    if (form.image_url.trim() && !isHttpsUrl(form.image_url.trim())) err.image = t("product.image_invalid");
     setFormErr(err);
     if (Object.keys(err).length) return;
     const body = {
       name_uz: form.name_uz.trim(), name_ru: form.name_ru.trim() || null, price_tiyin: price, unit: form.unit, sku: form.sku.trim() || null,
-      barcode: form.barcode.replace(/\s/g, "") || null, mxik: form.mxik.replace(/\s/g, "") || null, category_id: form.category_id || null, status: form.status,
+      barcode: form.barcode.replace(/\s/g, "") || null, mxik: form.mxik.replace(/\s/g, "") || null, category_id: form.category_id || null, status: form.status, image_url: form.image_url.trim() || null,
     };
     setBusy(true);
     try {
@@ -266,6 +268,7 @@ export default function CatalogPage() {
                     {(["piece", "kg", "l"] as const).map((u) => <option key={u} value={u}>{t(`unit.${u}`)}</option>)}
                   </select>
                 </div>
+                <Input id="pf-image" label={t("product.image_url")} hint={t("product.image_hint")} type="url" inputMode="url" value={form.image_url} error={formErr.image} onChange={(e) => setForm({ ...form, image_url: e.target.value })} />
                 <Input id="pf-sku" label={t("product.sku")} value={form.sku} error={formErr.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} />
                 <Input id="pf-barcode" label={t("product.barcode")} inputMode="numeric" value={form.barcode} error={formErr.barcode} onChange={(e) => setForm({ ...form, barcode: e.target.value })} />
                 <Input id="pf-mxik" label={t("product.mxik")} inputMode="numeric" value={form.mxik} error={formErr.mxik} onChange={(e) => setForm({ ...form, mxik: e.target.value })} />
@@ -302,6 +305,7 @@ export default function CatalogPage() {
                   return (
                     <li key={p.id}>
                       <Card className="flex flex-col gap-3 p-3 md:flex-row md:items-center md:gap-4 md:p-4" data-testid="product-row">
+                        {p.image_url && <ProductImage src={p.image_url} size={56} />}
                         <div className="min-w-0 flex-1">
                           <p className="break-words text-body-lg font-bold">{prodName(p)} {p.status === "hidden" && <Badge tone="neutral">{t("catalog.hidden")}</Badge>}</p>
                           <p className="break-words text-body-sm text-muted">{[p.sku, p.barcode, t(`unit.${p.unit}`)].filter(Boolean).join(" · ")}</p>

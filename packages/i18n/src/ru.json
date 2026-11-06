@@ -602,5 +602,8 @@
  "wh.day_thu": "Четверг",
  "wh.day_fri": "Пятница",
  "wh.day_sat": "Суббота",
- "wh.day_sun": "Воскресенье"
+ "wh.day_sun": "Воскресенье",
+ "product.image_url": "Ссылка на изображение (https)",
+ "product.image_hint": "Адрес изображения, начинается с https://. Необязательно.",
+ "product.image_invalid": "Только ссылка, начинающаяся с https://"
 }

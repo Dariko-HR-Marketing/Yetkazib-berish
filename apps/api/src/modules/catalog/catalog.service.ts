@@ -10,13 +10,13 @@ type ProductInput = Record<string, string | number | null | undefined>;
 
 interface ProductRow {
   id: string; category_id: string | null; name_uz: string; name_ru: string | null; sku: string | null; barcode: string | null; mxik: string | null;
-  unit: string; price_tiyin: string; status: string; description_uz: string | null; description_ru: string | null; created_at: Date; updated_at: Date;
+  unit: string; price_tiyin: string; status: string; description_uz: string | null; description_ru: string | null; image_url: string | null; created_at: Date; updated_at: Date;
   q: string | null; r: string | null; avail: string; out_marked: boolean | null; cur_at: string;
 }
 
 export const toProduct = (p: ProductRow) => ({
   id: p.id, category_id: p.category_id, name_uz: p.name_uz, name_ru: p.name_ru, sku: p.sku, barcode: p.barcode, mxik: p.mxik,
-  unit: p.unit, price_tiyin: Number(p.price_tiyin), status: p.status, description_uz: p.description_uz, description_ru: p.description_ru,
+  unit: p.unit, price_tiyin: Number(p.price_tiyin), status: p.status, description_uz: p.description_uz, description_ru: p.description_ru, image_url: p.image_url,
   created_at: p.created_at, updated_at: p.updated_at,
   stock: {
     quantity_milli: Number(p.q ?? 0), reserved_milli: Number(p.r ?? 0), available_milli: Number(p.avail),
@@ -88,7 +88,7 @@ export class CatalogService {
   }
 
   private static readonly SELECT = `
-    select p.id, p.category_id, p.name_uz, p.name_ru, p.sku, p.barcode, p.mxik, p.unit, p.price_tiyin, p.status, p.description_uz, p.description_ru,
+    select p.id, p.category_id, p.name_uz, p.name_ru, p.sku, p.barcode, p.mxik, p.unit, p.price_tiyin, p.status, p.description_uz, p.description_ru, p.image_url,
            p.created_at, p.updated_at,
            to_char(p.created_at at time zone 'utc', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') as cur_at,
            st.q, st.r, coalesce(st.avail, 0) as avail, st.out_marked
@@ -105,9 +105,9 @@ export class CatalogService {
       let id: string;
       try {
         id = (await tx.query<{ id: string }>(
-          `insert into products (tenant_id, category_id, name_uz, name_ru, sku, barcode, mxik, unit, price_tiyin, status, description_uz, description_ru)
-           values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12) returning id`,
-          [tenantId, d.category_id ?? null, d.name_uz, d.name_ru ?? null, d.sku ?? null, d.barcode ?? null, d.mxik ?? null, d.unit, d.price_tiyin, d.status, d.description_uz ?? null, d.description_ru ?? null])).rows[0]!.id;
+          `insert into products (tenant_id, category_id, name_uz, name_ru, sku, barcode, mxik, unit, price_tiyin, status, description_uz, description_ru, image_url)
+           values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13) returning id`,
+          [tenantId, d.category_id ?? null, d.name_uz, d.name_ru ?? null, d.sku ?? null, d.barcode ?? null, d.mxik ?? null, d.unit, d.price_tiyin, d.status, d.description_uz ?? null, d.description_ru ?? null, d.image_url ?? null])).rows[0]!.id;
       } catch (e) { return mapUnique(e); }
       await this.audit.record(tx, { tenantId, actorId: userId, action: "product.created", entity: "product", entityId: id, after: { name_uz: d.name_uz, price_tiyin: d.price_tiyin }, ip });
       return this.fetchOne(tx, tenantId, id, null);
@@ -132,13 +132,13 @@ export class CatalogService {
       const pick = (k: string) => (d[k] === undefined ? old[k] : d[k]);
       const next = {
         category_id: pick("category_id"), name_uz: pick("name_uz"), name_ru: pick("name_ru"), sku: pick("sku"), barcode: pick("barcode"), mxik: pick("mxik"),
-        unit: pick("unit"), price_tiyin: pick("price_tiyin"), status: pick("status"), description_uz: pick("description_uz"), description_ru: pick("description_ru"),
+        unit: pick("unit"), price_tiyin: pick("price_tiyin"), status: pick("status"), description_uz: pick("description_uz"), description_ru: pick("description_ru"), image_url: pick("image_url"),
       };
       try {
         await tx.query(
           `update products set category_id=$3, name_uz=$4, name_ru=$5, sku=$6, barcode=$7, mxik=$8, unit=$9, price_tiyin=$10, status=$11,
-                  description_uz=$12, description_ru=$13, updated_at=now() where id=$1 and tenant_id=$2`,
-          [id, tenantId, next.category_id, next.name_uz, next.name_ru, next.sku, next.barcode, next.mxik, next.unit, next.price_tiyin, next.status, next.description_uz, next.description_ru]);
+                  description_uz=$12, description_ru=$13, image_url=$14, updated_at=now() where id=$1 and tenant_id=$2`,
+          [id, tenantId, next.category_id, next.name_uz, next.name_ru, next.sku, next.barcode, next.mxik, next.unit, next.price_tiyin, next.status, next.description_uz, next.description_ru, next.image_url]);
       } catch (e) { return mapUnique(e); }
       // A-1: narx o'zgarishi auditga (oldin/keyin); boshqa o'zgarishlar ham yoziladi.
       const priceChanged = Number(old.price_tiyin) !== Number(next.price_tiyin);

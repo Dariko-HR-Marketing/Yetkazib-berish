@@ -602,5 +602,8 @@
  "wh.day_thu": "Payshanba",
  "wh.day_fri": "Juma",
  "wh.day_sat": "Shanba",
- "wh.day_sun": "Yakshanba"
+ "wh.day_sun": "Yakshanba",
+ "product.image_url": "Rasm havolasi (https)",
+ "product.image_hint": "Rasm joylashgan sayt manzili, https:// bilan boshlanadi. Ixtiyoriy.",
+ "product.image_invalid": "Faqat https:// bilan boshlanadigan havola"
 }

@@ -14,17 +14,22 @@ const barcode = z.string().regex(/^[0-9]{6,14}$/, "validation.barcode_invalid");
 const mxik = z.string().regex(/^[0-9]{17}$/, "validation.mxik_invalid");
 const price = z.number().int().min(0).max(100_000_000_000);
 
+/** Rasm havolasi: faqat https, hisob ma'lumotisiz (user:pass@), ≤ 500 belgi. Fayl yuklash yo'q (v1): do'kon o'z CDN/xostingiga havola beradi. */
+export const imageUrl = z.string().trim().max(500).refine((v) => {
+  try { const u = new URL(v); return u.protocol === "https:" && !u.username && !u.password && u.hostname.includes("."); } catch { return false; }
+}, { message: "faqat https havola" }).nullable().optional();
+
 export const productCreateDto = z.object({
   name_uz: text(200), name_ru: opt(200), sku: z.string().trim().min(1).max(64).nullable().optional(),
   barcode: barcode.nullable().optional(), mxik: mxik.nullable().optional(), unit: z.enum(UNITS).default("piece"),
   price_tiyin: price, category_id: uuidSchema.nullable().optional(), status: z.enum(["active", "hidden"]).default("active"),
-  description_uz: opt(2000), description_ru: opt(2000),
+  description_uz: opt(2000), description_ru: opt(2000), image_url: imageUrl,
 }).strict();
 export const productUpdateDto = z.object({
   name_uz: text(200).optional(), name_ru: opt(200), sku: z.string().trim().min(1).max(64).nullable().optional(),
   barcode: barcode.nullable().optional(), mxik: mxik.nullable().optional(), unit: z.enum(UNITS).optional(),
   price_tiyin: price.optional(), category_id: uuidSchema.nullable().optional(), status: z.enum(STATUSES).optional(),
-  description_uz: opt(2000), description_ru: opt(2000),
+  description_uz: opt(2000), description_ru: opt(2000), image_url: imageUrl,
 }).strict().refine((v) => Object.keys(v).length > 0, { message: "validation.failed" });
 
 export const productListDto = z.object({
