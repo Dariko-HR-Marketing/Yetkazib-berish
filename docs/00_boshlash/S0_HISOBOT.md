@@ -171,3 +171,10 @@ Inson ko'rib chiqishi: qoldiq yozilishi (yig'ish/bajarish), ruxsatlar (`picking`
 | **Payme / Click / Uzum adapterlari** | ⛔ provayder hujjati va merchant sandbox kalitlari kerak |
 | Fiskal chek | ⛔ OFD/provayder tanlanmagan |
 Pul platformadan o'tmaydi: platforma faqat provayder webhooki orqali holatni yozadi.
+
+## 14. Qo'shimcha (2026-11-06)
+- **Bog'liqliklar:** NestJS 11 + Express 5; `pnpm audit --prod` — zaiflik yo'q.
+- **Monitoring:** `GET /v1/metrics` (Prometheus matni; `METRICS_TOKEN`).
+- **Kassa:** kuryer naqdi, topshirish (o'zgarmas jurnal), 1 500 000 so'm chegarasi, `/kassa`.
+- **Admin:** hujjatni kuchga kiritish tugmasi.
+- Testlar: API 276, web 27, E2E 128 + ochiq rejim 9.
