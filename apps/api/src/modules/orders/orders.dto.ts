@@ -8,7 +8,7 @@ export const orderCreateDto = z.object({
   fulfillment: z.enum(["delivery", "pickup"]),
   delivery_address: z.string().trim().min(5).max(300).optional(),
   note: z.string().trim().max(300).optional(),
-  payment_type: z.literal("cash").default("cash"),
+  payment_type: z.enum(["cash", "online"]).default("cash"),
   channel: z.enum(["vitrina", "telegram"]).default("vitrina"),
   points_to_use: z.number().int().min(0).max(10_000_000).default(0),
 }).strict().refine((v) => v.fulfillment === "pickup" || !!v.delivery_address, { message: "validation.failed", path: ["delivery_address"] });

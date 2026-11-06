@@ -275,6 +275,31 @@ describe("OpenAPI shartnomasi", () => {
     await op("post", "/v1/courier/deliveries/{id}/fail", `/v1/courier/deliveries/${d2}/fail`, 200, { ...K, body: { reason: "xaridor javob bermadi" } });
   });
 
+  it("javoblar shartnomaga mos: onlayn to'lov", async () => {
+    const o = await makeOwner(h, "+998901000001");
+    const T = { token: o.token, tenant: o.tenantId };
+    await call(h, "patch", `/v1/tenants/${o.tenantId}`, { ...T, body: { status: "active" } }).expect(200);
+    const slug = (await call(h, "get", `/v1/tenants/${o.tenantId}`, T)).body.slug as string;
+    const br = (await call(h, "post", "/v1/branches", { ...T, body: { name: "Markaz", address: "Chilonzor 1" } }).expect(201)).body.id as string;
+    const p = (await call(h, "post", "/v1/products", { ...T, body: { name_uz: "Non", price_tiyin: 500000 } }).expect(201)).body.id as string;
+    await call(h, "put", `/v1/products/${p}/stock`, { ...T, body: { branch_id: br, quantity_milli: 10000 } }).expect(200);
+    await op("get", "/v1/payments/settings", "/v1/payments/settings", 200, T);
+    await op("put", "/v1/payments/settings", "/v1/payments/settings", 422, { ...T, body: { provider: "payme", secret: "abcdefgh1234", enabled: true } });
+    await op("put", "/v1/payments/settings", "/v1/payments/settings", 200, { ...T, body: { provider: "mock", secret: "abcdefgh1234", enabled: true } });
+    const c = await signUp(h, "+998905550001");
+    const ord = (await call(h, "post", `/v1/shops/${slug}/orders`, { token: c.token, body: { branch_id: br, fulfillment: "pickup", payment_type: "online", items: [{ product_id: p, quantity_milli: 2000 }] } }).expect(201)).body;
+    const raw = JSON.stringify({ event_id: "e1", payment_id: ord.payment.id, type: "captured", amount_tiyin: ord.total_tiyin });
+    const sig = (await import("node:crypto")).createHmac("sha256", "abcdefgh1234").update(raw).digest("hex");
+    const send = (body: string, sg: string) => h.http.post(`/v1/webhooks/mock/${slug}`).set("Content-Type", "application/json").set("x-signature", sg).send(body);
+    const bad = await send(raw, "0".repeat(64)); expect(bad.status).toBe(401);
+    const ok = await send(raw, sig); expect(ok.status).toBe(200);
+    checked.push("post /v1/webhooks/{provider}/{slug}");
+    await op("post", "/v1/shops/{slug}/payments/{id}/sandbox", `/v1/shops/${slug}/payments/${ord.payment.id}/sandbox`, 200, { token: c.token, body: { outcome: "captured" } });
+    await op("post", "/v1/orders/{id}/refund", `/v1/orders/${ord.id}/refund`, 200, { ...T, body: { amount_tiyin: 100000, reason: "sifat" } });
+    await op("post", "/v1/orders/{id}/refund", `/v1/orders/${ord.id}/refund`, 422, { ...T, body: { amount_tiyin: 999999999, reason: "ko'p" } });
+    await op("get", "/v1/orders/{id}", `/v1/orders/${ord.id}`, 200, T);
+  });
+
   it("shartnoma o'zgarmasligini kafolatlovchi: har operatsiya testda ishlatilgan", () => {
     const used = new Set(checked);
     const missing: string[] = [];

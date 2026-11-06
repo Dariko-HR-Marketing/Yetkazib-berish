@@ -11,7 +11,7 @@ import { AppModule } from "./app.module";
 import { CONFIG, type Config } from "./config";
 
 export async function createApp(opts: { quiet?: boolean } = {}): Promise<NestExpressApplication> {
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, { logger: opts.quiet ? false : new AppLogger(), bodyParser: true });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { logger: opts.quiet ? false : new AppLogger(), bodyParser: true, rawBody: true });
   const cfg = app.get<Config>(CONFIG);
   app.disable("x-powered-by");
   app.set("trust proxy", 1);

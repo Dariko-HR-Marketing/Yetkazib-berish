@@ -21,7 +21,7 @@ describe("OpenAPI shartnomasi", () => {
 
   it("holatni o'zgartiruvchi har so'rov (auth'dan tashqari) Idempotency-Key talab qiladi", () => {
     for (const { path, method, op } of ops) {
-      if (method === "get" || path.startsWith("/v1/auth/")) continue;
+      if (method === "get" || path.startsWith("/v1/auth/") || path.startsWith("/v1/webhooks/")) continue; // webhook: imzo + event_id bilan takrorlanmaslik
       const hasKey = op.parameters?.some((p) => p.$ref === "#/components/parameters/IdempotencyKey");
       expect(hasKey, `${method.toUpperCase()} ${path}`).toBe(true);
     }
@@ -29,7 +29,7 @@ describe("OpenAPI shartnomasi", () => {
 
   it("do'konga tegishli endpointlar X-Tenant-Id talab qiladi (tenantlarni yaratish va admin'dan tashqari)", () => {
     for (const { path, method, op } of ops) {
-      if (path === "/v1/tenants" || path === "/v1/health" || path.startsWith("/v1/auth/") || path.startsWith("/v1/admin/") || path.startsWith("/v1/me") || path.startsWith("/v1/legal/") || path.startsWith("/v1/shops/") || path.startsWith("/v1/marketplace/") || path.endsWith("/accept")) continue;
+      if (path === "/v1/tenants" || path === "/v1/health" || path.startsWith("/v1/auth/") || path.startsWith("/v1/admin/") || path.startsWith("/v1/me") || path.startsWith("/v1/legal/") || path.startsWith("/v1/shops/") || path.startsWith("/v1/marketplace/") || path.startsWith("/v1/webhooks/") || path.endsWith("/accept")) continue;
       const hasTenant = op.parameters?.some((p) => p.$ref === "#/components/parameters/TenantId");
       expect(hasTenant, `${method.toUpperCase()} ${path}`).toBe(true);
     }

@@ -24,6 +24,7 @@ tags:
   - { name: orders }
   - { name: fulfillment }
   - { name: reports }
+  - { name: payments }
 security:
   - bearer: []
 paths:
@@ -910,6 +911,64 @@ paths:
       summary: "Umumiy katalog («Yaqin do'konlar»): catalog.marketplace_listing yoqilgan faol do'konlar"
       responses:
         '200': { description: Do'konlar, content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { type: object, required: [name, slug], properties: { name: { type: string }, slug: { type: string } } } } } } } } }
+  /v1/webhooks/{provider}/{slug}:
+    post:
+      tags: [payments]
+      operationId: paymentWebhook
+      security: []
+      summary: "To'lov provayderi callback'i. Imzo (mock: x-signature = HMAC-SHA256(raw tana, kalit)); (provider, event_id) bo'yicha takror xavfsiz"
+      parameters: [{ name: provider, in: path, required: true, schema: { type: string, enum: [mock, payme, click, uzum] } }, { name: slug, in: path, required: true, schema: { type: string } }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/PaymentWebhook' } } } }
+      responses:
+        '200': { description: Qabul qilindi (takror bo'lsa duplicate=true), content: { application/json: { schema: { type: object, required: [ok], properties: { ok: { type: boolean }, duplicate: { type: boolean }, ignored: { type: string }, refunded: { type: boolean } } } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '422': { $ref: '#/components/responses/Error' }
+  /v1/shops/{slug}/payments/{id}/sandbox:
+    post:
+      tags: [payments]
+      operationId: paymentSandbox
+      summary: Sinov to'lovi (faqat mock provayder, productionda SANDBOX_PAYMENTS=on bo'lmasa 404)
+      parameters: [{ name: slug, in: path, required: true, schema: { type: string } }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [outcome], additionalProperties: false, properties: { outcome: { type: string, enum: [captured, failed] } } } } } }
+      responses:
+        '200': { description: Natija, content: { application/json: { schema: { type: object, additionalProperties: true } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/payments/settings:
+    get:
+      tags: [payments]
+      operationId: getPaymentSettings
+      parameters: [{ $ref: '#/components/parameters/TenantId' }]
+      responses:
+        '200': { description: Sozlamalar (kalit qaytmaydi), content: { application/json: { schema: { $ref: '#/components/schemas/PaymentSettings' } } } }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+    put:
+      tags: [payments]
+      operationId: setPaymentSettings
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/PaymentSettingsInput' } } } }
+      responses:
+        '200': { description: Saqlandi, content: { application/json: { schema: { $ref: '#/components/schemas/PaymentSettings' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '422': { $ref: '#/components/responses/Error' }
+  /v1/orders/{id}/refund:
+    post:
+      tags: [payments]
+      operationId: refundOrder
+      summary: Qisman yoki to'liq qaytarish (summa bo'sh = qolgani). Moliya ruxsati
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { $ref: '#/components/parameters/IdempotencyKey' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [reason], additionalProperties: false, properties: { amount_tiyin: { type: integer, minimum: 1 }, reason: { type: string, minLength: 2, maxLength: 60 } } } } } }
+      responses:
+        '200': { description: Qaytarildi, content: { application/json: { schema: { $ref: '#/components/schemas/Payment' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '422': { $ref: '#/components/responses/Error' }
 components:
   securitySchemes:
     bearer: { type: http, scheme: bearer, bearerFormat: JWT }
@@ -1441,7 +1500,7 @@ components:
         fulfillment: { type: string, enum: [delivery, pickup] }
         delivery_address: { type: string, minLength: 5, maxLength: 300 }
         note: { type: string, maxLength: 300 }
-        payment_type: { type: string, enum: [cash], default: cash }
+        payment_type: { type: string, enum: [cash, online], default: cash }
         channel: { type: string, enum: [vitrina, telegram], default: vitrina }
         points_to_use: { type: integer, minimum: 0, default: 0, description: Ball bilan to'lash (1 ball = 1 so'm; mahsulot narxining 30% igacha) }
     OrderItem:
@@ -1481,6 +1540,10 @@ components:
         created_at: { type: string, format: date-time }
         updated_at: { type: string, format: date-time }
         items: { type: array, items: { $ref: '#/components/schemas/OrderItem' } }
+        payment:
+          oneOf:
+            - { type: 'null' }
+            - { $ref: '#/components/schemas/Payment' }
         delivery:
           description: Faqat panelda — biriktirilgan kuryer
           oneOf:
@@ -1570,3 +1633,43 @@ components:
         plan_version: { type: integer }
         created_at: { type: string, format: date-time }
         members: { type: integer }
+    Payment:
+      type: object
+      required: [id, provider, status, amount_tiyin, refunded_tiyin, failure_reason, expires_at, pay_url]
+      properties:
+        id: { type: string, format: uuid }
+        provider: { type: string }
+        status: { type: string, enum: [pending, authorized, captured, failed, cancelled] }
+        amount_tiyin: { type: integer }
+        refunded_tiyin: { type: integer }
+        failure_reason: { type: [string, 'null'] }
+        expires_at: { type: string, format: date-time }
+        pay_url: { type: [string, 'null'], description: Faqat «pending» holatda }
+    PaymentWebhook:
+      type: object
+      required: [event_id, payment_id, type, amount_tiyin]
+      additionalProperties: false
+      properties:
+        event_id: { type: string, maxLength: 100 }
+        payment_id: { type: string, format: uuid }
+        type: { type: string, enum: [authorized, captured, failed] }
+        amount_tiyin: { type: integer, minimum: 1 }
+        reason: { type: string, maxLength: 60 }
+    PaymentSettings:
+      type: object
+      required: [provider, merchant_id, enabled, has_secret, available_providers]
+      properties:
+        provider: { type: [string, 'null'] }
+        merchant_id: { type: [string, 'null'] }
+        enabled: { type: boolean }
+        has_secret: { type: boolean }
+        available_providers: { type: array, items: { type: string } }
+    PaymentSettingsInput:
+      type: object
+      required: [provider, enabled]
+      additionalProperties: false
+      properties:
+        provider: { type: string, enum: [mock, payme, click, uzum] }
+        merchant_id: { type: [string, 'null'], maxLength: 100 }
+        secret: { type: string, minLength: 8, maxLength: 200, description: Faqat yoziladi (shifrlanadi), hech qachon qaytmaydi }
+        enabled: { type: boolean }

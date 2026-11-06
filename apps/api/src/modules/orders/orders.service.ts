@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { Clock } from "../../common/clock";
 import { ApiError } from "../../common/errors";
 import { DbService, type Tx } from "../../db/db.service";
 import { AuditService } from "../audit-events/audit.service";
@@ -6,6 +7,7 @@ import { EventsService } from "../audit-events/events.service";
 import { decodeCursor, encodeCursor } from "../catalog/stock-state";
 import { maskPhone } from "../identity/identity.service";
 import { LoyaltyService, POINT_TIYIN } from "../loyalty/loyalty.service";
+import { PaymentsService } from "../payments/payments.service";
 import { FeaturesService } from "../plans-flags/features.service";
 import { StorefrontService } from "./storefront.service";
 
@@ -39,7 +41,7 @@ export const orderDto = (o: OrderRow, items: ItemRow[], mask: boolean, delivery?
 @Injectable()
 export class OrdersService {
   constructor(private readonly db: DbService, private readonly shops: StorefrontService, private readonly features: FeaturesService,
-              private readonly audit: AuditService, private readonly events: EventsService, private readonly loyalty: LoyaltyService) {}
+              private readonly audit: AuditService, private readonly events: EventsService, private readonly loyalty: LoyaltyService, private readonly payments: PaymentsService, private readonly clock: Clock) {}
 
   async loadItems(tx: Tx, tenantId: string, ids: string[]): Promise<Map<string, ItemRow[]>> {
     const m = new Map<string, ItemRow[]>();
@@ -59,9 +61,9 @@ export class OrdersService {
   }
 
   // ---------------------------------------------------------------- xaridor
-  async place(slug: string, userId: string, d: { branch_id: string; items: { product_id: string; quantity_milli: number }[]; fulfillment: "delivery" | "pickup"; delivery_address?: string; note?: string; payment_type: "cash"; channel: "vitrina" | "telegram"; points_to_use: number }) {
+  async place(slug: string, userId: string, d: { branch_id: string; items: { product_id: string; quantity_milli: number }[]; fulfillment: "delivery" | "pickup"; delivery_address?: string; note?: string; payment_type: "cash" | "online"; channel: "vitrina" | "telegram"; points_to_use: number }) {
     const shop = await this.shops.resolve(slug);
-    if (!(await this.features.can(shop.id, "payment.cash"))) throw new ApiError(422, "order.payment_unavailable");
+    if (d.payment_type === "cash" && !(await this.features.can(shop.id, "payment.cash"))) throw new ApiError(422, "order.payment_unavailable");
     if (d.points_to_use > 0 && !(await this.loyalty.enabled(shop.id))) throw new ApiError(422, "loyalty.disabled");
     const merged = new Map<string, number>();
     for (const i of d.items) merged.set(i.product_id, (merged.get(i.product_id) ?? 0) + i.quantity_milli);
@@ -98,6 +100,12 @@ export class OrdersService {
         `insert into orders (tenant_id, branch_id, customer_id, fulfillment, payment_type, channel, subtotal_tiyin, delivery_fee_tiyin, discount_tiyin, points_spent, total_tiyin, delivery_address, customer_phone, note)
          values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14) returning *, to_char(created_at at time zone 'utc', 'YYYY-MM-DD"T"HH24:MI:SS.US"Z"') as cur_at`,
         [shop.id, d.branch_id, userId, d.fulfillment, d.payment_type, d.channel, subtotal, fee, discount, d.points_to_use, subtotal + fee - discount, d.fulfillment === "delivery" ? d.delivery_address : null, phone, d.note ?? null])).rows[0]!;
+      let payment: ReturnType<PaymentsService["view"]> | null = null;
+      if (d.payment_type === "online") {
+        const provider = await this.payments.activeProvider(tx, shop.id);
+        if (!provider) throw new ApiError(422, "payment.online_unavailable");
+        payment = this.payments.view(await this.payments.createForOrder(tx, shop.id, o.id, provider, subtotal + fee - discount, this.clock.now()), shop.slug);
+      }
       if (d.points_to_use > 0) await this.loyalty.spendForOrder(tx, shop.id, userId, o.id, d.points_to_use, subtotal); // chegara va balansni tekshiradi; xatoda butun buyurtma bekor
       for (const l of lines) {
         await tx.query("insert into order_items (order_id, tenant_id, product_id, name_uz, name_ru, unit, quantity_milli, price_tiyin, line_total_tiyin, reserved_milli) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$7)",
@@ -105,7 +113,7 @@ export class OrdersService {
       }
       await tx.query("insert into order_status_history (tenant_id, order_id, from_status, to_status, actor_id) values ($1,$2,null,'placed',$3)", [shop.id, o.id, userId]);
       await this.events.emit(tx, "order.placed", { order_id: o.id, amount_tiyin: subtotal + fee - discount, payment_type: d.payment_type, channel: d.channel }, { tenantId: shop.id, actorId: userId, source: d.channel === "telegram" ? "telegram" : "vitrina" });
-      return orderDto(o, (await this.loadItems(tx, shop.id, [o.id])).get(o.id) ?? [], false);
+      return { ...orderDto(o, (await this.loadItems(tx, shop.id, [o.id])).get(o.id) ?? [], false), payment };
     });
   }
 
@@ -114,7 +122,8 @@ export class OrdersService {
     return this.db.tx({ tenantId: shop.id, userId }, async (tx) => {
       const r = await tx.query<OrderRow>("select *, '' as cur_at from orders where tenant_id = $1 and customer_id = $2 order by created_at desc, id limit $3", [shop.id, userId, limit]);
       const items = await this.loadItems(tx, shop.id, r.rows.map((o) => o.id));
-      return { items: r.rows.map((o) => orderDto(o, items.get(o.id) ?? [], false)) };
+      const pays = await this.payments.forOrders(tx, shop.id, r.rows.map((o) => o.id), shop.slug);
+      return { items: r.rows.map((o) => ({ ...orderDto(o, items.get(o.id) ?? [], false), payment: pays.get(o.id) ?? null })) };
     });
   }
 
@@ -123,7 +132,7 @@ export class OrdersService {
     return this.db.tx({ tenantId: shop.id, userId }, async (tx) => {
       const o = (await tx.query<OrderRow>("select *, '' as cur_at from orders where id = $1 and tenant_id = $2 and customer_id = $3", [id, shop.id, userId])).rows[0];
       if (!o) throw new ApiError(404, "not_found"); // begona buyurtma — mavjud emas bilan bir xil
-      return orderDto(o, (await this.loadItems(tx, shop.id, [o.id])).get(o.id) ?? [], false);
+      return { ...orderDto(o, (await this.loadItems(tx, shop.id, [o.id])).get(o.id) ?? [], false), payment: (await this.payments.forOrders(tx, shop.id, [o.id], shop.slug)).get(o.id) ?? null };
     });
   }
 
@@ -151,9 +160,10 @@ export class OrdersService {
       const last = page[page.length - 1];
       const items = await this.loadItems(tx, tenantId, page.map((o) => o.id));
       const dels = await this.loadDeliveries(tx, tenantId, page.map((o) => o.id));
+      const pays = await this.payments.forOrders(tx, tenantId, page.map((o) => o.id));
       const counts = await tx.query<{ status: string; n: number }>("select status, count(*)::int as n from orders where tenant_id = $1 group by status", [tenantId]);
       return {
-        items: page.map((o) => orderDto(o, items.get(o.id) ?? [], true, dels.get(o.id) ?? null)),
+        items: page.map((o) => ({ ...orderDto(o, items.get(o.id) ?? [], true, dels.get(o.id) ?? null), payment: pays.get(o.id) ?? null })),
         next_cursor: r.rows.length > q.limit && last ? encodeCursor({ at: last.cur_at, id: last.id }) : null,
         counts: Object.fromEntries(counts.rows.map((c) => [c.status, c.n])),
       };
@@ -165,7 +175,7 @@ export class OrdersService {
       const o = (await tx.query<OrderRow>("select *, '' as cur_at from orders where id = $1 and tenant_id = $2", [id, tenantId])).rows[0];
       if (!o) throw new ApiError(404, "not_found");
       const hist = await tx.query("select from_status, to_status, created_at from order_status_history where order_id = $1 and tenant_id = $2 order by created_at, id", [id, tenantId]);
-      return { ...orderDto(o, (await this.loadItems(tx, tenantId, [o.id])).get(o.id) ?? [], true, (await this.loadDeliveries(tx, tenantId, [o.id])).get(o.id) ?? null), history: hist.rows };
+      return { ...orderDto(o, (await this.loadItems(tx, tenantId, [o.id])).get(o.id) ?? [], true, (await this.loadDeliveries(tx, tenantId, [o.id])).get(o.id) ?? null), payment: (await this.payments.forOrders(tx, tenantId, [o.id])).get(o.id) ?? null, history: hist.rows };
     });
   }
 
@@ -174,6 +184,10 @@ export class OrdersService {
       const cur = (await tx.query<{ status: Status }>("select status from orders where id = $1 and tenant_id = $2 for update", [id, tenantId])).rows[0];
       if (!cur) throw new ApiError(404, "not_found");
       if (!TRANSITIONS[cur.status].includes(to)) throw new ApiError(409, "order.invalid_transition", { from: cur.status, to });
+      if (to === "accepted") {
+        const o = (await tx.query<{ payment_type: string }>("select payment_type from orders where id = $1 and tenant_id = $2", [id, tenantId])).rows[0]!;
+        if (o.payment_type === "online" && !(await tx.query("select 1 from payments where order_id = $1 and tenant_id = $2 and status = 'captured'", [id, tenantId])).rowCount) throw new ApiError(409, "order.payment_pending");
+      }
       if (to === "completed") {
         // qo'lda yakunlash: olib ketish topshirildi yoki kuryersiz tezkor yo'l; kuryer biriktirilgan bo'lsa yetkazish kuryer orqali tugaydi
         const o = (await tx.query<{ fulfillment: string }>("select fulfillment from orders where id = $1 and tenant_id = $2", [id, tenantId])).rows[0]!;
@@ -211,6 +225,7 @@ export class OrdersService {
     }
     if ((to === "cancelled" || to === "failed") && Number(o.points_spent) > 0) await this.loyalty.reverseForOrder(tx, tenantId, o.customer_id, id, Number(o.points_spent));
     if (to === "completed") await this.loyalty.accrueForOrder(tx, tenantId, o.customer_id, id, Number(o.subtotal_tiyin) - Number(o.discount_tiyin));
+    if (to === "cancelled" || to === "failed") await this.payments.refundAllOnCancel(tx, tenantId, id, actorId, reason ?? (to === "failed" ? "delivery_failed" : "cancelled"));
     const why = to === "cancelled" || to === "failed" ? reason ?? null : null;
     await tx.query("update orders set status = $3, cancel_reason = $4, updated_at = now(), delivered_at = case when $3 = 'completed' then now() else delivered_at end where id = $1 and tenant_id = $2", [id, tenantId, to, why]);
     await tx.query("insert into order_status_history (tenant_id, order_id, from_status, to_status, actor_id) values ($1,$2,$3,$4,$5)", [tenantId, id, from, to, actorId]);
