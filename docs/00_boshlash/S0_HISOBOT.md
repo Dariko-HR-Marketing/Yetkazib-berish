@@ -149,3 +149,12 @@ S3 (to'lov) tashqi ma'lumot (Payme/Click/Uzum merchant sandbox kalitlari va prot
 
 Qilinmagan: kuryer naqd limiti va kassa hisob-kitobi (1,5 mln so'm), 3 daqiqalik taklif/zaxira kanal (S5), yetkazish narxi, GPS marshruti xaritasi, haqiqiy qurilmada GPS tekshiruvi (bu muhitda geolokatsiya mavjud emas).
 Inson ko'rib chiqishi: qoldiq yozilishi (yig'ish/bajarish), ruxsatlar (`picking`, `dispatch`, `courier:self`), kuryerga mijoz telefoni ko'rinishi.
+
+## 12. S5–S8 — holat (2026-11-06)
+| Sprint | Natija | Holat |
+| --- | --- | --- |
+| S5 | Yetkazish narxi, bepul chegara, minimal buyurtma (tekis narx). **Platforma kuryerlari va tashqi xizmat (Yandex) — qilinmadi:** yurist xulosasi va shartnoma kerak (CLAUDE.md §9) | qisman |
+| S6 | Ball: o'zgarmas ledger, keshbek 2% + daraja, 30% chegara, 24 soat ushlash, 90 kun muddat, kunlik solishtirish. Oferta/akcept — S0'da bor. **KYC (E-IMZO) — qilinmadi** | qisman |
+| S7 | Hisobot (`/hisobot`), admin paneli (`/admin`), umumiy katalog (`/yaqin`). **AI yordamchi, billing/hisob-faktura, tahlil — qilinmadi** | qisman |
+| S8 | k6 skripti, zaxira/tiklash skriptlari, ishga tushirish ro'yxati (`ISHGA_TUSHIRISH.md`). **Yuklama/pentest natijalari yo'q** (staging kerak) | qisman |
+| S3 | Onlayn to'lov — tashqi kalitlar kerak | boshlanmagan |

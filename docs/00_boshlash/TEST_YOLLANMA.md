@@ -102,6 +102,19 @@ Nimani sinab ko'rish:
 
 **To'liq zanjirni sinash:** (1) xaridor `/d/demo` dan buyurtma beradi; (2) Egasi `/buyurtmalar` da qabul qiladi; (3) Yig'uvchi `/yigish` da yig'adi; (4) Dispetcher `/dispetcher` da kuryerga biriktiradi; (5) Kuryer `/kuryer` da oladi va yetkazadi; (6) xaridor holatni, Egasi `/katalog` da kamaygan qoldiqni ko'radi. Demo uchun ikki tayyor buyurtma bor (yangi va qabul qilingan).
 
+### /hisobot — savdo hisoboti (Egasi, Menejer, Dispetcher, Buxgalter, Marketolog)
+- Davr: 7 / 30 / 90 kun. Raqamlar: buyurtmalar, daromad, o'rtacha chek, bekor/yetkazilmagan ulushi; kunlar bo'yicha daromad (chiziqcha), eng ko'p sotilgan 10 mahsulot, ball chegirmasi. Faqat **bajarilgan** buyurtmalar daromadga kiradi.
+
+### /admin — platforma admini (faqat admin: `+998 90 100 00 00`)
+- Do'konlar (qidiruv, paketni o'zgartirish), Funksiyalar (platformada yoqish/o'chirish), Hujjatlar (versiyalar). Admin kirgach bevosita shu sahifaga tushadi.
+
+### /yaqin — umumiy katalog («Yaqin do'konlar»), kirish shart emas
+- Faqat Biznes paketli va `catalog.marketplace_listing` yoqilgan do'konlar. Boshqa holatda «Hozircha do'konlar yo'q».
+
+### Yetkazish narxi va ball
+- **/paket** (Egasi): «Yetkazish sozlamalari» — narx, bepul chegarasi, minimal buyurtma (so'mda). Savatda yetkazish narxi va minimal buyurtma ko'rinadi.
+- Ball: Egasi `loyalty.points` ni yoqadi (Biznes paketi va undan yuqori; demo Tarmoq paketida yoqiq emas — yoqing). Bajarilgan buyurtmadan 2% (daraja bilan ko'proq) keshbek, 24 soatdan keyin ishlatiladi; savatda «Ball bilan to'lash» (mahsulot narxining 30% igacha, yetkazish ballga to'lanmaydi). Bekor qilinsa ball qaytadi.
+
 ### /jamoa — xodimlar (Egasi: to'liq; Menejer: faqat ko'rish)
 - Jadval: a'zolar (telefon maskalangan), rol tanlash (faqat egasi), to'xtatish/yoqish tugmasi, kutilayotgan takliflar.
 - O'ngda «Taklif» formasi (faqat egasi): telefon + rol → SMS orqali havola (hozir SMS ketmaydi, havola serverda yaratiladi).
