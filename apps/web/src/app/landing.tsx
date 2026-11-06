@@ -21,7 +21,7 @@ export function Landing({ plans }: { plans: PublicPlan[] }) {
     <div className="mx-auto flex min-h-screen w-full max-w-[1100px] flex-col px-4 md:px-6" style={{ paddingTop: "var(--safe-top)" }}>
       <header className="flex flex-wrap items-center justify-between gap-3 py-3">
         <span className="text-title-sm font-extrabold text-brand-dark">{t("ui.app_name")}</span>
-        <div className="flex items-center gap-2"><LangSwitch /></div>
+        <div className="flex items-center gap-2">{signed && <Link href="/profil" className="inline-flex min-h-touch items-center px-2 text-body font-bold">{t("prof.title")}</Link>}<LangSwitch /></div>
       </header>
       <main className="min-w-0 flex-1 break-words">
         <section className="flex flex-col gap-4 py-8 md:py-14" aria-labelledby="hero">

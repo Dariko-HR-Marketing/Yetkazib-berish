@@ -76,3 +76,21 @@ test("hisobot, admin paneli va umumiy katalog", async ({ browser }) => {
   await owner.goto("/yaqin");
   await expect(owner.getByTestId("market-shop")).toContainText("Moviy Bozor");
 });
+
+test("profil: marketing roziligi alohida yoqiladi va qaytarib olinadi; audit va mijozlar sahifalari egasiga ochiq", async ({ browser }) => {
+  const p = await login(browser, "90 777 33 03");
+  await expect(p).toHaveURL(/dokon-yaratish/);
+  await p.goto("/profil");
+  await expect(p.getByTestId("prof-phone")).toContainText("•••");
+  const sw = p.getByRole("switch", { name: /xabar olish/ });
+  await expect(sw).toHaveAttribute("aria-checked", "false");
+  await sw.click();
+  await expect(sw).toHaveAttribute("aria-checked", "true");
+  await expect(p.getByTestId("prof-consents")).toContainText("Qabul qilingan");
+  await sw.click();
+  await expect(sw).toHaveAttribute("aria-checked", "false");
+  await expect(p.getByTestId("prof-consents")).toContainText("Qaytarib olingan");
+  // do'konsiz foydalanuvchi egasi sahifalariga kirmaydi
+  await p.goto("/audit");
+  await expect(p).toHaveURL(/dokon-yaratish/);
+});

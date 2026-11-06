@@ -575,5 +575,14 @@
  "cust.cancelled": "Отменено",
  "cust.spent": "Расходы",
  "cust.points": "Баллы",
- "cust.last": "Последний заказ"
+ "cust.last": "Последний заказ",
+ "prof.title": "Профиль",
+ "prof.phone": "Номер телефона",
+ "prof.marketing": "Маркетинговое согласие",
+ "prof.marketing_hint": "Получать сообщения об акциях и новостях. Отдельно от согласия на услугу; можно отозвать в любой момент.",
+ "prof.marketing_toggle": "Получать сообщения об акциях и новостях",
+ "prof.consents": "История согласий",
+ "prof.consents_empty": "Пока нет записей",
+ "prof.accepted": "Принято",
+ "prof.revoked": "Отозвано"
 }

@@ -575,5 +575,14 @@
  "cust.cancelled": "Bekor",
  "cust.spent": "Sarf",
  "cust.points": "Ball",
- "cust.last": "Oxirgi buyurtma"
+ "cust.last": "Oxirgi buyurtma",
+ "prof.title": "Profil",
+ "prof.phone": "Telefon raqami",
+ "prof.marketing": "Marketing roziligi",
+ "prof.marketing_hint": "Aksiyalar va yangiliklar haqida xabar olish. Xizmat roziligidan alohida; istalgan payt qaytarib olishingiz mumkin.",
+ "prof.marketing_toggle": "Aksiya va yangiliklar haqida xabar olish",
+ "prof.consents": "Rozilik tarixi",
+ "prof.consents_empty": "Hozircha yozuv yo'q",
+ "prof.accepted": "Qabul qilingan",
+ "prof.revoked": "Qaytarib olingan"
 }

@@ -92,6 +92,7 @@ const PAGES: { name: string; path: string; auth: boolean }[] = [
   { name: "yigish", path: "/yigish", auth: true },
   { name: "hisobot", path: "/hisobot", auth: true },
   { name: "audit", path: "/audit", auth: true },
+  { name: "profil", path: "/profil", auth: true },
   { name: "mijozlar", path: "/mijozlar", auth: true },
   { name: "kassa", path: "/kassa", auth: true },
   { name: "yaqin", path: "/yaqin", auth: false },
