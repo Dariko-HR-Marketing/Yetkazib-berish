@@ -94,3 +94,50 @@ test("profil: marketing roziligi alohida yoqiladi va qaytarib olinadi; audit va 
   await p.goto("/audit");
   await expect(p).toHaveURL(/dokon-yaratish/);
 });
+
+test("ish vaqti: egasi filialni yopadi — vitrinada 'Hozir yopiq', buyurtma tugmasi o'chadi; qayta ochgach tiklanadi", async ({ browser }) => {
+  const owner = await login(browser, "90 777 44 04");
+  await expect(owner).toHaveURL(/dokon-yaratish/);
+  await owner.getByLabel("Do'kon nomi", { exact: true }).fill("Qizil Bozor");
+  await owner.getByLabel(/STIR/).fill("223456789");
+  await owner.getByRole("button", { name: "Do'kon yaratish" }).click();
+  await expect(owner).toHaveURL(/katalog/);
+  await owner.getByLabel("Filial nomi").fill("Markaziy");
+  await owner.getByLabel("Manzil", { exact: true }).fill("Toshkent, Chilonzor 1");
+  await owner.getByRole("button", { name: "Filial qo'shish" }).click();
+  await owner.getByRole("button", { name: "Mahsulot qo'shish" }).click();
+  await owner.getByLabel("Nomi (o'zbekcha)").fill("Non");
+  await owner.getByLabel("Narx, so'm").fill("5 000");
+  await owner.getByLabel("Qoldiq (tanlangan filialda)").fill("20");
+  await owner.getByRole("button", { name: "Saqlash", exact: true }).click();
+  await expect(owner.getByTestId("product-row")).toHaveCount(1);
+
+  const cust = await login(browser, "90 777 55 05");
+  await cust.goto("/d/qizil-bozor");
+  await expect(cust.getByTestId("shop-closed")).toHaveCount(0);
+
+  // hamma kunlarni dam qilamiz
+  await owner.goto("/paket");
+  const card = owner.getByTestId("wh-branch");
+  await card.getByRole("switch", { name: "Doim ochiq (jadvalsiz)" }).click();
+  for (const d of ["Dushanba", "Seshanba", "Chorshanba", "Payshanba", "Juma", "Shanba", "Yakshanba"]) await card.getByRole("switch", { name: d, exact: true }).click();
+  const saved = owner.waitForResponse((r) => r.url().includes("/v1/branches/") && r.request().method() === "PATCH");
+  await card.getByRole("button", { name: "Saqlash" }).click();
+  const resp = await saved;
+  expect(resp.status(), await resp.text()).toBe(200);
+  await expect(owner.getByText("Ish vaqti saqlandi")).toBeVisible();
+
+  await cust.goto("/d/qizil-bozor");
+  await expect(cust.getByTestId("shop-closed")).toBeVisible();
+  await cust.getByTestId("shop-product").getByRole("button", { name: "Qo'shish" }).click();
+  await cust.getByRole("button", { name: /Savatni ko'rish/ }).click();
+  await expect(cust.getByTestId("branch-closed")).toBeVisible();
+  await expect(cust.getByRole("button", { name: "Buyurtma berish" })).toBeDisabled();
+
+  // qayta "doim ochiq"
+  await card.getByRole("switch", { name: "Doim ochiq (jadvalsiz)" }).click();
+  await card.getByRole("button", { name: "Saqlash" }).click();
+  await expect(owner.getByText("Ish vaqti saqlandi").first()).toBeVisible();
+  await cust.reload();
+  await expect(cust.getByTestId("branch-closed")).toHaveCount(0);
+});

@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { Clock } from "../../common/clock";
+import { isOpenAt } from "../../common/work-hours";
 import { ApiError } from "../../common/errors";
 import { DbService, type Tx } from "../../db/db.service";
 import { AuditService } from "../audit-events/audit.service";
@@ -71,7 +72,9 @@ export class OrdersService {
     const ids = [...merged.keys()].sort(); // qulf tartibi: deadlock bo'lmasin
 
     return this.db.tx({ tenantId: shop.id, userId }, async (tx) => {
-      if (!(await tx.query("select 1 from branches where id = $1 and tenant_id = $2", [d.branch_id, shop.id])).rowCount) throw new ApiError(404, "not_found");
+      const br = (await tx.query<{ work_hours: unknown }>("select work_hours from branches where id = $1 and tenant_id = $2", [d.branch_id, shop.id])).rows[0];
+      if (!br) throw new ApiError(404, "not_found");
+      if (!isOpenAt(br.work_hours, this.clock.now())) throw new ApiError(422, "order.branch_closed");
       const prods = (await tx.query<{ id: string; name_uz: string; name_ru: string | null; unit: string; price_tiyin: string }>(
         "select id, name_uz, name_ru, unit, price_tiyin from products where tenant_id = $1 and status = 'active' and id = any($2::uuid[])", [shop.id, ids])).rows;
       if (prods.length !== ids.length) throw new ApiError(422, "order.product_unavailable", { products: ids.filter((id) => !prods.some((p) => p.id === id)) });

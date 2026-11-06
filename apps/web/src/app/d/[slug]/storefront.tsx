@@ -10,7 +10,7 @@ import { formatQty } from "@/lib/catalog";
 import { useI18n } from "@/lib/i18n";
 import { MainAction } from "@/lib/telegram";
 
-export interface ShopData { slug: string; name: string; branches: { id: string; name: string; address: string }[]; features: { cash: boolean; stock_visible: boolean } }
+export interface ShopData { slug: string; name: string; branches: { id: string; name: string; address: string; open_now: boolean }[]; features: { cash: boolean; stock_visible: boolean } }
 export interface CategoryItem { id: string; name_uz: string; name_ru: string | null }
 export interface ShopProduct { id: string; category_id: string | null; name_uz: string; name_ru: string | null; unit: "piece" | "kg" | "l"; price_tiyin: number; availability: { state: "in" | "low" | "out"; available_milli: number | null } }
 export interface ProductPage { branch_id: string | null; items: ShopProduct[]; next_cursor: string | null }
@@ -72,11 +72,12 @@ export function Storefront({ slug, shop, categories, initial }: { slug: string; 
             <div className="flex flex-col gap-1">
               <label htmlFor="shop-branch" className="text-body font-semibold">{t("shop.branch")}</label>
               <select id="shop-branch" value={branchId} onChange={(e) => setBranchId(e.target.value)} className="min-h-touch rounded-md border border-line-strong bg-surface px-3 text-body-lg">
-                {shop.branches.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
+                {shop.branches.map((b) => <option key={b.id} value={b.id}>{b.name}{b.open_now ? "" : ` · ${t("wh.closed_now")}`}</option>)}
               </select>
             </div>
           )}
         </div>
+        {shop.branches.find((b) => b.id === branchId)?.open_now === false && <p role="status" data-testid="shop-closed" className="mt-3 rounded-lg bg-warning-soft p-3 font-semibold text-warning">{t("wh.closed_now")} — {t("wh.cart_closed")}</p>}
         {categories.length > 0 && (
           <div role="group" aria-label={t("shop.all")} className="-mx-4 flex gap-2 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:px-0">
             {[{ id: "", name_uz: t("shop.all"), name_ru: t("shop.all") }, ...categories].map((c) => (

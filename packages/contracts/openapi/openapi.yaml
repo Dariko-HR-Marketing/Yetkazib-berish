@@ -287,6 +287,18 @@ paths:
         '403': { $ref: '#/components/responses/Error' }
         '404': { $ref: '#/components/responses/Error' }
         '409': { $ref: '#/components/responses/Error' }
+  /v1/branches/{id}:
+    patch:
+      tags: [tenancy]
+      operationId: updateBranch
+      summary: "Filial ish vaqtini o'zgartirish ({} — jadval yo'q, doim ochiq; aks holda 7 kun: {open, close} yoki null)"
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, required: [work_hours], additionalProperties: false, properties: { work_hours: { $ref: '#/components/schemas/WorkHours' } } } } } }
+      responses:
+        '200': { description: Yangilandi, content: { application/json: { schema: { $ref: '#/components/schemas/Branch' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
   /v1/invites:
     get:
       tags: [tenancy]
@@ -1283,6 +1295,10 @@ components:
         address: { type: string, minLength: 3, maxLength: 300 }
         lat: { type: number, minimum: -90, maximum: 90 }
         lng: { type: number, minimum: -180, maximum: 180 }
+    WorkHours:
+      type: object
+      description: "{} — jadval yo'q (doim ochiq). Aks holda mon..sun kalitlari, har biri {open, close} (HH:MM, close 24:00 bo'lishi mumkin) yoki null (dam). Asia/Tashkent."
+      additionalProperties: { type: [object, 'null'], required: [open, close], properties: { open: { type: string }, close: { type: string } } }
     Branch:
       type: object
       required: [id, name, address]
@@ -1292,6 +1308,7 @@ components:
         address: { type: string }
         lat: { type: [number, 'null'] }
         lng: { type: [number, 'null'] }
+        work_hours: { $ref: '#/components/schemas/WorkHours' }
     InviteCreate:
       type: object
       required: [phone, role]
@@ -1569,7 +1586,7 @@ components:
       properties:
         slug: { type: string }
         name: { type: string }
-        branches: { type: array, items: { type: object, required: [id, name, address], properties: { id: { type: string, format: uuid }, name: { type: string }, address: { type: string } } } }
+        branches: { type: array, items: { type: object, required: [id, name, address, work_hours, open_now], properties: { id: { type: string, format: uuid }, name: { type: string }, address: { type: string }, work_hours: { $ref: '#/components/schemas/WorkHours' }, open_now: { type: boolean } } } }
         features: { type: object, required: [cash, stock_visible, loyalty, online], properties: { cash: { type: boolean }, stock_visible: { type: boolean }, loyalty: { type: boolean }, online: { type: boolean } } }
         delivery: { $ref: '#/components/schemas/DeliverySettings' }
     ShopProduct:

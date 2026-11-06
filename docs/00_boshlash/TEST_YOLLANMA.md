@@ -188,3 +188,13 @@ Har topilmada: sahifa manzili, rol (qaysi raqam), nima qildingiz, nima kutdingiz
 | `/` (bosh) | hamma | Hero, 3 qadam, afzalliklar, paketlar kartalari (`GET /v1/plans`), hujjatlar havolalari; kirgan foydalanuvchiga CTA `/panel` ga olib boradi |
 
 Ruxsat: kassir, yig'uvchi, dispetcher, kuryer `/audit` va `/mijozlar` ni ko'rmaydi (API 403, menyuda yo'q, sahifa `/paket` ga yo'naltiradi).
+
+### Filial ish vaqti
+
+| Joy | Nimani tekshirish |
+|---|---|
+| `/paket` → "Filiallar ish vaqti" (faqat egasi) | Har filial uchun "Doim ochiq" kaliti; o'chirilsa 7 kun: kun kaliti + ochilish/yopilish vaqti (24:00 = yarim tun) yoki "Dam"; yopilish ochilishdan keyin bo'lishi shart; saqlangach "Ish vaqti saqlandi" |
+| `/d/<do'kon>` | Tanlangan filial yopiq bo'lsa "Hozir yopiq" xabari; filial tanlagichda "· Hozir yopiq" |
+| `/d/<do'kon>/savat` | Yopiq filialda qizil xabar va "Buyurtma berish" o'chiq; API ham `422 order.branch_closed` qaytaradi |
+
+Vaqt Asia/Tashkent (UTC+5). Jadval berilmagan filial doim ochiq. API: `PATCH /v1/branches/{id}` (`tenant:manage`), audit: `branch.work_hours_updated`.

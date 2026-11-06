@@ -7,6 +7,7 @@ import { useI18n } from "@/lib/i18n";
 import { useRequireSession } from "@/lib/use-session";
 import { DeliverySettingsCard } from "@/components/delivery-settings";
 import { PaymentSettingsCard } from "@/components/payment-settings";
+import { WorkHoursCard } from "@/components/work-hours";
 import { PageSkeleton, Shell } from "@/components/shell";
 
 interface Feature { key: string; enabled: boolean; platform_enabled: boolean; in_plan: boolean; shop_enabled: boolean; min_plan: string; requires: string[]; blocked_by?: string[]; toggled_by: string }
@@ -110,6 +111,7 @@ export default function PlanPage() {
               </Card>
             </div>
             <aside className="flex h-fit flex-col gap-4">
+              {isOwner && <WorkHoursCard onToast={(msg, tone) => setToast({ msg, tone })} />}
               {isOwner && <DeliverySettingsCard onToast={(msg, tone) => setToast({ msg, tone })} />}
               {isOwner && membership.tenant_slug && <PaymentSettingsCard slug={membership.tenant_slug} onToast={(msg, tone) => setToast({ msg, tone })} />}
               <Card className="flex flex-col gap-3">

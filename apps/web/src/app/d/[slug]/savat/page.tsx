@@ -18,6 +18,7 @@ export default function CartPage({ params }: { params: Promise<{ slug: string }>
   const cart = useCart(slug);
   const session = useSessionValue();
   const [shopName, setShopName] = useState(slug);
+  const [closedIds, setClosedIds] = useState<string[]>([]);
   const [cashOk, setCashOk] = useState(true);
   const [onlineOk, setOnlineOk] = useState(false);
   const [method, setMethod] = useState<"cash" | "online">("cash");
@@ -31,7 +32,7 @@ export default function CartPage({ params }: { params: Promise<{ slug: string }>
   const [toast, setToast] = useState<{ msg: string; tone: "ok" | "danger" } | null>(null);
   const [short, setShort] = useState<Record<string, number>>({});
 
-  useEffect(() => { api<{ name: string; features: { cash: boolean; online?: boolean }; delivery: { fee_tiyin: number; free_from_tiyin: number | null; min_order_tiyin: number } }>(`/v1/shops/${slug}`, { auth: false }).then((s) => { setShopName(s.name); setCashOk(s.features.cash); setOnlineOk(Boolean(s.features.online)); if (!s.features.cash && s.features.online) setMethod("online"); setDelivery(s.delivery); }).catch(() => undefined); }, [slug]);
+  useEffect(() => { api<{ name: string; branches?: { id: string; open_now: boolean }[]; features: { cash: boolean; online?: boolean }; delivery: { fee_tiyin: number; free_from_tiyin: number | null; min_order_tiyin: number } }>(`/v1/shops/${slug}`, { auth: false }).then((s) => { setClosedIds((s.branches ?? []).filter((b) => !b.open_now).map((b) => b.id)); setShopName(s.name); setCashOk(s.features.cash); setOnlineOk(Boolean(s.features.online)); if (!s.features.cash && s.features.online) setMethod("online"); setDelivery(s.delivery); }).catch(() => undefined); }, [slug]);
 
   const signedIn = Boolean(session?.signedIn);
   useEffect(() => { if (signedIn) api<NonNullable<typeof loyal>>(`/v1/shops/${slug}/loyalty`).then((l) => setLoyal(l.enabled ? l : null)).catch(() => setLoyal(null)); }, [signedIn, slug]);
@@ -64,7 +65,8 @@ export default function CartPage({ params }: { params: Promise<{ slug: string }>
     } finally { setBusy(false); }
   }, [cart, fulfillment, address, note, slug, router, t, locale, method, pointsNum]);
 
-  const canPlace = cart.lines.length > 0 && addressOk && (method === "online" ? onlineOk : cashOk) && !belowMin;
+  const branchClosed = Boolean(cart.branch_id && closedIds.includes(cart.branch_id));
+  const canPlace = cart.lines.length > 0 && addressOk && (method === "online" ? onlineOk : cashOk) && !belowMin && !branchClosed;
 
   return (
     <ShopShell slug={slug} name={shopName} back>
@@ -105,6 +107,7 @@ export default function CartPage({ params }: { params: Promise<{ slug: string }>
             </fieldset>
             {fulfillment === "delivery" && <Input id="addr" label={t("cart.address")} hint={t("cart.address_hint")} value={address} onChange={(e) => setAddress(e.target.value)} autoComplete="street-address" maxLength={300} />}
             <Input id="note" label={t("cart.note")} value={note} onChange={(e) => setNote(e.target.value)} maxLength={300} />
+            {branchClosed && <p role="alert" data-testid="branch-closed" className="text-body-sm font-semibold text-danger">{t("wh.cart_closed")}</p>}
             {belowMin && <p role="alert" className="text-body-sm font-semibold text-danger">{t("cart.min_order", { min: money(delivery.min_order_tiyin) })}</p>}
             {loyal && (
               <div className="flex flex-col gap-1 rounded-md border border-line p-3">

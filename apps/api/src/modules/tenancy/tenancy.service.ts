@@ -99,7 +99,7 @@ export class TenancyService {
 
   // ---------------------------------------------------------------- filial
   async listBranches(tenantId: string, userId: string) {
-    return this.db.tx({ tenantId, userId }, async (tx) => ({ items: (await tx.query("select id, name, address, lat, lng from branches where tenant_id = $1 order by created_at", [tenantId])).rows }));
+    return this.db.tx({ tenantId, userId }, async (tx) => ({ items: (await tx.query("select id, name, address, lat, lng, work_hours from branches where tenant_id = $1 order by created_at", [tenantId])).rows }));
   }
 
   async createBranch(tenantId: string, userId: string, d: { name: string; address: string; lat?: number; lng?: number }, ip?: string | null) {
@@ -110,6 +110,16 @@ export class TenancyService {
       if (plan.limits.branches !== null && used >= plan.limits.branches) throw this.limitError(plan, "branches", plan.limits.branches, used);
       const b = (await tx.query("insert into branches (tenant_id, name, address, lat, lng) values ($1,$2,$3,$4,$5) returning id, name, address, lat, lng", [tenantId, d.name, d.address, d.lat ?? null, d.lng ?? null])).rows[0]!;
       await this.audit.record(tx, { tenantId, actorId: userId, action: "branch.created", entity: "branch", entityId: b.id, after: { name: d.name }, ip });
+      return b;
+    });
+  }
+
+  async updateBranch(tenantId: string, userId: string, id: string, d: { work_hours: unknown }, ip?: string | null) {
+    return this.db.tx({ tenantId, userId }, async (tx) => {
+      const old = (await tx.query<{ work_hours: unknown }>("select work_hours from branches where id = $1 and tenant_id = $2 for update", [id, tenantId])).rows[0];
+      if (!old) throw new ApiError(404, "not_found");
+      const b = (await tx.query("update branches set work_hours = $3 where id = $1 and tenant_id = $2 returning id, name, address, lat, lng, work_hours", [id, tenantId, JSON.stringify(d.work_hours)])).rows[0]!;
+      await this.audit.record(tx, { tenantId, actorId: userId, action: "branch.work_hours_updated", entity: "branch", entityId: id, before: { work_hours: old.work_hours }, after: { work_hours: d.work_hours }, ip });
       return b;
     });
   }

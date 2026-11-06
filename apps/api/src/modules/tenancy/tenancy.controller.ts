@@ -3,7 +3,7 @@ import { TenantScoped } from "../../common/access";
 import { ApiError } from "../../common/errors";
 import type { AppRequest } from "../../common/request-context";
 import { parse, uuidSchema } from "../../common/validate";
-import { branchCreateDto, inviteCreateDto, listQueryDto, memberUpdateDto, tenantCreateDto, tenantUpdateDto } from "./tenancy.dto";
+import { branchCreateDto, branchUpdateDto, inviteCreateDto, listQueryDto, memberUpdateDto, tenantCreateDto, tenantUpdateDto } from "./tenancy.dto";
 import { TenancyService } from "./tenancy.service";
 
 @Controller("v1")
@@ -35,6 +35,11 @@ export class TenancyController {
   @Post("branches") @TenantScoped("tenant:manage") @HttpCode(201)
   createBranch(@Body() body: unknown, @Req() req: AppRequest) {
     return this.svc.createBranch(req.tenant!.tenantId, req.auth!.userId, parse(branchCreateDto, body), req.ip);
+  }
+
+  @Patch("branches/:id") @TenantScoped("tenant:manage")
+  updateBranch(@Param("id") id: string, @Body() body: unknown, @Req() req: AppRequest) {
+    return this.svc.updateBranch(req.tenant!.tenantId, req.auth!.userId, parse(uuidSchema, id), parse(branchUpdateDto, body), req.ip);
   }
 
   @Get("invites") @TenantScoped("team:write")

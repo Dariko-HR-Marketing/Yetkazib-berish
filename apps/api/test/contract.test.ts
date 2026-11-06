@@ -116,7 +116,9 @@ describe("OpenAPI shartnomasi", () => {
     await op("get", "/v1/tenants/{id}", `/v1/tenants/${o.tenantId}`, 404, { token: o.token, tenant: "00000000-0000-4000-8000-000000000000" });
     await op("patch", "/v1/tenants/{id}", `/v1/tenants/${o.tenantId}`, 200, { ...T, body: { status: "active" } });
     await op("get", "/v1/branches", "/v1/branches", 200, T);
-    await op("post", "/v1/branches", "/v1/branches", 201, { ...T, body: { name: "Markaz", address: "Chilonzor 1", lat: 41.3, lng: 69.2 } });
+    const nb = await op("post", "/v1/branches", "/v1/branches", 201, { ...T, body: { name: "Markaz", address: "Chilonzor 1", lat: 41.3, lng: 69.2 } });
+    await op("patch", "/v1/branches/{id}", `/v1/branches/${nb.body.id}`, 200, { ...T, body: { work_hours: {} } });
+    await op("patch", "/v1/branches/{id}", `/v1/branches/${nb.body.id}`, 400, { ...T, body: { work_hours: { mon: null } } });
     await op("get", "/v1/invites", "/v1/invites", 200, T);
     await op("post", "/v1/invites", "/v1/invites", 201, { ...T, body: { phone: "+998901000002", role: "picker" } });
     await op("get", "/v1/members", "/v1/members", 200, T);
