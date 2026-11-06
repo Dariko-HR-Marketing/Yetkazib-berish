@@ -24,6 +24,8 @@ const schema = z.object({
   CORS_ORIGINS: z.string().default("http://localhost:3000"),
   EVENTS_DISPATCH: z.enum(["on", "off"]).default("off"),
   /** Kunlik ishlar: ball muddati va ledger solishtirish. Testlarda o'chiq. */
+  /** Prometheus /v1/metrics uchun Bearer token; bo'sh bo'lsa endpoint yopiq (404). */
+  METRICS_TOKEN: z.string().min(16).optional(),
   BACKGROUND_JOBS: z.enum(["on", "off"]).default("on"),
   /** IP bo'yicha so'rovlar chegarasi (daqiqada): kirish endpointlari va umumiy. */
   RATE_LIMIT_AUTH_PER_MIN: z.coerce.number().int().positive().default(30),

@@ -29,7 +29,7 @@ Holat: **kod tomoni tayyor, lekin pilotga chiqish uchun quyidagi tashqi va inson
 ## 4. Kuzatuv (monitoring)
 - `GET /v1/health` (baza + Redis). Uptime monitor: 1 daqiqa, ogohlantirish 2 ketma-ket xatoda.
 - API jurnali JSON (`level`, `rid`); shaxsiy ma'lumot maskalangan. ERROR: `ball ledgeri nomuvofiq`, `refresh rad etildi: reuse` (o'g'irlik belgisi), 5xx.
-- Ko'rsatkichlar (Prometheus/Grafana, Sentry) — **hali ulanmagan**; ulangach: p95 o'qish ≤ 300 ms, yozish ≤ 600 ms, mavjudlik ≥ 99,5%.
+- `GET /v1/metrics` (Prometheus matni: so'rovlar davomiyligi gistogrammasi marshrut bo'yicha, jarayon xotirasi) — `METRICS_TOKEN` o'rnatilsa ochiladi (Bearer). Grafana paneli va Sentry (DSN) — **hali ulanmagan**; ulangach: p95 o'qish ≤ 300 ms, yozish ≤ 600 ms, mavjudlik ≥ 99,5%.
 
 ## 5. Yuklama sinovi
 `infra/k6/load.js` — vitrina o'qish + buyurtma berish; maqsad: **300 buyurtma/soat × 10 zaxira** (3000/soat), chegaralar skriptda. Staging'da ishga tushiring:

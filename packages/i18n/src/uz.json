@@ -499,5 +499,7 @@
  "pay.waiting_badge": "To'lov kutilmoqda",
  "pay.refund": "Qaytarish",
  "pay.refund_reason": "Qaytarish sababi",
- "pay.refund_done": "Qaytarildi"
+ "pay.refund_done": "Qaytarildi",
+ "admin.publish": "Kuchga kiritish",
+ "admin.published": "Hujjat kuchga kirdi"
 }

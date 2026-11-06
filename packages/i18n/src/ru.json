@@ -499,5 +499,7 @@
  "pay.waiting_badge": "Ожидается оплата",
  "pay.refund": "Вернуть",
  "pay.refund_reason": "Причина возврата",
- "pay.refund_done": "Возврат выполнен"
+ "pay.refund_done": "Возврат выполнен",
+ "admin.publish": "Ввести в силу",
+ "admin.published": "Документ вступил в силу"
 }

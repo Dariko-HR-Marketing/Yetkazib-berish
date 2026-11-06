@@ -12,6 +12,7 @@ export default defineConfig({
       REDIS_URL: process.env.TEST_REDIS_URL ?? "redis://127.0.0.1:6379/15",
       TELEGRAM_BOT_TOKEN: "123456:TEST-BOT-TOKEN",
       BACKGROUND_JOBS: "off",
+      METRICS_TOKEN: "test-metrics-token-0123456789",
       OPEN_LOGIN: "off", // standart testlar to'liq SMS/TOTP oqimini tekshiradi; soddalashtirilgan kirish open-login.test.ts da
       // Testlar bir IP'dan minglab so'rov yuboradi; chegara alohida testda pasaytiriladi.
       RATE_LIMIT_AUTH_PER_MIN: "1000000",

@@ -75,6 +75,7 @@ services:
       SMS_FIXED_CODE: "${SMS_FIXED_CODE:-123456}"
       # Hozircha faqat telefon bilan kirish (SMS/TOTP/rozilik/blokirovka yo'q). Rasmiy ishga tushirishda OPEN_LOGIN=off
       OPEN_LOGIN: "${OPEN_LOGIN:-on}"
+      METRICS_TOKEN: "${METRICS_TOKEN:-}"
       # Demo do'kon va rollar bo'yicha hisoblar (docs/00_boshlash/TEST_YOLLANMA.md). Rasmiy ishga tushirishda DEMO_SEED=off
       DEMO_SEED: "${DEMO_SEED:-on}"
       APP_BASE_URL: "https://yetkazish.tajriba24.uz"

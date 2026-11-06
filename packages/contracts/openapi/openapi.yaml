@@ -37,6 +37,16 @@ paths:
       responses:
         '200': { description: Ishlayapti, content: { application/json: { schema: { type: object, required: [status], properties: { status: { type: string, const: ok } } } } } }
         '503': { $ref: '#/components/responses/Error' }
+  /v1/metrics:
+    get:
+      tags: [system]
+      operationId: metrics
+      security: []
+      summary: Prometheus ko'rsatkichlari (Bearer METRICS_TOKEN; sozlanmagan bo'lsa 404)
+      responses:
+        '200': { description: "Prometheus matni (http_request_duration_ms, process_*)", content: { text/plain: { schema: { type: string } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
   /v1/auth/config:
     get:
       tags: [auth]

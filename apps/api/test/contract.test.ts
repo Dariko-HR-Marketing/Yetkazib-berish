@@ -68,6 +68,12 @@ describe("OpenAPI shartnomasi", () => {
 
   it("javoblar shartnomaga mos: auth", async () => {
     await op("get", "/v1/health", "/v1/health", 200);
+    expect((await h.http.get("/v1/metrics").expect(401)).body.code).toBe("auth.unauthorized");
+    const m = await h.http.get("/v1/metrics").set("Authorization", "Bearer test-metrics-token-0123456789").expect(200);
+    expect(m.headers["content-type"]).toContain("text/plain");
+    expect(m.text).toMatch(/http_request_duration_ms_count\{method="GET",route="\/v1\/health",status="2xx"\} \d+/);
+    expect(m.text).toContain("process_uptime_seconds");
+    checked.push("get /v1/metrics");
     expect((await op("get", "/v1/auth/config", "/v1/auth/config", 200)).body).toEqual({ open_login: false });
     await op("post", "/v1/auth/open", "/v1/auth/open", 404, { body: { phone: "+998901234567" } }); // sinov rejimi o'chiq
     const phone = "+998901000001";
