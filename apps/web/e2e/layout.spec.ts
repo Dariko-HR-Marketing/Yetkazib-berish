@@ -21,6 +21,7 @@ test.beforeAll(async ({ browser, request }) => {
   await expect(page.getByText("Taklif kutilmoqda")).toBeVisible();
   // S1: filial + mahsulot (katalog/import sahifalarini tekshirish uchun ma'lumot)
   await page.goto("/katalog");
+  await page.getByRole("button", { name: "Do'konni faollashtirish" }).click();
   await page.getByLabel("Filial nomi").fill("Markaziy");
   await page.getByLabel("Manzil", { exact: true }).fill("Toshkent, Chilonzor 1");
   await page.getByRole("button", { name: "Filial qo'shish" }).click();
@@ -86,6 +87,9 @@ const PAGES: { name: string; path: string; auth: boolean }[] = [
   { name: "jamoa", path: "/jamoa", auth: true },
   { name: "paket", path: "/paket", auth: true },
   { name: "katalog", path: "/katalog", auth: true },
+  { name: "buyurtmalar", path: "/buyurtmalar", auth: true },
+  { name: "vitrina", path: "/d/yashil-savat", auth: false },
+  { name: "savat", path: "/d/yashil-savat/savat", auth: false },
   { name: "import", path: "/import", auth: true },
   { name: "hujjat", path: "/hujjat/customer_offer", auth: false },
 ];
@@ -102,6 +106,7 @@ for (const lang of ["uz", "ru"] as const) {
         if (pg.name === "paket") await expect(page.locator("[data-feature]").first()).toBeVisible();
         if (pg.name === "jamoa") await expect(page.locator("tbody tr").first()).toBeVisible();
         if (pg.name === "katalog") await expect(page.getByTestId("product-row").first()).toBeVisible();
+        if (pg.name === "vitrina") await expect(page.getByTestId("shop-product").first()).toBeVisible();
         if (pg.name === "hujjat") await expect(page.locator("article h1")).toBeVisible();
         await audit(page, pg.name, w);
         await page.screenshot({ path: `${SHOTS}/${pg.name}-${lang}-${w}.png`, fullPage: true });

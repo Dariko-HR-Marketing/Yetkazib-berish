@@ -119,3 +119,19 @@ Reja va qarorlar (D1–D17): `S1_REJA.md`.
 Qilinmagan / keyingi: import «bekor qilish» (undo), zal/ombor bo'linishi, ierarxik kategoriya, rasm yuklash (S3 bilan), MXIK avtomatik to'ldirish (AI, S7), ommaviy vitrina o'qishi (S2).
 Inson ko'rib chiqishi: ruxsatlar (`catalog:*`, `stock:*`), RLS (0009), import parseri (`parsers.ts`, zip-bomba chegarasi).
 Tuzatildi: yangilash tokeni bir vaqtda ikki marta yuborilganda API sessiyani «qayta ishlatish» deb bekor qilardi (CI jurnalida `reuse` ko'rindi). BFF endi bir xil token uchun natijani 10 soniya umumlashtiradi.
+
+## 10. S2 (vitrina, savat, buyurtma) — holat (2026-11-06)
+
+| Nima | Holat |
+| --- | --- |
+| Migratsiya 0010: `tenants.slug`, `orders`, `order_items`, `order_status_history` (o'zgarmas) + RLS | ✅ |
+| Ommaviy vitrina API: do'kon, kategoriyalar, mahsulotlar (Bor / Kam / Tugadi; `stock.visible`) | ✅ |
+| Buyurtma: atomik band qilish (qator qulfi, parallel testi), narx surati, butun son jami, naqd, idempotentlik, `order.placed` (PII'siz) | ✅ |
+| Panel: `/buyurtmalar` (yangi/tasdiqlangan/bajarilgan/bekor, qabul → bajarildi: qoldiq ayriladi; bekor: band bo'shaydi), ruxsat `orders:*` | ✅ |
+| Veb: `/d/<slug>` (server render), `/savat`, `/buyurtma`, `/buyurtma/<id>`; Telegram MainButton; uz/ru; JS ≤ 136 KB (chegara 170) | ✅ |
+| Do'konni faollashtirish tugmasi (qoralama do'kon vitrinasi yopiq) | ✅ |
+| Testlar: API 244, web 27, E2E 88 + sinov rejimi 5 | ✅ lokal |
+
+Qilinmagan: onlayn to'lov (S3), yetkazish narxi va slotlar (S5/S4), haqiqiy Telegram klienti bilan tekshiruv (bot tokeni kerak), LCP o'lchovi.
+Qaror: S2'da to'lov faqat naqd (`payment.cash` yoqilgan bo'lsa); yetkazish bepul (0), S5'da narx hisoblanadi.
+Inson ko'rib chiqishi: qoldiq band qilish va bajarish (pul/qoldiq mantig'i), RLS 0010, ommaviy endpointlar.

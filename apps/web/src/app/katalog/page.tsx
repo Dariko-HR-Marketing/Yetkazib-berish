@@ -55,6 +55,7 @@ export default function CatalogPage() {
   const [formErr, setFormErr] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
   const [qty, setQty] = useState<Record<string, string>>({});
+  const [tenantStatus, setTenantStatus] = useState<string | null>(null);
   const [newBranch, setNewBranch] = useState({ name: "", address: "" });
   const reqId = useRef(0);
 
@@ -75,6 +76,13 @@ export default function CatalogPage() {
       if (canRead) setCats((await api<{ items: Category[] }>("/v1/categories", { tenant: true })).items);
     } catch (e) { setError(errText(e)); setBranches([]); }
   }, [canRead, errText]);
+  useEffect(() => {
+    if (ready && membership && role === "owner") api<{ status: string }>(`/v1/tenants/${membership.tenant_id}`, { tenant: true }).then((x) => setTenantStatus(x.status)).catch(() => undefined);
+  }, [ready, membership, role]);
+  const activate = async () => {
+    if (!membership) return;
+    try { await api(`/v1/tenants/${membership.tenant_id}`, { method: "PATCH", tenant: true, body: { status: "active" } }); setTenantStatus("active"); setToast({ msg: t("shop.activated"), tone: "ok" }); } catch (e) { fail(e); }
+  };
   useEffect(() => { if (ready && membership) void loadBase(); else if (ready && !membership) router.replace("/dokon-yaratish"); }, [ready, membership, loadBase, router]);
 
   const listPath = canRead ? "/v1/products" : "/v1/stock";
@@ -195,6 +203,12 @@ export default function CatalogPage() {
   return (
     <Shell role={role} title={t("catalog.title")} subtitle={t("catalog.subtitle")} tenantName={membership.tenant_name}
       actions={canWrite && branches.length > 0 && <Button onClick={() => openForm()}>{t("catalog.add")}</Button>}>
+      {tenantStatus === "draft" && (
+        <div role="status" className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-lg bg-warning-soft p-3 text-body font-semibold text-warning">
+          <span>{t("shop.draft_banner")}</span><Button onClick={activate}>{t("shop.activate")}</Button>
+        </div>
+      )}
+      {tenantStatus === "active" && membership.tenant_slug && <p className="mb-3"><Link href={`/d/${membership.tenant_slug}`} className="inline-flex min-h-touch items-center font-bold">{t("shop.open_vitrina")} →</Link></p>}
       {branches.length === 0 ? (
         <Card className="mx-auto flex max-w-md flex-col gap-4">
           <h2 className="text-title-sm font-extrabold">{t("catalog.no_branch_title")}</h2>

@@ -10,7 +10,7 @@ export const API_URL = `http://127.0.0.1:${API_PORT}`;
 
 export default defineConfig({
   testDir: "./e2e",
-  testIgnore: /open\.spec\.ts/, // sinov rejimi alohida konfiguratsiya bilan (playwright.open.config.ts)
+  testIgnore: /open.*\.spec\.ts/, // sinov rejimi alohida konfiguratsiya bilan (playwright.open.config.ts)
   timeout: 60_000,
   expect: { timeout: 10_000 }, // CI mashinalari sekinroq; kesh va yangilash oqimlari uchun zaxira
   fullyParallel: false,

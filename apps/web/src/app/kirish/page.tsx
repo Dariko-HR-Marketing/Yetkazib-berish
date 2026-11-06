@@ -50,9 +50,11 @@ export default function LoginPage() {
     const pending = sessionStorage.getItem("dostavka.invite");
     const active = me.memberships.find((m) => m.status === "active");
     if (active) setSession({ ...getSession()!, tenantId: active.tenant_id });
+    const next = new URLSearchParams(window.location.search).get("next");
+    if (next && /^\/d\/[a-z0-9-]+(\/[A-Za-z0-9-]+)*$/.test(next)) { router.replace(next); return; } // xaridor: vitrinaga qaytish
     if (pending) { router.replace(`/taklif/${pending}`); return; }
     // Rolga mos birinchi sahifa: katalog/qoldiq paneli bor rollar — /katalog; dispetcher va kuryer uchun hozircha faqat /paket (ularning ish ekranlari keyingi sprintlarda)
-    router.replace(!active ? "/dokon-yaratish" : ["dispatcher", "courier"].includes(active.role) ? "/paket" : "/katalog");
+    router.replace(!active ? "/dokon-yaratish" : active.role === "courier" ? "/paket" : active.role === "dispatcher" ? "/buyurtmalar" : "/katalog");
   }, [router]);
 
   const handleSignIn = useCallback(async (r: SignIn) => {

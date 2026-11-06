@@ -22,6 +22,7 @@ export function LangSwitch() {
 /** Ichki sahifalar uchun qobiq: navigatsiya, til, chiqish. 360 px dan boshlab: nav gorizontal aylanadi. */
 /** Rolga ko'ra bo'limlar (roles_permissions.json: katalog va qoldiq). Server baribir tekshiradi; bu faqat qulaylik uchun. */
 const CATALOG_ROLES = new Set(["owner", "manager", "accountant", "marketer", "picker", "cashier"]);
+const ORDER_ROLES = new Set(["owner", "manager", "picker", "cashier", "dispatcher", "accountant", "marketer"]);
 const IMPORT_ROLES = new Set(["owner", "manager"]);
 
 export function Shell({ title, subtitle, tenantName, children, actions, role }: { title: string; subtitle?: string; tenantName?: string; children: ReactNode; actions?: ReactNode; role?: string }) {
@@ -29,6 +30,7 @@ export function Shell({ title, subtitle, tenantName, children, actions, role }: 
   const path = usePathname();
   const router = useRouter();
   const nav = [
+    ...(role && ORDER_ROLES.has(role) ? [{ href: "/buyurtmalar", label: t("nav.orders") }] : []),
     ...(role && CATALOG_ROLES.has(role) ? [{ href: "/katalog", label: t("nav.catalog") }] : []),
     ...(role && IMPORT_ROLES.has(role) ? [{ href: "/import", label: t("nav.import") }] : []),
     ...(role === "owner" || role === "manager" ? [{ href: "/jamoa", label: t("nav.team") }] : []),

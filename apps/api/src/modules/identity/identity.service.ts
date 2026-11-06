@@ -153,7 +153,7 @@ export class IdentityService {
       const isNew = existing.rowCount === 0;
       if (existing.rows[0]) await tx.query("select set_config('app.user_id', $1, true)", [existing.rows[0].id]);
       const ev = await this.legal.evaluate(tx, { userId: existing.rows[0]?.id }, "customer", opts.consents);
-      if (ev.missing.length) return { k: "consent", docs: ev.missing };
+      if (ev.missing.length && this.cfg.OPEN_LOGIN !== "on") return { k: "consent", docs: ev.missing };
       let userId = existing.rows[0]?.id;
       if (!userId) {
         const ins = await tx.query<{ id: string }>("insert into users (telegram_id, locale, last_seen_at) values ($1,$2,$3) returning id", [tg.id, tg.language_code === "ru" ? "ru" : "uz", now]);
@@ -224,8 +224,8 @@ export class IdentityService {
         "select id, phone, telegram_id, locale, totp_enabled, is_platform_admin from users where id = $1", [userId]);
       const row = u.rows[0];
       if (!row) throw new ApiError(401, "auth.token_invalid");
-      const m = await tx.query<{ member_id: string; tenant_id: string; tenant_name: string; role: string; status: string }>(
-        `select m.id as member_id, m.tenant_id, t.name as tenant_name, m.role, m.status from memberships m join tenants t on t.id = m.tenant_id
+      const m = await tx.query<{ member_id: string; tenant_id: string; tenant_name: string; tenant_slug: string; role: string; status: string }>(
+        `select m.id as member_id, m.tenant_id, t.name as tenant_name, t.slug as tenant_slug, m.role, m.status from memberships m join tenants t on t.id = m.tenant_id
          where m.user_id = $1 order by m.created_at`, [userId]);
       return { id: row.id, phone_masked: maskPhone(row.phone), locale: row.locale, telegram_linked: row.telegram_id !== null, totp_enabled: row.totp_enabled, is_platform_admin: row.is_platform_admin, memberships: m.rows };
     });

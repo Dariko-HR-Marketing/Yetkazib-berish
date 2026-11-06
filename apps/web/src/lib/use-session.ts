@@ -10,7 +10,7 @@ export function useSessionValue(): Session | null {
 
 export interface Me {
   id: string; phone_masked: string | null; locale: "uz" | "ru"; totp_enabled: boolean; is_platform_admin: boolean;
-  memberships: { member_id: string; tenant_id: string; tenant_name: string; role: string; status: string }[];
+  memberships: { member_id: string; tenant_id: string; tenant_name: string; tenant_slug: string; role: string; status: string }[];
 }
 
 /** Kirmagan foydalanuvchini /kirish ga yo'naltiradi; /me ni yuklaydi. */
