@@ -121,6 +121,27 @@ for (const lang of ["uz", "ru"] as const) {
   }
 }
 
+/** CLAUDE.md §6: LCP ≤ 2,5 s, CLS ≤ 0,1 (mahalliy Chromium, tarmoq cheklovisiz — regressiyadan himoya; real o'lchov staging'da Lighthouse CI bilan). */
+test("ko'rsatkichlar: LCP va CLS chegaradan oshmaydi (vitrina, kirish, katalog)", async ({ browser }) => {
+  for (const [path, auth] of [["/d/yashil-savat", false], ["/kirish", false], ["/katalog", true]] as const) {
+    const ctx = await browser.newContext({ viewport: { width: 390, height: 800 }, storageState: auth ? STATE : undefined });
+    const page = await ctx.newPage();
+    await page.addInitScript(() => {
+      const w = window as unknown as { __lcp: number; __cls: number };
+      w.__lcp = 0; w.__cls = 0;
+      new PerformanceObserver((l) => { for (const e of l.getEntries()) w.__lcp = e.startTime; }).observe({ type: "largest-contentful-paint", buffered: true });
+      new PerformanceObserver((l) => { for (const e of l.getEntries() as unknown as { value: number; hadRecentInput: boolean }[]) if (!e.hadRecentInput) w.__cls += e.value; }).observe({ type: "layout-shift", buffered: true });
+    });
+    await page.goto(path);
+    await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(500);
+    const m = await page.evaluate(() => { const w = window as unknown as { __lcp: number; __cls: number }; return { lcp: w.__lcp, cls: w.__cls }; });
+    expect(m.lcp, `${path} LCP`).toBeLessThanOrEqual(2500);
+    expect(m.cls, `${path} CLS`).toBeLessThanOrEqual(0.1);
+    await ctx.close();
+  }
+});
+
 test("qorong'i rejim: kontrast WCAG AA", async ({ browser }) => {
   for (const p of PAGES) {
     const ctx = await browser.newContext({ viewport: { width: 390, height: 900 }, colorScheme: "dark", storageState: p.auth ? STATE : undefined });
