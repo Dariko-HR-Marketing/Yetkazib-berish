@@ -2,6 +2,7 @@ import { Module } from "@nestjs/common";
 import { LoyaltyModule } from "../loyalty/loyalty.module";
 import { NotificationsModule } from "../notifications/notifications.module";
 import { PaymentsModule } from "../payments/payments.module";
+import { AddressesService } from "./addresses.service";
 import { FulfillmentController } from "./fulfillment.controller";
 import { FulfillmentService } from "./fulfillment.service";
 import { CashService } from "./cash.service";
@@ -12,5 +13,5 @@ import { OrdersController } from "./orders.controller";
 import { OrdersService } from "./orders.service";
 import { StorefrontService } from "./storefront.service";
 
-@Module({ imports: [LoyaltyModule, PaymentsModule, NotificationsModule], controllers: [OrdersController, FulfillmentController, PaymentsController], providers: [StorefrontService, OrdersService, FulfillmentService, DeliverySettingsService, PaymentFlowService, CashService], exports: [StorefrontService] })
+@Module({ imports: [LoyaltyModule, PaymentsModule, NotificationsModule], controllers: [OrdersController, FulfillmentController, PaymentsController], providers: [AddressesService, StorefrontService, OrdersService, FulfillmentService, DeliverySettingsService, PaymentFlowService, CashService], exports: [StorefrontService] })
 export class OrdersModule {}

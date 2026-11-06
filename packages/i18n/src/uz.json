@@ -605,5 +605,10 @@
  "wh.day_sun": "Yakshanba",
  "product.image_url": "Rasm havolasi (https)",
  "product.image_hint": "Rasm joylashgan sayt manzili, https:// bilan boshlanadi. Ixtiyoriy.",
- "product.image_invalid": "Faqat https:// bilan boshlanadigan havola"
+ "product.image_invalid": "Faqat https:// bilan boshlanadigan havola",
+ "address.duplicate": "Bu manzil allaqachon saqlangan",
+ "address.limit": "Ko'pi bilan {max} ta manzil saqlash mumkin",
+ "addr.saved": "Saqlangan manzillar",
+ "addr.remember": "Bu manzilni eslab qol",
+ "addr.remove": "{label} manzilini o'chirish"
 }

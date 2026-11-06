@@ -29,3 +29,7 @@ export const deliverySettingsDto = z.object({
   free_from_tiyin: z.number().int().min(0).max(100_000_000_000).nullable(),
   min_order_tiyin: z.number().int().min(0).max(100_000_000_000),
 }).strict();
+
+export const addressCreateDto = z.object({ label: z.string().trim().min(1).max(40), address: z.string().trim().min(5).max(300), is_default: z.boolean().optional() }).strict();
+export const addressUpdateDto = z.object({ label: z.string().trim().min(1).max(40).optional(), address: z.string().trim().min(5).max(300).optional(), is_default: z.boolean().optional() }).strict()
+  .refine((v) => Object.keys(v).length > 0, { message: "validation.failed" });

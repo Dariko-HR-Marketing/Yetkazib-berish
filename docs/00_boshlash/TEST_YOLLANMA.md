@@ -207,3 +207,12 @@ Vaqt Asia/Tashkent (UTC+5). Jadval berilmagan filial doim ochiq. API: `PATCH /v1
 | `/d/<do'kon>` | Mahsulot kartasida rasm; yuklanmasa yashiriladi (joy buzilmaydi); rasm kech yuklanadi |
 
 Eslatma (xavfsizlik/maxfiylik): rasmlar do'konning o'z saytidan yuklanadi, shuning uchun CSP `img-src` ga `https:` qo'shildi; rasm egasi xaridorning IP manzilini ko'radi (referrer yuborilmaydi). Fayl yuklash (S3/CDN) v1 dan keyin.
+
+### Saqlangan manzillar
+
+| Joy | Nimani tekshirish |
+|---|---|
+| `/d/<do'kon>/savat` (yetkazish) | Birinchi buyurtmada "Bu manzilni eslab qol" belgisi yoqiq; buyurtmadan keyin manzil saqlanadi. Keyingi safar manzil chip sifatida chiqadi va asosiy manzil avtomatik to'ldiriladi; chipni bosish manzilni almashtiradi; "×" o'chiradi |
+| API | `GET/POST /v1/shops/{slug}/addresses`, `PATCH/DELETE .../{id}`; ko'pi bilan 5 ta (`422 address.limit`), takror — `409 address.duplicate`; o'chirilganda birinchi qolgani asosiy bo'ladi |
+
+Maxfiylik: manzil shaxsiy ma'lumot. Jadval `customer_addresses` RLS bilan faqat egasiga (do'kon + foydalanuvchi) ochiq: do'kon egasi/xodimlari ham o'qiy olmaydi; manzil loglarga va hodisalarga yozilmaydi.

@@ -605,5 +605,10 @@
  "wh.day_sun": "Воскресенье",
  "product.image_url": "Ссылка на изображение (https)",
  "product.image_hint": "Адрес изображения, начинается с https://. Необязательно.",
- "product.image_invalid": "Только ссылка, начинающаяся с https://"
+ "product.image_invalid": "Только ссылка, начинающаяся с https://",
+ "address.duplicate": "Этот адрес уже сохранён",
+ "address.limit": "Можно сохранить не более {max} адресов",
+ "addr.saved": "Сохранённые адреса",
+ "addr.remember": "Запомнить этот адрес",
+ "addr.remove": "Удалить адрес {label}"
 }

@@ -27,6 +27,8 @@ export default function CartPage({ params }: { params: Promise<{ slug: string }>
   const [points, setPoints] = useState("");
   const [fulfillment, setFulfillment] = useState<"delivery" | "pickup">("delivery");
   const [address, setAddress] = useState("");
+  const [saved, setSaved] = useState<{ id: string; label: string; address: string; is_default: boolean }[]>([]);
+  const [saveIt, setSaveIt] = useState(true);
   const [note, setNote] = useState("");
   const [busy, setBusy] = useState(false);
   const [toast, setToast] = useState<{ msg: string; tone: "ok" | "danger" } | null>(null);
@@ -36,6 +38,11 @@ export default function CartPage({ params }: { params: Promise<{ slug: string }>
 
   const signedIn = Boolean(session?.signedIn);
   useEffect(() => { if (signedIn) api<NonNullable<typeof loyal>>(`/v1/shops/${slug}/loyalty`).then((l) => setLoyal(l.enabled ? l : null)).catch(() => setLoyal(null)); }, [signedIn, slug]);
+  useEffect(() => {
+    if (!signedIn) return;
+    api<{ items: typeof saved }>(`/v1/shops/${slug}/addresses`).then((r) => { setSaved(r.items); const d = r.items.find((a) => a.is_default); if (d) setAddress((cur) => cur || d.address); }).catch(() => setSaved([]));
+  }, [signedIn, slug]);
+  const removeSaved = async (id: string) => { try { await api(`/v1/shops/${slug}/addresses/${id}`, { method: "DELETE" }); setSaved((s) => s.filter((a) => a.id !== id)); } catch { /* ro'yxat o'zgarmaydi */ } };
   const subtotal = cartTotal(cart);
   const fee = fulfillment === "delivery" && subtotal > 0 && !(delivery.free_from_tiyin !== null && subtotal >= delivery.free_from_tiyin) ? delivery.fee_tiyin : 0;
   const maxPoints = loyal ? Math.max(0, Math.min(loyal.spendable_points, Math.floor((subtotal * loyal.max_pay_share_pct) / 100 / loyal.point_value_tiyin))) : 0;
@@ -54,6 +61,9 @@ export default function CartPage({ params }: { params: Promise<{ slug: string }>
     try {
       const body = { branch_id: cart.branch_id, fulfillment, payment_type: method, ...(fulfillment === "delivery" ? { delivery_address: address.trim() } : {}), ...(note.trim() ? { note: note.trim() } : {}), ...(pointsNum > 0 ? { points_to_use: pointsNum } : {}), items: cart.lines.map((l) => ({ product_id: l.id, quantity_milli: l.quantity_milli })) };
       const o = await api<{ id: string; payment: { pay_url: string | null } | null }>(`/v1/shops/${slug}/orders`, { method: "POST", body });
+      if (fulfillment === "delivery" && saveIt && saved.length < 5 && !saved.some((a) => a.address.toLowerCase() === address.trim().toLowerCase())) {
+        try { await api(`/v1/shops/${slug}/addresses`, { method: "POST", body: { label: address.trim().slice(0, 40), address: address.trim() } }); } catch { /* buyurtma muvaffaqiyatli: manzilni saqlash ixtiyoriy */ }
+      }
       clearCart(slug);
       router.replace(o.payment?.pay_url ?? `/d/${slug}/buyurtma/${o.id}`);
     } catch (e) {
@@ -63,7 +73,7 @@ export default function CartPage({ params }: { params: Promise<{ slug: string }>
       } else if (e instanceof ApiError && e.code === "order.product_unavailable") setToast({ msg: t("cart.unavailable"), tone: "danger" });
       else setToast({ msg: e instanceof ApiError ? e.text(locale) : e instanceof NetworkError ? t("ui.error_network") : t("ui.error_generic"), tone: "danger" });
     } finally { setBusy(false); }
-  }, [cart, fulfillment, address, note, slug, router, t, locale, method, pointsNum]);
+  }, [cart, fulfillment, address, note, slug, router, t, locale, method, pointsNum, saveIt, saved]);
 
   const branchClosed = Boolean(cart.branch_id && closedIds.includes(cart.branch_id));
   const canPlace = cart.lines.length > 0 && addressOk && (method === "online" ? onlineOk : cashOk) && !belowMin && !branchClosed;
@@ -105,7 +115,23 @@ export default function CartPage({ params }: { params: Promise<{ slug: string }>
                 </label>
               ))}
             </fieldset>
+            {fulfillment === "delivery" && saved.length > 0 && (
+              <div role="group" aria-label={t("addr.saved")} className="flex flex-col gap-2" data-testid="saved-addresses">
+                <p className="text-body-sm text-muted">{t("addr.saved")}</p>
+                <ul className="flex flex-wrap gap-2">
+                  {saved.map((a) => (
+                    <li key={a.id} className="flex items-center overflow-hidden rounded-full border border-line-strong bg-surface">
+                      <button type="button" aria-pressed={address.trim().toLowerCase() === a.address.toLowerCase()} onClick={() => setAddress(a.address)} className="min-h-touch max-w-[14rem] truncate px-4 text-body font-semibold aria-pressed:bg-ink aria-pressed:text-bg">{a.label}</button>
+                      <button type="button" aria-label={t("addr.remove", { label: a.label })} onClick={() => removeSaved(a.id)} className="inline-flex min-h-touch min-w-touch items-center justify-center text-muted">×</button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             {fulfillment === "delivery" && <Input id="addr" label={t("cart.address")} hint={t("cart.address_hint")} value={address} onChange={(e) => setAddress(e.target.value)} autoComplete="street-address" maxLength={300} />}
+            {fulfillment === "delivery" && saved.length < 5 && signedIn && (
+              <label className="flex min-h-touch items-center gap-3 text-body"><input type="checkbox" checked={saveIt} onChange={(e) => setSaveIt(e.target.checked)} className="h-5 w-5" />{t("addr.remember")}</label>
+            )}
             <Input id="note" label={t("cart.note")} value={note} onChange={(e) => setNote(e.target.value)} maxLength={300} />
             {branchClosed && <p role="alert" data-testid="branch-closed" className="text-body-sm font-semibold text-danger">{t("wh.cart_closed")}</p>}
             {belowMin && <p role="alert" className="text-body-sm font-semibold text-danger">{t("cart.min_order", { min: money(delivery.min_order_tiyin) })}</p>}

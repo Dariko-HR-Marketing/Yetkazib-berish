@@ -227,6 +227,11 @@ describe("OpenAPI shartnomasi", () => {
     const ord = await op("post", "/v1/shops/{slug}/orders", `/v1/shops/${slug}/orders`, 201, { token: c.token, body });
     await op("get", "/v1/shops/{slug}/orders", `/v1/shops/${slug}/orders`, 200, { token: c.token });
     await op("get", "/v1/shops/{slug}/loyalty", `/v1/shops/${slug}/loyalty`, 200, { token: c.token });
+    const ad = await op("post", "/v1/shops/{slug}/addresses", `/v1/shops/${slug}/addresses`, 201, { token: c.token, body: { label: "Uy", address: "Toshkent, Bobur 5" } });
+    await op("get", "/v1/shops/{slug}/addresses", `/v1/shops/${slug}/addresses`, 200, { token: c.token });
+    await op("patch", "/v1/shops/{slug}/addresses/{id}", `/v1/shops/${slug}/addresses/${ad.body.id}`, 200, { token: c.token, body: { label: "Ish" } });
+    await op("post", "/v1/shops/{slug}/addresses", `/v1/shops/${slug}/addresses`, 409, { token: c.token, body: { label: "Nusxa", address: "toshkent, bobur 5" } });
+    await op("delete", "/v1/shops/{slug}/addresses/{id}", `/v1/shops/${slug}/addresses/${ad.body.id}`, 200, { token: c.token });
     await op("get", "/v1/delivery/settings", "/v1/delivery/settings", 200, T);
     await op("get", "/v1/reports/sales", "/v1/reports/sales?days=7", 200, T);
     await op("get", "/v1/reports/sales", "/v1/reports/sales?days=0", 400, T);

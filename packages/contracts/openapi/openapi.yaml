@@ -895,6 +895,48 @@ paths:
         '200': { description: Ball, content: { application/json: { schema: { $ref: '#/components/schemas/LoyaltySummary' } } } }
         '401': { $ref: '#/components/responses/Error' }
         '404': { $ref: '#/components/responses/Error' }
+  /v1/shops/{slug}/addresses:
+    get:
+      tags: [storefront]
+      operationId: myAddresses
+      summary: "Xaridorning shu do'kondagi saqlangan manzillari (shaxsiy ma'lumot; faqat egasi ko'radi)"
+      parameters: [{ name: slug, in: path, required: true, schema: { type: string } }]
+      responses:
+        '200': { description: Manzillar, content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { $ref: '#/components/schemas/SavedAddress' } } } } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+    post:
+      tags: [storefront]
+      operationId: addAddress
+      parameters: [{ name: slug, in: path, required: true, schema: { type: string } }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/AddressCreate' } } } }
+      responses:
+        '201': { description: Saqlandi, content: { application/json: { schema: { $ref: '#/components/schemas/SavedAddress' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+        '422': { $ref: '#/components/responses/Error' }
+  /v1/shops/{slug}/addresses/{id}:
+    patch:
+      tags: [storefront]
+      operationId: editAddress
+      parameters: [{ name: slug, in: path, required: true, schema: { type: string } }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      requestBody: { required: true, content: { application/json: { schema: { type: object, additionalProperties: false, minProperties: 1, properties: { label: { type: string, minLength: 1, maxLength: 40 }, address: { type: string, minLength: 5, maxLength: 300 }, is_default: { type: boolean } } } } } }
+      responses:
+        '200': { description: Yangilandi, content: { application/json: { schema: { $ref: '#/components/schemas/SavedAddress' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '401': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+        '409': { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [storefront]
+      operationId: deleteAddress
+      parameters: [{ name: slug, in: path, required: true, schema: { type: string } }, { name: id, in: path, required: true, schema: { type: string, format: uuid } }, { $ref: '#/components/parameters/IdempotencyKey' }]
+      responses:
+        '200': { description: O'chirildi (birinchi qolgani asosiy bo'ladi), content: { application/json: { schema: { $ref: '#/components/schemas/IdOnly' } } } }
+        '401': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
   /v1/delivery/settings:
     get:
       tags: [orders]
@@ -1057,6 +1099,15 @@ components:
       description: Kirish natijasi (tokenlar yoki ikkinchi omil talabi)
       content: { application/json: { schema: { oneOf: [{ $ref: '#/components/schemas/SignInResult' }, { $ref: '#/components/schemas/MfaChallenge' }] } } }
   schemas:
+    SavedAddress:
+      type: object
+      required: [id, label, address, is_default]
+      properties: { id: { type: string, format: uuid }, label: { type: string }, address: { type: string }, is_default: { type: boolean } }
+    AddressCreate:
+      type: object
+      required: [label, address]
+      additionalProperties: false
+      properties: { label: { type: string, minLength: 1, maxLength: 40 }, address: { type: string, minLength: 5, maxLength: 300 }, is_default: { type: boolean } }
     AuditPage:
       type: object
       required: [items, next_cursor]

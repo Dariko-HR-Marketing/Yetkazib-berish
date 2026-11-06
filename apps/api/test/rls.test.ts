@@ -9,7 +9,7 @@ beforeEach(async () => { await h.reset(); });
 
 /** Global jadvallar (Z15): RLS yo'q, faqat server kodi murojaat qiladi. Yangi jadval qo'shilsa — ikki ro'yxatdan biriga kiritilishi shart. */
 const GLOBAL_TABLES = ["users", "otp_codes", "otp_locks", "refresh_tokens", "idempotency_keys", "plans", "plan_features", "feature_flags", "legal_documents", "schema_migrations"];
-const TENANT_TABLES = ["tenants", "branches", "memberships", "invites", "tenant_features", "consents", "events", "audit_log", "categories", "products", "stock", "stock_movements", "import_jobs", "orders", "order_items", "order_status_history", "deliveries", "courier_locations", "delivery_settings", "ledger_entries", "loyalty_balances", "tenant_payment_settings", "payments", "payment_webhook_events", "cash_handovers", "notifications"];
+const TENANT_TABLES = ["tenants", "branches", "memberships", "invites", "tenant_features", "consents", "events", "audit_log", "categories", "products", "stock", "stock_movements", "import_jobs", "orders", "order_items", "order_status_history", "deliveries", "courier_locations", "delivery_settings", "ledger_entries", "loyalty_balances", "tenant_payment_settings", "payments", "payment_webhook_events", "cash_handovers", "notifications", "customer_addresses"];
 
 describe("RLS qamrovi", () => {
   it("har jadval yo'q RLS (majburiy) yoki global ro'yxatda — yangi jadval RLS'siz qolib ketmaydi", async () => {

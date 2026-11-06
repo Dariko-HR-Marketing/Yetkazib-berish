@@ -171,3 +171,39 @@ test("mahsulot rasmi: faqat https qabul qilinadi, vitrinada yuklanadi (CSP ruxsa
   await expect(img).toHaveAttribute("src", "https://cdn.example.uz/non.png");
   await expect.poll(() => img.evaluate((e: HTMLImageElement) => e.complete && e.naturalWidth > 0)).toBe(true);
 });
+
+test("saqlangan manzillar: buyurtmadan keyin eslab qolinadi, keyingi safar avtomatik to'ldiriladi, o'chiriladi", async ({ browser }) => {
+  const owner = await login(browser, "90 777 88 08");
+  await expect(owner).toHaveURL(/dokon-yaratish/);
+  await owner.getByLabel("Do'kon nomi", { exact: true }).fill("Manzilli Bozor");
+  await owner.getByLabel(/STIR/).fill("423456789");
+  await owner.getByRole("button", { name: "Do'kon yaratish" }).click();
+  await expect(owner).toHaveURL(/katalog/);
+  await owner.getByLabel("Filial nomi").fill("Markaziy");
+  await owner.getByLabel("Manzil", { exact: true }).fill("Toshkent, Chilonzor 1");
+  await owner.getByRole("button", { name: "Filial qo'shish" }).click();
+  await owner.getByRole("button", { name: "Mahsulot qo'shish" }).click();
+  await owner.getByLabel("Nomi (o'zbekcha)").fill("Non");
+  await owner.getByLabel("Narx, so'm").fill("5 000");
+  await owner.getByLabel("Qoldiq (tanlangan filialda)").fill("50");
+  await owner.getByRole("button", { name: "Saqlash", exact: true }).click();
+  await expect(owner.getByTestId("product-row")).toHaveCount(1);
+
+  const cust = await login(browser, "90 777 99 09");
+  const order = async () => {
+    await cust.goto("/d/manzilli-bozor");
+    await cust.getByTestId("shop-product").getByRole("button", { name: "Qo'shish" }).click();
+    await cust.getByRole("button", { name: /Savatni ko'rish/ }).click();
+  };
+  await order();
+  await expect(cust.getByTestId("saved-addresses")).toHaveCount(0);
+  await cust.getByLabel("Manzil", { exact: true }).fill("Toshkent, Bobur 5");
+  await cust.getByRole("button", { name: "Buyurtma berish" }).click();
+  await expect(cust).toHaveURL(/buyurtma\//);
+
+  await order();
+  await expect(cust.getByTestId("saved-addresses")).toContainText("Toshkent, Bobur 5");
+  await expect(cust.getByLabel("Manzil", { exact: true })).toHaveValue("Toshkent, Bobur 5");
+  await cust.getByRole("button", { name: /o'chirish/ }).click();
+  await expect(cust.getByTestId("saved-addresses")).toHaveCount(0);
+});
