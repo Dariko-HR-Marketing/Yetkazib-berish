@@ -27,6 +27,8 @@ const PICK_ROLES = new Set(["owner", "manager", "picker", "dispatcher"]);
 const DISPATCH_ROLES = new Set(["owner", "manager", "dispatcher"]);
 const REPORT_ROLES = new Set(["owner", "manager", "dispatcher", "accountant", "marketer"]);
 const CASH_ROLES = new Set(["owner", "manager", "cashier", "accountant"]);
+const AUDIT_ROLES = new Set(["owner", "manager", "accountant"]);
+const CUSTOMER_ROLES = new Set(["owner", "manager", "marketer"]);
 const IMPORT_ROLES = new Set(["owner", "manager"]);
 
 export function Shell({ title, subtitle, tenantName, children, actions, role }: { title: string; subtitle?: string; tenantName?: string; children: ReactNode; actions?: ReactNode; role?: string }) {
@@ -40,6 +42,8 @@ export function Shell({ title, subtitle, tenantName, children, actions, role }: 
     ...(role && ORDER_ROLES.has(role) ? [{ href: "/buyurtmalar", label: t("nav.orders") }] : []),
     ...(role && CASH_ROLES.has(role) ? [{ href: "/kassa", label: t("nav.cash") }] : []),
     ...(role && REPORT_ROLES.has(role) ? [{ href: "/hisobot", label: t("nav.reports") }] : []),
+    ...(role && CUSTOMER_ROLES.has(role) ? [{ href: "/mijozlar", label: t("nav.customers") }] : []),
+    ...(role && AUDIT_ROLES.has(role) ? [{ href: "/audit", label: t("nav.audit") }] : []),
     ...(role === "platform_admin" ? [{ href: "/admin", label: t("nav.admin") }] : []),
     ...(role && CATALOG_ROLES.has(role) ? [{ href: "/katalog", label: t("nav.catalog") }] : []),
     ...(role && IMPORT_ROLES.has(role) ? [{ href: "/import", label: t("nav.import") }] : []),

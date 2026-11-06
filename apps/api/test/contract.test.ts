@@ -68,6 +68,9 @@ describe("OpenAPI shartnomasi", () => {
 
   it("javoblar shartnomaga mos: auth", async () => {
     await op("get", "/v1/health", "/v1/health", 200);
+    const plans = await op("get", "/v1/plans", "/v1/plans", 200);
+    expect(plans.body.items.map((p: { code: string }) => p.code)).toEqual(["start", "biznes", "pro", "tarmoq"]);
+    expect(plans.body.items[0]).toMatchObject({ code: "start", price_tiyin: 0 });
     expect((await h.http.get("/v1/metrics").expect(401)).body.code).toBe("auth.unauthorized");
     const m = await h.http.get("/v1/metrics").set("Authorization", "Bearer test-metrics-token-0123456789").expect(200);
     expect(m.headers["content-type"]).toContain("text/plain");
@@ -225,6 +228,9 @@ describe("OpenAPI shartnomasi", () => {
     await op("get", "/v1/delivery/settings", "/v1/delivery/settings", 200, T);
     await op("get", "/v1/reports/sales", "/v1/reports/sales?days=7", 200, T);
     await op("get", "/v1/reports/sales", "/v1/reports/sales?days=0", 400, T);
+    await op("get", "/v1/audit", "/v1/audit?limit=5", 200, T);
+    await op("get", "/v1/audit", "/v1/audit?cursor=zzz", 400, T);
+    await op("get", "/v1/customers", "/v1/customers", 200, T);
     await op("get", "/v1/marketplace/shops", "/v1/marketplace/shops", 200);
     const adm = await makeAdmin(h, "+998900000077");
     await op("get", "/v1/admin/tenants", "/v1/admin/tenants", 200, { token: adm.token });

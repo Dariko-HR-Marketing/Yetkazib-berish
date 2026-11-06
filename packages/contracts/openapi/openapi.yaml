@@ -24,6 +24,7 @@ tags:
   - { name: orders }
   - { name: fulfillment }
   - { name: reports }
+  - { name: insights }
   - { name: payments }
 security:
   - bearer: []
@@ -37,6 +38,14 @@ paths:
       responses:
         '200': { description: Ishlayapti, content: { application/json: { schema: { type: object, required: [status], properties: { status: { type: string, const: ok } } } } } }
         '503': { $ref: '#/components/responses/Error' }
+  /v1/plans:
+    get:
+      tags: [system]
+      operationId: publicPlans
+      security: []
+      summary: "Ommaviy paketlar va narxlar (landing). Narx konfiguratsiyadan, tiyinda; null — kelishuv"
+      responses:
+        '200': { description: Paketlar, content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { $ref: '#/components/schemas/PublicPlan' } } } } } } }
   /v1/metrics:
     get:
       tags: [system]
@@ -905,6 +914,28 @@ paths:
         '400': { $ref: '#/components/responses/Error' }
         '403': { $ref: '#/components/responses/Error' }
         '404': { $ref: '#/components/responses/Error' }
+  /v1/audit:
+    get:
+      tags: [insights]
+      operationId: auditLog
+      summary: "Audit jurnali (o'zgarmas; telefon maskalangan, IP ko'rsatilmaydi)"
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100, default: 50 } }, { name: cursor, in: query, schema: { type: string } }, { name: action, in: query, schema: { type: string, maxLength: 60 } }]
+      responses:
+        '200': { description: Jurnal, content: { application/json: { schema: { $ref: '#/components/schemas/AuditPage' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/customers:
+    get:
+      tags: [insights]
+      operationId: customers360
+      summary: "Mijoz 360 (maskalangan, faqat ichki tahlil)"
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 200, default: 100 } }]
+      responses:
+        '200': { description: Mijozlar, content: { application/json: { schema: { $ref: '#/components/schemas/CustomerList' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
   /v1/admin/tenants:
     get:
       tags: [admin]
@@ -1014,6 +1045,45 @@ components:
       description: Kirish natijasi (tokenlar yoki ikkinchi omil talabi)
       content: { application/json: { schema: { oneOf: [{ $ref: '#/components/schemas/SignInResult' }, { $ref: '#/components/schemas/MfaChallenge' }] } } }
   schemas:
+    AuditPage:
+      type: object
+      required: [items, next_cursor]
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+            required: [id, created_at, action, entity, entity_id, actor, before, after]
+            properties:
+              id: { type: integer }
+              created_at: { type: string, format: date-time }
+              action: { type: string }
+              entity: { type: string }
+              entity_id: { type: string }
+              actor: { type: [object, 'null'], required: [id, phone_masked], properties: { id: { type: string, format: uuid }, phone_masked: { type: [string, 'null'] } } }
+              before: { type: [object, 'null'] }
+              after: { type: [object, 'null'] }
+        next_cursor: { type: [string, 'null'] }
+    CustomerList:
+      type: object
+      required: [total_customers, items]
+      properties:
+        total_customers: { type: integer }
+        items:
+          type: array
+          items:
+            type: object
+            required: [customer_id, phone_masked, orders, completed, cancelled, spent_tiyin, last_order_at, points_balance, repeat]
+            properties:
+              customer_id: { type: string, format: uuid }
+              phone_masked: { type: [string, 'null'] }
+              orders: { type: integer }
+              completed: { type: integer }
+              cancelled: { type: integer }
+              spent_tiyin: { type: integer }
+              last_order_at: { type: string, format: date-time }
+              points_balance: { type: integer }
+              repeat: { type: boolean }
     Error:
       type: object
       required: [code, message_uz, message_ru, details]
@@ -1712,3 +1782,12 @@ components:
       properties:
         limit_tiyin: { type: integer }
         items: { type: array, items: { type: object, required: [user_id, phone, on_hand_tiyin, over_limit, last_handover_at], properties: { user_id: { type: string, format: uuid }, phone: { type: [string, 'null'] }, on_hand_tiyin: { type: integer }, over_limit: { type: boolean }, last_handover_at: { type: [string, 'null'], format: date-time } } } }
+    PublicPlan:
+      type: object
+      required: [code, name, price_tiyin, limits, features]
+      properties:
+        code: { $ref: '#/components/schemas/PlanCode' }
+        name: { type: string }
+        price_tiyin: { type: [integer, 'null'] }
+        limits: { $ref: '#/components/schemas/PlanLimits' }
+        features: { type: array, items: { type: string } }

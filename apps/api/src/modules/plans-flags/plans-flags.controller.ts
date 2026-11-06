@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpCode, Param, Patch, Post, Req } from "@nestjs/common";
-import { PlatformAdmin, TenantScoped } from "../../common/access";
+import { NoIdempotency, PlatformAdmin, Public, TenantScoped } from "../../common/access";
 import { ApiError } from "../../common/errors";
 import type { AppRequest } from "../../common/request-context";
 import { parse, uuidSchema } from "../../common/validate";
@@ -24,6 +24,10 @@ export class PlansFlagsController {
   toggle(@Param("key") key: string, @Body() body: unknown, @Req() req: AppRequest) {
     return this.features.toggle(req.tenant!.tenantId, req.auth!.userId, key, parse(toggleDto, body).enabled, req.ip);
   }
+
+  /** Ommaviy: paketlar va narxlar (landing). */
+  @Public() @NoIdempotency() @Get("plans")
+  publicPlans() { return this.admin.publicPlans().then((items) => ({ items })); }
 
   // ---- admin ----
   @Get("admin/plans") @PlatformAdmin()

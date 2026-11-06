@@ -177,3 +177,14 @@ Rol bo'yicha kutilgan ko'rinish:
 
 ## 6. Nima topsangiz menga yozing
 Har topilmada: sahifa manzili, rol (qaysi raqam), nima qildingiz, nima kutdingiz, nima chiqdi (skrinshot bilan) — shu ma'lumot bilan tez tuzataman.
+
+
+## Qo'shimcha sahifalar (audit va mijozlar)
+
+| Sahifa | Kim ko'radi | Nimani tekshirish |
+|---|---|---|
+| `/audit` | egasi, menejer, buxgalter | Yozuvlar yangisidan eskisiga; telefon maskalangan (`+99890 ••• •• 01`), IP ko'rinmaydi; "Tafsilot" ichida oldin/keyin; filtr (`order.`, `product.` …); "Yana yuklash" kursor bilan; bo'sh holat |
+| `/mijozlar` | egasi, menejer, marketolog | Jami mijoz, har mijozga buyurtma/bajarilgan/bekor/sarf/ball/oxirgi buyurtma; 2 va undan ortiq bajarilgan buyurtma — "Takroriy"; telefon maskalangan; bo'sh holat |
+| `/` (bosh) | hamma | Hero, 3 qadam, afzalliklar, paketlar kartalari (`GET /v1/plans`), hujjatlar havolalari; kirgan foydalanuvchiga CTA `/panel` ga olib boradi |
+
+Ruxsat: kassir, yig'uvchi, dispetcher, kuryer `/audit` va `/mijozlar` ni ko'rmaydi (API 403, menyuda yo'q, sahifa `/paket` ga yo'naltiradi).

@@ -31,6 +31,17 @@ export class AdminPlansService {
       limits: p.limits, features: features.sort(), published_at: p.published_at };
   }
 
+  /** Ommaviy narxlar sahifasi: har paketning joriy nashr etilgan versiyasi (narx konfiguratsiyadan, kodda emas). */
+  async publicPlans() {
+    return this.db.tx({ platform: true }, async (tx) => {
+      const plans = (await tx.query<PlanRow>("select distinct on (code) * from plans where status = 'published' order by code, version desc")).rows;
+      const feats = await tx.query<{ plan_id: string; feature_key: string }>("select plan_id, feature_key from plan_features");
+      const order = PLAN_ORDER as readonly string[];
+      return plans.sort((a, b) => order.indexOf(a.code) - order.indexOf(b.code))
+        .map((p) => ({ code: p.code, name: p.name, price_tiyin: p.price_tiyin === null ? null : Number(p.price_tiyin), limits: p.limits, features: feats.rows.filter((f) => f.plan_id === p.id).map((f) => f.feature_key).sort() }));
+    });
+  }
+
   async list(actorId: string) {
     return this.db.tx({ userId: actorId, platform: true }, async (tx) => {
       const plans = (await tx.query<PlanRow>("select * from plans order by code, version")).rows;

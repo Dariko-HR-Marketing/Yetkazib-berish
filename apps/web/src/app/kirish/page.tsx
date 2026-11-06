@@ -6,6 +6,7 @@ import { ApiError, NetworkError, api } from "@/lib/api";
 import { useI18n } from "@/lib/i18n";
 import { useOpenLogin } from "@/lib/auth-config";
 import { getSession, setSession, signIn } from "@/lib/session";
+import { landingFor } from "@/lib/landing";
 import { MainAction, tgInitData } from "@/lib/telegram";
 import type { Me } from "@/lib/use-session";
 import { CenterCard } from "@/components/shell";
@@ -53,8 +54,7 @@ export default function LoginPage() {
     const next = new URLSearchParams(window.location.search).get("next");
     if (next && /^\/d\/[a-z0-9-]+(\/[A-Za-z0-9-]+)*$/.test(next)) { router.replace(next); return; } // xaridor: vitrinaga qaytish
     if (pending) { router.replace(`/taklif/${pending}`); return; }
-    // Rolga mos birinchi sahifa: katalog/qoldiq paneli bor rollar — /katalog; dispetcher va kuryer uchun hozircha faqat /paket (ularning ish ekranlari keyingi sprintlarda)
-    router.replace(!active && me.is_platform_admin ? "/admin" : !active ? "/dokon-yaratish" : active.role === "courier" ? "/kuryer" : active.role === "dispatcher" ? "/dispetcher" : active.role === "picker" ? "/yigish" : "/katalog");
+    router.replace(landingFor(me, active)); // rolga mos birinchi sahifa
   }, [router]);
 
   const handleSignIn = useCallback(async (r: SignIn) => {

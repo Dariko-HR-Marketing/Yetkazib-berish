@@ -29,7 +29,7 @@ describe("OpenAPI shartnomasi", () => {
 
   it("do'konga tegishli endpointlar X-Tenant-Id talab qiladi (tenantlarni yaratish va admin'dan tashqari)", () => {
     for (const { path, method, op } of ops) {
-      if (path === "/v1/tenants" || path === "/v1/health" || path === "/v1/metrics" || path.startsWith("/v1/auth/") || path.startsWith("/v1/admin/") || path.startsWith("/v1/me") || path.startsWith("/v1/legal/") || path.startsWith("/v1/shops/") || path.startsWith("/v1/marketplace/") || path.startsWith("/v1/webhooks/") || path.endsWith("/accept")) continue;
+      if (path === "/v1/tenants" || path === "/v1/health" || path === "/v1/metrics" || path === "/v1/plans" || path.startsWith("/v1/auth/") || path.startsWith("/v1/admin/") || path.startsWith("/v1/me") || path.startsWith("/v1/legal/") || path.startsWith("/v1/shops/") || path.startsWith("/v1/marketplace/") || path.startsWith("/v1/webhooks/") || path.endsWith("/accept")) continue;
       const hasTenant = op.parameters?.some((p) => p.$ref === "#/components/parameters/TenantId");
       expect(hasTenant, `${method.toUpperCase()} ${path}`).toBe(true);
     }
