@@ -10,7 +10,7 @@ import { getSession } from "@/lib/session";
 
 interface Item { id: string; name_uz: string; name_ru: string | null; unit: string; quantity_milli: number; line_total_tiyin: number }
 interface Ord { id: string; number: number; status: string; fulfillment: string; total_tiyin: number; delivery_address: string | null; note: string | null; cancel_reason: string | null; items: Item[] }
-const TONE: Record<string, "info" | "ok" | "danger" | "warning"> = { placed: "info", accepted: "warning", completed: "ok", cancelled: "danger" };
+const TONE: Record<string, "info" | "ok" | "danger" | "warning"> = { placed: "info", accepted: "warning", picking: "warning", ready: "info", delivering: "warning", completed: "ok", cancelled: "danger", failed: "danger" };
 
 export default function OrderPage({ params }: { params: Promise<{ slug: string; id: string }> }) {
   const { slug, id } = use(params);

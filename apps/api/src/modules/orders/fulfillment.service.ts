@@ -22,7 +22,7 @@ export class FulfillmentService {
   }
   private async view(tx: Tx, tenantId: string, id: string, mask: boolean) {
     const o = (await tx.query<OrderRow>("select *, '' as cur_at from orders where id = $1 and tenant_id = $2", [id, tenantId])).rows[0]!;
-    return orderDto(o, (await this.orders.loadItems(tx, tenantId, [id])).get(id) ?? [], mask);
+    return orderDto(o, (await this.orders.loadItems(tx, tenantId, [id])).get(id) ?? [], mask, mask ? (await this.orders.loadDeliveries(tx, tenantId, [id])).get(id) ?? null : undefined);
   }
 
   // ---------------------------------------------------------------- yig'ish

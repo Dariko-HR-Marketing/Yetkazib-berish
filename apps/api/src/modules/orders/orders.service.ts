@@ -26,11 +26,13 @@ export interface OrderRow {
 export interface ItemRow { id: string; product_id: string; name_uz: string; name_ru: string | null; unit: string; quantity_milli: string; price_tiyin: string; line_total_tiyin: string; pick_status: string; picked_milli: string | null; reserved_milli: string }
 
 export const itemDto = (i: ItemRow) => ({ id: i.id, product_id: i.product_id, name_uz: i.name_uz, name_ru: i.name_ru, unit: i.unit, quantity_milli: Number(i.quantity_milli), price_tiyin: Number(i.price_tiyin), line_total_tiyin: Number(i.line_total_tiyin), pick_status: i.pick_status, picked_milli: i.picked_milli === null ? null : Number(i.picked_milli) });
-export const orderDto = (o: OrderRow, items: ItemRow[], mask: boolean) => ({
+export interface DeliveryRef { courier_user_id: string; status: string }
+export const orderDto = (o: OrderRow, items: ItemRow[], mask: boolean, delivery?: DeliveryRef | null) => ({
   id: o.id, number: Number(o.number), branch_id: o.branch_id, status: o.status, fulfillment: o.fulfillment, payment_type: o.payment_type, channel: o.channel,
   subtotal_tiyin: Number(o.subtotal_tiyin), delivery_fee_tiyin: Number(o.delivery_fee_tiyin), total_tiyin: Number(o.total_tiyin),
   delivery_address: o.delivery_address, customer_phone: mask ? maskPhone(o.customer_phone) : o.customer_phone, note: o.note, cancel_reason: o.cancel_reason,
   created_at: o.created_at, updated_at: o.updated_at, items: items.map(itemDto),
+  ...(delivery !== undefined ? { delivery } : {}),
 });
 
 @Injectable()
@@ -43,6 +45,15 @@ export class OrdersService {
     if (!ids.length) return m;
     const r = await tx.query<ItemRow & { order_id: string }>("select id, order_id, product_id, name_uz, name_ru, unit, quantity_milli, price_tiyin, line_total_tiyin, pick_status, picked_milli, reserved_milli from order_items where tenant_id = $1 and order_id = any($2::uuid[]) order by id", [tenantId, ids]);
     for (const i of r.rows) { const a = m.get(i.order_id) ?? []; a.push(i); m.set(i.order_id, a); }
+    return m;
+  }
+
+  /** Panel uchun: buyurtmaga biriktirilgan kuryer (xaridorga ko'rsatilmaydi). */
+  async loadDeliveries(tx: Tx, tenantId: string, ids: string[]): Promise<Map<string, DeliveryRef>> {
+    const m = new Map<string, DeliveryRef>();
+    if (!ids.length) return m;
+    const r = await tx.query<{ order_id: string; courier_user_id: string; status: string }>("select order_id, courier_user_id, status from deliveries where tenant_id = $1 and order_id = any($2::uuid[])", [tenantId, ids]);
+    for (const d of r.rows) m.set(d.order_id, { courier_user_id: d.courier_user_id, status: d.status });
     return m;
   }
 
@@ -131,9 +142,10 @@ export class OrdersService {
       const page = r.rows.slice(0, q.limit);
       const last = page[page.length - 1];
       const items = await this.loadItems(tx, tenantId, page.map((o) => o.id));
+      const dels = await this.loadDeliveries(tx, tenantId, page.map((o) => o.id));
       const counts = await tx.query<{ status: string; n: number }>("select status, count(*)::int as n from orders where tenant_id = $1 group by status", [tenantId]);
       return {
-        items: page.map((o) => orderDto(o, items.get(o.id) ?? [], true)),
+        items: page.map((o) => orderDto(o, items.get(o.id) ?? [], true, dels.get(o.id) ?? null)),
         next_cursor: r.rows.length > q.limit && last ? encodeCursor({ at: last.cur_at, id: last.id }) : null,
         counts: Object.fromEntries(counts.rows.map((c) => [c.status, c.n])),
       };
@@ -145,7 +157,7 @@ export class OrdersService {
       const o = (await tx.query<OrderRow>("select *, '' as cur_at from orders where id = $1 and tenant_id = $2", [id, tenantId])).rows[0];
       if (!o) throw new ApiError(404, "not_found");
       const hist = await tx.query("select from_status, to_status, created_at from order_status_history where order_id = $1 and tenant_id = $2 order by created_at, id", [id, tenantId]);
-      return { ...orderDto(o, (await this.loadItems(tx, tenantId, [o.id])).get(o.id) ?? [], true), history: hist.rows };
+      return { ...orderDto(o, (await this.loadItems(tx, tenantId, [o.id])).get(o.id) ?? [], true, (await this.loadDeliveries(tx, tenantId, [o.id])).get(o.id) ?? null), history: hist.rows };
     });
   }
 

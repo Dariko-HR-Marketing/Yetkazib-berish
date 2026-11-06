@@ -23,6 +23,8 @@ export function LangSwitch() {
 /** Rolga ko'ra bo'limlar (roles_permissions.json: katalog va qoldiq). Server baribir tekshiradi; bu faqat qulaylik uchun. */
 const CATALOG_ROLES = new Set(["owner", "manager", "accountant", "marketer", "picker", "cashier"]);
 const ORDER_ROLES = new Set(["owner", "manager", "picker", "cashier", "dispatcher", "accountant", "marketer"]);
+const PICK_ROLES = new Set(["owner", "manager", "picker", "dispatcher"]);
+const DISPATCH_ROLES = new Set(["owner", "manager", "dispatcher"]);
 const IMPORT_ROLES = new Set(["owner", "manager"]);
 
 export function Shell({ title, subtitle, tenantName, children, actions, role }: { title: string; subtitle?: string; tenantName?: string; children: ReactNode; actions?: ReactNode; role?: string }) {
@@ -30,6 +32,9 @@ export function Shell({ title, subtitle, tenantName, children, actions, role }: 
   const path = usePathname();
   const router = useRouter();
   const nav = [
+    ...(role === "courier" ? [{ href: "/kuryer", label: t("nav.courier") }] : []),
+    ...(role && PICK_ROLES.has(role) ? [{ href: "/yigish", label: t("nav.picking") }] : []),
+    ...(role && DISPATCH_ROLES.has(role) ? [{ href: "/dispetcher", label: t("nav.dispatch") }] : []),
     ...(role && ORDER_ROLES.has(role) ? [{ href: "/buyurtmalar", label: t("nav.orders") }] : []),
     ...(role && CATALOG_ROLES.has(role) ? [{ href: "/katalog", label: t("nav.catalog") }] : []),
     ...(role && IMPORT_ROLES.has(role) ? [{ href: "/import", label: t("nav.import") }] : []),

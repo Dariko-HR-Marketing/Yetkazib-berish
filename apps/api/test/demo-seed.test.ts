@@ -19,6 +19,8 @@ describe("demo hisoblar", () => {
     expect((await seedDemo(process.env.DATABASE_URL!)).created).toBe(false);
     expect((await h.admin.query("select count(*)::int as n from tenants")).rows[0].n).toBe(2);
     expect((await h.admin.query("select count(*)::int as n from products where tenant_id = (select id from tenants where tin = '200000001')")).rows[0].n).toBe(12);
+    expect((await h.admin.query("select status from orders order by number")).rows.map((r) => r.status)).toEqual(["placed", "accepted"]);
+    expect((await h.admin.query("select reserved_milli::int as r from stock s join products p on p.id = s.product_id where p.sku = 'MILK-32'")).rows[0].r).toBe(2000);
   });
 
   it("har rol o'z roli bilan kiradi va ruxsatlar rollar jadvaliga mos (sahifalar: katalog, qoldiq, import, jamoa)", async () => {

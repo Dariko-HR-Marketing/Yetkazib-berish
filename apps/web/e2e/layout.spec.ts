@@ -88,6 +88,8 @@ const PAGES: { name: string; path: string; auth: boolean }[] = [
   { name: "paket", path: "/paket", auth: true },
   { name: "katalog", path: "/katalog", auth: true },
   { name: "buyurtmalar", path: "/buyurtmalar", auth: true },
+  { name: "yigish", path: "/yigish", auth: true },
+  { name: "dispetcher", path: "/dispetcher", auth: true },
   { name: "vitrina", path: "/d/yashil-savat", auth: false },
   { name: "savat", path: "/d/yashil-savat/savat", auth: false },
   { name: "import", path: "/import", auth: true },

@@ -17,7 +17,7 @@ export const shopProductsDto = z.object({
   limit: z.coerce.number().int().min(1).max(60).default(30), cursor: z.string().optional(),
 });
 export const orderListDto = z.object({
-  status: z.enum(["placed", "accepted", "completed", "cancelled"]).optional(),
+  status: z.enum(["placed", "accepted", "picking", "ready", "delivering", "completed", "cancelled", "failed"]).optional(),
   limit: z.coerce.number().int().min(1).max(100).default(30), cursor: z.string().optional(),
 });
 export const orderStatusDto = z.object({ status: z.enum(["accepted", "completed", "cancelled"]), reason: z.string().trim().max(200).optional() }).strict();

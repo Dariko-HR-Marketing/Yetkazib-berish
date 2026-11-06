@@ -1415,6 +1415,11 @@ components:
         created_at: { type: string, format: date-time }
         updated_at: { type: string, format: date-time }
         items: { type: array, items: { $ref: '#/components/schemas/OrderItem' } }
+        delivery:
+          description: Faqat panelda — biriktirilgan kuryer
+          oneOf:
+            - { type: 'null' }
+            - { type: object, required: [courier_user_id, status], properties: { courier_user_id: { type: string, format: uuid }, status: { type: string } } }
     OrderPage:
       type: object
       required: [items, next_cursor, counts]

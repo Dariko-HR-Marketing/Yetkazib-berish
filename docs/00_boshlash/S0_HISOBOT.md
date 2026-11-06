@@ -135,3 +135,17 @@ Tuzatildi: yangilash tokeni bir vaqtda ikki marta yuborilganda API sessiyani «q
 Qilinmagan: onlayn to'lov (S3), yetkazish narxi va slotlar (S5/S4), haqiqiy Telegram klienti bilan tekshiruv (bot tokeni kerak), LCP o'lchovi.
 Qaror: S2'da to'lov faqat naqd (`payment.cash` yoqilgan bo'lsa); yetkazish bepul (0), S5'da narx hisoblanadi.
 Inson ko'rib chiqishi: qoldiq band qilish va bajarish (pul/qoldiq mantig'i), RLS 0010, ommaviy endpointlar.
+
+## 11. S4 (yig'ish, dispetcher, kuryer) — holat (2026-11-06)
+S3 (to'lov) tashqi ma'lumot (Payme/Click/Uzum merchant sandbox kalitlari va protokol hujjatlari) talab qilgani uchun keyinga qoldirildi; S4 mustaqil bo'lgani uchun oldin bajarildi.
+
+| Nima | Holat |
+| --- | --- |
+| Migratsiya 0011: yangi holatlar, yig'ish ustunlari, `deliveries`, `courier_locations` (RLS) | ✅ |
+| Yig'ish: navbat, qator belgilash (kam/yo'q), tugatish (jami qayta hisob, band bo'shatish), `order.picked` | ✅ |
+| Dispetcher: kuryerlar va joylashuv, o'z kuryerini biriktirish | ✅ |
+| Kuryer: topshiriqlar, olish, yetkazish (qoldiq ayriladi, naqd yozuvi, `order.delivered`), muvaffaqiyatsiz, GPS (15 s) | ✅ veb (`/kuryer`); React Native ilovasi — keyinga |
+| Testlar: API 251, E2E 104 (+ ochiq rejim 6, shu jumladan to'liq zanjir) | ✅ lokal |
+
+Qilinmagan: kuryer naqd limiti va kassa hisob-kitobi (1,5 mln so'm), 3 daqiqalik taklif/zaxira kanal (S5), yetkazish narxi, GPS marshruti xaritasi, haqiqiy qurilmada GPS tekshiruvi (bu muhitda geolokatsiya mavjud emas).
+Inson ko'rib chiqishi: qoldiq yozilishi (yig'ish/bajarish), ruxsatlar (`picking`, `dispatch`, `courier:self`), kuryerga mijoz telefoni ko'rinishi.

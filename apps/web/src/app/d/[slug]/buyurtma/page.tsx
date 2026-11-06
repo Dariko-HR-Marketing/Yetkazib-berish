@@ -9,7 +9,7 @@ import { useI18n } from "@/lib/i18n";
 import { getSession } from "@/lib/session";
 
 interface Ord { id: string; number: number; status: string; total_tiyin: number; created_at: string }
-const TONE: Record<string, "info" | "ok" | "danger" | "warning"> = { placed: "info", accepted: "warning", completed: "ok", cancelled: "danger" };
+const TONE: Record<string, "info" | "ok" | "danger" | "warning"> = { placed: "info", accepted: "warning", picking: "warning", ready: "info", delivering: "warning", completed: "ok", cancelled: "danger", failed: "danger" };
 
 export default function MyOrdersPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);

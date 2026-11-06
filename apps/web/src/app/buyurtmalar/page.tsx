@@ -10,10 +10,10 @@ import { useRequireSession } from "@/lib/use-session";
 import { PageSkeleton, Shell } from "@/components/shell";
 
 interface Item { id: string; name_uz: string; name_ru: string | null; unit: string; quantity_milli: number }
-interface Ord { id: string; number: number; status: "placed" | "accepted" | "completed" | "cancelled"; fulfillment: string; total_tiyin: number; delivery_address: string | null; customer_phone: string | null; note: string | null; created_at: string; items: Item[] }
+interface Ord { id: string; number: number; status: "placed" | "accepted" | "picking" | "ready" | "delivering" | "completed" | "cancelled" | "failed"; fulfillment: string; total_tiyin: number; delivery_address: string | null; customer_phone: string | null; note: string | null; created_at: string; items: Item[] }
 interface Page { items: Ord[]; next_cursor: string | null; counts: Record<string, number> }
 type Tab = "all" | Ord["status"];
-const TONE: Record<string, "info" | "ok" | "danger" | "warning"> = { placed: "info", accepted: "warning", completed: "ok", cancelled: "danger" };
+const TONE: Record<string, "info" | "ok" | "danger" | "warning"> = { placed: "info", accepted: "warning", picking: "warning", ready: "info", delivering: "warning", completed: "ok", cancelled: "danger", failed: "danger" };
 const WRITE = new Set(["owner", "manager", "dispatcher"]);
 const READ = new Set(["owner", "manager", "picker", "cashier", "dispatcher", "accountant", "marketer"]);
 
@@ -54,7 +54,7 @@ export default function OrdersPage() {
     catch (e) { setToast({ msg: errText(e), tone: "danger" }); await load(); } finally { setBusyId(null); }
   };
   const nameOf = (i: Item) => (locale === "ru" && i.name_ru ? i.name_ru : i.name_uz);
-  const tabs: Tab[] = ["placed", "accepted", "completed", "cancelled", "all"];
+  const tabs: Tab[] = ["placed", "accepted", "picking", "ready", "delivering", "completed", "cancelled", "failed", "all"];
 
   return (
     <Shell role={role} title={t("orders.title")} subtitle={t("orders.subtitle")} tenantName={membership.tenant_name}
@@ -84,10 +84,10 @@ export default function OrdersPage() {
                   <p className="text-body-sm text-muted">{t("orders.customer")}: {o.customer_phone ?? "—"} · {o.fulfillment === "delivery" ? t("orders.delivery_to", { address: o.delivery_address ?? "" }) : t("orders.pickup")}{o.note ? ` · ${o.note}` : ""}</p>
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <p className="text-title-sm font-extrabold">{money(o.total_tiyin)}</p>
-                    {WRITE.has(role) && (o.status === "placed" || o.status === "accepted") && (
+                    {WRITE.has(role) && (o.status === "placed" || o.status === "accepted" || (o.status === "ready" && o.fulfillment === "pickup")) && (
                       <div className="flex flex-wrap gap-2">
                         {o.status === "placed" && <Button loading={busyId === o.id} onClick={() => setStatus(o, "accepted")}>{t("orders.accept")}</Button>}
-                        {o.status === "accepted" && <Button loading={busyId === o.id} onClick={() => setStatus(o, "completed")}>{t("orders.complete")}</Button>}
+                        {(o.status === "accepted" || o.status === "ready") && <Button loading={busyId === o.id} onClick={() => setStatus(o, "completed")}>{o.status === "ready" ? t("orders.handover") : t("orders.complete")}</Button>}
                         <Button variant="ghost" onClick={() => setCancelId(cancelId === o.id ? null : o.id)}>{t("orders.cancel")}</Button>
                       </div>
                     )}

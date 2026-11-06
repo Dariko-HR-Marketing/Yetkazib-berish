@@ -14,12 +14,12 @@ Hozir kirish soddalashtirilgan (`OPEN_LOGIN=on`): **parol yo'q, SMS kod yo'q, ik
 | --- | --- | --- |
 | Egasi (owner) | `+998 90 100 00 01` | /katalog |
 | Menejer (manager) | `+998 90 100 00 02` | /katalog |
-| Yig'uvchi (picker) | `+998 90 100 00 03` | /katalog (faqat qoldiq) |
+| Yig'uvchi (picker) | `+998 90 100 00 03` | /yigish |
 | Kassir (cashier) | `+998 90 100 00 04` | /katalog (faqat qoldiq, o'qish) |
-| Dispetcher (dispatcher) | `+998 90 100 00 05` | /paket |
+| Dispetcher (dispatcher) | `+998 90 100 00 05` | /dispetcher |
 | Buxgalter (accountant) | `+998 90 100 00 06` | /katalog (o'qish) |
 | Marketolog (marketer) | `+998 90 100 00 07` | /katalog (o'qish) |
-| Kuryer (courier) | `+998 90 100 00 08` | /paket |
+| Kuryer (courier) | `+998 90 100 00 08` | /kuryer |
 | **Begona do'kon egasi** («Boshqa Do'kon», paket: Start) | `+998 90 100 00 09` | /katalog |
 | Platforma admini | `+998 90 100 00 00` | (admin ekrani hali yo'q, faqat API) |
 
@@ -36,8 +36,8 @@ Jarayon takrorlansa ham ma'lumot ikkilanmaydi.
 
 ## 2. Hozir mavjud va hali mavjud bo'lmagan sahifalar
 
-**Bor:** `/kirish`, `/dokon-yaratish`, `/katalog` (katalog + qoldiq), `/import`, `/jamoa`, `/paket`, `/taklif/<token>`, `/hujjat/<kalit>`.
-**Hali yo'q (keyingi sprintlar):** xaridor vitrinasi va savat, buyurtmalar, yig'ish ekrani, dispetcher va kuryer ekranlari, to'lov, kassa, ball/sodiqlik, hisobotlar, admin paneli. Dispetcher va kuryer hozircha faqat «Paket va funksiyalar» sahifasini ko'ra oladi; ularning ish ekranlari yo'qligi **xato emas**.
+**Bor:** `/kirish`, `/dokon-yaratish`, `/katalog` (katalog + qoldiq), `/import`, `/jamoa`, `/paket`, `/taklif/<token>`, `/hujjat/<kalit>`, **xaridor:** `/d/demo` (vitrina), `/d/demo/savat`, `/d/demo/buyurtma`, **panel:** `/buyurtmalar`, `/yigish`, `/dispetcher`, **kuryer:** `/kuryer`.
+**Hali yo'q (keyingi sprintlar):** onlayn to'lov (Payme/Click/Uzum), kassa va kuryer naqd hisob-kitobi, platforma kuryerlari, ball/sodiqlik, hisobotlar, admin paneli, kuryer uchun alohida mobil ilova (hozir veb sahifa `/kuryer`).
 
 Har sahifada o'ng yuqorida **UZ / RU** tugmasi va **Chiqish** bor. Telefonda ham tekshiring (matn va tugmalar sig'ishi kerak).
 
@@ -75,6 +75,32 @@ Nimani sinab ko'rish:
 - O'ng tomonda: oxirgi yuklashlar tarixi.
 - Sinab ko'rish: shablonni yuklab, bir-ikki qatorni buzing (narx «abc», takror shtrix-kod) → xatolar ro'yxatda chiqadi, qolganlari yoziladi. Ustun nomlari uz/ru/en bo'lishi mumkin (nomi, narx, shtrix-kod, qoldiq, birlik, kategoriya).
 - Faqat Egasi va Menejer kira oladi; boshqa rollar /katalog ga qaytariladi.
+
+### /d/demo — xaridor vitrinasi (kirish shart emas)
+- Qidiruv, kategoriyalar, filial tanlash, mahsulot kartalari: nom, narx/birlik, «Tugadi» / «Kam qoldi» nishoni, «Qo'shish» va −/+ (dona 1, kg/litr 0,5 qadam); pastda «Savatni ko'rish · jami».
+- Tekshiring: «Tugadi» mahsulotda tugma o'chiq; qoldiqdan ortiq qo'shib bo'lmaydi; filialni almashtirsangiz savat tozalanadi.
+
+### /d/demo/savat — savat va buyurtma
+- Qatorlar (−/+), yetkazish yoki olib ketish, manzil, izoh, to'lov: naqd; jami (butun so'm), «Buyurtma berish». Kirmagan bo'lsangiz — «Kirish» (kirgach savatga qaytadi). Manzilsiz yetkazish — tugma o'chiq.
+- Xato holati: qoldiq yetmasa «Ba'zi mahsulotlar yetarli emas» va qator ostida mavjud miqdor.
+
+### /d/demo/buyurtma va /buyurtma/<id> — xaridor
+- Holat nishoni: Qabul qilindi → Tasdiqlandi → Yig'ilmoqda → Tayyor → Yo'lda → Bajarildi (yoki Bekor/Yetkazilmadi), jami, tarkib (yig'ishdan keyin haqiqiy miqdor va jami), «Buyurtmani bekor qilish» (faqat «Qabul qilindi» da). 10 soniyada o'zi yangilanadi.
+
+### /buyurtmalar — buyurtmalar (panel)
+- Tablar: Yangi / Tasdiqlangan / Yig'ilmoqda / Tayyor / Yo'lda / Bajarilgan / Bekor / Yetkazilmadi / Hammasi (hisoblagichli), har 15 s yangilanadi. Kartada: raqam, vaqt (Toshkent), tarkib, xaridor (telefon maskalangan), manzil, jami.
+- Egasi/Menejer/Dispetcher: «Qabul qilish», «Bajarildi» (kuryersiz tezkor yo'l yoki olib ketish topshirildi), «Bekor qilish» (sabab bilan). Boshqa rollar faqat ko'radi. Bekor qilganda band qilingan qoldiq qaytadi.
+
+### /yigish — yig'ish (Yig'uvchi, Menejer, Egasi; Dispetcher ko'radi)
+- Qabul qilingan buyurtma → «Yig'ishni boshlash» → har qator: «Yig'ildi» / miqdor kiritib «Saqlash» (kam yig'ildi) / «Yo'q» / «Qaytarish». «Yig'ish tugadi» hammasi belgilangach yoqiladi; jami yig'ilganga qarab qayta hisoblanadi, ortiqcha band bo'shaydi. Hammasi «Yo'q» bo'lsa — rad etiladi (buyurtmani bekor qiling).
+
+### /dispetcher — dispetcher
+- Chapda tayyor yetkazish buyurtmalari (manzil, jami), kuryer tanlash va «Biriktirish» (olinmaguncha qayta biriktirish mumkin; biriktirilgach «Kuryer: …» belgisi). O'ngda kuryerlar: faol yetkazishlar soni, oxirgi joylashuv («hozir»/«eskirgan») va xaritada ochish.
+
+### /kuryer — kuryer (faqat Kuryer roli)
+- Biriktirilgan buyurtmalar: manzil, mijoz telefoni (to'liq, qo'ng'iroq havolasi), tarkib, olinadigan naqd. Tugmalar: «Buyurtmani oldim» → «Yetkazdim, naqd oldim» yoki «Yetkazib bo'lmadi» (sabab bilan). Ilova ochiq bo'lsa brauzer joylashuv ruxsatini so'raydi va har 15 soniyada yuboradi (belgi: «Joylashuv yuborilmoqda»).
+
+**To'liq zanjirni sinash:** (1) xaridor `/d/demo` dan buyurtma beradi; (2) Egasi `/buyurtmalar` da qabul qiladi; (3) Yig'uvchi `/yigish` da yig'adi; (4) Dispetcher `/dispetcher` da kuryerga biriktiradi; (5) Kuryer `/kuryer` da oladi va yetkazadi; (6) xaridor holatni, Egasi `/katalog` da kamaygan qoldiqni ko'radi. Demo uchun ikki tayyor buyurtma bor (yangi va qabul qilingan).
 
 ### /jamoa — xodimlar (Egasi: to'liq; Menejer: faqat ko'rish)
 - Jadval: a'zolar (telefon maskalangan), rol tanlash (faqat egasi), to'xtatish/yoqish tugmasi, kutilayotgan takliflar.

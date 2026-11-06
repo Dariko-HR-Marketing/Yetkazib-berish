@@ -12,6 +12,7 @@ export const DEMO_ACCOUNTS = [
   { role: "courier", phone: "+998901000008", name: "Kuryer" },
 ] as const;
 export const OTHER_OWNER = "+998901000009";
+export const DEMO_CUSTOMER = "+998901000010";
 export const PLATFORM_ADMIN = "+998901000000";
 
 const PRODUCTS: { sku: string; uz: string; ru: string; price: number; unit: "piece" | "kg" | "l"; cat: string; qty: number; mxik?: string; out?: boolean; barcode?: string }[] = [
@@ -59,6 +60,24 @@ export async function seedDemo(url: string): Promise<{ created: boolean }> {
       await c.query("insert into stock (product_id, branch_id, tenant_id, quantity_milli, out_marked, source) values ($1,$2,$3,$4,$5,'system')", [pid, b1, tid, p.qty, p.out ?? false]);
       await c.query("insert into stock_movements (tenant_id, product_id, branch_id, delta_milli, quantity_after_milli, reason, source) values ($1,$2,$3,$4,$4,'set','system')", [tid, pid, b1, p.qty]);
     }
+
+    // Demo buyurtmalar: biri yangi (placed), biri qabul qilingan (accepted) — panel va yig'ish ekranlarida darhol ko'rinadi
+    const customer = await user(DEMO_CUSTOMER);
+    const prod = async (sku: string) => (await c.query<{ id: string; name_uz: string; name_ru: string | null; unit: string; price_tiyin: string }>("select id, name_uz, name_ru, unit, price_tiyin from products where tenant_id = $1 and sku = $2", [tid, sku])).rows[0]!;
+    const mkOrder = async (status: string, address: string, lines: { sku: string; q: number }[]) => {
+      const rows = await Promise.all(lines.map(async (l) => ({ p: await prod(l.sku), q: l.q })));
+      const total = rows.reduce((a, r) => a + Number((BigInt(r.q) * BigInt(r.p.price_tiyin) + 500n) / 1000n), 0);
+      const oid = (await c.query<{ id: string }>("insert into orders (tenant_id, branch_id, customer_id, status, fulfillment, subtotal_tiyin, total_tiyin, delivery_address, customer_phone) values ($1,$2,$3,$4,'delivery',$5,$5,$6,$7) returning id", [tid, b1, customer, status, total, address, DEMO_CUSTOMER])).rows[0]!.id;
+      for (const r of rows) {
+        const line = Number((BigInt(r.q) * BigInt(r.p.price_tiyin) + 500n) / 1000n);
+        await c.query("insert into order_items (order_id, tenant_id, product_id, name_uz, name_ru, unit, quantity_milli, price_tiyin, line_total_tiyin, reserved_milli) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$7)", [oid, tid, r.p.id, r.p.name_uz, r.p.name_ru, r.p.unit, r.q, r.p.price_tiyin, line]);
+        await c.query("update stock set reserved_milli = reserved_milli + $3 where product_id = $1 and branch_id = $2", [r.p.id, b1, r.q]);
+      }
+      await c.query("insert into order_status_history (tenant_id, order_id, from_status, to_status, actor_id) values ($1,$2,null,'placed',$3)", [tid, oid, customer]);
+      if (status !== "placed") await c.query("insert into order_status_history (tenant_id, order_id, from_status, to_status) values ($1,$2,'placed',$3)", [tid, oid, status]);
+    };
+    await mkOrder("placed", "Toshkent, Bobur ko'chasi 5-uy", [{ sku: "MILK-32", q: 2000 }, { sku: "BREAD-1", q: 3000 }]);
+    await mkOrder("accepted", "Toshkent, Mustaqillik 12, 4-xonadon", [{ sku: "APPLE-KG", q: 1000 }, { sku: "WATER-15", q: 6000 }]);
 
     // Ikkinchi, begona do'kon: ma'lumotlar izolyatsiyasini (404) tekshirish uchun
     const otherUser = await user(OTHER_OWNER);
