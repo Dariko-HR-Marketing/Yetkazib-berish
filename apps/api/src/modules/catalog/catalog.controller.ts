@@ -2,6 +2,7 @@ import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query
 import { TenantScoped } from "../../common/access";
 import { ApiError } from "../../common/errors";
 import type { AppRequest } from "../../common/request-context";
+import { hasPermission } from "../../common/rbac";
 import { parse, uuidSchema } from "../../common/validate";
 import { z } from "zod";
 import { CatalogService } from "./catalog.service";
@@ -31,8 +32,12 @@ export class CatalogController {
   deleteCategory(@Param("id") cid: string, @Req() req: AppRequest) { return this.catalog.deleteCategory(req.tenant!.tenantId, req.auth!.userId, id(cid), req.ip); }
 
   // mahsulotlar
+  /** Qoldiq ma'lumoti faqat stock:read huquqi borlarga (masalan, marketolog katalogni ko'radi, qoldiqni emas). */
   @Get("products") @TenantScoped("catalog:read")
-  products(@Query() q: unknown, @Req() req: AppRequest) { return this.catalog.listProducts(req.tenant!.tenantId, req.auth!.userId, parse(productListDto, q)); }
+  async products(@Query() q: unknown, @Req() req: AppRequest) {
+    const r = await this.catalog.listProducts(req.tenant!.tenantId, req.auth!.userId, parse(productListDto, q));
+    return hasPermission(req.tenant!.role, "stock:read") ? r : { ...r, items: r.items.map((p) => ({ ...p, stock: null })) };
+  }
 
   /** Yig'uvchi/kassir uchun: katalog ruxsatisiz, faqat qoldiq ko'rinishi (stock:read). */
   @Get("stock") @TenantScoped("stock:read")
@@ -45,7 +50,10 @@ export class CatalogController {
   createProduct(@Body() b: unknown, @Req() req: AppRequest) { return this.catalog.createProduct(req.tenant!.tenantId, req.auth!.userId, parse(productCreateDto, b), req.ip); }
 
   @Get("products/:id") @TenantScoped("catalog:read")
-  product(@Param("id") pid: string, @Query() q: unknown, @Req() req: AppRequest) { return this.catalog.getProduct(req.tenant!.tenantId, req.auth!.userId, id(pid), parse(summaryDto, q).branch_id); }
+  async product(@Param("id") pid: string, @Query() q: unknown, @Req() req: AppRequest) {
+    const p = await this.catalog.getProduct(req.tenant!.tenantId, req.auth!.userId, id(pid), parse(summaryDto, q).branch_id);
+    return hasPermission(req.tenant!.role, "stock:read") ? p : { ...p, stock: null };
+  }
 
   @Patch("products/:id") @TenantScoped("catalog:write")
   updateProduct(@Param("id") pid: string, @Body() b: unknown, @Req() req: AppRequest) { return this.catalog.updateProduct(req.tenant!.tenantId, req.auth!.userId, id(pid), parse(productUpdateDto, b), req.ip); }

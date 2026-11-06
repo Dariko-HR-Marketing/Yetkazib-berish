@@ -217,6 +217,12 @@ describe("OpenAPI shartnomasi", () => {
     await op("get", "/v1/shops/{slug}/orders", `/v1/shops/${slug}/orders`, 200, { token: c.token });
     await op("get", "/v1/shops/{slug}/loyalty", `/v1/shops/${slug}/loyalty`, 200, { token: c.token });
     await op("get", "/v1/delivery/settings", "/v1/delivery/settings", 200, T);
+    await op("get", "/v1/reports/sales", "/v1/reports/sales?days=7", 200, T);
+    await op("get", "/v1/reports/sales", "/v1/reports/sales?days=0", 400, T);
+    await op("get", "/v1/marketplace/shops", "/v1/marketplace/shops", 200);
+    const adm = await makeAdmin(h, "+998900000077");
+    await op("get", "/v1/admin/tenants", "/v1/admin/tenants", 200, { token: adm.token });
+    await op("get", "/v1/admin/tenants", "/v1/admin/tenants", 403, T);
     await op("put", "/v1/delivery/settings", "/v1/delivery/settings", 200, { ...T, body: { fee_tiyin: 0, free_from_tiyin: null, min_order_tiyin: 0 } });
     await op("put", "/v1/delivery/settings", "/v1/delivery/settings", 400, { ...T, body: { fee_tiyin: -5, free_from_tiyin: null, min_order_tiyin: 0 } });
     await op("get", "/v1/shops/{slug}/orders/{id}", `/v1/shops/${slug}/orders/${ord.body.id}`, 200, { token: c.token });

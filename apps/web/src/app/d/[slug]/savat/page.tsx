@@ -19,6 +19,9 @@ export default function CartPage({ params }: { params: Promise<{ slug: string }>
   const session = useSessionValue();
   const [shopName, setShopName] = useState(slug);
   const [cashOk, setCashOk] = useState(true);
+  const [delivery, setDelivery] = useState({ fee_tiyin: 0, free_from_tiyin: null as number | null, min_order_tiyin: 0 });
+  const [loyal, setLoyal] = useState<{ enabled: boolean; spendable_points: number; pending_points: number; point_value_tiyin: number; max_pay_share_pct: number; hold_hours: number; tier: string; cashback_pct: number } | null>(null);
+  const [points, setPoints] = useState("");
   const [fulfillment, setFulfillment] = useState<"delivery" | "pickup">("delivery");
   const [address, setAddress] = useState("");
   const [note, setNote] = useState("");
@@ -26,10 +29,17 @@ export default function CartPage({ params }: { params: Promise<{ slug: string }>
   const [toast, setToast] = useState<{ msg: string; tone: "ok" | "danger" } | null>(null);
   const [short, setShort] = useState<Record<string, number>>({});
 
-  useEffect(() => { api<{ name: string; features: { cash: boolean } }>(`/v1/shops/${slug}`, { auth: false }).then((s) => { setShopName(s.name); setCashOk(s.features.cash); }).catch(() => undefined); }, [slug]);
+  useEffect(() => { api<{ name: string; features: { cash: boolean }; delivery: { fee_tiyin: number; free_from_tiyin: number | null; min_order_tiyin: number } }>(`/v1/shops/${slug}`, { auth: false }).then((s) => { setShopName(s.name); setCashOk(s.features.cash); setDelivery(s.delivery); }).catch(() => undefined); }, [slug]);
 
   const signedIn = Boolean(session?.signedIn);
-  const total = cartTotal(cart);
+  useEffect(() => { if (signedIn) api<NonNullable<typeof loyal>>(`/v1/shops/${slug}/loyalty`).then((l) => setLoyal(l.enabled ? l : null)).catch(() => setLoyal(null)); }, [signedIn, slug]);
+  const subtotal = cartTotal(cart);
+  const fee = fulfillment === "delivery" && subtotal > 0 && !(delivery.free_from_tiyin !== null && subtotal >= delivery.free_from_tiyin) ? delivery.fee_tiyin : 0;
+  const maxPoints = loyal ? Math.max(0, Math.min(loyal.spendable_points, Math.floor((subtotal * loyal.max_pay_share_pct) / 100 / loyal.point_value_tiyin))) : 0;
+  const pointsNum = Math.min(maxPoints, Math.max(0, Math.floor(Number(points.replace(/\D/g, "")) || 0)));
+  const discount = loyal ? pointsNum * loyal.point_value_tiyin : 0;
+  const total = subtotal + fee - discount;
+  const belowMin = subtotal < delivery.min_order_tiyin;
   const nameOf = (p: { name_uz: string; name_ru: string | null }) => (locale === "ru" && p.name_ru ? p.name_ru : p.name_uz);
   const addressOk = fulfillment === "pickup" || address.trim().length >= 5;
 
@@ -39,7 +49,7 @@ export default function CartPage({ params }: { params: Promise<{ slug: string }>
     if (!cart.branch_id) return;
     setBusy(true); setShort({});
     try {
-      const body = { branch_id: cart.branch_id, fulfillment, ...(fulfillment === "delivery" ? { delivery_address: address.trim() } : {}), ...(note.trim() ? { note: note.trim() } : {}), items: cart.lines.map((l) => ({ product_id: l.id, quantity_milli: l.quantity_milli })) };
+      const body = { branch_id: cart.branch_id, fulfillment, ...(fulfillment === "delivery" ? { delivery_address: address.trim() } : {}), ...(note.trim() ? { note: note.trim() } : {}), ...(pointsNum > 0 ? { points_to_use: pointsNum } : {}), items: cart.lines.map((l) => ({ product_id: l.id, quantity_milli: l.quantity_milli })) };
       const o = await api<{ id: string }>(`/v1/shops/${slug}/orders`, { method: "POST", body });
       clearCart(slug);
       router.replace(`/d/${slug}/buyurtma/${o.id}`);
@@ -52,7 +62,7 @@ export default function CartPage({ params }: { params: Promise<{ slug: string }>
     } finally { setBusy(false); }
   }, [cart, fulfillment, address, note, slug, router, t, locale]);
 
-  const canPlace = cart.lines.length > 0 && addressOk && cashOk;
+  const canPlace = cart.lines.length > 0 && addressOk && cashOk && !belowMin;
 
   return (
     <ShopShell slug={slug} name={shopName} back>
@@ -93,10 +103,19 @@ export default function CartPage({ params }: { params: Promise<{ slug: string }>
             </fieldset>
             {fulfillment === "delivery" && <Input id="addr" label={t("cart.address")} hint={t("cart.address_hint")} value={address} onChange={(e) => setAddress(e.target.value)} autoComplete="street-address" maxLength={300} />}
             <Input id="note" label={t("cart.note")} value={note} onChange={(e) => setNote(e.target.value)} maxLength={300} />
+            {belowMin && <p role="alert" className="text-body-sm font-semibold text-danger">{t("cart.min_order", { min: money(delivery.min_order_tiyin) })}</p>}
+            {loyal && (
+              <div className="flex flex-col gap-1 rounded-md border border-line p-3">
+                <Input id="points" label={t("loyalty.use")} inputMode="numeric" value={points} hint={t("loyalty.use_hint", { max: maxPoints })} onChange={(e) => setPoints(e.target.value.replace(/\D/g, ""))} />
+                <p className="text-body-sm text-muted">{t("loyalty.balance", { points: loyal.spendable_points })}{loyal.pending_points > 0 ? ` · ${t("loyalty.pending", { points: loyal.pending_points, hours: loyal.hold_hours })}` : ""}</p>
+                <p className="text-body-sm text-muted">{t("loyalty.tier", { tier: loyal.tier, pct: loyal.cashback_pct })}</p>
+              </div>
+            )}
             <p className="text-body-sm text-muted">{cashOk ? t("cart.payment") : t("cart.cash_off")}</p>
             <dl className="flex flex-col gap-1 border-t border-line-soft pt-3 text-body">
-              <div className="flex justify-between"><dt>{t("cart.subtotal")}</dt><dd>{money(total)}</dd></div>
-              <div className="flex justify-between"><dt>{t("cart.delivery_fee")}</dt><dd>{t("cart.free")}</dd></div>
+              <div className="flex justify-between"><dt>{t("cart.subtotal")}</dt><dd>{money(subtotal)}</dd></div>
+              <div className="flex justify-between"><dt>{t("cart.delivery_fee")}</dt><dd>{fee === 0 ? t("cart.free") : money(fee)}</dd></div>
+              {discount > 0 && <div className="flex justify-between"><dt>{t("loyalty.discount")}</dt><dd>−{money(discount)}</dd></div>}
               <div className="flex justify-between text-title-sm font-extrabold"><dt>{t("cart.total")}</dt><dd data-testid="cart-total">{money(total)}</dd></div>
             </dl>
             {signedIn

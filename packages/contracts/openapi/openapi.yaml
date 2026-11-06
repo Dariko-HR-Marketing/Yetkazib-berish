@@ -23,6 +23,7 @@ tags:
   - { name: storefront }
   - { name: orders }
   - { name: fulfillment }
+  - { name: reports }
 security:
   - bearer: []
 paths:
@@ -882,6 +883,33 @@ paths:
         '400': { $ref: '#/components/responses/Error' }
         '403': { $ref: '#/components/responses/Error' }
         '404': { $ref: '#/components/responses/Error' }
+  /v1/reports/sales:
+    get:
+      tags: [reports]
+      operationId: salesReport
+      summary: Savdo hisoboti (bajarilgan buyurtmalar; Asia/Tashkent kunlari)
+      parameters: [{ $ref: '#/components/parameters/TenantId' }, { name: days, in: query, schema: { type: integer, minimum: 1, maximum: 365, default: 30 } }]
+      responses:
+        '200': { description: Hisobot, content: { application/json: { schema: { $ref: '#/components/schemas/SalesReport' } } } }
+        '400': { $ref: '#/components/responses/Error' }
+        '403': { $ref: '#/components/responses/Error' }
+        '404': { $ref: '#/components/responses/Error' }
+  /v1/admin/tenants:
+    get:
+      tags: [admin]
+      operationId: adminListTenants
+      parameters: [{ name: q, in: query, schema: { type: string } }, { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 200, default: 100 } }]
+      responses:
+        '200': { description: Do'konlar, content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { $ref: '#/components/schemas/AdminTenant' } } } } } } }
+        '403': { $ref: '#/components/responses/Error' }
+  /v1/marketplace/shops:
+    get:
+      tags: [storefront]
+      operationId: marketplaceShops
+      security: []
+      summary: "Umumiy katalog («Yaqin do'konlar»): catalog.marketplace_listing yoqilgan faol do'konlar"
+      responses:
+        '200': { description: Do'konlar, content: { application/json: { schema: { type: object, required: [items], properties: { items: { type: array, items: { type: object, required: [name, slug], properties: { name: { type: string }, slug: { type: string } } } } } } } } }
 components:
   securitySchemes:
     bearer: { type: http, scheme: bearer, bearerFormat: JWT }
@@ -1248,7 +1276,11 @@ components:
         status: { type: string, enum: [active, hidden, archived] }
         description_uz: { type: [string, 'null'] }
         description_ru: { type: [string, 'null'] }
-        stock: { $ref: '#/components/schemas/StockView' }
+        stock:
+          description: stock:read huquqi bo'lmagan rolda (masalan, marketolog) null
+          oneOf:
+            - { type: 'null' }
+            - { $ref: '#/components/schemas/StockView' }
         created_at: { type: string, format: date-time }
         updated_at: { type: string, format: date-time }
     ProductPage:
@@ -1512,3 +1544,29 @@ components:
         max_pay_share_pct: { type: integer }
         hold_hours: { type: integer }
         expiry_days: { type: integer }
+    SalesReport:
+      type: object
+      required: [days, orders, revenue_tiyin, avg_order_tiyin, cancel_rate_pct, discount_tiyin, points_spent, status_counts, daily, top_products]
+      properties:
+        days: { type: integer }
+        orders: { type: integer }
+        revenue_tiyin: { type: integer }
+        avg_order_tiyin: { type: integer }
+        cancel_rate_pct: { type: number }
+        discount_tiyin: { type: integer }
+        points_spent: { type: integer }
+        status_counts: { type: object, additionalProperties: { type: integer } }
+        daily: { type: array, items: { type: object, required: [day, orders, revenue_tiyin, goods_tiyin], properties: { day: { type: string }, orders: { type: integer }, revenue_tiyin: { type: integer }, goods_tiyin: { type: integer } } } }
+        top_products: { type: array, items: { type: object, required: [product_id, name_uz, name_ru, unit, quantity_milli, revenue_tiyin], properties: { product_id: { type: string, format: uuid }, name_uz: { type: string }, name_ru: { type: [string, 'null'] }, unit: { type: string }, quantity_milli: { type: integer }, revenue_tiyin: { type: integer } } } }
+    AdminTenant:
+      type: object
+      required: [id, name, slug, status, plan_code, plan_version, created_at, members]
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        slug: { type: string }
+        status: { type: string }
+        plan_code: { type: string }
+        plan_version: { type: integer }
+        created_at: { type: string, format: date-time }
+        members: { type: integer }

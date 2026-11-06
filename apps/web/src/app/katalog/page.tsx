@@ -182,7 +182,7 @@ export default function CatalogPage() {
 
   const toggleOut = async (p: Product) => {
     try {
-      const s = await api<StockView>(`/v1/products/${p.id}/stock/out`, { method: "POST", tenant: true, body: { branch_id: branchId, out: !p.stock.out_marked } });
+      const s = await api<StockView>(`/v1/products/${p.id}/stock/out`, { method: "POST", tenant: true, body: { branch_id: branchId, out: !p.stock?.out_marked } });
       setItems((xs) => xs.map((x) => (x.id === p.id ? { ...x, stock: s } : x)));
       if (canRead) setSummary(await api<Summary>(`/v1/catalog/summary?branch_id=${branchId}`, { tenant: true }));
       if (filter === "low" || filter === "out") await load(); // holat o'zgargach ro'yxat filtrga mos qayta tuziladi
@@ -308,19 +308,21 @@ export default function CatalogPage() {
                           <p className="text-body font-semibold">{money(p.price_tiyin)}</p>
                         </div>
                         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-body-sm md:w-72">
+                          {p.stock && (<>
                           <Badge tone={TONE[p.stock.state]}>{t(`catalog.state_${p.stock.state}`)}</Badge>
                           <span>{t("catalog.col_stock")}: <b>{formatQty(p.stock.quantity_milli)}</b></span>
                           <span>{t("catalog.col_reserved")}: <b>{formatQty(p.stock.reserved_milli)}</b></span>
                           <span>{t("catalog.col_avail")}: <b>{formatQty(p.stock.available_milli)}</b></span>
+                        </>)}
                         </div>
                         <div className="flex flex-wrap items-center gap-2">
-                          {canStock && (
+                          {canStock && p.stock && (
                             <>
                               <input aria-label={`${t("catalog.col_stock")}: ${prodName(p)}`} inputMode="decimal" value={qty[p.id] ?? formatQty(p.stock.quantity_milli)}
                                 onChange={(e) => setQty({ ...qty, [p.id]: e.target.value })} onKeyDown={(e) => { if (e.key === "Enter" && dirty) void saveQty(p); }}
                                 className="min-h-touch w-24 rounded-md border border-line-strong bg-surface px-2 text-body" />
                               {dirty && <Button onClick={() => saveQty(p)}>{t("ui.save")}</Button>}
-                              <Button variant="ghost" onClick={() => toggleOut(p)}>{p.stock.out_marked ? t("catalog.back_on_sale") : t("catalog.mark_out")}</Button>
+                              <Button variant="ghost" onClick={() => toggleOut(p)}>{p.stock?.out_marked ? t("catalog.back_on_sale") : t("catalog.mark_out")}</Button>
                             </>
                           )}
                           {canWrite && <Button variant="ghost" onClick={() => openForm(p)}>{t("catalog.edit")}</Button>}

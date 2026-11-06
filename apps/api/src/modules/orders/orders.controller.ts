@@ -18,6 +18,9 @@ export class OrdersController {
   constructor(private readonly shops: StorefrontService, private readonly orders: OrdersService, private readonly delivery: DeliverySettingsService, private readonly loyalty: LoyaltyService) {}
 
   // ommaviy vitrina
+  @Public() @Get("marketplace/shops")
+  marketplace() { return this.shops.marketplace(); }
+
   @Public() @Get("shops/:slug")
   shop(@Param("slug") slug: string) { return this.shops.shop(slug); }
 

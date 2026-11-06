@@ -29,6 +29,14 @@ export class StorefrontService {
     return { slug: s.slug, name: s.name, branches: branches.rows, features: { cash, stock_visible: stockVisible, loyalty: await this.features.can(s.id, "loyalty.points") }, delivery: await this.delivery.get(s.id) };
   }
 
+  /** Umumiy katalog («Yaqin do'konlar»): faqat faol va catalog.marketplace_listing yoqilgan do'konlar. */
+  async marketplace() {
+    const all = await this.db.tx({ platform: true }, (tx) => tx.query<{ id: string; name: string; slug: string }>("select id, name, slug from tenants where status = 'active' order by name limit 500"));
+    const out: { name: string; slug: string }[] = [];
+    for (const t of all.rows) if ((await this.features.can(t.id, "catalog.marketplace_listing")) && (await this.features.can(t.id, "storefront.own"))) out.push({ name: t.name, slug: t.slug });
+    return { items: out };
+  }
+
   async categories(slug: string) {
     const s = await this.resolve(slug);
     const r = await this.db.tx({ tenantId: s.id }, (tx) => tx.query("select id, name_uz, name_ru from categories where tenant_id = $1 order by sort, lower(name_uz)", [s.id]));
